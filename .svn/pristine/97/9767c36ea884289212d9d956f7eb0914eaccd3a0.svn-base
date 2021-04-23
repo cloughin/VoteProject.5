@@ -1,0 +1,179 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Web.UI.WebControls;
+using DB.Vote;
+
+namespace Vote.Admin
+{
+  public partial class UpdateOfficesPage
+  {
+    #region Private
+
+    private enum MasterOnlySubTab
+    {
+      LockClasses
+    };
+
+    private List<MasterOnlySubTab> _MasterOnlySubTabs;
+
+    private void CreateLockedOfficeClassCheckBoxes()
+    {
+      ControlMasterOnlyClassesToLock.Items.Clear();
+
+      foreach (var officeClass in
+        Offices.GetOfficeClasses(GetOfficeClassesOptions.IncludeUSHouse |
+          GetOfficeClassesOptions.IncludeState |
+          GetOfficeClassesOptions.IncludeCounty |
+          GetOfficeClassesOptions.IncludeLocal))
+      {
+        var listItem = new ListItem();
+        ControlMasterOnlyClassesToLock.Items.Add(listItem);
+        var allIdentified = OfficesAllIdentified.GetIsOfficesAllIdentified(
+          StateCode, officeClass.ToInt(), CountyCode, LocalCode);
+        listItem.Text = GetOfficeClassDescription(officeClass); 
+        listItem.Value = officeClass.ToInt()
+          .ToString(CultureInfo.InvariantCulture);
+        listItem.Selected = allIdentified;
+      }
+    }
+
+    private string GetOfficeClassDescription(OfficeClass officeClass,
+      bool shortDesc = false)
+    {
+      return (shortDesc
+        ? Offices.GetShortLocalizedOfficeClassDescription(officeClass, StateCode,
+          CountyCode, LocalCode)
+        : Offices.GetLocalizedOfficeClassDescription(officeClass, StateCode,
+          CountyCode, LocalCode)) + " Offices";
+    }
+
+    private void UpdateLockedClasses()
+    {
+      // Get all OfficesAllIdentified rows for the state and make a dictionary of
+      // only the true values
+      var dictionary = OfficesAllIdentified.GetDataByStateCode(StateCode)
+        .Where(row => row.IsOfficesAllIdentified)
+        .ToDictionary(row => row.OfficeLevel.ToOfficeClass(),
+          row => null as object);
+
+      // now get any items that don't match the dictionary
+      var items = ControlMasterOnlyClassesToLock.Items.OfType<ListItem>()
+        .Where(
+          item =>
+            dictionary.ContainsKey(Offices.GetValidatedOfficeClass(item.Value)) !=
+              item.Selected);
+
+      foreach (var item in items)
+      {
+        var officeClass = Offices.GetValidatedOfficeClass(item.Value);
+        OfficesAllIdentified.UpdateIsOfficesAllIdentified(item.Selected, StateCode,
+          officeClass.ToInt());
+      }
+
+      FeedbackMasterOnly.AddInfo("The locked office classes were updated");
+    }
+
+    #region DataItem object
+
+    [PageInitializer]
+    private class MasterOnlyTabItem : OfficesDataItem
+    {
+      private const string GroupName = "MasterOnly";
+      private MasterOnlySubTab SubTab { get; set; }
+
+      protected MasterOnlyTabItem(UpdateOfficesPage page) : base(page, GroupName) { }
+
+      private static MasterOnlyTabItem[] GetTabInfo(UpdateOfficesPage page)
+      {
+        var masterOnlyTabInfo = new MasterOnlyTabItem[]
+        {
+          new MasterOnlyClassesToLockTabItem(page)
+          {
+            Column = "ClassesToLock",
+            Description = "Office classes to Lock",
+            SubTab = MasterOnlySubTab.LockClasses
+          }
+        };
+
+        foreach (var item in masterOnlyTabInfo) item.InitializeItem(page);
+
+        InitializeGroup(page, GroupName);
+
+        return masterOnlyTabInfo;
+      }
+
+      // ReSharper disable UnusedMember.Local
+      // Invoked via Reflection
+      internal static void Initialize(UpdateOfficesPage page)
+        // ReSharper restore UnusedMember.Local
+      {
+        page._MasterOnlyTabInfo = GetTabInfo(page);
+
+        page._MasterOnlySubTabs = new List<MasterOnlySubTab>
+        {
+          MasterOnlySubTab.LockClasses
+        };
+
+        if (!IsMasterUser) page.TabMasterItem.Visible = false;
+      }
+    }
+
+    private class MasterOnlyClassesToLockTabItem : MasterOnlyTabItem
+    {
+      internal MasterOnlyClassesToLockTabItem(UpdateOfficesPage page)
+        : base(page) {}
+
+      public override void LoadControl()
+      {
+        Page.CreateLockedOfficeClassCheckBoxes();
+      }
+    }
+
+    private MasterOnlyTabItem[] _MasterOnlyTabInfo;
+
+    #endregion DataItem object
+
+    #endregion Private
+
+    #region Event handlers and overrides
+
+    protected void ButtonMasterOnly_OnClick(object sender, EventArgs e)
+    {
+      switch (MasterOnlyReloading.Value)
+      {
+        case "reloading":
+          {
+            MasterOnlyReloading.Value = String.Empty;
+      //      ControlMasterOnlyElectionDesc.Enabled = false;
+      //      MasterOnlyDateWasChanged.Value = String.Empty;
+            _MasterOnlyTabInfo.LoadControls();
+      //      SetElectionHeading(HeadingMasterOnly);
+            FeedbackMasterOnly.AddInfo("Master-only data loaded.");
+          }
+          break;
+
+        case "":
+          {
+            // normal update
+            int subTabIndex;
+            _MasterOnlyTabInfo.ClearValidationErrors();
+            if (Int32.TryParse(ContainerMasterOnlySubTabIndex.Value, out subTabIndex))
+              switch (_MasterOnlySubTabs[subTabIndex])
+              {
+                case MasterOnlySubTab.LockClasses:
+                  UpdateLockedClasses();
+                  break;
+              }
+          }
+          break;
+
+        default:
+          throw new VoteException("Unknown reloading option");
+      }
+    }
+
+    #endregion Event handlers and overrides
+  }
+}

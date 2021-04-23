@@ -1,0 +1,45 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="404.aspx.cs" 
+Inherits="Vote.Error404Page" %>
+
+<%@ Register Src="/Controls/SocialMediaButtons.ascx" TagName="SocialMediaButtons" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonateBanner.ascx" TagName="DonateBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainBanner.ascx" TagName="MainBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainNavigation.ascx" TagName="MainNavigation" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainFooter.ascx" TagName="MainFooter" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeading.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntry.ascx" TagName="AddressEntry" TagPrefix="user" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+  <title runat="server" id="TitleTag" >Page Not Found</title>
+</head>
+<body class="error-404">
+    <form id="form1" runat="server" enableviewstate="True">
+    <div id="outer">
+    <div id="container">
+      <user:SocialMediaButtons runat="server" />
+      <user:DonateBanner runat="server" />
+      <user:MainBanner runat="server" />
+      <user:MainNavigation runat="server" />
+      <div id="mainContent">
+        <user:PageHeading ID="PageHeading" runat="server" 
+          MainHeadingText="Page Not Found" />
+
+        <div class="intro">
+        <p>We are sorry but we cannot find the page you requested.</p>
+        <p>Please make a selection from the menus on this page, or go to our 
+        <a href="/">Home page</a>.</p>
+        </div>
+
+        <user:MainFooter runat="server" />
+      </div> <!-- id="mainContent" -->
+    </div> <!-- id="container" -->
+    </div> <!-- id="outer" -->
+
+    <user:AddressEntry runat="server" />
+
+    </form>
+</body>
+</html>

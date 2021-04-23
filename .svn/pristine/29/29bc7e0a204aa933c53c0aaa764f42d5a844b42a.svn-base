@@ -1,0 +1,315 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using DB;
+
+namespace Vote.Reports
+{
+  internal class ResponsiveIssuesReport : ResponsiveReport
+  {
+    #region Private
+
+    private const int MoreMin = 250;
+    private const int MoreMax = 350;
+    private const int MoreMinForIntro = 750;
+    private const int MoreMaxForIntro = 1000;
+
+    protected ResponsiveIssuesReport()
+    {
+      ReportContainer.AddCssClasses("issues-report");
+    }
+
+    private static Control FormatAnswerForDisplay(QuestionAndAnswer qa, bool forIntro)
+    {
+      if (qa == null || string.IsNullOrWhiteSpace(qa.Answer) && string.IsNullOrWhiteSpace(qa.YouTubeUrl))
+        return new LiteralControl("<p><em>No response</em></p>");
+      if (string.IsNullOrWhiteSpace(qa.Answer))
+        return new PlaceHolder();
+      var min = forIntro
+        ? MoreMinForIntro
+        : MoreMin;
+      var max = forIntro
+        ? MoreMaxForIntro
+        : MoreMax;
+      var key = string.Format("{0}:{1}:{2}", qa.PoliticianKey, qa.QuestionKey, qa.Sequence);
+      return VotePage.GetMorePart1(qa.Answer, min, max, "answer", key);
+    }
+
+    private static void ReportAnswers(Control container, DataRow candidate, IList<QuestionAndAnswer> qas,
+      bool forIntro = false)
+    {
+      // sort qas on date descending: AnswerDate if there's an answer else YouTubeDate
+      qas = qas.OrderByDescending(a => string.IsNullOrWhiteSpace(a.Answer)
+        ? a.YouTubeDate
+        : a.AnswerDate).ToList();
+      if (qas.Count == 0) qas.Add(null); // To force empty cell for running mate with no answers
+      var content = new HtmlDiv().AddTo(container, "answer-cell");
+      var inner = new HtmlDiv().AddTo(content, "answer-cell-inner");
+
+      var firstAnswer = true;
+      foreach (var qa in qas)
+      {
+        content = new HtmlDiv().AddTo(inner, "answer-cell-answer clearfix");
+
+        if (firstAnswer && candidate != null && !forIntro)
+        {
+          var nameContainer = new HtmlDiv().AddTo(content, "answer-name");
+          FormatCandidateNameAndParty(nameContainer, candidate, false, false);
+
+          var imageContainer = new HtmlDiv().AddTo(content, "answer-image");
+          CreatePoliticianImageTag(candidate.PoliticianKey(), ImageSize100, string.Empty)
+            .AddTo(imageContainer);
+        }
+
+        if (qa != null && !string.IsNullOrWhiteSpace(qa.YouTubeUrl))
+        {
+          var p = new HtmlP().AddTo(content, "answer-youtube");
+          var anchor = new HtmlAnchor
+          {
+            HRef = VotePage.NormalizeUrl(qa.YouTubeUrl),
+            Target = "YouTube"
+          }.AddTo(p);
+          new HtmlImage {Src = "/images/yt-icon.png"}.AddTo(anchor);
+          // only show youtube date if the is no text answer
+          if (qa.YouTubeDate != VotePage.DefaultDbDate && string.IsNullOrWhiteSpace(qa.Answer))
+          {
+            new HtmlSpan
+            {
+              InnerHtml = "(" + qa.YouTubeDate.ToString("MM/dd/yyyy") + ")"
+            }.AddTo(p, "youtubedate");
+          }
+        }
+
+        //var answer = qa != null && !string.IsNullOrWhiteSpace(qa.Answer)
+        //  ? TruncateAnswer(qa.Answer).ReplaceNewLinesWithParagraphs()
+        //  : "<p><em>No response</em></p>";
+        var answerDiv = new HtmlDiv() /*{InnerHtml = answer}*/
+          .AddTo(content, "answer-answer");
+        FormatAnswerForDisplay(qa, forIntro).AddTo(answerDiv);
+
+        if (qa != null &&
+          (!string.IsNullOrWhiteSpace(qa.AnswerSource) || qa.AnswerDate != VotePage.DefaultDbDate))
+        {
+          var p = new HtmlP().AddTo(content, "answer-source");
+          if (!string.IsNullOrWhiteSpace(qa.AnswerSource))
+          {
+            new HtmlSpan {InnerHtml = "Source: "}.AddTo(p);
+            if (VotePage.IsValidUrl(qa.AnswerSource))
+              new HtmlAnchor
+              {
+                InnerText = qa.AnswerSource,
+                HRef = VotePage.NormalizeUrl(qa.AnswerSource),
+                Target = "_blank"
+              }.AddTo(p);
+            else
+              new LiteralControl(qa.AnswerSource).AddTo(p);
+          }
+          if (qa.AnswerDate != VotePage.DefaultDbDate)
+            new LiteralControl(" (" + qa.AnswerDate.ToString("MM/dd/yyyy") + ")").AddTo(p);
+        }
+        firstAnswer = false;
+      }
+
+    }
+
+    private static bool ReportBiographical(Control container, bool isRunningMateOffice, 
+      List<DataRow> keys, bool forIntro = false)
+    {
+      var answers = keys.SelectMany(r => r == null ? new QuestionAndAnswer[0] : GetBioQuestionaAndAnswers(r))
+      .Where(qa => !string.IsNullOrWhiteSpace(qa.Answer))
+      .ToList();
+      if (answers.Any())
+        ReportIssue(container, isRunningMateOffice, "Biographical", answers, keys, forIntro);
+      return answers.Any();
+    }
+
+    private static IEnumerable<QuestionAndAnswer> GetPoliticianAnswers(
+      IEnumerable<QuestionAndAnswer> answers,
+      string politicianKey)
+    {
+      return answers.Where(a => a.PoliticianKey.IsEqIgnoreCase(politicianKey))
+        .OrderByDescending(a => a.AnswerDate);
+    }
+
+    private static void ReportIssue(Control container, bool isRunningMateOffice, string issue,
+      IEnumerable<QuestionAndAnswer> qAndAs, List<DataRow> keys, bool forIntro = false)
+    {
+      new HtmlDiv { InnerHtml = issue }.AddTo(container, "issue-header accordion-header");
+      var content = new HtmlDiv().AddTo(container, "issues-content accordion-content");
+      var questions = qAndAs.GroupBy(qa => qa.QuestionKey);
+      foreach (var question in questions)
+      {
+        var answers = question.ToList();
+        var q = answers.First();
+        new HtmlDiv { InnerHtml = q.Question }.AddTo(content, "question-header accordion-header");
+        var answerContainer = new HtmlDiv().AddTo(content, "question-content accordion-content");
+        foreach (var candidate in keys.Where(k => k != null &&
+          (!k.ContainsColumn("IsRunningMate") || !k.IsRunningMate())))
+        {
+          var c = candidate;
+          var cont = answerContainer;
+          if (isRunningMateOffice)
+            cont = new HtmlDiv().AddTo(cont, "answer-ticket");
+          //ReportAnswer(cont, c, answers.FirstOrDefault(a => a.PoliticianKey.IsEqIgnoreCase(c.PoliticianKey())), forIntro);
+          ReportAnswers(cont, c, GetPoliticianAnswers(answers, c.PoliticianKey()).ToList(), forIntro);
+          if (isRunningMateOffice)
+          {
+            var runningMate = keys.FirstOrDefault(k => k != null && k.PoliticianKey().IsEqIgnoreCase(c.RunningMateKey()));
+            //ReportAnswer(cont, runningMate, answers.FirstOrDefault(a => a.PoliticianKey.IsEqIgnoreCase(c.RunningMateKey())));
+            ReportAnswers(cont, runningMate, GetPoliticianAnswers(answers, c.RunningMateKey()).ToList(), forIntro);
+          }
+        }
+      }
+    }
+
+    private static void ReportOneIssue(Control container, bool isRunningMateOffice, 
+      IGrouping<string, DataRow> issue, List<DataRow> keys, bool forIntro = false)
+    {
+      ReportIssue(container, isRunningMateOffice, issue.First().Issue(),
+        issue.Select(i => new QuestionAndAnswer
+        {
+          PoliticianKey = i.PoliticianKey(),
+          QuestionKey = i.QuestionKey(),
+          Sequence = i.Sequence(),
+          Question = i.Question(),
+          Answer = i.Answer(),
+          AnswerSource = i.AnswerSource(),
+          AnswerDate = i.AnswerDate(),
+          YouTubeUrl = i.YouTubeUrl(),
+          YouTubeDate = i.YouTubeDate(VotePage.DefaultDbDate)
+        }), keys, forIntro);
+    }
+
+    #endregion
+
+    #region Protected
+
+    #region ReSharper disable
+
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable VirtualMemberNeverOverriden.Global
+
+    #endregion ReSharper disable
+
+    protected void ReportIssues(List<DataRow> candidates, List<IGrouping<string, DataRow>> issues,
+      bool isRunningMateOffice = false, int candidateCount = 0, bool forIntro = false)
+    {
+      if (candidateCount == 0) candidateCount = candidates.Count;
+      var issuesContainer = new HtmlDiv()
+        .AddTo(ReportContainer, "issues-container candidates-" + candidateCount);
+      if (!ReportBiographical(issuesContainer, isRunningMateOffice, candidates, forIntro))
+      {
+        var messageContainer = new HtmlDiv().AddTo(ReportContainer,
+          "issues-message") as HtmlGenericControl;
+        var appendText = forIntro ? "" : " for any of the candidates";
+        messageContainer.InnerHtml = issues.Any()
+          ? "We have no biographical information" + appendText + "."
+          : "We have no biographical information or issue responses" + appendText + ".";
+      }
+      foreach (var issue in issues)
+        ReportOneIssue(issuesContainer, isRunningMateOffice, issue, candidates, forIntro);
+    }
+
+    #region ReSharper restore
+
+    // ReSharper restore VirtualMemberNeverOverriden.Global
+    // ReSharper restore MemberCanBePrivate.Global
+
+    #endregion ReSharper restore
+
+    #endregion Protected
+
+    #region Public
+
+    public sealed class QuestionAndAnswer
+    {
+      public string PoliticianKey;
+      public string QuestionKey;
+      public int Sequence;
+      public string Question;
+      public string Answer;
+      public string AnswerSource;
+      public DateTime AnswerDate = VotePage.DefaultDbDate;
+      public string YouTubeUrl;
+      public DateTime YouTubeDate;
+    }
+
+    public static QuestionAndAnswer[] GetBioQuestionaAndAnswers(DataRow r = null)
+    {
+      return new[]
+      {
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_General",
+          Question = "General (political statement of goals, objectives, views, philosophies)",
+          Answer = r == null ? null : r.GeneralStatement()
+        },
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_Personal",
+          Question =
+            "Personal (gender, age, marital status, spouse's name and age, children's name and ages, home town, current residence)",
+          Answer = r == null ? null : r.Personal()
+        },
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_Education",
+          Question = "Education (times and places of schools, colleges, major, degrees, activities, sports)",
+          Answer = r == null ? null : r.Education()
+        },
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_Profession",
+          Question = "Profession (professional and work experience outside politics)",
+          Answer = r == null ? null : r.Profession()
+        },
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_Military",
+          Question =
+            "Military (branch, years of service, active duty experience, highest rank, medals, honors, type and date of discharge)",
+          Answer = r == null ? null : r.Military()
+        },
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_Civic",
+          Question = "Civic (past and present organizations, charities involvement)",
+          Answer = r == null ? null : r.Civic()
+        },
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_Political",
+          Question = "Political (dates and titles of previously held political offices)",
+          Answer = r == null ? null : r.Political()
+        },
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_Religion",
+          Question = "Religion (current and past religious affiliations, beliefs)",
+          Answer = r == null ? null : r.Religion()
+        },
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_Accomplishments",
+          Question = "Accomplishments (significant accomplishments, awards, achievements)",
+          Answer = r == null ? null : r.Accomplishments()
+        }
+      };
+    }
+
+    #endregion
+  }
+}

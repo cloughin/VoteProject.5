@@ -1,0 +1,1358 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:x="urn:schemas-microsoft-com:office:excel"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Excel.Sheet>
+<meta name=Generator content="Microsoft Excel 11">
+<link rel=File-List href="Democrat%20Names%20Googled_files/filelist.xml">
+<link rel=Edit-Time-Data href="Democrat%20Names%20Googled_files/editdata.mso">
+<link rel=OLE-Object-Data href="Democrat%20Names%20Googled_files/oledata.mso">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+x\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>RK</o:Author>
+  <o:LastAuthor>RK</o:LastAuthor>
+  <o:Created>2007-12-13T15:02:50Z</o:Created>
+  <o:LastSaved>2007-12-13T17:03:51Z</o:LastSaved>
+  <o:Company>BOL</o:Company>
+  <o:Version>11.6360</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]-->
+<style>
+<!--table
+	{mso-displayed-decimal-separator:"\.";
+	mso-displayed-thousand-separator:"\,";}
+@page
+	{margin:1.0in .75in 1.0in .75in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;}
+tr
+	{mso-height-source:auto;}
+col
+	{mso-width-source:auto;}
+br
+	{mso-data-placement:same-cell;}
+.style0
+	{mso-number-format:General;
+	text-align:general;
+	vertical-align:bottom;
+	white-space:nowrap;
+	mso-rotate:0;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	color:windowtext;
+	font-size:10.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Arial;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	border:none;
+	mso-protection:locked visible;
+	mso-style-name:Normal;
+	mso-style-id:0;}
+td
+	{mso-style-parent:style0;
+	padding:0px;
+	mso-ignore:padding;
+	color:windowtext;
+	font-size:10.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Arial;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	mso-number-format:General;
+	text-align:general;
+	vertical-align:bottom;
+	border:none;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	mso-protection:locked visible;
+	white-space:nowrap;
+	mso-rotate:0;}
+.xl24
+	{mso-style-parent:style0;
+	mso-number-format:"Short Date";
+	text-align:center;}
+.xl25
+	{mso-style-parent:style0;
+	text-align:center;}
+.xl26
+	{mso-style-parent:style0;
+	mso-number-format:"\#\,\#\#0";
+	text-align:center;}
+.xl27
+	{mso-style-parent:style0;
+	mso-number-format:"0\.0%";
+	text-align:center;}
+.xl28
+	{mso-style-parent:style0;
+	mso-number-format:"Short Date";
+	text-align:center;
+	border-top:none;
+	border-right:none;
+	border-bottom:.5pt solid windowtext;
+	border-left:none;}
+.xl29
+	{mso-style-parent:style0;
+	text-align:center;
+	border-top:none;
+	border-right:none;
+	border-bottom:.5pt solid windowtext;
+	border-left:none;
+	white-space:normal;}
+.xl30
+	{mso-style-parent:style0;
+	text-align:center;
+	border-top:none;
+	border-right:none;
+	border-bottom:.5pt solid windowtext;
+	border-left:none;}
+.xl31
+	{mso-style-parent:style0;
+	border-top:none;
+	border-right:none;
+	border-bottom:.5pt solid windowtext;
+	border-left:none;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <x:ExcelWorkbook>
+  <x:ExcelWorksheets>
+   <x:ExcelWorksheet>
+    <x:Name>Sheet1</x:Name>
+    <x:WorksheetOptions>
+     <x:Selected/>
+     <x:TopRowVisible>7</x:TopRowVisible>
+     <x:Panes>
+      <x:Pane>
+       <x:Number>3</x:Number>
+       <x:ActiveRow>25</x:ActiveRow>
+       <x:ActiveCol>11</x:ActiveCol>
+      </x:Pane>
+     </x:Panes>
+     <x:ProtectContents>False</x:ProtectContents>
+     <x:ProtectObjects>False</x:ProtectObjects>
+     <x:ProtectScenarios>False</x:ProtectScenarios>
+    </x:WorksheetOptions>
+   </x:ExcelWorksheet>
+   <x:ExcelWorksheet>
+    <x:Name>Sheet2</x:Name>
+    <x:WorksheetOptions>
+     <x:ProtectContents>False</x:ProtectContents>
+     <x:ProtectObjects>False</x:ProtectObjects>
+     <x:ProtectScenarios>False</x:ProtectScenarios>
+    </x:WorksheetOptions>
+   </x:ExcelWorksheet>
+   <x:ExcelWorksheet>
+    <x:Name>Sheet3</x:Name>
+    <x:WorksheetOptions>
+     <x:ProtectContents>False</x:ProtectContents>
+     <x:ProtectObjects>False</x:ProtectObjects>
+     <x:ProtectScenarios>False</x:ProtectScenarios>
+    </x:WorksheetOptions>
+   </x:ExcelWorksheet>
+  </x:ExcelWorksheets>
+  <x:WindowHeight>12525</x:WindowHeight>
+  <x:WindowWidth>15195</x:WindowWidth>
+  <x:WindowTopX>0</x:WindowTopX>
+  <x:WindowTopY>75</x:WindowTopY>
+  <x:ProtectStructure>False</x:ProtectStructure>
+  <x:ProtectWindows>False</x:ProtectWindows>
+ </x:ExcelWorkbook>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="1028"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body link=blue vlink=purple>
+
+<table x:str border=0 cellpadding=0 cellspacing=0 width=836 style='border-collapse:
+ collapse;table-layout:fixed;width:627pt'>
+ <col width=76 span=256 style='mso-width-source:userset;mso-width-alt:2779;
+ width:57pt'>
+ <tr class=xl31 height=34 style='height:25.5pt'>
+  <td height=34 class=xl28 width=76 style='height:25.5pt;width:57pt'>&nbsp;</td>
+  <td class=xl29 width=76 style='width:57pt'>Barack <br>
+    Obama</td>
+  <td class=xl29 width=76 style='width:57pt'>Hillary <br>
+    Clinton</td>
+  <td class=xl29 width=76 style='width:57pt'>John <br>
+    Edwards</td>
+  <td class=xl29 width=76 style='width:57pt'>Dennis <br>
+    Kucinich</td>
+  <td class=xl29 width=76 style='width:57pt'>Bill <br>
+    Richardson</td>
+  <td class=xl29 width=76 style='width:57pt'>Joe <br>
+    Biden</td>
+  <td class=xl29 width=76 style='width:57pt'>Mike <br>
+    Gravel</td>
+  <td class=xl29 width=76 style='width:57pt'>Chris <br>
+    Dodd</td>
+  <td class=xl30 width=76 style='width:57pt'>Totals</td>
+  <td class=xl31 width=76 style='width:57pt'>&nbsp;</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl24 style='height:12.75pt' x:num="39423">12/7/2007</td>
+  <td class=xl26 x:num="9761">9,761</td>
+  <td class=xl26 x:num="4512">4,512</td>
+  <td class=xl26 x:num="2271">2,271</td>
+  <td class=xl26 x:num="1206">1,206</td>
+  <td class=xl26 x:num>604</td>
+  <td class=xl26 x:num>825</td>
+  <td class=xl26 x:num>426</td>
+  <td class=xl26 x:num>337</td>
+  <td class=xl26 x:num="19942" x:fmla="=SUM(B2:I2)">19,942</td>
+  <td></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl24 style='height:12.75pt' x:num="39424">12/8/2007</td>
+  <td class=xl26 x:num="16995">16,995</td>
+  <td class=xl26 x:num="9982">9,982</td>
+  <td class=xl26 x:num="5236">5,236</td>
+  <td class=xl26 x:num="2572">2,572</td>
+  <td class=xl26 x:num="1256">1,256</td>
+  <td class=xl26 x:num="1443">1,443</td>
+  <td class=xl26 x:num>740</td>
+  <td class=xl26 x:num>484</td>
+  <td class=xl26 x:num="38708" x:fmla="=SUM(B3:I3)">38,708</td>
+  <td></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl24 style='height:12.75pt' x:num="39425">12/9/2007</td>
+  <td class=xl26 x:num="21515">21,515</td>
+  <td class=xl26 x:num="12674">12,674</td>
+  <td class=xl26 x:num="4096">4,096</td>
+  <td class=xl26 x:num="2435">2,435</td>
+  <td class=xl26 x:num="1541">1,541</td>
+  <td class=xl26 x:num="1994">1,994</td>
+  <td class=xl26 x:num>941</td>
+  <td class=xl26 x:num>665</td>
+  <td class=xl26 x:num="45861" x:fmla="=SUM(B4:I4)">45,861</td>
+  <td></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl24 style='height:12.75pt' x:num="39426">12/10/2007</td>
+  <td class=xl26 x:num="17775">17,775</td>
+  <td class=xl26 x:num="12180">12,180</td>
+  <td class=xl26 x:num="3891">3,891</td>
+  <td class=xl26 x:num="2201">2,201</td>
+  <td class=xl26 x:num="1597">1,597</td>
+  <td class=xl26 x:num="1694">1,694</td>
+  <td class=xl26 x:num>919</td>
+  <td class=xl26 x:num="1041">1,041</td>
+  <td class=xl26 x:num="41298" x:fmla="=SUM(B5:I5)">41,298</td>
+  <td></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl24 style='height:12.75pt' x:num="39427">12/11/2007</td>
+  <td class=xl26 x:num="10731">10,731</td>
+  <td class=xl26 x:num="8630">8,630</td>
+  <td class=xl26 x:num="3047">3,047</td>
+  <td class=xl26 x:num="1512">1,512</td>
+  <td class=xl26 x:num="1197">1,197</td>
+  <td class=xl26 x:num="1412">1,412</td>
+  <td class=xl26 x:num>685</td>
+  <td class=xl26 x:num>737</td>
+  <td class=xl26 x:num="27951" x:fmla="=SUM(B6:I6)">27,951</td>
+  <td></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl25 style='height:12.75pt'>Total</td>
+  <td class=xl26 x:num="76777" x:fmla="=SUM(B2:B6)">76,777</td>
+  <td class=xl26 x:num="47978" x:fmla="=SUM(C2:C6)">47,978</td>
+  <td class=xl26 x:num="18541" x:fmla="=SUM(D2:D6)">18,541</td>
+  <td class=xl26 x:num="9926" x:fmla="=SUM(E2:E6)">9,926</td>
+  <td class=xl26 x:num="6195" x:fmla="=SUM(F2:F6)">6,195</td>
+  <td class=xl26 x:num="7368" x:fmla="=SUM(G2:G6)">7,368</td>
+  <td class=xl26 x:num="3711" x:fmla="=SUM(H2:H6)">3,711</td>
+  <td class=xl26 x:num="3264" x:fmla="=SUM(I2:I6)">3,264</td>
+  <td class=xl26 x:num="173760" x:fmla="=SUM(J2:J6)">173,760</td>
+  <td></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=10 class=xl25 style='height:12.75pt;mso-ignore:colspan'></td>
+  <td></td>
+ </tr>
+ <tr class=xl31 height=34 style='height:25.5pt'>
+  <td height=34 class=xl28 style='height:25.5pt'>&nbsp;</td>
+  <td class=xl29 width=76 style='width:57pt'>Barack <br>
+    Obama</td>
+  <td class=xl29 width=76 style='width:57pt'>Hillary <br>
+    Clinton</td>
+  <td class=xl29 width=76 style='width:57pt'>John <br>
+    Edwards</td>
+  <td class=xl29 width=76 style='width:57pt'>Dennis <br>
+    Kucinich</td>
+  <td class=xl29 width=76 style='width:57pt'>Bill <br>
+    Richardson</td>
+  <td class=xl29 width=76 style='width:57pt'>Joe <br>
+    Biden</td>
+  <td class=xl29 width=76 style='width:57pt'>Mike <br>
+    Gravel</td>
+  <td class=xl29 width=76 style='width:57pt'>Chris <br>
+    Dodd</td>
+  <td class=xl30>Totals</td>
+  <td class=xl31>&nbsp;</td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl24 style='height:12.75pt' x:num="39423">12/7/2007</td>
+  <td class=xl27 x:num="0.48946946143817072" x:fmla="=B2/J2">48.9%</td>
+  <td class=xl27 x:num="0.22625614281416107" x:fmla="=C2/J2">22.6%</td>
+  <td class=xl27 x:num="0.11388025273292549" x:fmla="=D2/J2">11.4%</td>
+  <td class=xl27 x:num="6.0475378597934011E-2" x:fmla="=E2/J2">6.0%</td>
+  <td class=xl27 x:num="3.028783472069E-2" x:fmla="=F2/J2">3.0%</td>
+  <td class=xl27 x:num="4.1369972921472271E-2" x:fmla="=G2/J2">4.1%</td>
+  <td class=xl27 x:num="2.1361949653996591E-2" x:fmla="=H2/J2">2.1%</td>
+  <td class=xl27 x:num="1.6899007120649883E-2" x:fmla="=I2/J2">1.7%</td>
+  <td class=xl27 x:num="1" x:fmla="=SUM(B10:I10)">100.0%</td>
+  <td></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl24 style='height:12.75pt' x:num="39424">12/8/2007</td>
+  <td class=xl27 x:num="0.43905652578278392" x:fmla="=B3/J3">43.9%</td>
+  <td class=xl27 x:num="0.25787950811201821" x:fmla="=C3/J3">25.8%</td>
+  <td class=xl27 x:num="0.13526919499844994" x:fmla="=D3/J3">13.5%</td>
+  <td class=xl27 x:num="6.644621266921566E-2" x:fmla="=E3/J3">6.6%</td>
+  <td class=xl27 x:num="3.244807274981916E-2" x:fmla="=F3/J3">3.2%</td>
+  <td class=xl27 x:num="3.727911542833523E-2" x:fmla="=G3/J3">3.7%</td>
+  <td class=xl27 x:num="1.9117495091453964E-2" x:fmla="=H3/J3">1.9%</td>
+  <td class=xl27 x:num="1.2503875167923943E-2" x:fmla="=I3/J3">1.3%</td>
+  <td class=xl27 x:num="1" x:fmla="=SUM(B11:I11)">100.0%</td>
+  <td></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl24 style='height:12.75pt' x:num="39425">12/9/2007</td>
+  <td class=xl27 x:num="0.46913499487582039" x:fmla="=B4/J4">46.9%</td>
+  <td class=xl27 x:num="0.27635681733935152" x:fmla="=C4/J4">27.6%</td>
+  <td class=xl27 x:num="8.9313359935457137E-2" x:fmla="=D4/J4">8.9%</td>
+  <td class=xl27 x:num="5.3095222520224153E-2" x:fmla="=E4/J4">5.3%</td>
+  <td class=xl27 x:num="3.3601535073373892E-2" x:fmla="=F4/J4">3.4%</td>
+  <td class=xl27 x:num="4.3479208913891981E-2" x:fmla="=G4/J4">4.3%</td>
+  <td class=xl27 x:num="2.051852336407841E-2" x:fmla="=H4/J4">2.1%</td>
+  <td class=xl27 x:num="1.450033797780249E-2" x:fmla="=I4/J4">1.5%</td>
+  <td class=xl27 x:num="1" x:fmla="=SUM(B12:I12)">100.0%</td>
+  <td></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl24 style='height:12.75pt' x:num="39426">12/10/2007</td>
+  <td class=xl27 x:num="0.43040825221560364" x:fmla="=B5/J5">43.0%</td>
+  <td class=xl27 x:num="0.29492953653929971" x:fmla="=C5/J5">29.5%</td>
+  <td class=xl27 x:num="9.4217637657997969E-2" x:fmla="=D5/J5">9.4%</td>
+  <td class=xl27 x:num="5.3295559106978543E-2" x:fmla="=E5/J5">5.3%</td>
+  <td class=xl27 x:num="3.8670153518330183E-2" x:fmla="=F5/J5">3.9%</td>
+  <td class=xl27 x:num="4.101893554167272E-2" x:fmla="=G5/J5">4.1%</td>
+  <td class=xl27 x:num="2.2252893602595768E-2" x:fmla="=H5/J5">2.2%</td>
+  <td class=xl27 x:num="2.520703181752143E-2" x:fmla="=I5/J5">2.5%</td>
+  <td class=xl27 x:num="1" x:fmla="=SUM(B13:I13)">100.0%</td>
+  <td></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 class=xl24 style='height:12.75pt' x:num="39427">12/11/2007</td>
+  <td class=xl27 x:num="0.38392186326070621" x:fmla="=B6/J6">38.4%</td>
+  <td class=xl27 x:num="0.30875460627526741" x:fmla="=C6/J6">30.9%</td>
+  <td class=xl27 x:num="0.10901219992129083" x:fmla="=D6/J6">10.9%</td>
+  <td class=xl27 x:num="5.4094665664913597E-2" x:fmla="=E6/J6">5.4%</td>
+  <td class=xl27 x:num="4.2824943651389932E-2" x:fmla="=F6/J6">4.3%</td>
+  <td class=xl27 x:num="5.0516976136810846E-2" x:fmla="=G6/J6">5.1%</td>
+  <td class=xl27 x:num="2.4507173267503846E-2" x:fmla="=H6/J6">2.5%</td>
+  <td class=xl27 x:num="2.6367571822117276E-2" x:fmla="=I6/J6">2.6%</td>
+  <td class=xl27 x:num="1" x:fmla="=SUM(B14:I14)">100.0%</td>
+  <td></td>
+ </tr>
+ <tr class=xl25 height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 class=xl25 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr class=xl31 height=34 style='height:25.5pt'>
+  <td height=34 class=xl28 style='height:25.5pt'>&nbsp;</td>
+  <td class=xl29 width=76 style='width:57pt'>Barack <br>
+    Obama</td>
+  <td class=xl29 width=76 style='width:57pt'>Hillary <br>
+    Clinton</td>
+  <td class=xl29 width=76 style='width:57pt'>John <br>
+    Edwards</td>
+  <td class=xl29 width=76 style='width:57pt'>Dennis <br>
+    Kucinich</td>
+  <td class=xl29 width=76 style='width:57pt'>Bill <br>
+    Richardson</td>
+  <td class=xl29 width=76 style='width:57pt'>Joe <br>
+    Biden</td>
+  <td class=xl29 width=76 style='width:57pt'>Mike <br>
+    Gravel</td>
+  <td class=xl29 width=76 style='width:57pt'>Chris <br>
+    Dodd</td>
+  <td class=xl30>Totals</td>
+  <td class=xl31>&nbsp;</td>
+ </tr>
+ <tr class=xl25 height=17 style='height:12.75pt'>
+  <td height=17 class=xl25 style='height:12.75pt'>Total</td>
+  <td class=xl27 x:num="0.44185658379373849" x:fmla="=B7/J7">44.2%</td>
+  <td class=xl27 x:num="0.27611648250460408" x:fmla="=C7/J7">27.6%</td>
+  <td class=xl27 x:num="0.10670465009208104" x:fmla="=D7/J7">10.7%</td>
+  <td class=xl27 x:num="5.7124769797421732E-2" x:fmla="=E7/J7">5.7%</td>
+  <td class=xl27 x:num="3.5652624309392263E-2" x:fmla="=F7/J7">3.6%</td>
+  <td class=xl27 x:num="4.2403314917127073E-2" x:fmla="=G7/J7">4.2%</td>
+  <td class=xl27 x:num="2.1357044198895028E-2" x:fmla="=H7/J7">2.1%</td>
+  <td class=xl27 x:num="1.8784530386740331E-2" x:fmla="=I7/J7">1.9%</td>
+  <td class=xl27 x:num="1" x:fmla="=SUM(B17:I17)">100.0%</td>
+  <td class=xl25></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt' align=left valign=top><!--[if gte vml 1]><v:shapetype
+   id="_x0000_t201" coordsize="21600,21600" o:spt="201" path="m,l,21600r21600,l21600,xe">
+   <v:stroke joinstyle="miter"/>
+   <v:path shadowok="f" o:extrusionok="f" strokeok="f" fillok="f"
+    o:connecttype="rect"/>
+   <o:lock v:ext="edit" shapetype="t"/>
+  </v:shapetype><v:shape id="_x0000_s1027" type="#_x0000_t201" style='position:absolute;
+   margin-left:21pt;margin-top:9.75pt;width:335.25pt;height:231.75pt;z-index:3'
+   fillcolor="window [78]" strokecolor="windowText [77]" o:insetmode="auto">
+   <v:fill color2="windowText [77]"/>
+   <o:lock v:ext="edit" rotation="t" text="t"/>
+   <x:ClientData ObjectType="Chart">
+    <x:WebChart>
+     <x:Scaling>
+      <x:ScaleID>0</x:ScaleID>
+      <x:Orientation>MinMax</x:Orientation>
+     </x:Scaling>
+     <x:Scaling>
+      <x:ScaleID>1</x:ScaleID>
+      <x:Orientation>MinMax</x:Orientation>
+     </x:Scaling>
+     <x:Chart>
+      <x:Name>Chart 3</x:Name>
+      <x:Title>
+       <x:Caption>
+        <x:DataSource>-1</x:DataSource>
+        <x:Data>&quot;<x:B>Percent Democrat Names Googled</x:B>&quot;</x:Data>
+       </x:Caption>
+       <x:Font>
+        <x:FontName>Arial</x:FontName>
+        <x:Size>8</x:Size>
+        <x:B/>
+        <x:AutoScale/>
+       </x:Font>
+       <x:Border>
+        <x:ColorIndex>None</x:ColorIndex>
+       </x:Border>
+       <x:Interior>
+        <x:ColorIndex>None</x:ColorIndex>
+       </x:Interior>
+      </x:Title>
+      <x:Options>
+       <x:SizeWithWindow/>
+      </x:Options>
+      <x:PageSetup>
+       <x:ChartSize>FullPage</x:ChartSize>
+      </x:PageSetup>
+      <x:Font>
+       <x:FontName>Arial</x:FontName>
+       <x:Size>8</x:Size>
+       <x:AutoScale/>
+      </x:Font>
+      <x:Left>0</x:Left>
+      <x:Top>0</x:Top>
+      <x:Width>6719.9853515625</x:Width>
+      <x:Height>4649.9853515625</x:Height>
+      <x:ChartGrowth>
+       <x:HorzGrowth>1</x:HorzGrowth>
+       <x:VertGrowth>1</x:VertGrowth>
+      </x:ChartGrowth>
+      <x:PlotArea>
+       <x:Border>
+        <x:ColorIndex>15</x:ColorIndex>
+        <x:LineStyle>Solid</x:LineStyle>
+        <x:Weight>Narrow</x:Weight>
+       </x:Border>
+       <x:Interior>
+        <x:ColorIndex>14</x:ColorIndex>
+        <x:BGColorIndex>Neutral</x:BGColorIndex>
+       </x:Interior>
+       <x:Font>
+        <x:FontName>Arial</x:FontName>
+        <x:Size>8</x:Size>
+        <x:AutoScale/>
+       </x:Font>
+       <x:Graph>
+        <x:Type>Column</x:Type>
+        <x:SubType>Clustered</x:SubType>
+        <x:Overlap>0</x:Overlap>
+        <x:ScaleID>0</x:ScaleID>
+        <x:ScaleID>1</x:ScaleID>
+        <x:Series>
+         <x:Index>0</x:Index>
+         <x:Name>Series 1</x:Name>
+         <x:Category>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$B$16:$I$16</x:Data>
+         </x:Category>
+         <x:Value>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$B$17:$I$17</x:Data>
+         </x:Value>
+        </x:Series>
+        <x:PlotVisible/>
+       </x:Graph>
+       <x:Axis>
+        <x:Placement>Bottom</x:Placement>
+        <x:AxisID>0</x:AxisID>
+        <x:ScaleID>0</x:ScaleID>
+        <x:Title>
+         <x:Caption>
+          <x:DataSource>-1</x:DataSource>
+          <x:Data>&quot;<x:B>Candidate</x:B>&quot;</x:Data>
+         </x:Caption>
+         <x:Font>
+          <x:FontName>Arial</x:FontName>
+          <x:Size>8</x:Size>
+          <x:B/>
+          <x:AutoScale/>
+         </x:Font>
+         <x:Border>
+          <x:ColorIndex>None</x:ColorIndex>
+         </x:Border>
+         <x:Interior>
+          <x:ColorIndex>None</x:ColorIndex>
+         </x:Interior>
+        </x:Title>
+        <x:CrossingAxis>1</x:CrossingAxis>
+        <x:Font>
+         <x:FontName>Arial</x:FontName>
+         <x:Size>8</x:Size>
+         <x:AutoScale/>
+        </x:Font>
+        <x:Number>
+         <x:SourceLinked/>
+         <x:BuiltInFormat>0</x:BuiltInFormat>
+        </x:Number>
+        <x:Type>Automatic</x:Type>
+       </x:Axis>
+       <x:Axis>
+        <x:Placement>Left</x:Placement>
+        <x:AxisID>1</x:AxisID>
+        <x:ScaleID>1</x:ScaleID>
+        <x:MajorGridlines/>
+        <x:Title>
+         <x:Caption>
+          <x:DataSource>-1</x:DataSource>
+          <x:Data>&quot;<x:B>Percent Googled</x:B>&quot;</x:Data>
+         </x:Caption>
+         <x:Font>
+          <x:FontName>Arial</x:FontName>
+          <x:Size>8</x:Size>
+          <x:B/>
+          <x:AutoScale/>
+         </x:Font>
+         <x:Border>
+          <x:ColorIndex>None</x:ColorIndex>
+         </x:Border>
+         <x:Interior>
+          <x:ColorIndex>None</x:ColorIndex>
+         </x:Interior>
+        </x:Title>
+        <x:CrossingAxis>0</x:CrossingAxis>
+        <x:CrossesAt>Minimum</x:CrossesAt>
+        <x:CrossBetween>Between</x:CrossBetween>
+        <x:Font>
+         <x:FontName>Arial</x:FontName>
+         <x:Size>8</x:Size>
+         <x:AutoScale/>
+        </x:Font>
+        <x:Number>
+         <x:SourceLinked/>
+         <x:FormatString>0.0%</x:FormatString>
+        </x:Number>
+        <x:Type>Value</x:Type>
+       </x:Axis>
+      </x:PlotArea>
+      <x:Legend>
+       <x:Delete/>
+      </x:Legend>
+     </x:Chart>
+    </x:WebChart>
+   </x:ClientData>
+  </v:shape><![endif]--><![if !vml]><span style='mso-ignore:vglayout;
+  position:absolute;z-index:3;margin-left:28px;margin-top:13px;width:448px;
+  height:310px'><![endif]><![if !excel]><img width=448 height=310
+  src="Democrat%20Names%20Googled_files/image001.gif" v:shapes="_x0000_s1027"
+  class=shape v:dpi="96"><![endif]><![if !vml]></span><![endif]><span
+  style='mso-ignore:vglayout2'>
+  <table cellpadding=0 cellspacing=0>
+   <tr>
+    <td height=17 width=76 style='height:12.75pt;width:57pt'></td>
+   </tr>
+  </table>
+  </span></td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 style='height:12.75pt' align=left valign=top><!--[if gte vml 1]><v:shape
+   id="_x0000_s1025" type="#_x0000_t201" style='position:absolute;
+   margin-left:4.5pt;margin-top:3.75pt;width:283.5pt;height:302.25pt;z-index:1'
+   fillcolor="window [78]" strokecolor="windowText [77]" o:insetmode="auto">
+   <v:fill color2="windowText [77]"/>
+   <o:lock v:ext="edit" rotation="t" text="t"/>
+   <x:ClientData ObjectType="Chart">
+    <x:WebChart>
+     <x:Scaling>
+      <x:ScaleID>0</x:ScaleID>
+      <x:Orientation>MinMax</x:Orientation>
+     </x:Scaling>
+     <x:Scaling>
+      <x:ScaleID>1</x:ScaleID>
+      <x:Orientation>MinMax</x:Orientation>
+     </x:Scaling>
+     <x:Chart>
+      <x:Name>Chart 1</x:Name>
+      <x:Title>
+       <x:Caption>
+        <x:DataSource>-1</x:DataSource>
+        <x:Data>&quot;<x:B>Democrat Names Googled Each Day</x:B>&quot;</x:Data>
+       </x:Caption>
+       <x:Font>
+        <x:FontName>Arial</x:FontName>
+        <x:Size>8</x:Size>
+        <x:B/>
+        <x:AutoScale/>
+       </x:Font>
+       <x:Border>
+        <x:ColorIndex>None</x:ColorIndex>
+       </x:Border>
+       <x:Interior>
+        <x:ColorIndex>None</x:ColorIndex>
+       </x:Interior>
+      </x:Title>
+      <x:Options>
+       <x:SizeWithWindow/>
+      </x:Options>
+      <x:PageSetup>
+       <x:ChartSize>FullPage</x:ChartSize>
+      </x:PageSetup>
+      <x:Font>
+       <x:FontName>Arial</x:FontName>
+       <x:Size>5.75</x:Size>
+       <x:AutoScale/>
+      </x:Font>
+      <x:Left>0</x:Left>
+      <x:Top>0</x:Top>
+      <x:Width>5684.9853515625</x:Width>
+      <x:Height>6059.99267578125</x:Height>
+      <x:ChartGrowth>
+       <x:HorzGrowth>1</x:HorzGrowth>
+       <x:VertGrowth>1</x:VertGrowth>
+      </x:ChartGrowth>
+      <x:PlotArea>
+       <x:Border>
+        <x:ColorIndex>15</x:ColorIndex>
+        <x:LineStyle>Solid</x:LineStyle>
+        <x:Weight>Narrow</x:Weight>
+       </x:Border>
+       <x:Interior>
+        <x:ColorIndex>14</x:ColorIndex>
+        <x:BGColorIndex>Neutral</x:BGColorIndex>
+       </x:Interior>
+       <x:Font>
+        <x:FontName>Arial</x:FontName>
+        <x:Size>5.75</x:Size>
+        <x:AutoScale/>
+       </x:Font>
+       <x:Graph>
+        <x:Type>Line</x:Type>
+        <x:SubType>Standard</x:SubType>
+        <x:SubType>Marker</x:SubType>
+        <x:ScaleID>0</x:ScaleID>
+        <x:ScaleID>1</x:ScaleID>
+        <x:Series>
+         <x:Index>0</x:Index>
+         <x:Caption>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$B$1</x:Data>
+         </x:Caption>
+         <x:Name>Barack &#10;Obama</x:Name>
+         <x:Category>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$A$2:$A$6</x:Data>
+         </x:Category>
+         <x:Value>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$B$2:$B$6</x:Data>
+         </x:Value>
+        </x:Series>
+        <x:Series>
+         <x:Index>1</x:Index>
+         <x:Caption>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$C$1</x:Data>
+         </x:Caption>
+         <x:Name>Hillary &#10;Clinton</x:Name>
+         <x:Category>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$A$2:$A$6</x:Data>
+         </x:Category>
+         <x:Value>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$C$2:$C$6</x:Data>
+         </x:Value>
+        </x:Series>
+        <x:Series>
+         <x:Index>2</x:Index>
+         <x:Caption>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$D$1</x:Data>
+         </x:Caption>
+         <x:Name>John &#10;Edwards</x:Name>
+         <x:Category>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$A$2:$A$6</x:Data>
+         </x:Category>
+         <x:Value>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$D$2:$D$6</x:Data>
+         </x:Value>
+        </x:Series>
+        <x:Series>
+         <x:Index>3</x:Index>
+         <x:Caption>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$E$1</x:Data>
+         </x:Caption>
+         <x:Name>Dennis &#10;Kucinich</x:Name>
+         <x:Category>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$A$2:$A$6</x:Data>
+         </x:Category>
+         <x:Value>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$E$2:$E$6</x:Data>
+         </x:Value>
+        </x:Series>
+        <x:Series>
+         <x:Index>4</x:Index>
+         <x:Caption>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$F$1</x:Data>
+         </x:Caption>
+         <x:Name>Bill &#10;Richardson</x:Name>
+         <x:Category>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$A$2:$A$6</x:Data>
+         </x:Category>
+         <x:Value>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$F$2:$F$6</x:Data>
+         </x:Value>
+        </x:Series>
+        <x:Series>
+         <x:Index>5</x:Index>
+         <x:Caption>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$G$1</x:Data>
+         </x:Caption>
+         <x:Name>Joe &#10;Biden</x:Name>
+         <x:Category>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$A$2:$A$6</x:Data>
+         </x:Category>
+         <x:Value>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$G$2:$G$6</x:Data>
+         </x:Value>
+        </x:Series>
+        <x:Series>
+         <x:Index>6</x:Index>
+         <x:Caption>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$H$1</x:Data>
+         </x:Caption>
+         <x:Name>Mike &#10;Gravel</x:Name>
+         <x:Category>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$A$2:$A$6</x:Data>
+         </x:Category>
+         <x:Value>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$H$2:$H$6</x:Data>
+         </x:Value>
+        </x:Series>
+        <x:Series>
+         <x:Index>7</x:Index>
+         <x:Caption>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$I$1</x:Data>
+         </x:Caption>
+         <x:Name>Chris &#10;Dodd</x:Name>
+         <x:Category>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$A$2:$A$6</x:Data>
+         </x:Category>
+         <x:Value>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$I$2:$I$6</x:Data>
+         </x:Value>
+        </x:Series>
+        <x:PlotVisible/>
+       </x:Graph>
+       <x:Axis>
+        <x:Placement>Bottom</x:Placement>
+        <x:AxisID>0</x:AxisID>
+        <x:ScaleID>0</x:ScaleID>
+        <x:Title>
+         <x:Caption>
+          <x:DataSource>-1</x:DataSource>
+          <x:Data>&quot;<x:B>Date</x:B>&quot;</x:Data>
+         </x:Caption>
+         <x:Font>
+          <x:FontName>Arial</x:FontName>
+          <x:Size>5.75</x:Size>
+          <x:B/>
+          <x:AutoScale/>
+         </x:Font>
+         <x:Border>
+          <x:ColorIndex>None</x:ColorIndex>
+         </x:Border>
+         <x:Interior>
+          <x:ColorIndex>None</x:ColorIndex>
+         </x:Interior>
+        </x:Title>
+        <x:CrossingAxis>1</x:CrossingAxis>
+        <x:Font>
+         <x:FontName>Arial</x:FontName>
+         <x:Size>5.75</x:Size>
+         <x:AutoScale/>
+        </x:Font>
+        <x:Number>
+         <x:SourceLinked/>
+         <x:FormatString>m/d/yyyy</x:FormatString>
+        </x:Number>
+        <x:Type>Automatic</x:Type>
+       </x:Axis>
+       <x:Axis>
+        <x:Placement>Left</x:Placement>
+        <x:AxisID>1</x:AxisID>
+        <x:ScaleID>1</x:ScaleID>
+        <x:MajorGridlines/>
+        <x:Title>
+         <x:Caption>
+          <x:DataSource>-1</x:DataSource>
+          <x:Data>&quot;<x:B>Name Googled</x:B>&quot;</x:Data>
+         </x:Caption>
+         <x:Font>
+          <x:FontName>Arial</x:FontName>
+          <x:Size>5.75</x:Size>
+          <x:B/>
+          <x:AutoScale/>
+         </x:Font>
+         <x:Border>
+          <x:ColorIndex>None</x:ColorIndex>
+         </x:Border>
+         <x:Interior>
+          <x:ColorIndex>None</x:ColorIndex>
+         </x:Interior>
+        </x:Title>
+        <x:CrossingAxis>0</x:CrossingAxis>
+        <x:CrossBetween>Between</x:CrossBetween>
+        <x:Font>
+         <x:FontName>Arial</x:FontName>
+         <x:Size>5.75</x:Size>
+         <x:AutoScale/>
+        </x:Font>
+        <x:Number>
+         <x:SourceLinked/>
+         <x:BuiltInFormat>3</x:BuiltInFormat>
+        </x:Number>
+        <x:Type>Value</x:Type>
+       </x:Axis>
+      </x:PlotArea>
+      <x:Legend>
+       <x:Placement>Right</x:Placement>
+       <x:Font>
+        <x:FontName>Arial</x:FontName>
+        <x:Size>5.75</x:Size>
+        <x:AutoScale/>
+       </x:Font>
+      </x:Legend>
+     </x:Chart>
+    </x:WebChart>
+   </x:ClientData>
+  </v:shape><v:shape id="_x0000_s1026" type="#_x0000_t201" style='position:absolute;
+   margin-left:297pt;margin-top:5.25pt;width:279.75pt;height:300.75pt;
+   z-index:2' fillcolor="window [78]" strokecolor="windowText [77]"
+   o:insetmode="auto">
+   <v:fill color2="windowText [77]"/>
+   <o:lock v:ext="edit" rotation="t" text="t"/>
+   <x:ClientData ObjectType="Chart">
+    <x:WebChart>
+     <x:Scaling>
+      <x:ScaleID>0</x:ScaleID>
+      <x:Orientation>MinMax</x:Orientation>
+     </x:Scaling>
+     <x:Scaling>
+      <x:ScaleID>1</x:ScaleID>
+      <x:Orientation>MinMax</x:Orientation>
+     </x:Scaling>
+     <x:Chart>
+      <x:Name>Chart 2</x:Name>
+      <x:Title>
+       <x:Caption>
+        <x:DataSource>-1</x:DataSource>
+        <x:Data>&quot;<x:B>Percent of Democrat Names Googled Each Day</x:B>&quot;</x:Data>
+       </x:Caption>
+       <x:Font>
+        <x:FontName>Arial</x:FontName>
+        <x:Size>8</x:Size>
+        <x:B/>
+        <x:AutoScale/>
+       </x:Font>
+       <x:Border>
+        <x:ColorIndex>None</x:ColorIndex>
+       </x:Border>
+       <x:Interior>
+        <x:ColorIndex>None</x:ColorIndex>
+       </x:Interior>
+      </x:Title>
+      <x:Options>
+       <x:SizeWithWindow/>
+      </x:Options>
+      <x:PageSetup>
+       <x:ChartSize>FullPage</x:ChartSize>
+      </x:PageSetup>
+      <x:Font>
+       <x:FontName>Arial</x:FontName>
+       <x:Size>5.75</x:Size>
+       <x:AutoScale/>
+      </x:Font>
+      <x:Left>0</x:Left>
+      <x:Top>0</x:Top>
+      <x:Width>5609.99267578125</x:Width>
+      <x:Height>6030</x:Height>
+      <x:ChartGrowth>
+       <x:HorzGrowth>1</x:HorzGrowth>
+       <x:VertGrowth>1</x:VertGrowth>
+      </x:ChartGrowth>
+      <x:PlotArea>
+       <x:Border>
+        <x:ColorIndex>15</x:ColorIndex>
+        <x:LineStyle>Solid</x:LineStyle>
+        <x:Weight>Narrow</x:Weight>
+       </x:Border>
+       <x:Interior>
+        <x:ColorIndex>14</x:ColorIndex>
+        <x:BGColorIndex>Neutral</x:BGColorIndex>
+       </x:Interior>
+       <x:Font>
+        <x:FontName>Arial</x:FontName>
+        <x:Size>5.75</x:Size>
+        <x:AutoScale/>
+       </x:Font>
+       <x:Graph>
+        <x:Type>Line</x:Type>
+        <x:SubType>Standard</x:SubType>
+        <x:SubType>Marker</x:SubType>
+        <x:ScaleID>0</x:ScaleID>
+        <x:ScaleID>1</x:ScaleID>
+        <x:Series>
+         <x:Index>0</x:Index>
+         <x:Caption>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$B$9</x:Data>
+         </x:Caption>
+         <x:Name>Barack &#10;Obama</x:Name>
+         <x:Category>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$A$10:$A$14</x:Data>
+         </x:Category>
+         <x:Value>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$B$10:$B$14</x:Data>
+         </x:Value>
+        </x:Series>
+        <x:Series>
+         <x:Index>1</x:Index>
+         <x:Caption>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$C$9</x:Data>
+         </x:Caption>
+         <x:Name>Hillary &#10;Clinton</x:Name>
+         <x:Category>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$A$10:$A$14</x:Data>
+         </x:Category>
+         <x:Value>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$C$10:$C$14</x:Data>
+         </x:Value>
+        </x:Series>
+        <x:Series>
+         <x:Index>2</x:Index>
+         <x:Caption>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$D$9</x:Data>
+         </x:Caption>
+         <x:Name>John &#10;Edwards</x:Name>
+         <x:Category>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$A$10:$A$14</x:Data>
+         </x:Category>
+         <x:Value>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$D$10:$D$14</x:Data>
+         </x:Value>
+        </x:Series>
+        <x:Series>
+         <x:Index>3</x:Index>
+         <x:Caption>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$E$9</x:Data>
+         </x:Caption>
+         <x:Name>Dennis &#10;Kucinich</x:Name>
+         <x:Category>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$A$10:$A$14</x:Data>
+         </x:Category>
+         <x:Value>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$E$10:$E$14</x:Data>
+         </x:Value>
+        </x:Series>
+        <x:Series>
+         <x:Index>4</x:Index>
+         <x:Caption>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$F$9</x:Data>
+         </x:Caption>
+         <x:Name>Bill &#10;Richardson</x:Name>
+         <x:Category>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$A$10:$A$14</x:Data>
+         </x:Category>
+         <x:Value>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$F$10:$F$14</x:Data>
+         </x:Value>
+        </x:Series>
+        <x:Series>
+         <x:Index>5</x:Index>
+         <x:Caption>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$G$9</x:Data>
+         </x:Caption>
+         <x:Name>Joe &#10;Biden</x:Name>
+         <x:Category>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$A$10:$A$14</x:Data>
+         </x:Category>
+         <x:Value>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$G$10:$G$14</x:Data>
+         </x:Value>
+        </x:Series>
+        <x:Series>
+         <x:Index>6</x:Index>
+         <x:Caption>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$H$9</x:Data>
+         </x:Caption>
+         <x:Name>Mike &#10;Gravel</x:Name>
+         <x:Category>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$A$10:$A$14</x:Data>
+         </x:Category>
+         <x:Value>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$H$10:$H$14</x:Data>
+         </x:Value>
+        </x:Series>
+        <x:Series>
+         <x:Index>7</x:Index>
+         <x:Caption>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$I$9</x:Data>
+         </x:Caption>
+         <x:Name>Chris &#10;Dodd</x:Name>
+         <x:Category>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$A$10:$A$14</x:Data>
+         </x:Category>
+         <x:Value>
+          <x:DataSource>0</x:DataSource>
+          <x:Data>Sheet1!$I$10:$I$14</x:Data>
+         </x:Value>
+        </x:Series>
+        <x:PlotVisible/>
+       </x:Graph>
+       <x:Axis>
+        <x:Placement>Bottom</x:Placement>
+        <x:AxisID>0</x:AxisID>
+        <x:ScaleID>0</x:ScaleID>
+        <x:Title>
+         <x:Caption>
+          <x:DataSource>-1</x:DataSource>
+          <x:Data>&quot;<x:B>Date</x:B>&quot;</x:Data>
+         </x:Caption>
+         <x:Font>
+          <x:FontName>Arial</x:FontName>
+          <x:Size>5.75</x:Size>
+          <x:B/>
+          <x:AutoScale/>
+         </x:Font>
+         <x:Border>
+          <x:ColorIndex>None</x:ColorIndex>
+         </x:Border>
+         <x:Interior>
+          <x:ColorIndex>None</x:ColorIndex>
+         </x:Interior>
+        </x:Title>
+        <x:CrossingAxis>1</x:CrossingAxis>
+        <x:Font>
+         <x:FontName>Arial</x:FontName>
+         <x:Size>5.75</x:Size>
+         <x:AutoScale/>
+        </x:Font>
+        <x:Number>
+         <x:SourceLinked/>
+         <x:FormatString>m/d/yyyy</x:FormatString>
+        </x:Number>
+        <x:Type>Automatic</x:Type>
+       </x:Axis>
+       <x:Axis>
+        <x:Placement>Left</x:Placement>
+        <x:AxisID>1</x:AxisID>
+        <x:ScaleID>1</x:ScaleID>
+        <x:MajorGridlines/>
+        <x:Title>
+         <x:Caption>
+          <x:DataSource>-1</x:DataSource>
+          <x:Data>&quot;<x:B>Percent of Names</x:B>&quot;</x:Data>
+         </x:Caption>
+         <x:Font>
+          <x:FontName>Arial</x:FontName>
+          <x:Size>5.75</x:Size>
+          <x:B/>
+          <x:AutoScale/>
+         </x:Font>
+         <x:Border>
+          <x:ColorIndex>None</x:ColorIndex>
+         </x:Border>
+         <x:Interior>
+          <x:ColorIndex>None</x:ColorIndex>
+         </x:Interior>
+        </x:Title>
+        <x:CrossingAxis>0</x:CrossingAxis>
+        <x:CrossBetween>Between</x:CrossBetween>
+        <x:Font>
+         <x:FontName>Arial</x:FontName>
+         <x:Size>5.75</x:Size>
+         <x:AutoScale/>
+        </x:Font>
+        <x:Number>
+         <x:SourceLinked/>
+         <x:FormatString>0.0%</x:FormatString>
+        </x:Number>
+        <x:Type>Value</x:Type>
+       </x:Axis>
+      </x:PlotArea>
+      <x:Legend>
+       <x:Placement>Right</x:Placement>
+       <x:Font>
+        <x:FontName>Arial</x:FontName>
+        <x:Size>5.75</x:Size>
+        <x:AutoScale/>
+       </x:Font>
+      </x:Legend>
+     </x:Chart>
+    </x:WebChart>
+   </x:ClientData>
+  </v:shape><![endif]--><![if !vml]><span style='mso-ignore:vglayout;
+  position:absolute;z-index:1;margin-left:6px;margin-top:5px;width:764px;
+  height:404px'>
+  <table cellpadding=0 cellspacing=0>
+   <tr>
+    <td width=0 height=0></td>
+    <td width=379></td>
+    <td width=11></td>
+    <td width=374></td>
+   </tr>
+   <tr>
+    <td height=2></td>
+    <td rowspan=2 align=left valign=top><![endif]><![if !excel]><img width=379
+    height=404 src="Democrat%20Names%20Googled_files/image002.gif" v:shapes="_x0000_s1025"
+    class=shape v:dpi="96"><![endif]><![if !vml]></td>
+   </tr>
+   <tr>
+    <td height=402></td>
+    <td></td>
+    <td align=left valign=top><![endif]><![if !excel]><img width=374
+    height=402 src="Democrat%20Names%20Googled_files/image006.gif" v:shapes="_x0000_s1026"
+    class=shape v:dpi="96"><![endif]><![if !vml]></td>
+   </tr>
+  </table>
+  </span><![endif]><span style='mso-ignore:vglayout2'>
+  <table cellpadding=0 cellspacing=0>
+   <tr>
+    <td height=17 width=76 style='height:12.75pt;width:57pt'></td>
+   </tr>
+  </table>
+  </span></td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <tr height=17 style='height:12.75pt'>
+  <td height=17 colspan=11 style='height:12.75pt;mso-ignore:colspan'></td>
+ </tr>
+ <![if supportMisalignedColumns]>
+ <tr height=0 style='display:none'>
+  <td width=76 style='width:57pt'></td>
+  <td width=76 style='width:57pt'></td>
+  <td width=76 style='width:57pt'></td>
+  <td width=76 style='width:57pt'></td>
+  <td width=76 style='width:57pt'></td>
+  <td width=76 style='width:57pt'></td>
+  <td width=76 style='width:57pt'></td>
+  <td width=76 style='width:57pt'></td>
+  <td width=76 style='width:57pt'></td>
+  <td width=76 style='width:57pt'></td>
+  <td width=76 style='width:57pt'></td>
+ </tr>
+ <![endif]>
+</table>
+
+</body>
+
+</html>

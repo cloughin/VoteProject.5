@@ -1,0 +1,15 @@
+﻿$(function () {
+  //return; // to simulate no-js
+  $("body").removeClass("no-js");
+  $("body").addClass("js");
+  $('.main-menu').slicknav({
+    prependTo: '.main-navigation',
+    label: "Main Menu"
+  });
+  $('.states-menu ul').slicknav({
+    prependTo: '.states-menu',
+    label: "Select a state",
+    duplicate: false
+  });
+  $(".main-banner .states-menu .slicknav_menutxt").text($(".main-banner .base-menu .slicknav_menutxt").text());
+});  

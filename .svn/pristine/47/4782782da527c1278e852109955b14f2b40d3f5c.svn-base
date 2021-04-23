@@ -1,0 +1,43 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Admin.Master.cs" 
+ Inherits="Vote.Master.AdminMaster" %>
+
+<%@ Register Src="/Controls/AdminHeading.ascx" TagName="AdminHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AdminMenu.ascx" TagName="AdminMenu" TagPrefix="user" %>
+
+<!DOCTYPE HTML>
+
+<html class="no-js" runat="server" id="HtmlTag">
+<head id="Head1" runat="server">
+  <title></title>
+  <script src="/js/jq/modernizr.custom.63696.js" type="text/javascript"></script> 
+  <script data-main="/js/require-main.js?v=190" src="/js/require.js" type="text/javascript"></script> 
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+  <link href="/css/tipTip.css" type="text/css" rel="stylesheet" />
+  <asp:ContentPlaceHolder ID="MasterHeadContent" runat="server">
+  </asp:ContentPlaceHolder>
+</head>
+<body id="body" class="admin-page">
+  <form id="MainForm" runat="server">
+
+  <asp:ScriptManager ID="ScriptManager" runat="server"
+   AjaxFrameworkMode="Enabled" AsyncPostBackTimeout="1200">
+  </asp:ScriptManager>
+
+  <div id="AdminPage">
+    <user:AdminHeading ID="AdminHeading" EnableViewState="false" runat="server" />
+    <user:AdminMenu ID="AdminMenu" EnableViewState="false" runat="server" />
+  </div>
+
+  <div id="NoJs">
+    <hr />
+    <h3>We're sorry, but this page requires a JavaScript-enabled browser.</h3>
+  </div>
+ 
+  <div style="clear:both" class="master-main-content">
+    <asp:ContentPlaceHolder ID="MasterMainContent" runat="server">
+    </asp:ContentPlaceHolder>
+  </div>
+
+  </form>
+</body>
+</html>

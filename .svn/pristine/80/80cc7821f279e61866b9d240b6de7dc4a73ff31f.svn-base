@@ -1,0 +1,94 @@
+﻿using System;
+using System.Linq;
+using DB.Vote;
+using Vote;
+
+namespace FixYouTubeUrls
+{
+  internal static class Program
+  {
+    private const string IssueKey = "ALLPersonal";
+    private const string QuestionKey = "ALLPersonal440785"; // Why I'm Running
+
+    // ReSharper disable once UnusedParameter.Local
+    private static void Main(string[] args)
+    {
+      var withVideoUrls = Politicians.GetAllCacheData()
+        .Where(row => !string.IsNullOrWhiteSpace(row.YouTubeWebAddress.GetYouTubeVideoId()))
+        .ToList();
+      var count = 0;
+      var duplicate = 0;
+      foreach (var politician in withVideoUrls)
+      {
+        var youTubeId = politician.YouTubeWebAddress.GetYouTubeVideoId();
+        YouTubeInfo videoInfo = null;
+        if (!string.IsNullOrWhiteSpace(youTubeId))
+          videoInfo = YouTubeUtility.GetYouTubeVideoInfo(youTubeId, false, 1);
+        if (videoInfo != null && videoInfo.IsValid)
+        {
+          count++;
+
+          // get Why I'm Running answers
+          var answers = Answers.GetDataByPoliticianKeyQuestionKey(politician.PoliticianKey,
+            QuestionKey);
+          if (answers.All(row => row.YouTubeUrl.GetYouTubeVideoId() != youTubeId))
+          {
+            // doesn't exist -- add to first without a YouTubeUrl
+            var rowToUpdate =
+              answers.FirstOrDefault(row => string.IsNullOrWhiteSpace(row.YouTubeUrl));
+            if (rowToUpdate == null)
+            {
+              // new to add a row
+              {
+                rowToUpdate = answers.NewRow(
+                  politician.PoliticianKey,
+                  QuestionKey,
+                  Answers.GetNextSequence(politician.PoliticianKey, QuestionKey),
+                  Politicians.GetStateCodeFromKey(politician.PoliticianKey),
+                  IssueKey,
+                  string.Empty,
+                  string.Empty,
+                  VotePage.DefaultDbDate,
+                  "curt",
+                  string.Empty,
+                  string.Empty,
+                  default(TimeSpan),
+                  string.Empty,
+                  string.Empty,
+                  VotePage.DefaultDbDate,
+                  VotePage.DefaultDbDate,
+                  string.Empty
+                  );
+                answers.AddRow(rowToUpdate);
+              }
+            }
+
+            // update the row
+
+            var description = videoInfo.Description.Trim();
+            if (string.IsNullOrWhiteSpace(description) ||
+              description.Length > YouTubeInfo.MaxVideoDescriptionLength)
+              description = videoInfo.Title.Trim();
+            rowToUpdate.YouTubeUrl = politician.YouTubeWebAddress;
+            rowToUpdate.YouTubeDescription = description;
+            rowToUpdate.YouTubeRunningTime = videoInfo.Duration;
+            rowToUpdate.YouTubeSource = YouTubeInfo.VideoUploadedByCandidateMessage;
+            rowToUpdate.YouTubeSourceUrl = string.Empty;
+            rowToUpdate.YouTubeDate = videoInfo.PublishedAt;
+            rowToUpdate.YouTubeRefreshTime = VotePage.DefaultDbDate;
+            rowToUpdate.YouTubeAutoDisable = string.Empty;
+            //Answers.UpdateTable(answers);
+          }
+          else duplicate++;
+          if (count % 100 == 0) 
+            Console.WriteLine("Processed {0}", count);
+        }
+        //Politicians.UpdateYouTubeWebAddress(string.Empty, politician.PoliticianKey);
+      }
+      Console.WriteLine("With Video URL: {0} -- Invalid: {1} -- Duplicate: {2}",
+        withVideoUrls.Count, withVideoUrls.Count - count, duplicate);
+      Console.Write("Press any key to exit");
+      Console.ReadKey();
+    }
+  }
+}

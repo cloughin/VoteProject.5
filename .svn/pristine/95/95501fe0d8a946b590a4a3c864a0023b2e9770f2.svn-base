@@ -1,0 +1,87 @@
+﻿define(["jquery", "vote/adminMaster", "vote/util", "monitor", "jqueryui"],
+  function ($, master, util, monitor) {
+
+    var $$ = util.$$;
+
+    // begin: automatically fill in source and date from current
+
+    // notes:
+    // - source and date do not show when a politician is updating
+    // - they are filled in when the response changes if both fields are empty
+    // - "current" is updated on any save operation
+
+    var currentSource = "";
+    var currentDate = "";
+
+    function checkAutoSource(group) {
+      if (!group.changed || !util.endsWith(group.group, "-answer")) return;
+      var $container = $("#" + group.parent.container);
+      var $source = $("." + group.parent.group + "-source", $container);
+      var $date = $("." + group.parent.group + "-date", $container);
+      if ($source.length === 1 && $date.length === 1 &&
+       !$source.val() && !$date.val()) {
+        $source.val(currentSource);
+        $date.val(currentDate);
+      }
+    }
+
+    function saveSourceAndDate(group) {
+      var $container = $("#" + group.container);
+      var $source = $("." + group.group + "-source", $container);
+      var $date = $("." + group.group + "-date", $container);
+      if ($source.length === 1 && $date.length === 1) {
+        currentSource = $source.val();
+        currentDate = $date.val();
+      }
+    };
+
+    // end: automatically fill in source and date from current
+
+    var afterUpdateContainer = function (group, args) {
+      if (!group) return;
+      initGroup($$(group.container));
+      saveSourceAndDate(group);
+    };
+
+    var clientChange = function (group, args) {
+      if (!group) return;
+      checkAutoSource(group);
+    };
+
+    var initGroup = function ($group) {
+      $(".date-picker", $group).datepicker({
+        changeYear: true,
+        yearRange: "2010:+0"
+      });
+
+      $(".today-button", $group).safeBind("click", function (event) {
+        var today = new Date();
+        today = (today.getMonth() + 101).toString().substr(1) + "/" +
+        (today.getDate() + 100).toString().substr(1) + "/" +
+        today.getFullYear();
+        $(event.target).closest(".mc-container").find(".date-textbox").val(today);
+      });
+    }
+
+  var initPage = function() {
+    monitor.init();
+    monitor.registerCallback("afterUpdateContainer", afterUpdateContainer);
+    monitor.registerCallback("clientChange", clientChange);
+
+    initGroup(null);
+    
+    $("#main-tabs").on("click", "input.remove-line-breaks", function () {
+      var $textarea = $(this).closest(".mc-container").find("textarea");
+      $textarea.val(util.replaceLineBreaksWithSpaces($textarea.val()));
+    });
+    util.safeBind($(".vcentered-tab"), "click", util.tabClick);
+    window.onbeforeunload = function () {
+      if (monitor.hasChanges())
+        return "There are entries on your form that have not been submitted";
+    };
+  };
+
+  master.inititializePage({
+    callback: initPage
+  });
+});

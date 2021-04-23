@@ -1,0 +1,29 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Public.Master" AutoEventWireup="true" CodeBehind="BallotNew.aspx.cs" Inherits="Vote.BallotNew" %>
+
+<%@ Register Src="/Controls/PageHeadingResponsive.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/SampleBallotEmailDialog.ascx" TagName="SampleBallotEmailDialog" TagPrefix="user" %>
+
+<asp:Content ID="HeadTopContent" ContentPlaceHolderID="MasterHeadTopContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="HeadBottomContent" ContentPlaceHolderID="MasterHeadBottomContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+  <div id="mainContent">
+  <div id="InnerContent" runat="server">
+    <user:PageHeading ID="PageHeading" runat="server" MainHeadingText="Your Sample Ballot" />
+
+    <table class="tablePage" id="BallotHeadingTable" cellspacing="0" cellpadding="0" runat="server" EnableViewState="False" border="0">
+    </table>
+
+    <asp:PlaceHolder ID="ReportPlaceHolder" runat="server"></asp:PlaceHolder>
+    <asp:PlaceHolder ID="ReferendumReportPlaceHolder" runat="server"></asp:PlaceHolder>
+
+  </div>
+  </div>
+</asp:Content>
+
+<asp:Content ID="BottomContent" ContentPlaceHolderID="MasterBottomContent" runat="server">
+  <user:SampleBallotEmailDialog ID="SampleBallotEmailDialog" runat="server" />
+</asp:Content>

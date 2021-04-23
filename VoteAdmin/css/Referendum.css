@@ -1,0 +1,148 @@
+/*--Heading--*/
+.trReferendumName
+{
+}
+.tdReferendumName
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 18px;
+font-weight: bold;
+color: #373737;
+margin: 0px;
+padding:10px 10px 0px 10px;
+}
+.trReferendumTitle
+{
+}
+.tdReferendumTitle
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+font-weight: bold;
+color: #373737;
+margin: 0px;
+padding:2px 10px 0px 10px;
+}
+.trReferendumElection
+{
+}
+.tdReferendumElection
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 14px;
+font-weight: bold;
+color: #373737;
+margin: 0px;
+padding:2px 10px 10px 10px;
+}
+/*--Referendum--*/
+.trReferendumDescription
+{
+}
+.tdReferendumDescription
+{
+font-family: Arial, Helvetica, sans-serif;
+/*font-size: 13px;*/
+font-size: 16px;
+font-weight: normal;
+color: #373737;
+margin: 0px;
+padding:2px 10px 10px 10px;
+}
+.ReferendumDescriptionHead
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 14px;
+font-weight: bold;
+color: #373737;
+margin: 0px;
+padding:0px;
+}
+
+.trReferendumDetail
+{
+}
+.tdReferendumDetail
+{
+font-family: Arial, Helvetica, sans-serif;
+/*font-size: 13px;*/
+font-size: 16px;
+font-weight: normal;
+color: #373737;
+margin: 0px;
+padding:2px 10px 10px 10px;
+}
+.ReferendumDetailHead
+/*
+,.ReferendumDetailHead a:link
+,.ReferendumDetailHead a:visited
+,.ReferendumDetailHead a:hover
+*/
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 14px;
+font-weight: bold;
+color: #373737;
+margin: 0px;
+padding:0px;
+}
+
+.trReferendumFullText
+{
+}
+.tdReferendumFullText
+{
+font-family: Arial, Helvetica, sans-serif;
+/*font-size: 13px;*/
+font-size: 16px;
+font-weight: normal;
+color: #373737;
+margin: 0px;
+padding:2px 10px 10px 10px;
+}
+.ReferendumDetailFullText
+/*
+,.ReferendumDetailFullText a:link
+,.ReferendumDetailFullText a:visited
+,.ReferendumDetailFullText a:hover
+*/
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 14px;
+font-weight: bold;
+color: #373737;
+margin: 0px;
+padding:0px;
+}
+
+#mainContent #ReferendumHeading td
+{
+  color: #666;
+}
+
+#mainContent #ReferendumHeading td
+{
+  color: #666;
+}
+
+#mainContent #ReferendumBody td
+{
+  line-height: 120%;
+}
+
+#mainContent .ReferendumDescriptionHead,
+#mainContent #LabelReferendumDetail,
+#mainContent #LabelReferendumFullText
+{
+  color: #666;
+}
+
+#mainContent #ReferendumDesc,
+#mainContent #ReferendumDetail,
+#mainContent #ReferendumFullText
+{
+  display: block;
+  margin-top: 8px;
+}
+
+

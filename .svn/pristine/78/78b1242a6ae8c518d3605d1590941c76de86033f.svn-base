@@ -1,0 +1,113 @@
+using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+
+namespace Vote.Admin
+{
+  public partial class IssuesReport : VotePage
+  {
+    private void IssueTableReport(DataTable IssueTable)
+    {
+      foreach (DataRow IssueRow in IssueTable.Rows)
+      {
+        string Issue = "<hr>" + IssueRow["Issue"].ToString()
+          + "<br>[" + IssueRow["IssueKey"].ToString() + "]";
+        if ((bool)IssueRow["IsIssueOmit"])
+          Issue += " O";
+        //if ((bool)IssueRow["xIsIssueTagForDeletion"])
+        //  Issue += " D";
+        HtmlTableRow HTMLIssueTr = db.Add_Tr_To_Table_Return_Tr(HTMLIssuesTable, "PartyRow");
+        db.Add_Td_To_Tr(HTMLIssueTr, Issue, "tdReportDetail");
+        db.Add_Td_To_Tr(HTMLIssueTr, "<hr>", "tdReportDetail");
+
+        DataTable QuestionsTable = db.Table(sql.CandidateQuestions4IssueAll(IssueRow["IssueKey"].ToString()));
+        foreach (DataRow QuestionRow in QuestionsTable.Rows)
+        {
+          //int Answers = db.RowsCountQuery(sql.Answers4Question(QuestionRow["QuestionKey"].ToString()));
+          //int Answers = db.Rows_Sql(sql.Answers4Question(QuestionRow["QuestionKey"].ToString()));
+          string SQL = "Answers ";
+          SQL += " WHERE Answers.QuestionKey = " + db.SQLLit(QuestionRow["QuestionKey"].ToString());
+          //int Answers = db.Rows_Sql(sql.Answers4Question(QuestionRow["QuestionKey"].ToString()));
+          int Answers = db.Rows_Count_From(SQL);
+          string Question = QuestionRow["Question"].ToString()
+            + " (" + Answers.ToString() + ")"
+            + " ...[" + QuestionRow["QuestionKey"].ToString() + "]";
+          if ((bool)QuestionRow["IsQuestionOmit"])
+            Question += " O";
+          //if ((bool)QuestionRow["xIsQuestionTagForDeletion"])
+          //  Question += " D";
+          HtmlTableRow HTMLQuestionRow = db.Add_Tr_To_Table_Return_Tr(HTMLIssuesTable, "PartyRow");
+          db.Add_Td_To_Tr(HTMLQuestionRow, string.Empty, "tdReportDetail");
+          db.Add_Td_To_Tr(HTMLQuestionRow, Question, "tdReportDetail");
+        }
+      }
+    }
+    private void ShowReport(string IssueLevel, string IssuesGroup)
+    {
+      //IssuesGroup can be either: LL (for All), US or StateCode
+      //in Page html <table id="HTMLIssuesTable" align="center" cellSpacing="0" width="760" runat="server">
+      HtmlTableRow HeadingRow = db.Add_Tr_To_Table_Return_Tr(HTMLIssuesTable, "HeadingRow");//<tr Class="HeadingRow">
+
+      #region Heading <td Class="tdReportGroupHeadingLeft" align="left">
+      db.Add_Td_To_Tr(HeadingRow
+        , "Issue on Navbar" + "<br>[Issue ID] O D"
+        , "tdReportGroupHeadingLeft");
+      db.Add_Td_To_Tr(HeadingRow
+        , "Question (Answers) ...[Question ID] O D" + "<br>(What is your position and views regarding)"
+        , "tdReportGroupHeadingLeft");
+      #endregion
+
+      DataTable IssueTable = db.Table(sql.IssuesAtLevelAll(IssueLevel, IssuesGroup));
+      IssueTableReport(IssueTable);
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        ViewState["StateCode"] = db.State_Code();
+        ViewState["CountyCode"] = db.County_Code();
+        ViewState["LocalCode"] = db.Local_Code();
+        if (!db.Is_User_Security_Ok())
+          SecurePage.HandleSecurityException();
+
+        #region ViewState Values
+        ViewState["IssueLevel"] = string.Empty;
+        ViewState["IssuesGroup"] = string.Empty;
+
+        #region ViewState["IssueLevel"]  ViewState["IssuesGroup"]
+        if (!string.IsNullOrEmpty(GetQueryString("IssueLevel")))
+          ViewState["IssueLevel"] = GetQueryString("IssueLevel");
+        if (!string.IsNullOrEmpty(GetQueryString("Group")))
+          ViewState["IssuesGroup"] = GetQueryString("Group");
+        #endregion
+        #endregion ViewState Values
+
+        #region Additional Security
+        if ((ViewState["IssueLevel"].ToString() == string.Empty)
+          || (ViewState["IssuesGroup"].ToString() == string.Empty))
+        {
+          HandleFatalError("IssueLevel and/or IssueGroup is missing");
+        }
+        #endregion Additional Security
+
+        try
+        {
+          ShowReport(ViewState["IssueLevel"].ToString(), ViewState["IssuesGroup"].ToString());
+        }
+        catch (Exception ex)
+        {
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+        }
+      }
+    }
+  }
+}

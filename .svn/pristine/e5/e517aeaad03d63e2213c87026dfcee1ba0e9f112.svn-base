@@ -1,0 +1,77 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="forResearch.aspx.cs" 
+Inherits="Vote.ForResearchPage" %>
+
+<%@ Register Src="/Controls/SocialMediaButtons.ascx" TagName="SocialMediaButtons"
+  TagPrefix="user" %>
+<%@ Register Src="/Controls/DonateBanner.ascx" TagName="DonateBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainBanner.ascx" TagName="MainBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainNavigation.ascx" TagName="MainNavigation" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainFooter.ascx" TagName="MainFooter" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeading.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntry.ascx" TagName="AddressEntry" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonationRequest.ascx" TagName="DonationRequest" TagPrefix="user" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+  <title runat="server" id="TitleTag">For Research</title>
+  <meta runat="server" id="MetaDescriptionTag" content="" name="description" />
+  <meta runat="server" id="MetaKeywordsTag" content="" name="keywords" />
+</head>
+<body class="research-page">
+  <form id="form1" runat="server" enableviewstate="True">
+  <div id="outer">
+    <div id="container">
+      <user:SocialMediaButtons runat="server" />
+      <user:DonateBanner runat="server" />
+      <user:MainBanner runat="server" />
+      <user:MainNavigation runat="server" />
+      <div id="mainContent">
+        <user:PageHeading ID="PageHeading" runat="server" 
+          MainHeadingText="For Research" />
+        <div class="intro">
+          <p>
+            Vote-USA has election information dating back to 2004. We have information and pictures
+            for over 35,000 candidates and office holders and over 50,000 responses to issue
+            questions. We have directories for each election listing all candidates, contests
+            and ballot measures as well as directories of all current office holders. From these
+            directories you can navigate to information of interest, such as pictures, biographical
+            information, views on issues, and candidate comparisons.</p>
+        </div>
+        <div>
+          <div class="linkBoxes">
+            <div class="linkBox stateLinks">
+              <div class="linkHeader">
+                Elections and Elected Officials for
+                <select id="StateElectionDropDown" runat="server">
+                </select>
+                <img class="ajaxLoader" alt="Ajax is processing" src="/images/ajax-loader16.gif" />
+                <br />
+                Use this dropdown list to obtain information about another state.
+              </div>
+              <div class="links" id="StateLinks" runat="server">
+              </div>
+            </div>
+            <div class="linkBox" id="PresidentLinks" runat="server">
+            </div>
+            <div class="linkBox" id="SenateLinks" runat="server">
+            </div>
+            <div class="linkBox" id="HouseLinks" runat="server">
+            </div>
+            <div class="linkBox" id="GovernorLinks" runat="server">
+            </div>
+          </div>
+        </div>
+        <user:MainFooter runat="server" />
+      </div>
+      <!-- id="mainContent" -->
+    </div>
+    <!-- id="container" -->
+  </div>
+  <!-- id="outer" -->
+  <user:AddressEntry runat="server" />
+  <user:DonationRequest runat="server" />
+
+  </form>
+</body>
+</html>

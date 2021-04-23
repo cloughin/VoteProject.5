@@ -1,0 +1,63 @@
+﻿#main-tabs div.htab-panel div.inner-panel {
+  min-height: 483px;
+}
+
+#tab-adduser .input-element {
+  float: left;
+  margin: 15px 20px 0 0;
+}
+
+#tab-adduser .update-button {
+  float: left;
+  margin-top: 25px;
+}
+
+#tab-adduser select {
+  min-width: 150px;
+}
+
+#tab-changeuser .user-scroller {
+  max-height: 448px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+}
+
+#tab-changeuser .user-scroller table {
+  width: 100%;
+}
+
+#tab-changeuser .user-scroller thead {
+  background-color: #000;
+  color: #fff;
+}
+
+#tab-changeuser .user-scroller th,
+#tab-changeuser .user-scroller td {
+  padding: 2px;
+}
+
+#tab-changeuser .user-scroller tr.even {
+  background-color: #d8d8d8;
+}
+
+#tab-changeuser .user-scroller td.link {
+  text-decoration: underline;
+  font-size: 85%
+}
+
+#tab-changeuser .user-scroller td.link:hover {
+  color: red;
+}
+
+#change-password-dialog {
+   text-align: left;
+}
+
+#change-password-dialog .input-element.new-password {
+   margin-top: 10px;
+}
+
+#change-password-dialog .update-button {
+  margin-top: 20px;
+  float: none;
+}

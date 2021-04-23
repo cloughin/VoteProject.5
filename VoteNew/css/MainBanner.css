@@ -1,0 +1,60 @@
+﻿#mainBanner
+{
+  width: 100%;
+  overflow: auto; /* to clear floats */
+}
+#mainBanner .logo
+{
+  margin: 38px 0 4px 0;
+  height: 80px;
+  float: left;
+}
+#mainBanner .stateBanner
+{
+  height: 118px;
+  width:300px;
+  text-align: right;
+  float: right;
+  font-family: Arial;
+  font-size: 8pt;
+}
+#mainBanner .stateBanner .stateName
+{
+  margin-top: 23px;
+}
+#mainBanner .stateBanner .stateSite
+{
+  margin-top: 9px;
+}
+#mainBanner .stateBanner .anotherState
+{
+  margin-top: 7px;
+}
+#mainBanner a.anotherStateButton
+{
+  display: block;
+  float: right;
+  margin-top: 7px;
+  height: 20px;
+  width: 140px;
+  background: url(/images/anotherstate.png);
+  overflow: hidden;
+	text-indent: -10000px;
+	font-size: 0px;
+	line-height: 0px;
+  cursor: pointer;
+}
+#mainBanner a:hover.anotherStateButton
+{
+  background-position: 0 -20px;
+}
+#mainBanner .stateBanner a.stateSiteLink
+{
+  text-decoration: none;
+  color: #666666;
+}
+#mainBanner .stateBanner a.stateSiteLink:hover
+{
+  color: #000000;
+}
+

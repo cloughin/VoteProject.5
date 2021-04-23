@@ -1,0 +1,198 @@
+.ace-votetemplate .ace_gutter {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.ace-votetemplate .ace_print-margin {
+  width: 1px;
+  background: #e8e8e8;
+}
+
+.ace-votetemplate .ace_fold {
+    background-color: #6B72E6;
+}
+
+.ace-votetemplate {
+  background-color: #FFFFFF;
+}
+
+.ace-votetemplate .ace_cursor {
+  color: black;
+}
+        
+.ace-votetemplate .ace_invisible {
+  color: rgb(191, 191, 191);
+}
+
+.ace-votetemplate .ace_storage,
+.ace-votetemplate .ace_keyword {
+  color: blue;
+}
+
+.ace-votetemplate .ace_keyword.ace_operator {
+  color: rgb(104, 118, 135);
+}
+
+.ace-votetemplate .ace_keyword.ace_operator.ace_separator {
+  color: rgb(0, 0, 255);
+}
+
+.ace-votetemplate .ace_constant {
+  color: rgb(197, 6, 11);
+}
+
+.ace-votetemplate .ace_constant.ace_buildin {
+  color: rgb(88, 72, 246);
+}
+
+.ace-votetemplate .ace_constant.ace_language {
+  color: rgb(88, 92, 246);
+}
+
+.ace-votetemplate .ace_constant.ace_language.ace_escape {
+  color: rgb(0, 0, 0);
+  background-color: rgb(255, 255, 51);
+  -moz-opacity: 0.6;
+  filter: alpha(opacity: 60);
+  opacity: 0.6;
+  }
+
+.ace-votetemplate .ace_constant.ace_library {
+  color: rgb(6, 150, 14);
+}
+
+.ace-votetemplate .ace_constant.ace_numeric {
+  color: rgb(0, 0, 205);
+}
+
+.ace-votetemplate .ace_invalid {
+  background-color: rgba(255, 0, 0, 0.1);
+  color: red;
+}
+
+.ace-votetemplate .ace_support.ace_function {
+  color: rgb(60, 76, 114);
+}
+
+.ace-votetemplate .ace_support.ace_constant {
+  color: rgb(6, 150, 14);
+}
+
+.ace-votetemplate .ace_support.ace_type,
+.ace-votetemplate .ace_support.ace_class {
+  color: rgb(109, 121, 222);
+}
+
+.ace-votetemplate .ace_string {
+  color: rgb(26, 26, 166);
+}
+
+.ace-votetemplate .ace_string.ace_regex {
+  color: rgb(255, 0, 0)
+}
+
+.ace-votetemplate .ace_comment {
+  color: rgb(76, 136, 107);
+}
+
+.ace-votetemplate .ace_comment.ace_doc {
+  color: rgb(0, 102, 255);
+}
+
+.ace-votetemplate .ace_comment.ace_doc.ace_tag {
+  color: rgb(128, 159, 191);
+}
+
+.ace-votetemplate .ace_variable {
+  color: rgb(49, 132, 149);
+}
+
+.ace-votetemplate .ace_xml-pe {
+  color: rgb(104, 104, 91);
+}
+
+.ace-votetemplate .ace_entity.ace_name.ace_function {
+  color: #0000A2;
+}
+
+.ace-votetemplate .ace_entity.ace_other.ace_attribute-name
+{
+  color: rgb(178, 69, 135);
+}
+
+.ace-votetemplate .ace_heading {
+  color: rgb(12, 7, 255);
+}
+
+.ace-votetemplate .ace_list {
+  color:rgb(185, 6, 144);
+}
+
+.ace-votetemplate .ace_meta.ace_substitution {
+  color:rgb(255, 0, 0);
+}
+
+.ace-votetemplate .ace_meta.ace_substitution.ace_valid {
+  color:rgb(0, 0, 224);
+}
+
+.ace-votetemplate .ace_meta.ace_substitution.ace_deprecated {
+  color:rgb(85, 26, 139);
+}
+
+.ace-votetemplate .ace_meta.ace_conditional {
+  color:rgb(0, 0, 224);
+                                            }
+
+.ace-votetemplate .ace_meta.ace_embedded {
+  color:rgb(0, 200, 0);
+                                            }
+
+.ace-votetemplate .ace_meta.ace_tag {
+  color:rgb(136, 18, 159);
+}
+
+.ace-votetemplate .ace_meta.ace_tag.ace_punctuation.ace_begin {
+  color:rgb(150, 18, 128);
+}
+
+.ace-votetemplate .ace_meta.ace_tag.ace_punctuation.ace_end {
+  color:rgb(138, 18, 143);
+}
+
+.ace-votetemplate .ace_marker-layer .ace_selection {
+  background: rgb(181, 213, 255);
+}
+.ace-votetemplate.ace_multiselect .ace_selection.ace_start {
+  box-shadow: 0 0 3px 0px white;
+  border-radius: 2px;
+}
+.ace-votetemplate .ace_marker-layer .ace_step {
+  background: rgb(252, 255, 0);
+}
+
+.ace-votetemplate .ace_marker-layer .ace_stack {
+  background: rgb(164, 229, 101);
+}
+
+.ace-votetemplate .ace_marker-layer .ace_bracket {
+  margin: -1px 0 0 -1px;
+  border: 1px solid rgb(192, 192, 192);
+}
+
+.ace-votetemplate .ace_marker-layer .ace_active-line {
+  background: rgba(0, 0, 0, 0.07);
+}
+
+.ace-votetemplate .ace_gutter-active-line {
+    background-color : #dcdcdc;
+}
+
+.ace-votetemplate .ace_marker-layer .ace_selected-word {
+  background: rgb(250, 250, 255);
+  border: 1px solid rgb(200, 200, 250);
+}
+
+.ace-votetemplate .ace_indent-guide {
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==") right repeat-y;
+}

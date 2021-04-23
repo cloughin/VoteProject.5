@@ -1,0 +1,82 @@
+﻿<%@ Page Language="C#" ValidateRequest="false" AutoEventWireup="true" 
+CodeBehind="xforElectionAuthorities.aspx.cs" Inherits="Vote.ForElectionAuthoritiesPageX" %>
+
+<%@ Register Src="/Controls/SocialMediaButtons.ascx" TagName="SocialMediaButtons" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonateBanner.ascx" TagName="DonateBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainBanner.ascx" TagName="MainBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainNavigation.ascx" TagName="MainNavigation" TagPrefix="user" %>
+<%@ Register Src="/Controls/EmailForm.ascx" TagName="EmailForm" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainFooter.ascx" TagName="MainFooter" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeading.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntry.ascx" TagName="AddressEntry" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddSampleBallotButtons.ascx" TagName="AddSampleBallotButtons" TagPrefix="user" %>
+<%@ Register Assembly="BotDetect" Namespace="BotDetect.Web.UI"  TagPrefix="BotDetect" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+  <title runat="server" id="TitleTag" >For Election Authorities</title>
+  <meta runat="server" id="MetaDescriptionTag" content="" name="description" />
+  <meta runat="server" id="MetaKeywordsTag" content="" name="keywords" />
+</head>
+<body class="authorities-page">
+    <form id="form1" runat="server" enableviewstate="True">
+    <div id="outer">
+    <div id="container">
+      <user:SocialMediaButtons runat="server" />
+      <user:DonateBanner runat="server" />
+      <user:MainBanner runat="server" />
+      <user:MainNavigation runat="server" />
+      <div id="mainContent">
+        <user:PageHeading ID="PageHeading" runat="server" 
+          MainHeadingText="For Election Authorities" />
+
+        <div class="intro">
+
+        <h2>Election Authority Tools</h2>
+
+          <p>Most of the 51 state election authorities have been very cooperative in 
+          response to our requests for election rosters. Since 2004, Vote-USA has 
+          used these rosters to cover all general elections, most off-year elections, 
+          and many primary elections.</p>
+
+          <p>All states, counties, and many local districts have their own rules 
+          and regulations regarding elections. Some states are responsible 
+          for federal, state, county and local elected offices, while other 
+          states delegate this responsibility to the counties and local districts. 
+          Each authority has its own ballot access requirements, set of elected 
+          offices, election rosters, and election calendars. Although we have not yet
+          begun to work with county and local district election authorities, we 
+          intend to do so in the near future, finances permitting.</p>
+
+          <p>Vote-USA has the tools to allow any state election authority to enter 
+          and edit its own election rosters for the Vote-USA platform. 
+          Doing so makes our customized sample ballots available at the earliest 
+          possible time, guarantees their accuracy, and reduces our data entry load. 
+          We also have the tools to add our customized sample ballots and other 
+          reporting capabilities to any state election website. We welcome the 
+          opportunity to work with any state that desires to utilize these 
+          capabilities.</p>
+
+          <user:AddSampleBallotButtons ID="AddSampleBallotButtons" runat="server" />
+
+          <h2>Email Us</h2>
+
+          <p>If you would like to work with us regarding any of these possibilities, 
+          please use the form below to contact us:</p>
+
+          <user:EmailForm id="EmailForm" runat="server" />
+
+        </div>
+
+        <user:MainFooter runat="server" />
+      </div> <!-- id="mainContent" -->
+    </div> <!-- id="container" -->
+    </div> <!-- id="outer" -->
+
+    <user:AddressEntry runat="server" />
+
+    </form>
+</body>
+</html>

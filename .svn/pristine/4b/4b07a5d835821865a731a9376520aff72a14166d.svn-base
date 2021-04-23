@@ -1,0 +1,204 @@
+﻿define(["jquery", "vote/adminMaster", "vote/util", "monitor",
+  "vote/controls/navigateJurisdiction", "vote/controls/officeControl", 
+  "vote/controls/managePoliticiansPanel", "jqueryui", "slimscroll", "dynatree"],
+  function ($, master, util, monitor, navigateJurisdiction, officeControl,
+   managePoliticiansPanel) {
+
+    var $$ = util.$$;
+    var queryOffice;
+
+    //
+    // Monitor callbacks
+    //
+
+    function afterUpdateContainer(group, args) {
+      if (!group) return;
+
+      switch (group.group) {
+        case "mc-group-addincumbents":
+          afterUpdateContainerAddIncumbents(group, args);
+          break;
+
+        case "mc-group-masteronly":
+          afterUpdateContainerMasterOnly(group, args);
+          break;
+      }
+    };
+
+    //
+    // Add Office
+    //
+
+    function onChangeOfficeClassDropdown() {
+      var $this = $(this);
+      var officeLevel = $this.val();
+      if (!officeLevel) return;
+      util.ajax({
+        url: "/Admin/WebService.asmx/GetOfficesInClass",
+        data: {
+          stateCode: $.queryString("state") || "",
+          countyCode: $.queryString("county") || "",
+          localCode: $.queryString("local") || "",
+          officeLevel: parseInt(officeLevel)
+        },
+
+        success: function (result) {
+          var offices = result.d;
+          var $list = $("#tab-addoffice .list-of-existing-offices");
+          if (offices.length === 0)
+            $list.html('<p class="no-offices">No offices for thsi office category</p>');
+          else {
+            var list = [];
+            for (var i = 0; i < offices.length; i++)
+              list.push('<p data-key="' + offices[i].Value + '">' + offices[i].Text + '</p>');
+            $list.html(list.join(""));
+          }
+          $("#tab-addoffice .step1").addClass("completed");
+          $("#tab-addoffice .step2").removeClass("hidden");
+        },
+
+        error: function (result) {
+          $this.val("");
+          $("#tab-addoffice .step2").addClass("hidden");
+          util.closeAjaxDialog();
+          util.alert(util.formatAjaxError(result,
+              "Could not get offices"));
+        }
+      });
+    }
+
+    //
+    // Add Incumbents
+    //
+
+    function afterUpdateContainerAddIncumbents() {
+      //officeControl.initSelectOfficeTree();
+    }
+
+    //
+    // Master only
+    //
+
+    var masterOnlyStartTab = "";
+
+    function afterUpdateContainerMasterOnly() {
+      var active = $("#tab-masteronly .sub-tab-index").val() || 0;
+      if (masterOnlyStartTab) {
+        active = util.getTabIndex("master-only-tabs", masterOnlyStartTab);
+        masterOnlyStartTab = "";
+        $("#tab-masteronly .sub-tab-index").val(active);
+      }
+      $("#master-only-tabs").tabs(
+      {
+        show: 400,
+        active: active,
+        beforeActivate: function(event, ui) { onTabsBeforeActivateMasterOnlySubTab(event, ui); },
+        activate: function (event, ui) {
+          // save the current tab index to restore after update
+          $("#tab-masteronly .sub-tab-index")
+            .val($("#master-only-tabs").tabs("option", "active"));
+        }
+      });
+    }
+
+    var onTabsBeforeActivateMasterOnlySubTab = function (event, ui) {
+      return monitor.tabsBeforeActivate(event, ui, "master-only-tabs",
+       "#tab-masteronly .mc-container");
+    };
+
+    //
+    // Misc
+    //
+
+    var initPage = function () {
+      monitor.registerCallback("afterUpdateContainer", afterUpdateContainer);
+      monitor.init();
+
+      util.safeBind($(".jurisdiction-change-button"), "click",
+        navigateJurisdiction.changeJurisdictionButtonClicked);
+
+      window.onbeforeunload = function () {
+        var changedGroups = monitor.getChangedGroupNames(true);
+        if (changedGroups.length > 0)
+          return "There are entries on your form that have not been submitted";
+      };
+
+      $$('main-tabs')
+        .safeBind("tabsbeforeactivate", onTabsBeforeActivate)
+        .safeBind("tabsactivate", onTabsActivate)
+        .on("change", ".add-office-office-class-dropdown", onChangeOfficeClassDropdown);
+
+      queryOffice = $.queryString("office");
+      officeControl.initControl({
+        onSelect: function (flag, node) {
+          reloadPanel($(".office-control").closest(".ui-tabs-panel")[0].id, "reloading");
+        },
+        officeKey: queryOffice
+      });
+      officeControl.initSelectOfficeTree();
+
+      managePoliticiansPanel.initControl();
+
+      var defaultTab = "tab-addoffice";
+      var tabInfo = master.parseFragment(defaultTab);
+      switch(tabInfo.tab) {
+        case "tab-addoffice":
+          // not called automatically for first tab
+          reloadPanel("tab-addoffice");
+          break;
+          
+        case "tab-masteronly":
+          masterOnlyStartTab = tabInfo.subTab;
+          break;
+      }
+//      if (tabInfo.tab === "tab-masteronly")
+//        masterOnlyStartTab = tabInfo.subTab;
+    };
+
+    var onTabsActivate = function (event, ui) {
+      var newPanelId = ui.newPanel[0].id;
+      switch (newPanelId) {
+        case "tab-changeinfo":
+        case "tab-addincumbents":
+          // if we don't have the office control, grab it
+          var $officeControl = $(".office-control");
+          var $ownerTab = $officeControl.closest(".ui-tabs-panel");
+          if (newPanelId !== $ownerTab[0].id) {
+            // need to move it
+            officeControl.toggle(false);
+            var $newTab = $$(newPanelId);
+            $(".office-control-container", $newTab).append($officeControl);
+            $(".office-heading", $newTab).html($(".office-heading", $ownerTab).html());
+          }
+          if (officeControl.getSelectedOffice()) reloadPanel(newPanelId);
+          else officeControl.toggle(true);
+          break;
+
+        default:
+          reloadPanel(newPanelId);
+          break;
+      }
+    };
+
+    var onTabsBeforeActivate = function (event, ui) {
+      return monitor.tabsBeforeActivate(event, ui, "main-tabs");
+    };
+
+    var reloadPanel = function (id, option) {
+      if (!option) option = "reloading";
+      switch (id) {
+        case "tab-addoffice":
+        case "tab-addincumbents":
+        case "tab-masteronly":
+          $$(id + ' .reloading').val(option);
+          $$(id + ' input.update-button').addClass("reloading").click();
+          break;
+      }
+    };
+
+    // I N I T I A L I Z E
+
+    master.inititializePage({
+      callback: initPage
+    });
+  });

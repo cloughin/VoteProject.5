@@ -1,0 +1,346 @@
+﻿.placeholder
+{
+  color: #a9a9a9;
+  font-style: italic;
+}
+
+.fileinputs
+{
+  height: 24px;
+  position: relative;
+}
+
+.fileinputs .masker
+{
+  background: #eee;
+  display: none;
+  position: absolute;
+  z-index: 3;
+}
+
+.fileinputs .upload-file
+{
+  -moz-opacity: 0;
+  cursor: pointer;
+  filter: alpha(opacity: 0);
+  opacity: 0;
+  position: absolute;
+  text-align: right;
+  z-index: 2;
+}
+
+.fileinputs .browse-button
+{
+  font-size: 11px;
+  left: 0;
+  padding: 2px 18px;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+}
+
+.fileinputs .file-name-container
+{
+  left: 100px;
+  position: absolute;
+  top: 1px;
+}
+
+.fileinputs .file-name-clear
+{
+  background: #fff url(/images/opsprite.png) -100px 0;
+  cursor: pointer;
+  float: left;
+  height: 20px;
+  margin: 2px 0 0 5px;
+  width: 20px;
+}
+
+.fileinputs .file-name-clear:hover
+{
+  background-position: -100px -20px;
+}
+
+.fileinputs .file-name
+{
+  background: #ffffee;
+  border: 1px solid #2554aa;
+  cursor: default;
+  float: left;
+  overflow: hidden;
+  padding: 3px 5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 760px;
+}
+
+.fileinputs .file-name.disabled
+{
+  color: #a9a9a9;
+  font-style: italic;
+}
+
+.fileinputs .tab-ast
+{
+  float: left;
+  position: relative !important;
+  left: 4px;
+  top: 5px;
+}
+
+.upload-button
+{
+  float: right;
+}
+
+.apply-button,
+.rename-button,
+.delete-button
+{
+  float: left;
+  margin-right: 10px;
+}
+
+.boxed-group
+{
+  margin-top: 25px;
+}
+
+#main-tabs .upload-boxed-group .saveas
+{
+  margin: 5px 0 0 100px;
+}
+
+#main-tabs .upload-boxed-group .saveas input
+{
+  border: 1px solid #2554aa;
+  font-size: 8pt;
+  margin: 0;
+  line-height: 15px;
+  width: 760px;
+}
+
+.upload-boxed-group .input-element.overwrite
+{
+  margin: 5px 0 0 100px;
+}
+
+.upload-boxed-group .bottom
+{
+  margin-top: 10px;
+}
+
+.upload-boxed-group .feedback
+{
+  width: 782px;
+}
+
+.download-button
+{
+  float: right;
+}
+
+.list-container table
+{
+  width: 100%
+}
+
+.list-container table thead tr
+{
+  background-color: #d8d8f9;
+}
+
+.list-container table tr.even
+{
+  background-color: #eef;
+}
+
+.list-container table tr.selected
+{
+  background-color: #00f;
+}
+
+.list-container table tr.selected td
+{
+  color: #fff;
+}
+
+.list-container table th,
+.list-container table td
+{
+  padding: 0 3px
+}
+
+.list-container table th
+{
+  color: #bf9241;
+  font-size: 8pt;
+  border-left: 1px solid #eee;
+}
+
+.list-container table th .label
+{
+  float: left;
+}
+
+.list-container table th:first-child
+{
+  border-left: none;
+}
+
+.list-container table td
+{
+  color: #334f80;
+  font-size: 8pt;
+}
+
+.uploaded-csvs
+{
+  max-height: 300px;
+  overflow-y: scroll;
+}
+
+.loaded-candidates
+{
+  max-height: 600px;
+  overflow-y: scroll;
+}
+
+#main-tabs .loaded-candidates .incomplete input
+{
+  padding: 0;
+  margin: 0;
+  font-size: 8pt;
+  width: 100%;
+  border: none;
+  background-color: #ffcccc;
+}
+
+.ballotpedia-csv-rename-dialog .inner
+{
+  margin-top: 5px;
+}
+
+.ballotpedia-csv-rename-dialog p.label
+{
+  color: #bf9241;
+  font-weight: bold;
+}
+
+.ballotpedia-csv-rename-dialog p.original
+{
+  font-size: 8pt;
+  font-family: arial;
+  padding-left: 8px;
+  margin-bottom: 10px;
+}
+
+ .ballotpedia-csv-rename-dialog p.new-name input
+{
+  width: 590px;
+}
+
+/***********************************************/
+
+/* FIREFOX                                     */
+
+/***********************************************/
+
+@-moz-document url-prefix()
+{
+  .fileinputs .browse-button
+  {
+    font-size: 11px;
+    left: 0;
+    padding: 1px 9px;
+    top: 4px;
+  }
+  .fileinputs .upload-file
+  {
+    left: -142px;
+    top: 2px;
+  }
+  .fileinputs .file-name-container
+  {
+    left: 82px;
+  }
+  .fileinputs .file-name
+  {
+    width: 778px;
+  }
+}
+
+/***********************************************/
+
+/* CHROME                                      */
+
+/***********************************************/
+
+@media
+screen and (-webkit-min-device-pixel-ratio: 0)
+{
+  .fileinputs .browse-button
+  {
+    font-size: 11px;
+    padding: 2px 18px;
+    top: 1px;
+  }
+
+  .fileinputs .upload-file
+  {
+    left: 0;
+    top: 0;
+  }
+
+  .fileinputs .masker2
+  {
+    display: block;
+    height: 26px;
+    left: 82px;
+    opacity: 0;
+    width: 190px;
+  }
+}
+
+/***********************************************/
+
+/* IE10                                        */
+
+/***********************************************/
+
+.ie10 .fileinputs .masker2
+{
+  display: block;
+  height: 26px;
+  left: -155px;
+  opacity: 0;
+  width: 155px;
+}
+
+.ie10 .fileinputs .browse-button
+{
+  padding: 1px 21px;
+  top: 5px;
+}
+
+.ie10 .fileinputs .upload-file
+{
+  left: -149px;
+  top: 4px;
+}
+
+.ie10 .fileinputs.file-name-container
+{
+  left: 94px;
+}
+
+.ie10 .fileinputs .file-name
+{
+  width: 766px;
+}
+
+.ie10 #main-tabs .upload-boxed-group .saveas input
+{
+  width: 766px;
+  padding: 4px 5px;
+}

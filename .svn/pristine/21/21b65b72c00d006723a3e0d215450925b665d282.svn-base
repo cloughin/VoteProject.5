@@ -1,0 +1,1104 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Web.UI.HtmlControls;
+
+namespace Vote.Admin
+{
+  public partial class IssuesPage : SecureAdminPage
+  {
+    internal override IEnumerable<string> NonStateCodesAllowed { get { return new[] { "LL", "US" }; } }
+
+    private void MakeAllControlsNotVisible()
+    {
+      Table_Issue_Edit.Visible = false;
+      Table_Issue_Add.Visible = false;
+
+      Table_Question_Edit.Visible = false;
+      Table_Question_Add.Visible = false;
+      Table_Question.Visible = false;
+      Table_Questions_Report.Visible = false;
+
+      Table_Delete_Question.Visible = false;
+      Table_Delete_Issue.Visible = false;
+    }
+
+    // general methods
+    private int QuestionsCount(string issueKey)
+    {
+      return db.Rows_Count_From("Questions WHERE IssueKey = "
+        + db.SQLLit(issueKey));
+    }
+
+    private int AnswersCount(string questionKey)
+    {
+      return db.Rows_Count_From("Answers WHERE QuestionKey = "
+        + db.SQLLit(questionKey));
+    }
+
+    private string GetIssueLevelInIssueKey(string issueKey)
+    {
+      return !string.IsNullOrEmpty(issueKey) ? issueKey.Substring(0, 1) : string.Empty;
+    }
+
+    private string MakeIssueKey(
+      string countyCode
+      , string localCode
+      , string issue
+      )
+    {
+      //IssueKey is also the first part of the QuestionsKey.
+      var issueLevel = string.Empty;
+      switch (ViewState["StateCode"].ToString().ToUpper())
+      {
+        case "LL":
+          issueLevel += "A";
+          break;
+        case "US":
+          issueLevel += "B";
+          break;
+        default:
+          if (!string.IsNullOrEmpty(localCode))
+            issueLevel += "E";
+          else if (!string.IsNullOrEmpty(countyCode))
+            issueLevel += "D";
+          else if (!string.IsNullOrEmpty(ViewState["StateCode"].ToString()))
+            issueLevel += "C";
+          else
+            throw new ApplicationException("IssueLevel invalid in Issue_Key");
+          break;
+      }
+
+      var issueKey = issueLevel
+                    + ViewState["StateCode"]
+                    + issue;
+      issueKey = db.Str_Remove_Non_Key_Chars(issueKey);
+
+      return issueKey;
+    }
+
+    // Checks
+    protected void CheckTextboxesForBadContent()
+    {
+      //Issues
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Issue_Description);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Issue_Order);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Issue_Description_Add);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Issue_Order_Add);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Delete_IssueKey);
+      //Questions
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Question_Description);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Question_Order);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Question_Description_Add);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Question_Order_Add);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Delete_QuestionKey);
+    }
+
+    // Issues Report
+
+    private void HeadingIssuesReport(ref HtmlTable htmlTableIssues)
+    {
+      //<tr Class="trReportDetailHeading">
+      var htmlTrHeading = db.Add_Tr_To_Table_Return_Tr(
+        htmlTableIssues
+        , "trReportDetailHeading"
+        );
+      //<td Class="tdReportDetailHeading" align="center">
+      db.Add_Td_To_Tr(
+        htmlTrHeading
+        , "Order"
+        , "tdReportDetailHeading"
+        );
+      //<td Class="tdReportDetailHeading" align="center">
+      db.Add_Td_To_Tr(
+        htmlTrHeading
+        , "Issue"
+        , "tdReportDetailHeading"
+        );
+      //<td Class="tdReportDetailHeading" align="center">
+      db.Add_Td_To_Tr(
+        htmlTrHeading
+        , "Omit"
+        , "tdReportDetailHeading"
+        );
+      //<td Class="tdReportDetailHeading" align="center">
+      db.Add_Td_To_Tr(
+        htmlTrHeading
+        , "IssueKey"
+        , "tdReportDetailHeading"
+        );
+      //<td Class="tdReportDetailHeading" align="center">
+      db.Add_Td_To_Tr(
+        htmlTrHeading
+        , "Questions"
+        , "tdReportDetailHeading"
+        );
+    }
+
+    private void CreateIssuesReportRow(ref HtmlTable htmlTableIssues, DataRow rowIssue)
+    {
+      //<tr Class="trReportDetail">
+      var htmlTrIssue = db.Add_Tr_To_Table_Return_Tr(
+        htmlTableIssues
+        , "trReportDetail"
+        );
+
+      //Order
+      db.Add_Td_To_Tr(
+        htmlTrIssue
+        , rowIssue["IssueOrder"].ToString()
+        , "tdReportDetail"
+        );
+      //Issue
+      db.Add_Td_To_Tr(
+        htmlTrIssue
+        , db.Anchor_Admin_Issues(
+            ViewState["StateCode"].ToString()
+            , rowIssue["IssueKey"].ToString()
+            , rowIssue["Issue"].ToString()
+            )
+        , "tdReportDetail"
+        );
+      //Omit
+      string omitAnchor;
+      //if (db.Issues_Bool(Row_Issue["IssueKey"].ToString(), "IsIssueOmit"))
+      if (db.Is_Issue_Omit(rowIssue["IssueKey"].ToString()))
+      {
+        //anchor to reinstate
+        omitAnchor = db.Anchor_Admin_Issues_Omit(
+          ViewState["StateCode"].ToString()
+        , rowIssue["IssueKey"].ToString()
+        , "<strong>OMIT</strong>"
+        , false
+        );
+      }
+      else
+      {
+        //anchor to omit
+        omitAnchor = db.Anchor_Admin_Issues_Omit(
+          ViewState["StateCode"].ToString()
+        , rowIssue["IssueKey"].ToString()
+        , "ok"
+        , true
+        );
+      }
+      db.Add_Td_To_Tr(
+        htmlTrIssue
+        , omitAnchor
+        , "tdReportDetail"
+        );
+
+      // IssueKey
+      db.Add_Td_To_Tr(
+        htmlTrIssue
+        , rowIssue["IssueKey"].ToString()
+        , "tdReportDetail"
+        );
+
+      // Questions
+      db.Add_Td_To_Tr(
+        htmlTrIssue
+        , QuestionsCount(rowIssue["IssueKey"].ToString()).ToString(CultureInfo.InvariantCulture)
+        , "tdReportDetail"
+        );
+    }
+
+    private void CreateIssuesReport()
+    {
+      var htmlTableIssues = new HtmlTable();
+      htmlTableIssues.Attributes["cellspacing"] = "0";
+      htmlTableIssues.Attributes["border"] = "0";
+
+      // Issues
+      HeadingIssuesReport(ref htmlTableIssues);
+      var sql = string.Empty;
+      sql += "SELECT * FROM Issues ";
+      sql += " WHERE StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+      sql += " ORDER BY IsIssueOmit ASC,IssueOrder";
+      var tableIssues = db.Table(sql);
+      foreach (DataRow rowIssue in tableIssues.Rows)
+        CreateIssuesReportRow(ref htmlTableIssues, rowIssue);
+
+      //return db.RenderToString(HTML_Table_Issues);
+      Label_Issues_Report.Text = db.RenderToString(htmlTableIssues);
+    }
+
+    // Questions Report
+
+    private void CreateQuestionsReportHeading(HtmlTable htmlTableQuestions)
+    {
+      //<tr Class="trReportDetailHeading">
+      var htmlTrHeading = db.Add_Tr_To_Table_Return_Tr(
+        htmlTableQuestions
+        , "trReportDetailHeading"
+        );
+      //<td Class="tdReportDetailHeading" align="center">
+      db.Add_Td_To_Tr(
+        htmlTrHeading
+        , "Order"
+        , "tdReportDetailHeading"
+        );
+      //<td Class="tdReportDetailHeading" align="center">
+      db.Add_Td_To_Tr(
+        htmlTrHeading
+        , "Question"
+        , "tdReportDetailHeading"
+        );
+      //<td Class="tdReportDetailHeading" align="center">
+      db.Add_Td_To_Tr(
+        htmlTrHeading
+        , "Omit"
+        , "tdReportDetailHeading"
+        );
+      //<td Class="tdReportDetailHeading" align="center">
+      db.Add_Td_To_Tr(
+        htmlTrHeading
+        , "QuestionKey"
+        , "tdReportDetailHeading"
+        );
+      //<td Class="tdReportDetailHeading" align="center">
+      db.Add_Td_To_Tr(
+        htmlTrHeading
+        , "Answers"
+        , "tdReportDetailHeading"
+        );
+    }
+
+    private void CreateQuestionsReportRow(ref HtmlTable htmlTableQuestions, DataRow rowQuestion)
+    {
+      //<tr Class="trReportDetail">
+      var htmlTrQuestion = db.Add_Tr_To_Table_Return_Tr(
+        htmlTableQuestions, "trReportDetail");
+
+      //Order
+      db.Add_Td_To_Tr(htmlTrQuestion, 
+        rowQuestion["QuestionOrder"].ToString(), "tdReportDetail");
+      //Question
+      db.Add_Td_To_Tr(
+        htmlTrQuestion
+        , db.Anchor_Admin_Issues_Question(
+            ViewState["StateCode"].ToString()
+            , rowQuestion["IssueKey"].ToString()
+            , rowQuestion["QuestionKey"].ToString()
+            , rowQuestion["Question"].ToString()
+            )
+        , "tdReportDetail"
+        );
+      //Omit
+      string omitAnchor;
+      if (db.Is_Question_Omit(
+            rowQuestion["QuestionKey"].ToString())
+          )
+      {
+        //anchor to reinstate
+        omitAnchor = db.Anchor_Admin_Question_Issues_Omit(
+          ViewState["StateCode"].ToString()
+        , rowQuestion["IssueKey"].ToString()
+        , rowQuestion["QuestionKey"].ToString()
+        , "<strong>OMIT</strong>"
+        , false
+        );
+      }
+      else
+      {
+        //anchor to omit
+        omitAnchor = db.Anchor_Admin_Question_Issues_Omit(
+          ViewState["StateCode"].ToString()
+        , rowQuestion["IssueKey"].ToString()
+        , rowQuestion["QuestionKey"].ToString()
+        , "ok"
+        , true
+        );
+      }
+      db.Add_Td_To_Tr(
+        htmlTrQuestion
+        , omitAnchor
+        , "tdReportDetail"
+        );
+
+      // QuestionKey
+      db.Add_Td_To_Tr(
+        htmlTrQuestion
+        , rowQuestion["QuestionKey"].ToString()
+        , "tdReportDetail"
+        );
+
+      // Answers
+      db.Add_Td_To_Tr(
+        htmlTrQuestion
+        , AnswersCount(rowQuestion["QuestionKey"].ToString()).ToString(CultureInfo.InvariantCulture)
+        , "tdReportDetail"
+        );
+    }
+
+    private void CreateQuestionsReport()
+    {
+      var htmlTableQuestions = new HtmlTable();
+      htmlTableQuestions.Attributes["cellspacing"] = "0";
+      htmlTableQuestions.Attributes["border"] = "0";
+
+      // Questions
+      CreateQuestionsReportHeading(htmlTableQuestions);
+      var sql = string.Empty;
+      sql += "SELECT * FROM Questions ";
+      sql += " WHERE IssueKey = " + db.SQLLit(ViewState["IssueKey"].ToString());
+      sql += " ORDER BY IsQuestionOmit ASC,QuestionOrder";
+      var tableQuestions = db.Table(sql);
+      foreach (DataRow rowIssue in tableQuestions.Rows)
+        CreateQuestionsReportRow(ref htmlTableQuestions, rowIssue);
+
+      LabelQuestionsReport.Text = db.RenderToString(htmlTableQuestions);
+    }
+
+    protected void RenumberIssues()
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " IssueKey ";
+      sql += ",IssueOrder ";
+      sql += " FROM Issues ";
+      sql += " WHERE StateCode = "
+        + db.SQLLit(ViewState["StateCode"].ToString());
+      sql += " ORDER BY IssueOrder";
+      var tableIssues = db.Table(sql);
+      var count = 10;
+      foreach (DataRow rowIssue in tableIssues.Rows)
+      {
+        db.Issues_Update_IssueOrder(
+          rowIssue["IssueKey"].ToString()
+        , count
+        );
+        count += 10;
+      }
+    }
+
+    protected void RenumberQuestions()
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " QuestionKey ";
+      sql += ",QuestionOrder ";
+      sql += " FROM Questions ";
+      sql += " WHERE IssueKey = "
+        + db.SQLLit(ViewState["IssueKey"].ToString());
+      sql += " ORDER BY QuestionOrder";
+      var tableQuestions = db.Table(sql);
+      var count = 10;
+      foreach (DataRow rowQuestion in tableQuestions.Rows)
+      {
+        db.Questions_Update_QuestionOrder(
+          rowQuestion["QuestionKey"].ToString()
+        , count
+        );
+        count += 10;
+      }
+    }
+
+    // Buttons
+    //Issues
+    protected void ButtonAddIssue_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        CheckTextboxesForBadContent();
+
+        if (!Table_Issue_Add.Visible)
+        {
+          // 1st Step in Adding an Issue
+
+          //Only Add Issue Table Visible
+          Table_Issue_Add.Visible = true;
+          Table_Issue_Edit.Visible = false;
+
+          TextBox_Issue_Description_Add.Text = string.Empty;
+          TextBox_Issue_Order_Add.Text = string.Empty;
+
+          Msg.Text = db.Msg("To complete the add, enter the issue description and optional order."
+            + " Then click the 'Add an Issue' Button.");
+        }
+        else
+        {
+          // 2nd Step - Complete the Issue Addition
+
+          // Checks
+          if (TextBox_Issue_Description_Add.Text.Trim() == string.Empty)
+            throw new ApplicationException("The Description Textbox is empty.");
+          if (
+            (!string.IsNullOrEmpty(TextBox_Issue_Order_Add.Text.Trim()))
+            && (!db.Is_Valid_Integer(TextBox_Issue_Order_Add.Text.Trim()))
+            )
+            throw new ApplicationException("The Order Textbox needs to be an integer.");
+          if (TextBox_Issue_Description_Add.Text.Trim().Length > 40)
+          {
+            var tooLongBy = TextBox_Issue_Description_Add.Text.Trim().Length - 40;
+            throw new ApplicationException("When adding a new issue,"
+              + " the Issue description must be 40 characters or less."
+              + " You need to shorten by "
+              + tooLongBy + " characters");
+          }
+
+
+          // Make IssueKey and check its unique
+          var issueKey = MakeIssueKey(
+            string.Empty// CountyCode
+            , string.Empty// LocalCode
+            , db.Str_ReCase(TextBox_Issue_Description_Add.Text)// Issue
+            );
+
+          //SQL = string.Empty;
+          //SQL += " SELECT ";
+          //SQL += " IssueKey ";
+          //SQL += " FROM Issues ";
+          //SQL += " WHERE IssueKey = " + db.SQLLit(ViewState["IssueKey"].ToString());
+
+
+          //if (db.Row_Optional(SQL) != null)
+          if (db.Is_Valid_Issue(issueKey))
+            throw new ApplicationException("Issue (" + TextBox_Issue_Description_Add.Text + ") already exists");
+          ViewState["IssueKey"] = issueKey;
+
+          // Issue Order
+          var issueOrder = TextBox_Issue_Order_Add.Text.Trim() != string.Empty ? Convert.ToInt16(TextBox_Issue_Order_Add.Text.Trim()) : 1;
+
+          // Add the Issue
+          var insertSql = "INSERT INTO Issues"
+            + "("
+            + "IssueKey"
+            + ",IssueOrder"
+            + ",Issue"
+            + ",IssueLevel"
+            + ",StateCode"
+            + ",CountyCode"
+            + ",LocalCode"
+            + ",IsIssueOmit"
+            + " )"
+            + " VALUES"
+            + "("
+            + db.SQLLit(ViewState["IssueKey"].ToString())
+            + "," + issueOrder
+            + "," + db.SQLLit(TextBox_Issue_Description_Add.Text.Trim())
+            + "," + db.SQLLit(GetIssueLevelInIssueKey(ViewState["IssueKey"].ToString()))
+            + "," + db.SQLLit(ViewState["StateCode"].ToString())
+            + "," + db.SQLLit(ViewState["CountyCode"].ToString())
+            + "," + db.SQLLit(ViewState["LocalCode"].ToString())
+            + ",0" 
+            + ")";
+          db.ExecuteSQL(insertSql);
+
+          //TextBox_Issue_Description_Add.Text = string.Empty;
+          //TextBox_Issue_Order_Add.Text = string.Empty;
+
+          RenumberIssues();
+
+          CreateIssuesReport();
+
+          //  Edit Issue Table and load
+          Table_Issue_Add.Visible = false;
+          Table_Issue_Edit.Visible = true;
+          TextBox_Issue_Description.Text =
+            db.Issue_Desc(ViewState["IssueKey"].ToString());
+          TextBox_Issue_Order.Text =
+            db.Issues_IssueOrder(ViewState["IssueKey"].ToString()).ToString(CultureInfo.InvariantCulture);
+
+          Msg.Text = db.Ok("The issue has been added and is in the report below.");
+        }
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void ButtonDeleteIssue_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        // checks
+        CheckTextboxesForBadContent();
+
+        if (!db.Is_Valid_Issue(TextBox_Delete_IssueKey.Text.Trim()))
+          throw new ApplicationException("The IssueKey is not valid.");
+
+        if (QuestionsCount(TextBox_Delete_IssueKey.Text.Trim()) > 0)
+          throw new ApplicationException("There are "
+            + QuestionsCount(TextBox_Delete_IssueKey.Text.Trim())
+            + " questions. These need to be reassigned beore this issue can be deleted.");
+
+        if (AnswersCount(TextBox_Delete_QuestionKey.Text.Trim()) > 0)
+          throw new ApplicationException("There are "
+            + AnswersCount(TextBox_Delete_QuestionKey.Text.Trim())
+            + " answers. These need to be reassigned or deleted before this question can be deleted.");
+
+        var sql = "DELETE FROM Issues WHERE IssueKey = "
+          + db.SQLLit(TextBox_Delete_IssueKey.Text.Trim());
+        db.ExecuteSQL(sql);
+
+        TextBox_Delete_IssueKey.Text = string.Empty;
+
+        RenumberIssues();
+
+        CreateIssuesReport();
+
+        // Reset Tables Not Visible
+        Table_Question_Edit.Visible = false;
+        Table_Question_Add.Visible = false;
+        Table_Question.Visible = false;
+        Table_Delete_Question.Visible = false;
+        Table_Questions_Report.Visible = false;
+
+
+        Table_Issue_Edit.Visible = false;
+        Table_Issue_Add.Visible = false;
+
+        Msg.Text = db.Ok("The issue has been deleted.");
+
+        //db.Cache_Remove_Issue_Pages(TextBox_Delete_IssueKey.Text.Trim());
+        //db.Cache_Remove_PoliticianIssue_Issue(TextBox_Delete_IssueKey.Text.Trim());
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    //Questions
+
+    protected void ButtonAddQuestion_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        CheckTextboxesForBadContent();
+
+        if (!Table_Question_Add.Visible)
+        {
+          // 1st Step in Adding an Question
+
+          //Only Add Question Table Visible
+          Table_Question_Add.Visible = true;
+          Table_Question_Edit.Visible = false;
+
+          TextBox_Question_Description_Add.Text = string.Empty;
+          TextBox_Question_Order_Add.Text = string.Empty;
+
+          Msg.Text = db.Msg("To complete the add, enter the question and optional order."
+            + " Then click the 'Add a Question' Button.");
+        }
+        else
+        {
+          // 2nd Step - Complete the Question Addition
+
+          // Checks
+          if (TextBox_Question_Description_Add.Text.Trim() == string.Empty)
+            throw new ApplicationException("The Question Textbox is empty.");
+          if (
+            (!string.IsNullOrEmpty(TextBox_Question_Order_Add.Text.Trim()))
+            && (!db.Is_Valid_Integer(TextBox_Question_Order_Add.Text.Trim()))
+            )
+            throw new ApplicationException("The Order Textbox needs to be an integer.");
+          if (TextBox_Question_Description_Add.Text.Trim().Length > 80)
+          {
+            var tooLongBy = TextBox_Question_Description_Add.Text.Trim().Length - 80;
+            throw new ApplicationException("The question must be 80 characters or less."
+              + " You need to shorten by "
+              + tooLongBy + " characters");
+          }
+
+
+          // Make QuestionKey and check its unique
+          var questionKey =
+            ViewState["IssueKey"]
+              + db.MakeUnique6Digits();
+
+          if (db.Is_Valid_Question(questionKey))
+            throw new ApplicationException(
+              "Question (" + TextBox_Question_Description_Add.Text + ") already exists");
+          ViewState["QuestionKey"] = questionKey;
+
+          // Question Order
+          var questionOrder = TextBox_Question_Order_Add.Text.Trim() != string.Empty 
+            ? Convert.ToInt16(TextBox_Question_Order_Add.Text.Trim()) 
+            : 1;
+
+          // Add the Question
+          var insertSql = "INSERT INTO Questions"
+            + "("
+            + "QuestionKey"
+            + ",IssueKey"
+            + ",QuestionOrder"
+            + ",Question"
+            + " )"
+            + " VALUES"
+            + "("
+            + db.SQLLit(ViewState["QuestionKey"].ToString())
+            + "," + db.SQLLit(ViewState["IssueKey"].ToString())
+            + "," + questionOrder
+            + "," + db.SQLLit(TextBox_Question_Description_Add.Text.Trim())
+            + ")";
+          db.ExecuteSQL(insertSql);
+
+          RenumberQuestions();
+
+          CreateQuestionsReport();
+
+          // Edit Question Table Visible and load
+          Table_Question_Add.Visible = false;
+          Table_Question_Edit.Visible = true;
+          TextBox_Question_Description.Text =
+            db.Questions_Question(ViewState["QuestionKey"].ToString());
+          TextBox_Question_Order.Text =
+            db.Questions_QuestionOrder(ViewState["QuestionKey"].ToString()).ToString(CultureInfo.InvariantCulture);
+
+          Msg.Text = db.Ok("The question has been added and is in the report below.");
+
+          //db.Cache_Remove_Issue_Pages(ViewState["IssueKey"].ToString());
+          //db.Cache_Remove_PoliticianIssue_Issue(ViewState["IssueKey"].ToString());
+
+        }
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void ButtonDeleteQuestion_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        // checks
+        CheckTextboxesForBadContent();
+
+        if (!db.Is_Valid_Question(TextBox_Delete_QuestionKey.Text.Trim()))
+          throw new ApplicationException("The QuestionKey is not valid.");
+
+        if (AnswersCount(TextBox_Delete_QuestionKey.Text.Trim()) > 0)
+          throw new ApplicationException("There are "
+            + AnswersCount(TextBox_Delete_QuestionKey.Text.Trim())
+            + " answers. These need to be reassigned or deleted before this question can be deleted.");
+
+        // Msg needs to come before question is deleted
+        Msg.Text = db.Ok("The question ("
+          + db.Questions_Str(TextBox_Delete_QuestionKey.Text.Trim(), "Question")
+        + ") has been deleted.");
+
+        var sql = "DELETE FROM Questions WHERE QuestionKey = "
+          + db.SQLLit(TextBox_Delete_QuestionKey.Text.Trim());
+        db.ExecuteSQL(sql);
+
+        RenumberQuestions();
+
+        CreateQuestionsReport();
+
+        // Reset Tables Not Visible
+        if (QuestionsCount(ViewState["IssueKey"].ToString()) == 0)
+        {
+          Table_Question_Edit.Visible = false;
+          Table_Question_Add.Visible = false;
+          Table_Question.Visible = false;
+          Table_Delete_Question.Visible = false;
+          Table_Questions_Report.Visible = false;
+        }
+
+        TextBox_Delete_QuestionKey.Text = string.Empty;
+
+        //db.Cache_Remove_Issue_Pages(ViewState["IssueKey"].ToString());
+        //db.Cache_Remove_PoliticianIssue_Issue(ViewState["IssueKey"].ToString());
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void ButtonDeleteAnswers_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        // checks
+        CheckTextboxesForBadContent();
+
+        if (!db.Is_Valid_Question(TextBox_Delete_QuestionKey.Text.Trim()))
+          throw new ApplicationException("The QuestionKey is not valid.");
+
+        var sql = "DELETE FROM Answers WHERE QuestionKey = "
+          + db.SQLLit(TextBox_Delete_QuestionKey.Text.Trim());
+        db.ExecuteSQL(sql);
+
+        RenumberQuestions();
+
+        CreateQuestionsReport();
+
+        // Reset Tables Not Visible
+        if (QuestionsCount(ViewState["IssueKey"].ToString()) == 0)
+        {
+          Table_Question_Edit.Visible = false;
+          Table_Question_Add.Visible = false;
+          Table_Question.Visible = false;
+          Table_Delete_Question.Visible = false;
+          Table_Questions_Report.Visible = false;
+        }
+
+        Msg.Text = db.Ok("All the ANSWERES to question ("
+          + db.Questions_Str(TextBox_Delete_QuestionKey.Text.Trim(), "Question")
+        + ") have been deleted.");
+
+        //db.Cache_Remove_Issue_Pages(ViewState["IssueKey"].ToString());
+        //db.Cache_Remove_PoliticianIssue_Issue(ViewState["IssueKey"].ToString());
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void ButtonDeleteAllQuestions_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        CheckTextboxesForBadContent();
+
+        var sql = "SELECT * FROM Questions WHERE IssueKey="
+                     + db.SQLLit(ViewState["IssueKey"].ToString())
+                     + " ORDER BY QuestionOrder";
+        var tableQuestions = db.Table(sql);
+        foreach (DataRow rowQuestion in tableQuestions.Rows)
+        {
+          var answersInt = AnswersCount(rowQuestion["QuestionKey"].ToString());
+          if (answersInt == 0)
+          {
+            sql = "DELETE FROM Questions WHERE QuestionKey = "
+             + db.SQLLit(rowQuestion["QuestionKey"].ToString());
+            db.ExecuteSQL(sql);
+          }
+        }
+
+        RenumberQuestions();
+
+        CreateQuestionsReport();
+
+        // Reset Tables Not Visible
+        if (QuestionsCount(ViewState["IssueKey"].ToString()) == 0)
+        {
+          Table_Question_Edit.Visible = false;
+          Table_Question_Add.Visible = false;
+          Table_Question.Visible = false;
+          Table_Delete_Question.Visible = false;
+          Table_Questions_Report.Visible = false;
+        }
+
+        Msg.Text = db.Ok("The questions with no answers have been deleted.");
+
+        //db.Cache_Remove_Issue_Pages(db.Questions_IssueKey(TextBox_Delete_QuestionKey.Text.Trim()));
+        //db.Cache_Remove_PoliticianIssue_Issue(db.Questions_IssueKey(TextBox_Delete_QuestionKey.Text.Trim()));
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    // Textboxes
+    //Issues
+    protected void TextBoxIssueDescription_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        // checks
+        CheckTextboxesForBadContent();
+
+        if (TextBox_Issue_Description.Text.Trim() == string.Empty)
+          throw new ApplicationException("The Issue Description Textbox is empty.");
+
+        if (TextBox_Issue_Description.Text.Trim().Length > 40)
+        {
+          var tooLongBy = TextBox_Issue_Description.Text.Trim().Length - 40;
+          throw new ApplicationException("The Issue description must be 40 characters or less."
+            + " You need to shorten by "
+            + tooLongBy + " characters");
+        }
+
+        db.Issues_Update_Issue(
+          ViewState["IssueKey"].ToString()
+          , TextBox_Issue_Description.Text.Trim()
+          );
+
+        Table_Issue_Edit.Visible = false;
+
+        CreateIssuesReport();
+
+        Msg.Text = db.Ok("The issue description has been updated");
+
+        //db.Cache_Remove_Issue_Pages(ViewState["IssueKey"].ToString());
+        //db.Cache_Remove_PoliticianIssue_Issue(ViewState["IssueKey"].ToString());
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void TextBoxIssueOrder_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        // Checks
+        CheckTextboxesForBadContent();
+
+        if (TextBox_Issue_Order.Text.Trim() == string.Empty)
+          throw new ApplicationException("The Order Textbox can not be empty.");
+
+        if (!db.Is_Valid_Integer(TextBox_Issue_Order.Text.Trim()))
+          throw new ApplicationException("The Order Textbox needs to be an integer.");
+
+        db.Issues_Update_IssueOrder(ViewState["IssueKey"].ToString(), 
+          string.IsNullOrEmpty(TextBox_Issue_Order.Text.Trim()) 
+            ? 1  
+            : Convert.ToInt16(TextBox_Issue_Order.Text.Trim()));
+
+        Table_Issue_Edit.Visible = false;
+
+        RenumberIssues();
+
+        CreateIssuesReport();
+
+        Msg.Text = db.Ok("The issue order has been updated");
+
+        //db.Cache_Remove_Issue_Pages(ViewState["IssueKey"].ToString());
+        //db.Cache_Remove_PoliticianIssue_Issue(ViewState["IssueKey"].ToString());
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    //Questions
+    protected void TextBoxQuestionDescription_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        // checks
+        CheckTextboxesForBadContent();
+
+        if (TextBox_Question_Description.Text.Trim() == string.Empty)
+          throw new ApplicationException("The Question Textbox is empty.");
+
+        db.Questions_Update_Question(
+          ViewState["QuestionKey"].ToString()
+          , TextBox_Question_Description.Text.Trim()
+          );
+
+        Table_Question_Edit.Visible = false;
+
+        CreateQuestionsReport();
+
+        Msg.Text = db.Ok("The question has been updated");
+
+        //db.Cache_Remove_Issue_Pages(ViewState["IssueKey"].ToString());
+        //db.Cache_Remove_PoliticianIssue_Issue(ViewState["IssueKey"].ToString());
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void TextBoxQuestionOrder_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        // Checks
+        CheckTextboxesForBadContent();
+
+        if (TextBox_Question_Order.Text.Trim() == string.Empty)
+          throw new ApplicationException("The Order Textbox can not be empty.");
+
+        if (!db.Is_Valid_Integer(TextBox_Question_Order.Text.Trim()))
+          throw new ApplicationException("The Order Textbox needs to be an integer.");
+
+        db.Questions_Update_QuestionOrder(
+          ViewState["QuestionKey"].ToString()
+          , Convert.ToInt16(TextBox_Question_Order.Text.Trim())
+          );
+
+        Table_Question_Edit.Visible = false;
+
+        RenumberQuestions();
+
+        CreateQuestionsReport();
+
+        Msg.Text = db.Ok("The question order has been updated");
+
+        //db.Cache_Remove_Issue_Pages(ViewState["IssueKey"].ToString());
+        //db.Cache_Remove_PoliticianIssue_Issue(ViewState["IssueKey"].ToString());
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        Page.Title = "Issues";
+        // Security Check and Values for ViewState["StateCode"] ViewState["CountyCode"] ViewState["LocalCode"]
+
+        ViewState["StateCode"] = db.State_Code();
+        ViewState["CountyCode"] = db.County_Code();
+        ViewState["LocalCode"] = db.Local_Code();
+        if (!db.Is_User_Security_Ok())
+          HandleSecurityException();
+
+        // ViewState["IssueKey"] ViewState["QuestionKey"]
+
+        ViewState["IssueKey"] = string.Empty;
+        if (!string.IsNullOrEmpty(QueryIssue))
+          ViewState["IssueKey"] = QueryIssue;
+
+        ViewState["QuestionKey"] = string.Empty;
+        if (!string.IsNullOrEmpty(QueryQuestion))
+          ViewState["QuestionKey"] = QueryQuestion;
+
+        try
+        {
+          // Page Title
+          PageTitle.Text = "Issues and Questions";
+
+          if (ViewState["StateCode"].ToString() == "LL")
+            PageTitle.Text += "<br>" + "All Candidates";
+          else if (ViewState["StateCode"].ToString() == "US")
+            PageTitle.Text += "<br>" + "National Candidates";
+          else
+            PageTitle.Text += "<br>" + StateCache.GetStateName(ViewState["StateCode"].ToString())
+              + " Candidates";
+
+          if (!string.IsNullOrEmpty(ViewState["IssueKey"].ToString()))
+          {
+            PageTitle.Text += "<br>"
+              + "<span style=color:red>"
+              + db.Issue_Desc(ViewState["IssueKey"].ToString())
+              + "</span>";
+
+          }
+
+          //On initial entry there is only a StateCode Anchor
+          //Anchors on Issues and Questions Reports have 4 possible query string prameters:
+          //Issue Link => db.QueryString("Issue")
+          //Issue Ok/Omit Link => db.QueryString("Issue") & db.QueryString("Omit")
+          //Question Link => db.QueryString("Issue") & db.QueryString("Question")
+          //Question Ok/Omit Link => db.QueryString("Issue") & db.QueryString("Question") & db.QueryString("Omit")
+
+          if (string.IsNullOrEmpty(QueryIssue))
+          {
+            MakeAllControlsNotVisible();
+          }
+          else
+          {
+            // Entry from Link on Issues or Question Reports
+            if (
+              (string.IsNullOrEmpty(QueryQuestion))
+              && (string.IsNullOrEmpty(GetQueryString("Omit")))
+              )
+            {
+              // Issue Link to edit issue and/or issue questions
+              MakeAllControlsNotVisible();
+              Table_Issue_Edit.Visible = true;
+              Table_Question.Visible = true;
+              Table_Questions_Report.Visible = true;
+
+              TextBox_Issue_Description.Text =
+                db.Issue_Desc(QueryIssue);
+              TextBox_Issue_Order.Text =
+                db.Issues_IssueOrder(QueryIssue).ToString(CultureInfo.InvariantCulture);
+              ViewState["IssueKey"] = QueryIssue;
+
+              CreateQuestionsReport();
+            }
+            else if (
+              (string.IsNullOrEmpty(QueryQuestion))
+              && (!string.IsNullOrEmpty(GetQueryString("Omit")))
+              )
+            {
+              // Issue Ok/Omit Link to change status to ok or omit
+
+              MakeAllControlsNotVisible();
+
+              db.Issues_Update_IsIssueOmit(QueryIssue, GetQueryString("Omit") == "true");
+            }
+            else if (!string.IsNullOrEmpty(QueryQuestion) && string.IsNullOrEmpty(GetQueryString("Omit")))
+            {
+              // Question Link to edit question
+
+              MakeAllControlsNotVisible();
+              Table_Question_Edit.Visible = true;
+              Table_Question.Visible = true;
+              Table_Questions_Report.Visible = true;
+
+              TextBox_Question_Description.Text =
+                db.Questions_Question(ViewState["QuestionKey"].ToString());
+              TextBox_Question_Order.Text =
+                db.Questions_QuestionOrder(ViewState["QuestionKey"].ToString()).ToString(CultureInfo.InvariantCulture);
+
+              RenumberQuestions();
+
+              CreateQuestionsReport();
+            }
+            else if (
+              (!string.IsNullOrEmpty(QueryQuestion))
+              && (!string.IsNullOrEmpty(GetQueryString("Omit")))
+              )
+            {
+              // Question Ok/Omit Link to change status to ok or omit
+
+              MakeAllControlsNotVisible();
+              Table_Question.Visible = true;
+              Table_Questions_Report.Visible = true;
+
+              db.Questions_Update_IsQuestionOmit(QueryQuestion, GetQueryString("Omit") == "true");
+
+              RenumberQuestions();
+ 
+              CreateQuestionsReport();
+            }
+          }
+
+          RenumberIssues();
+
+          CreateIssuesReport();
+
+          // Only Master controls
+          if (IsSuperUser)
+          {
+            Table_Delete_Issue.Visible = true;
+
+            if (
+              (!string.IsNullOrEmpty(QueryIssue))
+              && (string.IsNullOrEmpty(GetQueryString("Omit")))
+              )
+              Table_Delete_Question.Visible = true;
+          }
+        }
+        catch (Exception ex)
+        {
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+        }
+      }
+    }
+
+
+  }
+}

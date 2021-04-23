@@ -1,0 +1,74 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Master.master.cs" Inherits="PatchTest.Master" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title></title>
+    <asp:ContentPlaceHolder ID="MasterHeadTopContent" runat="server">
+    </asp:ContentPlaceHolder>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+  <style>
+    body
+    {
+      margin: 0;
+    }
+    .dummy-header
+    {
+      text-align: center;
+      font-size: 5vw;
+      padding: 20px 0;
+      background-color: #666;
+      color: white;
+    }
+    .dummy-content
+    {
+      font-size: 16px;
+      padding: 20px;
+      background-color: #ddd;
+    }
+    .dummy-title
+    {
+      background-color: #eee;
+      margin: 0;
+      padding: .67em 0;
+    }
+  </style>
+  <asp:ContentPlaceHolder ID="MasterHeadBottomContent" runat="server">
+  </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+      <div class="dummy-header">
+        Patch Header
+      </div>
+      <div class="dummy-content">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vitae tempus massa. Proin eleifend, leo eget pulvinar fermentum, nisi nisl congue lectus, eu tincidunt lorem ipsum eu eros. Aliquam erat volutpat. Donec vehicula enim eu est interdum egestas. Etiam dignissim lorem dignissim elit vehicula euismod euismod vel nisl. Aenean bibendum a risus nec rutrum. Aliquam elementum lectus in mollis vulputate. Pellentesque malesuada tortor nec lorem efficitur viverra. In eleifend elementum felis pulvinar dictum. Curabitur turpis ex, auctor ultricies turpis et, ullamcorper consectetur ligula. Aenean orci tortor, luctus eu erat eu, fermentum aliquam nunc. Sed commodo facilisis neque, sed accumsan turpis finibus et.
+        </p>
+        <p>
+          Vestibulum elementum justo nec velit faucibus, a feugiat magna tincidunt. Donec euismod nisl massa, at ultrices purus malesuada nec. In id erat tincidunt, lobortis tortor a, egestas elit. Nam orci mi, ullamcorper et fringilla et, convallis mollis ligula. Duis sollicitudin sem eu tempus lacinia. Fusce sit amet laoreet massa. Nunc tincidunt sagittis quam eget imperdiet. In consectetur enim vitae turpis sagittis mattis.
+        </p>
+      </div>
+      <div class="container body-content">
+        <asp:ContentPlaceHolder ID="MainContent" runat="server">
+        </asp:ContentPlaceHolder>
+      </div>
+      <div class="dummy-content">
+        <p>
+          Phasellus quis nibh mattis, dignissim lectus at, interdum sapien. Maecenas facilisis leo arcu, sit amet laoreet erat posuere eget. Morbi sollicitudin egestas mi, eget mollis nunc lacinia ut. Sed maximus suscipit nunc, eget aliquet nulla pellentesque nec. Morbi id arcu lacus. Morbi placerat, dui quis vestibulum auctor, ligula tortor imperdiet metus, vitae luctus diam nulla a metus. Integer mattis gravida augue, eu ultrices libero. Vivamus lorem magna, tristique vitae porta in, finibus ut lacus. Sed eget arcu nec dui tempor efficitur sit amet in ligula.
+        </p>
+        <p>
+          Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin nec diam nec arcu semper facilisis quis ac lacus. Suspendisse blandit lorem et nibh consectetur lobortis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur interdum, nisl vel cursus semper, dolor arcu congue erat, nec finibus mauris lectus a tellus.
+        </p>
+      </div>
+      <div class="dummy-header">
+        Patch Footer
+      </div>
+    </form>
+</body>
+</html>

@@ -1,0 +1,376 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using DB.Vote;
+using DB.VoteLog;
+using Vote.Controls;
+
+namespace Vote
+{
+  public class SecurePoliticianPage : SecurePage
+  {
+    #region Private
+
+    private static string GetPoliticianFolderPageUrl(string pageName,
+      params string[] queryParametersAndValues)
+    {
+      if (queryParametersAndValues.Length == 0 &&
+        UserSecurityClass != PoliticianSecurityClass)
+      {
+        var id = PoliticianKeyFromSecurePoliticianPage;
+        if (!string.IsNullOrWhiteSpace(id))
+          queryParametersAndValues = new[] {"id", id};
+      }
+      return QueryStringCollection.FromPairs(queryParametersAndValues)
+        .AddToPath("/politician/" + pageName + ".aspx");
+    }
+
+    private static string GetPoliticianPublicPageUrl(string pageName)
+    {
+      var politicianKey = UserSecurityClass == PoliticianSecurityClass
+        ? UserPoliticianKey
+        : PoliticianKeyFromSecurePoliticianPage;
+      var url = "/" + pageName + ".aspx?id=" + politicianKey;
+      return InsertNoCacheIntoUrl(url);
+    }
+
+    private static string PoliticianKeyFromSecurePoliticianPage
+    {
+      get
+      {
+        var politicianPage = GetPage<SecurePoliticianPage>();
+        if (politicianPage == null) // bad call
+          throw new VoteException(
+            "GetPoliticianFolderPageUrl: cannot determine PoliticianKey");
+        return politicianPage.PoliticianKey;
+      }
+    }
+
+    private void UpdatePoliticianAnswer(string questionKey, string issueKey,
+      string newValue, string source, DateTime dateStamp)
+    {
+      if (string.IsNullOrWhiteSpace(newValue))
+        // Just delete and be done with it
+        Answers.DeleteByPoliticianKeyQuestionKey(PoliticianKey, questionKey);
+      else
+      {
+        var table = Answers.GetDataByPoliticianKeyQuestionKey(PoliticianKey,
+          questionKey);
+        var row = table.Count == 0 ? table.NewRow() : table[0];
+        row.PoliticianKey = PoliticianKey;
+        row.QuestionKey = questionKey;
+        row.StateCode = Politicians.GetStateCodeFromKey(PoliticianKey);
+        row.IssueKey = issueKey;
+        row.Answer = newValue;
+        row.Source = source;
+        row.DateStamp = dateStamp;
+        row.UserName = UserName;
+        row.YouTubeUrl = null;
+        row.YouTubeDate = DefaultDbDate;
+        if (table.Count == 0)
+          table.AddRow(row);
+        Answers.UpdateTable(table);
+      }
+    }
+
+    #endregion Private
+
+    #region Protected
+
+    #region ReSharper disable
+
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable VirtualMemberNeverOverriden.Global
+    // ReSharper disable UnusedMember.Global
+
+    #endregion ReSharper disable
+
+    protected UpdateStatus DoAnswerUpdate(IEnumerable<AnswersViewRow> table,
+      string questionKey, bool reportUnchanged, ref int updateCount)
+    {
+      var updateStatus = UpdateStatus.Failure; // default
+      var description = string.Empty;
+
+      var feedback =
+        Master.FindMainContentControl("Feedback" + questionKey) as
+          FeedbackContainerControl;
+      var updatePanel =
+        Master.FindMainContentControl("UpdatePanel" + questionKey) as UpdatePanel;
+      var textBox =
+        Master.FindMainContentControl("TextBox" + questionKey) as TextBox;
+      var sourceBox =
+        Master.FindMainContentControl("Source" + questionKey) as TextBox;
+      var dateBox = Master.FindMainContentControl("Date" + questionKey) as TextBox;
+
+      Debug.Assert(feedback != null, "feedback != null");
+      Debug.Assert(updatePanel != null, "updatePanel != null");
+      Debug.Assert(textBox != null, "textBox != null");
+
+      try
+      {
+        textBox.AddCssClasses("badupdate");
+
+        FeedbackContainerControl.ClearValidationErrors(textBox, sourceBox, dateBox);
+
+        var newValue = textBox.GetValue();
+        string newSource;
+        DateTime newDate;
+        bool success;
+        var dateWasEmpty = true;
+
+        newValue = feedback.StripHtml(newValue);
+        newValue = newValue.StripRedundantSpaces();
+        var oldRow = table.First(row => row.QuestionKey == questionKey);
+        description = '"' + oldRow.Question + '"';
+
+        if (IsPoliticianUser)
+        {
+          newSource = PageCache.Politicians.GetLastName(PoliticianKey);
+          newDate = DateTime.UtcNow.Date;
+        }
+        else
+        {
+          Debug.Assert(sourceBox != null, "sourceBox != null");
+          Debug.Assert(dateBox != null, "dateBox != null");
+          newSource = sourceBox.Text;
+          newSource = feedback.StripHtml(newSource);
+          newSource = newSource.StripRedundantSpaces();
+          dateWasEmpty = string.IsNullOrWhiteSpace(dateBox.Text);
+          newDate =
+            feedback.ValidateDateOptional(dateBox, out success, "Date",
+              DateTime.UtcNow.Date)
+              .Date;
+        }
+
+        if (feedback.ValidationErrorCount == 0)
+        {
+          var oldValue = oldRow.Answer.SafeString();
+          var oldSource = oldRow.Source.SafeString();
+          var oldDate = oldRow.DateStamp.SafeDbDate()
+            .Date;
+
+          var unchanged = oldValue == newValue;
+          if (unchanged && !IsPoliticianUser)
+            unchanged = oldSource == newSource &&
+              (oldDate == newDate || dateWasEmpty);
+
+          if (unchanged)
+          {
+            if (reportUnchanged)
+            {
+              feedback.AddInfo("Your " + description + " entry was unchanged.");
+              updatePanel.Update();
+            }
+            updateStatus = UpdateStatus.Unchanged;
+          }
+          else
+          {
+            ThrowRandomException();
+            if (!IsPoliticianUser /*&& !string.IsNullOrWhiteSpace(newValue)*/)
+              feedback.ValidateLength(sourceBox, "Source", 1, 85, out success);
+            if (feedback.ValidationErrorCount == 0)
+            {
+              LogPoliticianAnswerChange(questionKey, oldValue, newValue, newSource);
+              UpdatePoliticianAnswer(questionKey, oldRow.IssueKey, newValue,
+                newSource, newDate);
+              feedback.AddInfo("Your " + description + " entry was updated.");
+              updateStatus = UpdateStatus.Success;
+              updateCount++;
+            }
+            updatePanel.Update();
+          }
+        }
+
+        if (updateStatus != UpdateStatus.Failure)
+        {
+          if (newValue != textBox.Text)
+            updatePanel.Update();
+          textBox.SetValue(newValue);
+          if (!IsPoliticianUser)
+          {
+            if (string.IsNullOrWhiteSpace(newValue))
+            {
+              newSource = string.Empty;
+              newDate = DefaultDbDate;
+            }
+            var newDateText = newDate.DbDateToShortDate();
+            Debug.Assert(sourceBox != null, "sourceBox != null");
+            Debug.Assert(dateBox != null, "dateBox != null");
+            if (newSource != sourceBox.Text || newDateText != dateBox.Text)
+              updatePanel.Update();
+            sourceBox.SetValue(newSource);
+            dateBox.SetValue(newDate.DbDateToShortDate());
+          }
+        }
+
+        textBox.RemoveCssClass("badupdate");
+      }
+      catch (Exception ex)
+      {
+        if (description == string.Empty) description = "your response";
+        feedback.AddError("There was an unexpected error updating " + description);
+        feedback.HandleException(ex);
+        updateStatus = UpdateStatus.Failure;
+        updatePanel.Update();
+      }
+
+      return updateStatus;
+    }
+
+    protected void LogImageChange(byte[] oldImageBlob, byte[] newImageBlob)
+    {
+      LogImageChange(oldImageBlob, newImageBlob, DateTime.UtcNow);
+    }
+
+    protected void LogImageChange(byte[] oldImageBlob, byte[] newImageBlob,
+      DateTime uploadTime)
+    {
+      LogDataChange.LogUpdate(PoliticiansImagesBlobs.Column.ProfileOriginal,
+        oldImageBlob, newImageBlob, UserName, UserSecurityClass, uploadTime,
+        PoliticianKey);
+    }
+
+    protected void LogPoliticianAnswerChange(string questionKey, string oldAnswer,
+      string newAnswer, string source)
+    {
+      LogDataChange.LogUpdate(Answers.Column.Answer, oldAnswer, newAnswer, source,
+        UserName, UserSecurityClass, DateTime.UtcNow, PoliticianKey, questionKey);
+    }
+
+    protected void LogPoliticiansDataChange(string column, string oldValue,
+      string newValue)
+    {
+      LogDataChange.LogUpdate(Politicians.TableName, column, oldValue, newValue,
+        UserName, UserSecurityClass, DateTime.UtcNow, PoliticianKey);
+    }
+
+    #region ReSharper restore
+
+    // ReSharper restore UnusedMember.Global
+    // ReSharper restore VirtualMemberNeverOverriden.Global
+    // ReSharper restore MemberCanBePrivate.Global
+
+    #endregion ReSharper restore
+
+    #endregion Protected
+
+    #region Public
+
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable MemberCanBeProtected.Global
+    // ReSharper disable UnusedMember.Global
+
+    #region Public Properties
+
+    public static string AjaxImageUploaderUrl { get { return GetPoliticianFolderPageUrl("ajaximageuploader"); } }
+
+    public string CurrentElection { get; private set; }
+
+    public static string IntroPageUrl { get { return GetPoliticianPublicPageUrl("intro"); } }
+
+    public static string MainPageUrl { get { return GetPoliticianFolderPageUrl("main"); } }
+
+    public string NoCacheImageProfile200Url { get { return GetPoliticianImageUrl(PoliticianKey, "Profile200", true); } }
+
+    public string NoCacheImageProfile300Url { get { return GetPoliticianImageUrl(PoliticianKey, "Profile300", true); } }
+
+    public string OfficeAndStatus { get; private set; }
+
+    public static string PoliticianIssuePageUrl { get { return GetPoliticianPublicPageUrl("politicianissue"); } }
+
+    public string PoliticianKey { get; private set; }
+
+    public bool PoliticianKeyExists { get; private set; }
+
+    public string PoliticianName { get; private set; }
+
+    public static string UpdateIntroPageUrl { get { return GetPoliticianFolderPageUrl("updateintro"); } }
+
+    public static string UpdateIssuesPageUrl { get { return GetPoliticianFolderPageUrl("updateissues"); } }
+
+    #endregion Public Properties
+
+    #region Public Methods
+
+    public static string GetPoliticianName()
+    {
+      var page = GetPage<SecurePoliticianPage>();
+      return page == null ? string.Empty : page.PoliticianName;
+    }
+
+    public static string GetPoliticianKey()
+    {
+      var page = GetPage<SecurePoliticianPage>();
+      return page == null ? string.Empty : page.PoliticianKey;
+    }
+
+    public static bool GetPoliticianKeyExists()
+    {
+      var page = GetPage<SecurePoliticianPage>();
+      return page != null && page.PoliticianKeyExists;
+    }
+
+    public static string GetUpdateIntroPageUrl(string politicianId)
+    {
+      return GetPoliticianFolderPageUrl("UpdateIntro", "Id", politicianId);
+    }
+
+    public static string GetUpdateIssuesPageUrl(string politicianId)
+    {
+      return GetPoliticianFolderPageUrl("UpdateIssues", "Id", politicianId);
+    }
+
+    #endregion Public Methods
+
+    // ReSharper restore UnusedMember.Global
+    // ReSharper restore MemberCanBeProtected.Global
+    // ReSharper restore MemberCanBePrivate.Global
+
+    #endregion Public
+
+    #region Event handlers and overrides
+
+    protected override void OnLoad(EventArgs e)
+    {
+      // Skip OnLoad processing if key is missing, handled in OnPreRender
+      if (PoliticianKeyExists)
+        base.OnLoad(e);
+    }
+
+    protected override void OnPreLoad(EventArgs e)
+    {
+      base.OnPreLoad(e);
+      PoliticianKey = ViewStatePoliticianKey;
+      PoliticianKeyExists = Politicians.PoliticianKeyExists(PoliticianKey);
+      if (PoliticianKeyExists)
+      {
+        PoliticianName = PageCache.Politicians.GetPoliticianName(PoliticianKey);
+        OfficeAndStatus = PageCache.Politicians.GetOfficeAndStatus(PoliticianKey);
+        CurrentElection =
+          PageCache.Politicians.GetFutureViewableElectionKey(PoliticianKey);
+      }
+      else if (!IsSignedIn) // if not signed in, dump to sign in pageName
+        RedirectToSignInPage();
+    }
+
+    protected override void OnPreRender(EventArgs e)
+    {
+      base.OnPreRender(e);
+
+      if (PoliticianKeyExists) return;
+      var mainContent = Master.MainContentControl;
+      mainContent.Controls.Clear();
+      var text = string.IsNullOrWhiteSpace(PoliticianKey)
+        ? "PoliticianKey is missing"
+        : "PoliticianKey [" + PoliticianKey + "] is invalid";
+      new HtmlGenericControl("p") {InnerHtml = text}.AddTo(mainContent,
+        "missing-key");
+    }
+
+    #endregion Event handlers and overrides
+  }
+}

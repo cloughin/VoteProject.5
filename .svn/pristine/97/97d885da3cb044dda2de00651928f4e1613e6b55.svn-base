@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<configuration>
+<startup><supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/></startup>
+  <appSettings>
+    <add key="TestDb" value="Server=votetestdb.c3fj3t5d5d77.us-east-1.rds.amazonaws.com;Uid=ron;Pwd=p17134RAK;Database=votezipnew"/>
+    <add key="LiveDb" value="Server=votesql.c3fj3t5d5d77.us-east-1.rds.amazonaws.com;Uid=ron;Pwd=p17134;Database=votezipnew" />
+  </appSettings>
+</configuration>

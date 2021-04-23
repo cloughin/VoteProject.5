@@ -1,0 +1,240 @@
+﻿/* nag form icon help */
+    #outer .nag-container .help .icon
+    {
+      background-image: url(/images/opsprite.png);
+      border: 1px solid #ccc;
+      clear: both;
+      float: left;
+      height: 20px;
+      margin: 3px 3px 3px 10px;
+      width: 20px;
+    }
+
+    #outer .nag-container .help .icon-text
+    {
+      float: left;
+      margin: 3px 0 0 3px;
+    }
+
+    #outer .nag-container .help .edit-icon
+    {
+      background-position: 0px 0px;
+    }
+
+    #outer .nag-container .help .delete-icon
+    {
+      background-position: -40px 0px;
+    }
+
+    #outer .nag-container .help .add-icon
+    {
+      background-position: -20px 0px;
+    }
+
+    #outer .nag-container .help .update-icon
+    {
+      background-position: -80px 0px;
+    }
+
+    #outer .nag-container .help .cancel-icon
+    {
+      background-position: -60px 0px;
+    }
+
+    /* for the nag maint form operation links */
+
+    #outer .nag-container a.op
+    {
+      background-image: url(/images/opsprite.png);
+      display: block;
+      height: 20px;
+      margin: 0;
+      padding: 0;
+      text-decoration: none;
+      text-indent: -9999px;
+      width: 20px;
+    }
+
+    #outer .nag-container a.op-add
+    {
+      background-position: -80px 0px;
+    }
+
+    #outer .nag-container a:hover.op-add
+    {
+      background-position: -80px -20px;
+    }
+
+    #outer .nag-container a.op-cancel
+    {
+      background-position: -60px 0px;
+    }
+
+    #outer .nag-container a:hover.op-cancel
+    {
+      background-position: -60px -20px;
+    }
+
+    .nag-container a.op-delete
+    {
+      background-position: -40px 0px;
+    }
+
+    #outer .nag-container a:hover.op-delete
+    {
+      background-position: -40px -20px;
+    }
+
+    #outer .nag-container a.op-edit
+    {
+      background-position: 0px 0px;
+    }
+
+    #outer .nag-container a:hover.op-edit
+    {
+      background-position: 0px -20px;
+    }
+
+    #outer .nag-container a.op-insert
+    {
+      background-position: -20px 0px;
+    }
+
+    #outer .nag-container a:hover.op-insert
+    {
+      background-position: -20px -20px;
+    }
+
+    #outer .nag-container a.op-update
+    {
+      background-position: -80px 0px;
+    }
+
+    #outer .nag-container a:hover.op-update
+    {
+      background-position: -80px -20px;
+    }
+
+    /* for the nag maint form */
+
+    #outer .nag-container table
+    {
+      border-right: 1px solid #ccc;
+      color: #333;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      font-weight: normal;
+      width: 100%;
+    }
+
+    #outer .nag-container table input
+    {
+      color: #333;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      font-weight: normal;
+      padding: 2px 0 0 1px;
+    }
+
+    #outer .nag-container table p
+    {
+      margin: 0;
+    }
+
+    #outer .nag-container th.content
+    {
+      border-bottom: 1px solid #ccc;
+      border-left: 1px solid #ccc;
+      border-top: 1px solid #ccc;
+    }
+
+    #outer .nag-container th.op1
+    {
+      width: 24px;
+    }
+
+    #outer .nag-container th.op2
+    {
+      width: 24px;
+    }
+
+    #outer .nag-container th.message-number
+    {
+      text-align: center;
+      width: 30px;
+    }
+
+    #outer .nag-container th.next-message-number
+    {
+      text-align: center;
+      width: 30px;
+    }
+
+    #outer .nag-container th.message-text
+    {
+      padding-left: 2px;
+    }
+
+    #outer .nag-container td
+    {
+      height: 20px;
+    }
+
+    #outer .nag-container td.content
+    {
+      border-bottom: 1px solid #ccc;
+      border-left: 1px solid #ccc;
+    }
+
+    #outer .nag-container td p
+    {
+      padding: 5px 0 0 2px;
+    }
+
+    #outer .nag-container td .text-box
+    {
+      margin: 2px 0 2px 0;
+    }
+
+    #outer .nag-container td .text-box.message-number
+    {
+      width: 24px;
+    }
+
+    #outer .nag-container td .text-box.next-message-number
+    {
+      width: 24px;
+    }
+
+    #outer .nag-container td .text-box.message-text
+    {
+      width: 810px;
+    }
+
+    /* ff only */
+
+    @-moz-document url-prefix()
+    {
+      #outer .nag-container td
+      {
+        height: 22px;
+      }
+      #outer .nag-container td p
+      {
+        padding: 4px 0 0 4px;
+      }
+      #outer .nag-container table input
+      {
+        padding: 2px 0 0 2px;
+      }
+    }
+
+    .ie10 #outer .nag-container table input
+    {
+      padding: 3px 0 0 1px;
+    }
+
+    .ie10 #outer .nag-container td
+    {
+      height: 25px;
+    }

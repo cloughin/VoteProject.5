@@ -1,0 +1,32 @@
+/*--Page Title--*/
+.trInternsPageTitle
+{
+}
+.tdInternsPageTitle
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+font-weight:bold;
+color: #373737;
+padding:10px 10px 3px 10px;
+}
+/*--Page Content--*/
+.trInternsPageContent
+{
+}
+.tdInternsPageContent
+/*
+,.tdInternsPageContent a:link
+,.tdInternsPageContent a:visited
+,.tdInternsPageContent a:hover
+*/
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 12px;
+font-weight:normal;
+color: #373737;
+}
+.tdInternsPageContent
+{
+padding:2px 10px 2px 10px;
+}

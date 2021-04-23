@@ -1,0 +1,31 @@
+<%@ Page ValidateRequest="false" Language="C#" AutoEventWireup="true" Codebehind="IssuesReport.aspx.cs"
+  Inherits="Vote.Admin.IssuesReport" %>
+<%@ Register Src="../LoginBar.ascx" TagName="LoginBar" TagPrefix="user" %>
+<%@ Register Src="../Banner.ascx" TagName="Banner" TagPrefix="user" %>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+<head>
+  <title>Issues Report</title>
+  <link href="/css/AllAdmin.css" type="text/css" rel="stylesheet" />
+  <meta content="Microsoft Visual Studio .NET 7.1" name="GENERATOR" />
+  <meta content="C#" name="CODE_LANGUAGE" />
+  <meta content="JavaScript" name="vs_defaultClientScript" />
+  <meta content="http://schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema" />
+</head>
+<body>
+  <form id="form1" runat="server">
+    <user:LoginBar ID="LoginBar1" runat="server" />
+    <user:Banner ID="Banner" runat="server" />
+      <!-- Table -->
+    <table class="tableAdmin" id="Table1" cellspacing="0" cellpadding="0" border="0">
+      <tr>
+        <td class="T">
+          <asp:Label ID="Msg" runat="server"></asp:Label></td>
+      </tr>
+    </table>
+      <!-- Table -->
+    <table class="tableAdmin" id="HTMLIssuesTable" cellspacing="0" border="0" runat="server">
+    </table>
+  </form>
+</body>
+</html>

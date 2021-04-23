@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>ACE in Action</title>
+  <style type="text/css" media="screen">
+    #editor { 
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+            }
+  </style>
+  <script src="http://code.jquery.com/jquery-1.9.1.js" type="text/javascript"></script>
+</head>
+<body>
+  <textarea class="initial-html" name="initial-html" rows="1">
+<div class="xxx">
+</div>
+[[ballotname]] ##buttons## @@contactemail@@
+
+{{ iF = [[ballotname]] }} {{ elsEif = def }} {{ thEn }} {{ elsE }} {{ endIf }}
+  </textarea>
+
+  <div id="editor">
+  </div>
+   
+  <script data-main="/js/require-main.js" src="/js/require.js" type="text/javascript"></script> 
+  <script type="text/javascript">
+    require(["ace/ace", "vote/util"],
+      function (ace, util) {
+        var x = util.getClasses("textarea");
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/votetemplate");
+        editor.getSession().setMode("ace/mode/html_votetemplate");
+        var textarea = $('textarea[name="initial-html"]').hide();
+        editor.getSession().setValue(textarea.val());
+      });
+  </script>
+</body>
+</html>

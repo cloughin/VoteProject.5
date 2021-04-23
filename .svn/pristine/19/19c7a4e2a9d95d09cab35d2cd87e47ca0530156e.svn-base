@@ -1,0 +1,425 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Public.Master" AutoEventWireup="true" CodeBehind="Ballot.aspx.cs" Inherits="Vote.BallotPage" %>
+
+<%@ Register Src="/Controls/PageHeadingResponsive.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/SampleBallotEmailDialogResponsive.ascx" TagName="SampleBallotEmailDialog" TagPrefix="user" %>
+
+<asp:Content ID="HeadTopContent" ContentPlaceHolderID="MasterHeadTopContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="HeadBottomContent" ContentPlaceHolderID="MasterHeadBottomContent" runat="server">
+  <style type="text/css">
+    .content .title-and-location {
+      margin-bottom: 15px;
+    }   
+    .content .location-info {
+      float: right;
+    }   
+
+    .offer-to-print a {
+      cursor: pointer;
+    }
+   
+    .ballot-report .county-contests,
+    .ballot-report .one-local-contests,
+    .ballot-report .local-districts-header,
+    .ballot-referendum-report .referendums-list,
+    .ballot-referendum-report .districts-list {
+      margin-top: 20px;
+    }
+    .ballot-referendum-report .districts-list .referendums-list:first-child {
+      margin-top: 0;
+    }
+    .ballot-referendum-report .districts-list .referendums-list {
+      margin-top: 10px;
+    }
+
+     .ballot-report .office-cell {
+       display: inline-block;
+       vertical-align: top;
+       width: 33.3333333%;
+       padding: 8px 4px;
+       font-family: sans-serif;
+     }
+
+    .ballot-report .office-cell-inner {
+      border: 1px solid #333333;
+      border-bottom: none;
+    }
+
+    .ballot-report .office-heading {
+      border-bottom: 1px solid #333333;
+      text-align: center;
+      background-color: #f0f0f0;
+      padding: 5px;
+    }
+
+    .ballot-report .office-heading-name {
+      font-weight: bold;
+      padding-bottom: 3px;
+    }
+
+    .ballot-report .office-heading-name span {
+      display: block;
+    }
+
+    .ballot-report .office-heading-vote-for 
+    {
+      font-size: .75rem;
+      padding-bottom: 3px;
+    }
+    
+    .ballot-report .candidate-cell {
+      display: block;
+      width: 100%;
+      padding: 0;
+    }
+    
+    .ballot-report .candidate-cell.write-in-cell {
+      padding-top: 4px;
+    }
+    
+    .ballot-report .candidate-cell-inner {
+      border-top: none;
+      border-left: none;
+      border-right: none;
+    }
+    
+    .ballot-report .candidate-name span {
+      /*display: inline-block;*/
+    }   
+    
+    .ballot-report .candidate-name span.running-mate {
+      display: block;
+      margin-left: 17px;
+    }   
+    
+    .ballot-report .candidate-image img {
+      padding: 2px;
+    }
+    
+    .ballot-report .candidate-image img.running-mate-image {
+      padding-top: 0;
+    }
+    
+    .ballot-report .write-in-wording {
+      padding: 2px 0 4px 0;
+      display: inline-block;
+    }
+    
+    .ballot-report .write-in-text {
+      border: none;
+      border-top: 1px solid #dddddd;
+      padding: 5px 4px;
+    }
+  
+    .ballot-referendum-report .referendum-content
+    {
+      padding-left: 1em;
+    }
+  
+    .ballot-referendum-report .yes-no
+    {
+      vertical-align: top;
+      display: block;
+      float: left;
+      width: 70px;
+      margin-top: 3px;
+    }
+  
+    .ballot-referendum-report .yes-no > span
+    {
+      display: block;
+      margin-bottom: 10px;
+    }
+  
+    .ballot-referendum-report a.kalypto-checkbox
+    {
+      display: inline-block;
+    }
+  
+    .ballot-report input[type=checkbox].candidate-checkbox
+    {
+      float: left;
+      margin-top: 6px;
+    }
+ 
+    .ballot-referendum-report .yes-no .label
+    {
+      font-size: .95rem;
+      display: inline-block;
+      padding-left: 4px;
+      vertical-align: top;
+    }
+ 
+    .ballot-referendum-report .referendum-right-content
+    {
+      vertical-align: top;
+    }
+    
+    body#Body:not(.staging) .selection-panel {
+      display: none;
+    }
+
+    body .selection-panel {
+      padding-top: 10px;
+      display: block;
+      background: #dddddd;
+      border-bottom: 1px solid #666666;
+      width: 100%;
+      height: 40px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      text-align: center;
+      background: #ffffff; /* Old browsers */
+      background: -moz-linear-gradient(top,  #ffffff 0%, #f6f6f6 47%, #ededed 100%); /* FF3.6-15 */
+      background: -webkit-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#ededed 100%); /* Chrome10-25,Safari5.1-6 */
+      background: linear-gradient(to bottom,  #ffffff 0%,#f6f6f6 47%,#ededed 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+    }
+    
+    body.has-choices-panel .selection-panel {
+      height: 85px;
+    }
+    
+    .selection-panel .choices-panel {
+      display: none;
+    }
+    
+    body.has-choices-panel .selection-panel .choices-panel {
+      display: block;
+    }
+
+    .selection-panel select {
+      width: 150px;
+      padding: 5px;
+    }
+
+    .selection-panel select.friend {
+      color: red;
+    }
+
+    .selection-panel select option {
+      color: black;
+    }
+
+    .selection-panel input {
+      margin: 0 8px;
+    }
+
+    .selection-panel input[type=button] {
+      cursor: pointer;
+    }
+
+    .selection-panel .buttons {
+      display: inline-block;
+    }
+    
+    body#Body:not(.staging) .outer-page {
+      margin-top: 0;
+    }
+    
+    body .outer-page {
+      margin-top: 40px;
+    }
+
+    body.has-choices-panel .outer-page {
+      margin-top: 85px;
+    }
+    
+    #share-ballot-dialog {
+      display: none;
+    }
+    
+    #share-ballot-dialog {
+      text-align: left;
+    }
+    
+    #share-ballot-dialog p.intro {
+      font-size: 10pt;
+      line-height: 120%;
+    }
+    
+    #share-ballot-dialog label,
+    #share-ballot-dialog input {
+      display: block;
+    }
+    
+    #share-ballot-dialog label {
+      margin: 15px 0 5px 0;
+      font-size: 12pt;
+      font-family: arial;
+      font-weight: bold;    
+    }
+    
+    #share-ballot-dialog input[type=button] 
+    {
+      margin-top:  15px;
+    }
+    
+    .share-ballot-dialog .ui-dialog-title {
+      font-size: 8pt;
+      width: auto;
+    }
+
+    @media only screen and (max-width : 799px) 
+    {
+      .ballot-report .office-cell {
+        width: 50%;
+      }
+    }
+    
+    @media only screen and (max-width : 479px) 
+    {
+      .ballot-report .office-cell {
+        width: 100% !important;
+      }
+    }
+     
+    @media only screen and (max-width : 759px) 
+    {
+      /* small & medium*/
+      .content .intro .location-info {
+        float: none;
+        margin-bottom: 10px;
+      }    
+
+      body.has-choices-panel .selection-panel {
+        height: 108px;
+      }
+
+      body.has-choices-panel .outer-page {
+        margin-top: 108px;
+      }
+
+      .selection-panel .buttons {
+        display: block;
+        margin-top: 7px;
+      }
+    }
+   
+    @media print 
+    {
+      /*
+      * {
+        -webkit-transition: none !important;
+        transition: none !important;
+       }
+       */
+       
+      .donate-banner,
+      /*.ballot-report .candidate-image,*/
+      .ballot-report .candidate-info,
+      .ballot-report .write-in-cell:not(.checked),
+      .local-districts-header > .accordion-header,
+      .main-footer {
+        display: none;
+      }
+      
+     .ballot-report .accordion-header {
+        background: none;
+        color: #444444;
+      }     
+      
+      .ballot-report .candidate-image {
+        display: table-cell;
+      }
+      
+      .ballot-report .candidate-image img {
+        width: 25px;
+      }
+      
+      .ballot-report .candidate-name {
+        padding: 3px 2px 0 7px;
+        text-indent: -5px;
+        display: table-cell;
+        vertical-align: top;
+        width: 100%;
+      }
+      
+      .ballot-report .candidate-name span {
+        /*padding-left: 4px;*/
+      }
+      
+      .ballot-report a.candidate-checkbox {
+        padding: 3px 0 0 2px;
+        float: none;
+        display: table-cell;
+        background: none;
+        vertical-align: top;
+      }
+      
+      .ballot-report .write-in-cell a.candidate-checkbox {
+        margin: 0 2px;
+        padding: 0;
+        float: left;
+        display: block;
+      }
+      
+      .accordion-content.local-districts-content {
+        border: none;
+        padding: 0;
+      }
+      
+      a.candidate-checkbox:before {
+        content: url(/images/checkboxoff.png);
+      }
+      
+      a.candidate-checkbox.checked:before {
+        content: url(/images/checkboxon.png);
+      }
+      
+      .responsive-report .candidate-name,
+      .ballot-report .write-in-wording,
+      .ballot-report .write-in-text {
+        font-size: 0.8rem;
+      }
+    }
+    
+  </style>
+  <script type="text/javascript" src="/js/jq/kalypto.mod.js"></script>
+  <script type="text/javascript" src="/js/vote/publicutil.js"></script>
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+  <div class="selection-panel no-print">
+    <div><input type="button" class="button-1 button-smallest share-choices-button" value="Share my choices with a friend"/></div>
+    <div class="choices-panel hidden">
+      <hr/>
+      <span>Choices to display: </span>
+      <select class="friends-dropdown"><option value="">My choices</option></select>
+      <div class="buttons">
+      <input type="button" class="button-1 button-smallest make-my-choices-button" value="Make these my choices"/>
+      <input type="button" class="button-3 button-smallest delete-choices-button" value="Delete these choices"/>
+      </div>
+    </div>
+  </div>
+  <div id="InnerContent" runat="server">
+    <user:PageHeading ID="PageHeading" runat="server" MainHeadingText="Your Sample Ballot" />
+    <div class="intro">
+      <div class="title-and-location clearfix">
+        <div id="LocationInfo" class="location-info" runat="server"></div>
+        <h1 id="ElectionTitle" class="election-title" runat="server"></h1>
+      </div>
+      <p id="Instructions" class="instructions no-print" runat="server"></p>
+      <asp:PlaceHolder id="AdditionalInfo" runat="server"></asp:PlaceHolder>
+    </div>
+
+    <asp:PlaceHolder ID="ReportPlaceHolder" runat="server"></asp:PlaceHolder>
+    <asp:PlaceHolder ID="ReferendumReportPlaceHolder" runat="server"></asp:PlaceHolder>
+
+  </div>
+</asp:Content>
+
+<asp:Content ID="BottomContent" ContentPlaceHolderID="MasterBottomContent" runat="server">
+  <user:SampleBallotEmailDialog ID="SampleBallotEmailDialog" runat="server" />
+  <div id="share-ballot-dialog">
+    <input type="image" width="1px" height="1px" src="/images/1x1.png"/> <%-- Prevent auto focus --%>
+    <p class="intro">Enter your name and email address. We'll send a you an email with a link that you can forward to friends and colleagues.</p>
+    <label>Your name:</label>
+    <input type="text" name="name" class="share-ballot-name" required="required" autocomplete="name" />
+    <label>Your email address:</label>
+    <input type="email" name="email" class="share-ballot-email" required="required" autocomplete="email" />
+    <input type="button" class="share-ballot-button button-1 button-smaller" value="Send Email"/>
+  </div>
+</asp:Content>

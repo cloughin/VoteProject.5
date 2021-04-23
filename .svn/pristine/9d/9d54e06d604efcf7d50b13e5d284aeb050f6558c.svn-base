@@ -1,0 +1,15 @@
+﻿define(["jquery", "vote/adminMaster", "vote/util"],
+function ($, master, util) {
+
+  function initPage() {
+    $(".submit-form").click(function () {
+      //if ($(".delete-checkbox input").prop("checked"))
+      //  if (!confirm("You are about to actually delete the selected email addresses. Ok?"))
+      //    return;
+      $("#MainForm")[0].submit();
+    });
+  }
+  master.inititializePage({
+    callback: initPage
+  });
+});

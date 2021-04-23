@@ -1,0 +1,20 @@
+﻿using System;
+using System.Data.Common;
+
+namespace DB.Vote
+{
+  public partial class PartiesRow {}
+
+  public partial class Parties
+  {
+    public static PartiesTable GetMajorPartyDataByStateCode(String stateCode,
+      int commandTimeout = -1)
+    {
+      const string cmdText =
+        "SELECT PartyKey,PartyCode,StateCode,PartyOrder,PartyName,PartyURL,PartyAddressLine1,PartyAddressLine2,PartyCityStateZip,IsPartyMajor FROM Parties WHERE StateCode=@StateCode AND IsPartyMajor=1 AND LENGTH(PartyCode)=1 ORDER BY PartyOrder";
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      VoteDb.AddCommandParameter(cmd, "StateCode", stateCode);
+      return FillTable(cmd, PartiesTable.ColumnSet.All);
+    }
+  }
+}

@@ -1,0 +1,156 @@
+﻿define(["jquery", "vote/adminMaster", "vote/util", "monitor",
+  "vote/controls/navigateJurisdiction", "vote/controls/officeControl", 
+  "vote/controls/managePoliticiansPanel", "jqueryui", "slimscroll", "dynatree"],
+  function ($, master, util, monitor, navigateJurisdiction, officeControl,
+   managePoliticiansPanel) {
+
+    var $$ = util.$$;
+    var queryOffice;
+
+    //
+    // Monitor callbacks
+    //
+
+    function afterUpdateContainer(group, args) {
+      if (!group) return;
+
+      switch (group.group) {
+        case "mc-group-addincumbents":
+          afterUpdateContainerAddIncumbents(group, args);
+          break;
+
+        case "mc-group-masteronly":
+          afterUpdateContainerMasterOnly(group, args);
+          break;
+      }
+    };
+
+    //
+    // Add Incumbents
+    //
+
+    function afterUpdateContainerAddIncumbents() {
+      //officeControl.initSelectOfficeTree();
+    }
+
+    //
+    // Master only
+    //
+
+    var masterOnlyStartTab = "";
+
+    function afterUpdateContainerMasterOnly() {
+      var active = $("#tab-masteronly .sub-tab-index").val() || 0;
+      if (masterOnlyStartTab) {
+        active = util.getTabIndex("master-only-tabs", masterOnlyStartTab);
+        masterOnlyStartTab = "";
+      }
+      $("#master-only-tabs").tabs(
+      {
+        show: 400,
+        active: active,
+        beforeActivate: onTabsBeforeActivateMasterOnlySubTab,
+        activate: function (event, ui) {
+          // save the current tab index to restore after update
+          $("#tab-masteronly .sub-tab-index")
+            .val($("#master-only-tabs").tabs("option", "active"));
+        }
+      });
+    }
+
+    var onTabsBeforeActivateMasterOnlySubTab = function () {
+      return monitor.tabsBeforeActivate(event, ui, "master-only-tabs",
+       "#tab-masteronly .mc-container");
+    };
+
+    //
+    // Misc
+    //
+
+    var initPage = function () {
+      monitor.registerCallback("afterUpdateContainer", afterUpdateContainer);
+      monitor.init();
+
+      util.safeBind($(".jurisdiction-change-button"), "click",
+        navigateJurisdiction.changeJurisdictionButtonClicked);
+
+      window.onbeforeunload = function () {
+        var changedGroups = monitor.getChangedGroupNames(true);
+        if (changedGroups.length > 0)
+          return "There are entries on your form that have not been submitted";
+      };
+
+      $$('main-tabs')
+        .safeBind("tabsbeforeactivate", onTabsBeforeActivate)
+        .safeBind("tabsactivate", onTabsActivate);
+
+      queryOffice = $.queryString("office");
+      officeControl.initControl({
+        onSelect: function (flag, node) {
+          reloadPanel($(".office-control").closest(".ui-tabs-panel")[0].id, "reloading");
+        },
+        officeKey: queryOffice
+      });
+      officeControl.initSelectOfficeTree();
+
+      managePoliticiansPanel.initControl();
+
+      var frag = window.location.hash.substr(1).split("-");
+      frag[0] = frag[0].toLowerCase();
+      if (frag[0]) frag[0] = "tab-" + frag[0];
+
+      var startTab = "tab-addoffice";
+      if (frag[0]) startTab = frag[0];
+
+      $$('main-tabs').tabs("option", "active", util.getTabIndex("main-tabs", startTab));
+      if (frag[1] && startTab === "tab-masteronly") {
+        masterOnlyStartTab = startTab + "-" + frag[1].toLowerCase();
+      }
+    };
+
+    var onTabsActivate = function (event, ui) {
+      var newPanelId = ui.newPanel[0].id;
+      switch (newPanelId) {
+        case "tab-changeinfo":
+        case "tab-addincumbents":
+          // if we don't have the office control, grab it
+          var $officeControl = $(".office-control");
+          var $ownerTab = $officeControl.closest(".ui-tabs-panel");
+          if (newPanelId !== $ownerTab[0].id) {
+            // need to move it
+            officeControl.toggle(false);
+            var $newTab = $$(newPanelId);
+            $(".office-control-container", $newTab).append($officeControl);
+            $(".office-heading", $newTab).html($(".office-heading", $ownerTab).html());
+          }
+          if (officeControl.getSelectedOffice()) reloadPanel(newPanelId);
+          else officeControl.toggle(true);
+          break;
+
+        default:
+          reloadPanel(newPanelId);
+          break;
+      }
+    };
+
+    var onTabsBeforeActivate = function (event, ui) {
+      return monitor.tabsBeforeActivate(event, ui, "main-tabs");
+    };
+
+    var reloadPanel = function (id, option) {
+      if (!option) option = "reloading";
+      switch (id) {
+        case "tab-addincumbents":
+        case "tab-masteronly":
+          $$(id + ' .reloading').val(option);
+          $$(id + ' input.update-button').addClass("reloading").click();
+          break;
+      }
+    };
+
+    // I N I T I A L I Z E
+
+    master.inititializePage({
+      callback: initPage
+    });
+  });

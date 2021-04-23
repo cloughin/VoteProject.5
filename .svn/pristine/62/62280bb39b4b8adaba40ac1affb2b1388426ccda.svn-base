@@ -1,0 +1,302 @@
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="TestZipAddresses.aspx.cs" Inherits="Vote.Master.TestZipAddresses" %>
+
+<html><head><title></title></head><body></body></html>
+
+<%-- 
+<%@ Register TagPrefix="user" Namespace="Vote" Assembly="Vote" %>
+<%@ Register Src="../LoginBar.ascx" TagName="LoginBar" TagPrefix="user" %>
+<%@ Register Src="../Banner.ascx" TagName="Banner" TagPrefix="user" %>
+<%@ Register TagPrefix="uc2" TagName="Navbar" Src="../NavbarAdmin.ascx" %>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<HTML>
+<head id="Head1" runat="server">
+  <title>Test Zip Answers</title>
+  <link href="/css/AllAdmin.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+  <form id="form1" runat="server">
+    <user:LoginBar ID="LoginBar1" runat="server" />
+    <user:Banner ID="Banner" runat="server" />
+    <uc2:Navbar ID="Navbar" runat="server" />
+    <!-- Table -->
+    <table class="tableAdmin" id="TableHeading" cellspacing="0" cellpadding="0" width=700>
+      <tr>
+        <td align="left" class="HLarge">
+          &nbsp;Test Zip Addresses</td>
+      </tr>
+      <tr>
+        <td>
+          <asp:Label ID="Msg" runat="server"></asp:Label></td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table7" cellspacing="0" cellpadding="0" width=700>
+      <tr>
+        <td class="HSmall">
+          Last Table of Test Addresses</td>
+      </tr>
+      <tr>
+        <td class="T">
+          Addresses are tested by processing each row in the ZipAddressesTesting Table. Invalid
+          addresses are added to the ZipAddressesTestedBad Table.
+          The last batch of addresses used to construct the ZipAddressesTesting Table was
+          extracted from address in this table, for this StateCode and all cities with this
+          first character.
+          Modify these three parameters and click Record to create a new batch of addresses
+          to test.</td>
+      </tr>
+      <tr>
+        <td class="TBold" valign="top">
+          Table:
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBox_Table" runat="server" CssClass="TextBoxInput" Width="250px"></user:TextBoxWithNormalizedLineBreaks>
+          StateCode:
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBox_StateCode" runat="server" CssClass="TextBoxInput" Width="35px"></user:TextBoxWithNormalizedLineBreaks>&nbsp;
+          First Character of City:
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBox_FirstChar" runat="server" CssClass="TextBoxInput" Width="15px"></user:TextBoxWithNormalizedLineBreaks>&nbsp;<asp:Button
+            ID="Button_Record" runat="server" CssClass="Buttons" Height="21px" OnClick="Button_Record_Click"
+            Text="Record" Width="61px" /></td>
+      </tr>
+      <tr>
+        <td class="H">
+          Process Entire ZipAddressesTest Table</td>
+      </tr>
+      <tr>
+        <td class="T">
+          Use the first button to make a new ZipAddressesTesting Table using the conditions
+          above. Use the second button to automaticall process all the rows in this table.</td>
+      </tr>
+      <tr>
+        <td class="TBold">
+          Rows in ZipAddressesTest Table:
+          <asp:Label ID="Label_ZipAddressesTable_Rows" runat="server"></asp:Label></td>
+      </tr>
+      <tr>
+        <td class="TBold">
+          <asp:Button ID="Button_Make_New" runat="server" CssClass="Buttons" OnClick="Button_Make_New_Click"
+            Text="Make a New ZipAddressesTesting Table" Width="300px" />&nbsp;<asp:Button ID="Button_Process"
+              runat="server" CssClass="Buttons" OnClick="Button_Process_Click" Text="Process Entire ZipAddressesTesting Table"
+              Width="300px" /></td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table6" cellspacing="0" cellpadding="0" width=700>
+      <tr>
+        <td class="H" colspan="2">
+          Manually Process ZipAddressesTesting Table One Address at a Time</td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="Button_Load_Bad_Addresses" runat="server" CssClass="Buttons" OnClick="Button_Load_Bad_Addresses_Click"
+            Text="Load Bad Addresses" Width="150px" /></td>
+        <td class="T" colspan="1">
+          Use this button to load the bad addresses processed above in to the ZipAddressesTesting
+          Table so that they can be processed one row at a time.</td>
+      </tr>
+      <tr>
+        <td class="TBold" colspan="2">
+          Current Rows in ZipAddressesTestedBad:
+          <asp:Label ID="Label_Rows_Bad" runat="server"></asp:Label></td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table1" cellspacing="0" cellpadding="0" width=700 border="1">
+      <tr>
+        <td class="HSmall" colspan="2">
+          Address Components Entered: vs Retrieved from Tables (last row tested values)</td>
+      </tr>
+      <tr>
+        <td class="T"><asp:Button ID="Button_Next_Address" runat="server" Text="Test NEXT Address" 
+          OnClick="Button_Next_Address_Click" CssClass="Buttons" Width="150px" /></td>
+        <td class="T" width="100%">
+          Use this button to process the addresses in the ZipAddressesTesting Table, one row at
+          a time, and display the results in the controls
+          below. The ZipAddressesTesting
+          Table can be a newly created table or just the bad addresses.
+          An address that is
+          found to be good is automatically deleted from the ZipAddressesTesting Table.</td>
+      </tr>
+      <tr id="tr_Skip_Address" runat=server>
+        <td class="T">
+          <asp:Button ID="Button_Skip_Address" runat="server" Text="Skip Address" 
+          OnClick="Button_Skip_Address_Click" CssClass="Buttons" Width="150px" /></td>
+        <td class="T" width="100%">
+          If the address can not be fixed by adding an alternative street or city spelling,
+          use this button to skip the testing of this address and delete the address from
+          the ZipAddressesTesting Table.</td>
+      </tr>
+    <tr><td class="HSmall" colspan="2">
+      Entered Address</td></tr>
+      <tr>
+        <td class="TBold" colspan="2">
+          <asp:Label ID="Label_Address_Entered" runat="server"></asp:Label>
+          <asp:Label ID="Label_City_Entered" runat="server"></asp:Label>
+          <asp:Label ID="Label_DomainState" runat="server"></asp:Label></td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <!-- Table -->
+    <table class="tableAdmin" id="Table3" cellspacing="0" cellpadding="0" width=700>
+      <tr>
+        <td class="HSmall" colspan="7">
+          Address in ZipStreetsRanges Table&nbsp;
+          <asp:Label ID="Label_Address_Error" runat="server" CssClass="TBoldColor"></asp:Label></td>
+      </tr>
+      <tr>
+        <td class="T" width="100">
+          Number</td>
+        <td class="T" width="50">
+          Pre</td>
+        <td class="T" width="150">
+          Street</td>
+        <td class="T" width="50">
+          Type</td>
+        <td class="T" width="50">
+          Direction</td>
+        <td class="T" width="100">
+          City</td>
+        <td class="T" width="100%">
+          State</td>
+      </tr>
+      <tr>
+        <td class="TBold">
+          <asp:Label ID="Label_StreetNumber" runat="server"></asp:Label></td>
+        <td class="TBold">
+          <asp:Label ID="Label_StreetPre" runat="server"></asp:Label></td>
+        <td class="TBold">
+          <asp:Label ID="Label_Street" runat="server"></asp:Label></td>
+        <td class="TBold">
+          <asp:Label ID="Label_StreetType" runat="server"></asp:Label></td>
+        <td class="TBold" style="width: 9px">
+          <asp:Label ID="Label_StreetDirection" runat="server"></asp:Label></td>
+        <td class="TBold" style="width: 9px">
+          <asp:Label ID="Label_City_Name_Key" runat="server"></asp:Label></td>
+        <td class="TBold" style="width: 9px">
+          <asp:Label ID="Label_StateCode" runat="server"></asp:Label></td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table4" cellspacing="0" cellpadding="0" width=700>
+      <tr>
+        <td class="HSmall" colspan="6">
+          Zip Codes - LDS Component vs in ZipStreetsRanges Table</td>
+      </tr>
+      <tr>
+        <td class="HSmall" colspan="3">
+          Zip5</td>
+        <td class="HSmall" colspan="3">
+          Zip4</td>
+      </tr>
+      <tr>
+        <td class="T" style="height: 13px" width="60">
+          LDS</td>
+        <td class="T" style="height: 13px">
+          Table</td>
+        <td class="T" style="height: 13px">
+          </td>
+        <td class="T" style="height: 13px" width="60">
+          LDS</td>
+        <td class="T" style="height: 13px">
+          Table</td>
+        <td class="T" style="height: 13px">
+          </td>
+      </tr>
+    <tr><td class="TBold" width="60">
+      <asp:Label ID="Label_Zip5_LDS" runat="server"></asp:Label></td>
+      <td class="TBold" width="60">
+        <asp:Label ID="Label_Zip5_ZipStreets" runat="server"></asp:Label></td>
+      <td class="TBold" width="30">
+        <asp:Label ID="Label_Zip5_Compare" runat="server" ForeColor="Red"></asp:Label></td>
+      <td class="TBold" width="60">
+        <asp:Label ID="Label_Zip4_LDS" runat="server"></asp:Label></td>
+      <td class="TBold" width="60">
+        <asp:Label ID="Label_Zip4_ZipStreets" runat="server"></asp:Label></td>
+      <td class="TBold" width="100%">
+        <asp:Label ID="Label_Zip4_Compare" runat="server" ForeColor="DarkGoldenrod"></asp:Label></td>
+    </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table5" cellspacing="0" cellpadding="0" width=700 border="1">
+    <tr><td class="HSmall" colspan="2">
+      Entered Address Not Found in ZipStreetsRanges:
+          <asp:Label ID="Label_Address_Bad" runat="server" ForeColor="Red"></asp:Label></td></tr>
+      <tr>
+        <td class="TBold">
+          Add an Alternate STREET Spelling for any part of a Street Name</td>
+        <td class="TBold">
+          Add an Alternative CITY Spelling</td>
+      </tr>
+      <tr>
+        <td class="TBold">
+          Street Name:
+          <asp:Label ID="Label_Street_Bad" runat="server" ForeColor="Red"></asp:Label></td>
+        <td class="TBold" style="height: 21px">
+          City:
+          <asp:Label ID="Label_City_Bad" runat="server" ForeColor="Red"></asp:Label>&nbsp;
+          State:<asp:Label
+            ID="Label_State_Bad" runat="server" ForeColor="Red"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td class="T" valign="top">
+          There may be several parts to a street name. Any of the parts may have an alternative
+          spelling. For example MT is a common alternative for MOUNT. Enter (copy and paste)
+          the alternative
+          in the top textbox (i.e. MT) and the 
+          valid street part in the address tables (i.e. MOUNT)
+          in the button textbox, and click the button. Casing is ignored.
+          You will then be able to test the address with the alternate spelling.</td>
+        <td class="T" valign="top">
+          To an alternative city name, enter the correct city in the textbox below and click the button. Enter (copy and paste) the alternative in the top textbox and the valid
+          city in the address tables in the button textbox, and click the button. Casing is ignored. You will then be able to test the
+          address with the alternate spelling.</td>
+      </tr>
+      <tr>
+        <td class="TBold">
+          Alternative Spelling:
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBox_Street_Alt" runat="server" CssClass="TextBoxInput" Width="200px"></user:TextBoxWithNormalizedLineBreaks></td>
+        <td class="TBold">
+          Alternate Spelling:
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBox_City_Alt" runat="server" CssClass="TextBoxInput" Width="170px" OnTextChanged="TextBox_City_Alt_TextChanged"></user:TextBoxWithNormalizedLineBreaks></td>
+      </tr>
+      <tr>
+        <td class="TBold">
+          Valid Street Spelling:
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBox_Street" runat="server" CssClass="TextBoxInput" 
+            Width="200px"></user:TextBoxWithNormalizedLineBreaks></td>
+        <td class="TBold">
+          Valid City Spelling:
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBox_City" runat="server" CssClass="TextBoxInput" Width="170px"></user:TextBoxWithNormalizedLineBreaks></td>
+      </tr>
+      <tr>
+        <td class="TBold">
+          <asp:Button
+            ID="Button_Street_Alt" runat="server" CssClass="Buttons" OnClick="Button_Street_Alt_Click"
+            Text="Add as an Alternate Spelling for Street Part" Width="300px" /></td>
+        <td class="TBold">
+          <asp:Button
+            ID="Button_City_Alternate" runat="server" CssClass="Buttons" OnClick="Button_City_Alternate_Click"
+            Text="Add as Alternate Spelling for City" Width="300px" /></td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table2" cellspacing="0" cellpadding="0" width=700>
+      <tr>
+        <td class="HSmall" >
+          Debug Address Components</td>
+      </tr>
+      <tr>
+        <td class="T">
+          Use this button to test the same address or debug the address components or finding
+          the address in the ZipStreetsRange Table. To debug set a break point in Button_Debug_Click.</td>
+      </tr>
+      <tr>
+        <td class="TBold">
+          <asp:Button ID="Button_Debug" runat="server" CssClass="Buttons" OnClick="Button_Debug_Click"
+            Text="Test the Same Address Again" Width="364px" /></td>
+      </tr>
+    </table>
+    </form>
+</body>
+</html>
+--%>

@@ -1,0 +1,229 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Public.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="Vote.DefaultPage" %>
+
+<%@ Register Src="/Controls/SiteVerification.ascx" TagName="SiteVerification" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntryInline.ascx" TagName="AddressEntryInline" TagPrefix="user" %>
+
+<asp:Content ID="HeadTopContent" ContentPlaceHolderID="MasterHeadTopContent" runat="server">
+  <user:SiteVerification ID="SiteVerification" runat="server" />
+</asp:Content>
+
+<asp:Content ID="HeadBottomContent" ContentPlaceHolderID="MasterHeadBottomContent" runat="server">
+  <style type="text/css">
+    .top-items {
+      overflow: auto;
+      width: 100%;
+    }
+    .address-entry-outer,
+    .intro-blurb-outer {
+      height: 350px;
+    }
+    .address-entry-outer {
+      width: 58%;
+      float: left;
+      background-image: url(/images/peoplevoting-lite.jpg);
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+    .address-entry {
+      padding: 20px;
+    }
+    .address-entry .input-label {
+      font-weight: bold;
+      font-family: Arial;
+      font-size: .75rem;
+      line-height: .9rem;
+      padding-bottom: 5px;
+    }
+    .intro-blurb-outer
+    {
+      width: 42%;
+      float: right;
+      background-image: url(/images/flagbg.jpg);
+      background-repeat: no-repeat;
+      background-size: cover;
+      overflow: hidden;
+    }
+    .intro-blurb {
+      color: #ffffff;
+      font-family: Georgia;
+      font-size: 14px;
+      line-height: 18px;
+      padding: 20px;
+    }
+    .intro-blurb .heads {
+      display: inline-block;
+    }
+    .intro-blurb h5 {
+      font-size: 1.3rem;
+      text-shadow: rgb(0, 0, 0) 2px 2px 0;
+    }
+    .intro-blurb h6 
+    {
+      text-align: right;
+      font-size: 1.2rem;
+      text-shadow: rgb(0, 0, 0) 2px 2px 0;
+      margin: 10px 0 20px 0;
+    }
+    .intro-blurb p {
+      margin: 5px 0;
+    }
+    .bottom-items {
+      display: table-row;
+    }
+    .mission-head {
+      display: table-cell;
+      width: 115px;
+      font-family: Georgia;
+      font-size: 18px;
+      font-weight: bold;
+      font-style: italic;
+      color: #a1000e;
+      text-align: right;
+      margin-right: 20px;
+      line-height: 120%;    
+    }
+    .mission {
+      display: table-cell;
+      font-family: Georgia;
+      font-size: 12px;
+      color: #333333;
+      line-height: 19px;
+      padding: 0 15px;
+    }
+    .pull-quote-outer {
+      display: table-cell;
+      padding-top: 13px;
+      text-align: right;
+      background: url(/images/pullbg.png) no-repeat top left;
+    }
+    .pull-quote {
+      width: 185px;
+      padding-right: 35px;
+      font-family: Georgia;
+      font-size: 18px;
+      font-style: italic;
+      color: #999;
+      line-height: 22px;
+    }
+    
+    @media only screen and (max-width : 519px) 
+    {
+      /* small */
+      .intro-blurb h5 {
+        font-size: 1.3rem;
+      }
+      .intro-blurb h6 
+      {
+        font-size: 1.15rem;
+      }
+      .bottom-items,
+      .mission-head,
+      .mission {
+        display: block;
+      }
+      .mission-head {
+        text-align: left;
+        width: auto;
+        margin: 0 0 5px 15px;
+      }
+    }
+    
+    @media only screen and (max-width : 759px) 
+    {
+      /* small & medium*/
+      .address-entry-outer,
+      .intro-blurb-outer {
+        width: 100%;
+        height: auto;
+      }
+      .top-items 
+      {
+        margin-bottom: 10px;
+      }
+      .pull-quote-outer {
+        display: none;
+      }
+      .content {
+        margin-top: 26px;
+      }
+      .no-js .content {
+        margin-top: 0;
+      }
+    }
+        
+    @media only screen and (min-width : 520px) and (max-width : 759px) 
+    {
+      .intro-blurb h5 {
+        font-size: 1.6rem;
+      }
+      .intro-blurb h6 
+      {
+        font-size: 1.3rem;
+      }
+    }
+
+    @media only screen and (min-width : 940px) 
+    {
+      /* huge */
+      .address-entry-outer,
+      .intro-blurb-outer {
+        height: 290px;
+      }
+      .intro-blurb h5 {
+        font-size: 1.6rem;
+      }
+      .intro-blurb h6 
+      {
+        font-size: 1.3rem;
+      }
+   }
+
+  </style>
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+  <div class="top-items">
+    <div class="address-entry-outer">
+      <div class="address-entry no-print">
+        <p class="input-label">Get your enhanced Sample Ballot or your current Elected Officials customized for your location. Enter your address or 9-digit zip.</p>
+        <user:AddressEntryInline ID="AddressEntryInline" runat="server" />
+      </div>
+    </div>
+    <div class="intro-blurb-outer">
+      <div class="intro-blurb">
+        <div class="heads">
+          <h5>Becoming an informed voter</h5>
+          <h6>&hellip; Just Got <em>Easier</em></h6>
+        </div>
+        <p>Get your customized, enhanced sample ballot and evaluate your candidates and ballot measures. 
+        Pictures, bios, YouTube videos, social media links and, most importantly, each candidate&rsquo;s positions 
+        on the issues are presented for easy comparison. All information is candidate 
+        authored or obtained from the candidate&rsquo;s website.</p>
+        <p>We can also provide your elected representatives and information on elections going back to 2004.</p>
+        <p>Vote-USA has no political agenda.</p>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-items">
+    <div class="mission-head">
+      <h5>Our Mission</h5>
+    </div>
+    <div class="mission">
+      <p>Our democracy is so precious; we feel there must be a better way to make it work. Rather than 
+      electing our representatives based on money, deceptive advertising, and political posters, we feel 
+      that the Internet and social media can provide a truly vibrant and thriving representative democratic 
+      environment. Ancient Greece was the crucible of Western civilization and democracy. In an arena, 
+      citizens would gather to debate and decide public policy. Clearly, that model would not work for 
+      America; however, the model we present here could work. So please help us make this work with a 
+      100% tax-deductible donation.</p>
+    </div>
+    <div class="pull-quote-outer">
+      <div class="pull-quote">
+        &ldquo;...provide a truly vibrant and thriving representative democratic environment.&rdquo;
+      </div>
+    </div>
+  </div>
+</asp:Content>
+
+<asp:Content ID="BottomContent" ContentPlaceHolderID="MasterBottomContent" runat="server">
+</asp:Content>

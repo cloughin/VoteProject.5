@@ -1,0 +1,54 @@
+﻿using System;
+using System.Data;
+using System.Data.Common;
+using MySql.Data.MySqlClient;
+
+namespace DB.Vote
+{
+  public partial class AnswersRow {}
+
+  public partial class Answers
+  {
+    public static DataTable GetAnswers(string politicianKey, string officeKey,
+      int commandTimeout = -1)
+    {
+      const string cmdText =
+        "SELECT a.Answer,a.IssueKey,a.QuestionKey,a.Sequence,a.Source,a.DateStamp,a.YouTubeUrl,a.YouTubeDate," +
+         "a.PoliticianKey,i.Issue,i.IssueLevel,i.IssueOrder,q.Question,q.QuestionOrder FROM Answers a" +
+         " INNER JOIN Issues i ON i.IssueKey=a.IssueKey AND i.IsIssueOmit=0" +
+         " INNER JOIN Questions q ON q.QuestionKey=a.QuestionKey" +
+         "  AND q.IsQuestionOmit=0" +
+         " WHERE a.PoliticianKey=@PoliticianKey AND (TRIM(a.Answer) <> '' OR TRIM(a.YouTubeUrl) <> '')" +
+         " AND i.IssueLevel IN ('A', GetIssueLevel(@OfficeKey))" +
+          " ORDER BY IssueLevel,IssueOrder,Issue,QuestionOrder,Question,DateStamp DESC,Sequence DESC";
+
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      using (var cn = VoteDb.GetOpenConnection())
+      {
+        cmd.Connection = cn;
+        VoteDb.AddCommandParameter(cmd, "PoliticianKey", politicianKey);
+        VoteDb.AddCommandParameter(cmd, "OfficeKey", officeKey);
+        var table = new DataTable();
+        DbDataAdapter adapter = new MySqlDataAdapter(cmd as MySqlCommand);
+        adapter.Fill(table);
+        return table;
+      }
+    }
+
+    public static int GetNextSequence(string politicianKey, string questionKey)
+    {
+      const string cmdText =
+        "SELECT MAX(Sequence) FROM Answers WHERE PoliticianKey=@PoliticianKey AND QuestionKey=@QuestionKey";
+      var cmd = VoteDb.GetCommand(cmdText);
+      using (var cn = VoteDb.GetOpenConnection())
+      {
+        cmd.Connection = cn;
+        VoteDb.AddCommandParameter(cmd, "PoliticianKey", politicianKey);
+        VoteDb.AddCommandParameter(cmd, "QuestionKey", questionKey);
+        var result = VoteDb.ExecuteScalar(cmd);
+        if (result == null || result == DBNull.Value) return 0;
+        return Convert.ToInt32(result) + 1;
+      }
+    }
+  }
+}

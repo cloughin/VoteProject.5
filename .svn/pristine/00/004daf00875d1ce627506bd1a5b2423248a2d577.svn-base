@@ -1,0 +1,81 @@
+<%@ Page Language="C#" AutoEventWireup="true" Codebehind="xReferendum.aspx.cs" 
+Inherits="Vote.ReferendumPageX" %>
+
+<%@ Register Src="/Controls/SocialMediaButtons.ascx" TagName="SocialMediaButtons" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonateBanner.ascx" TagName="DonateBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainBanner.ascx" TagName="MainBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainNavigation.ascx" TagName="MainNavigation" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainFooter.ascx" TagName="MainFooter" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeading.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntry.ascx" TagName="AddressEntry" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonationRequest.ascx" TagName="DonationRequest" TagPrefix="user" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+  <title runat="server" id="TitleTag" ></title>
+  <meta id="MetaDescriptionTag" content="" name="description" runat="server" EnableViewState="False" />
+  <meta id="MetaKeywordsTag" content="" name="keywords" runat="server" EnableViewState="False" />
+</head>
+<body class="referendum-page">
+    <form id="form1" runat="server">
+
+    <div id="outer">
+    <div id="container">
+      <user:SocialMediaButtons ID="SocialMediaButtons1" runat="server" />
+      <user:DonateBanner ID="DonateBanner1" runat="server" />
+      <user:MainBanner ID="MainBanner1" runat="server" />
+      <user:MainNavigation ID="MainNavigation1" runat="server" />
+      <div id="mainContent">
+        <user:PageHeading ID="PageHeading" runat="server" 
+          MainHeadingText="Ballot Measures" />
+
+        <table class="tablePage" cellspacing="0" cellpadding="0" id="ReferendumHeading">
+          <tr class="trReferendumName">
+            <td class="tdReferendumName">
+              <asp:Label ID="LabelReferendum" runat="server" EnableViewState="False"></asp:Label></td>
+          </tr>
+          <tr class="trReferendumTitle">
+            <td class="tdReferendumTitle">
+              <asp:Label ID="LabelTitle" runat="server" EnableViewState="False"></asp:Label></td>
+          </tr>
+          <tr class="trReferendumElection">
+            <td class="tdReferendumElection">
+              <asp:Label ID="LabelElection" runat="server" EnableViewState="False"></asp:Label></td>
+          </tr>
+        </table>
+
+        <table class="tablePage" cellspacing="0" cellpadding="0" id="ReferendumBody">
+          <tr class="trReferendumDescription" id="DescriptionRow" EnableViewState="False" runat="server">
+            <td class="tdReferendumDescription">
+              <span class="ReferendumDescriptionHead">Description: </span>
+              <asp:Label ID="ReferendumDesc" runat="server" EnableViewState="False"></asp:Label></td>
+          </tr>
+          <tr class="trReferendumDetail" id="DetailRow" EnableViewState="False" runat="server">
+            <td class="tdReferendumDetail">
+              <span class="ReferendumDetailHead">
+                <asp:Label ID="LabelReferendumDetail" runat="server" EnableViewState="False"></asp:Label>
+              </span>
+              <asp:Label ID="ReferendumDetail" runat="server" EnableViewState="False"></asp:Label></td>
+          </tr>
+          <tr class="trReferendumFullText" id="FullTextRow" EnableViewState="False" runat="server">
+            <td class="tdReferendumFullText">
+              <span class="ReferendumDetailFullText">
+                <asp:Label ID="LabelReferendumFullText" runat="server" EnableViewState="False"></asp:Label>
+              </span>
+              <asp:Label ID="ReferendumFullText" runat="server" EnableViewState="False"></asp:Label></td>
+          </tr>
+        </table>
+ 
+       <user:MainFooter ID="MainFooter1" runat="server" />
+      </div> <!-- id="mainContent" -->
+    </div> <!-- id="container" -->
+    </div> <!-- id="outer" -->
+
+    <user:AddressEntry ID="AddressEntry" runat="server" />
+    <user:DonationRequest ID="DonationRequest1" runat="server" />
+
+    </form>
+</body>
+</html>

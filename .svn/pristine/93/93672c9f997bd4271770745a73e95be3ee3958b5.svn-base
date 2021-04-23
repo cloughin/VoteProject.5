@@ -1,0 +1,15 @@
+﻿using System;
+
+namespace ReportInfoLogSummary
+{
+  class Program
+  {
+    // ReSharper disable once UnusedParameter.Local
+    static void Main(string[] args)
+    {
+      Console.WriteLine("Begin ReportLogInfoSummary");
+      Vote.ReportLogInfoSummary.Report();
+      Console.WriteLine("End ReportLogInfoSummary");
+    }
+  }
+}

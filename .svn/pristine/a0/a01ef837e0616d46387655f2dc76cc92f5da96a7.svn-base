@@ -1,0 +1,70 @@
+﻿define(["jquery", "vote/adminMaster", "vote/util", "monitor", 
+    "vote/politician/updateAnswer", "jqueryui"],
+  function ($, master, util, monitor, updateAnswer) {
+
+    var $$ = util.$$;
+
+    function afterUpdateContainer(group, args) {
+      if (!group) return;
+      initGroup($$(group.container));
+    };
+    
+    function initMainTab($panel) {
+      //find the active panel for the new main tab and call initSideTab
+      initSideTab($(".ui-tabs-panel[aria-hidden='false']", $panel.find(".vtab-control")).filter(":visible"));
+    }
+
+    function initSideTab($panel) {
+      //alert($panel.attr("id"));
+      var $accordion = $panel.find(".accordion-deferred");
+      if ($accordion.length) {
+        $accordion.removeClass("accordion-deferred").addClass("accordion")
+          .accordion({
+          heightStyle: "content",
+          active: false,
+          collapsible: true
+        });
+      }
+    }
+
+    function initGroup($group) {
+      if ($group != null && $group.hasClass("answer-container")) return; // handled in answer
+      $(".date-picker", $group).datepicker({
+        changeYear: true,
+        yearRange: "2010:+0"
+      });
+      $("#main-tabs")
+        .on("accordionactivate", ".accordion", function (event, ui) {
+          updateAnswer.initGroup(ui.newPanel.find(".answer-container"));
+        });
+    };
+
+  function initPage() {
+    monitor.init();
+    monitor.registerCallback("afterUpdateContainer", afterUpdateContainer);
+
+    initGroup(null);
+    
+    $("body")
+      .on("tabsactivate", ".vtab-control,.htab-control", function (event, ui) {
+        var $this = $(this);
+        if ($this.hasClass("vtab-control")) {
+          initSideTab(ui.newPanel);
+          event.stopPropagation();
+        }
+        else if ($this.hasClass("htab-control"))
+          initMainTab(ui.newPanel);
+      });
+    initMainTab(util.getCurrentTabPanel("main-tabs"));
+   
+    util.safeBind($(".vcentered-tab"), "click", util.tabClick);
+    window.onbeforeunload = function () {
+      if (monitor.hasChanges())
+        return "There are entries on your form that have not been submitted";
+    };
+  };
+
+  master.inititializePage({
+    callback: initPage
+  });
+});

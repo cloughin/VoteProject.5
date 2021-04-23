@@ -1,0 +1,18 @@
+﻿using System;
+
+namespace Vote.Controls
+{
+  public partial class DonationRequestResponsive : System.Web.UI.UserControl
+  {
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      Page.IncludeJs("~/js/jq/jquery.cookie.js");
+      Page.IncludeJs("~/js/jq/jquery.scrollintoview.js");
+      Page.IncludeJs("~/js/vote.js");
+      Page.IncludeJs("~/js/DonationRequestResponsive.js");
+      Page.IncludeJs("~/js/json2.js");
+      Page.IncludeCss("~/js/jq/jquery-ui.css");
+      Page.IncludeCss("~/css/DonationRequestResponsive.css");
+    }
+  }
+}

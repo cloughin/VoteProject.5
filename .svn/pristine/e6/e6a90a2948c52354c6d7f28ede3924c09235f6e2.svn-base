@@ -1,0 +1,399 @@
+using System;
+using System.Web.UI.WebControls;
+using DB.Vote;
+using Vote.Reports;
+
+namespace Vote
+{
+  public partial class ElectionPageX : CacheablePage
+  {
+    public ElectionPageX()
+    {
+      NoUrlEdit = true; /* bacause disabled */
+      NoIndex = true; /* bacause disabled */
+    }
+
+    #region Caching support
+
+    protected override bool SuppressCaching
+    {
+      get { return true; }
+    }
+
+    protected override string GetCacheKey()
+    {
+      var key = UrlManager.GetStateCodeFromHostName() + "." + QueryState + "." +
+        QueryElection;
+      var siteId = UrlManager.CurrentQuerySiteId;
+      if (!string.IsNullOrEmpty(siteId))
+        key += "." + siteId;
+
+      return key;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "Election";
+    }
+
+    #endregion Caching support
+
+    private readonly string _ElectionKey = QueryElection;
+    private string _ElectionDescription;
+    private string _StateCode;
+
+    private const string TitleTagAllStatesDomain = "{1}";
+
+    private const string MetaDescriptionAllStatesDomain =
+      "{1} candidates’ pictures, bios, social media and  positions on the issues; plus your customized sample ballot.";
+
+    private const string MetaKeywordsAllStatesDomain =
+      "sample ballot, sample ballots, vote, voter, ballot, election, voting, candidates";
+
+    private const string TitleTagSingleStateDomain = "{1}";
+
+    private const string MetaDescriptionSingleStateDomain =
+      "{1} candidates’ pictures, bios, social media and  positions on the issues; plus your customized sample ballot.";
+
+    private const string MetaKeywordsSingleStateDomain =
+      "{0} sample ballot, {0} sample ballots, {0} vote, {0} voter, {0} ballot, {0} election, {0} voting, {0} candidates";
+
+    private void PopulateMetaTags()
+    {
+      if (DomainData.IsValidStateCode)
+      {
+        TitleTag.Text = TitleTagSingleStateDomain;
+        MetaDescriptionTag.Content = MetaDescriptionSingleStateDomain;
+        MetaKeywordsTag.Content = MetaKeywordsSingleStateDomain;
+      }
+      else
+      {
+        TitleTag.Text = TitleTagAllStatesDomain;
+        MetaDescriptionTag.Content = MetaDescriptionAllStatesDomain;
+        MetaKeywordsTag.Content = MetaKeywordsAllStatesDomain;
+      }
+
+      TitleTag.Text = string.Format(TitleTag.Text, _StateCode, _ElectionDescription);
+      MetaDescriptionTag.Content = string.Format(MetaDescriptionTag.Content,
+        _StateCode, _ElectionDescription);
+      MetaKeywordsTag.Content = string.Format(MetaKeywordsTag.Content, _StateCode,
+        _ElectionDescription);
+    }
+
+    private void FillInReport()
+    {
+      var report = ElectionReport.GetReport(ReportUser.Public, _ElectionKey);
+      var siteId = UrlManager.CurrentQuerySiteId;
+      if (siteId == "ivn")
+      {
+        var reportText = report.RenderToString();
+        reportText = UrlNormalizer.ApplySiteId(reportText, siteId);
+        report = new Literal {Text = reportText};
+      }
+      report.AddTo(ElectionPlaceHolder);
+    }
+
+    private void FillInReportInstructions()
+    {
+      switch (Elections.GetElectoralClass(_ElectionKey))
+      {
+        case ElectoralClass.USPresident:
+        case ElectoralClass.USHouse:
+        case ElectoralClass.State:
+          ReportInstructions.Text = "Click a Compare Button for side-by-side" +
+            " candidate comparisons, including pictures, bios, social media" +
+            " links and their positions and views on the issues.";
+          break;
+
+        case ElectoralClass.USSenate:
+          ReportInstructions.Text = "Click a Compare Button for side-by-side" +
+            " candidate comparisons, including pictures, bios, social media" +
+            " links and their positions and views on the issues. Some states" +
+            " have no candidates listed because there were no US Senate seats" +
+            " up for election.";
+          break;
+
+        case ElectoralClass.USGovernors:
+          ReportInstructions.Text = "Click the \"Candidate Comparisons\" link" +
+            " for a side-by-side comparison of all candidates for an office," +
+            " including bios and their views on the issues.";
+          break;
+
+        case ElectoralClass.County:
+        case ElectoralClass.Local:
+          ReportInstructions.Text = "Click a Compare Button for side-by-side" +
+            " candidate comparisons, including pictures, bios, social media" +
+            " links and their positions and views on the issues. If we have" +
+            " information about local elections, there will be <strong>Local" +
+            " District</strong> links at the bottom of this page.";
+          break;
+
+        default:
+          ReportInstructions.Text = string.Empty;
+          break;
+      }
+
+      ElectionInstructionTable.Visible = ReportInstructions.Text != string.Empty;
+    }
+
+    private void FillInAdditionalInfo()
+    {
+      var additionalInfo =
+        PageCache.Elections.GetElectionAdditionalInfo(_ElectionKey);
+
+      if (string.IsNullOrWhiteSpace(additionalInfo))
+        ElectionInfoTable.Visible = false;
+      else
+      {
+        AdditionalElectionInfo.Text = additionalInfo.ReplaceNewLinesWithBreakTags();
+        ElectionInfoTable.Visible = true;
+      }
+    }
+
+    private string GetHeadingText()
+    {
+      if (!MemCache.IsValidElection(_ElectionKey))
+        return "No Data for this Election";
+      return StateCache.IsValidStateCode(_StateCode)
+        ? "Directory of Election Contests and Ballot Measures"
+        : "Directory of Election Contests ";
+    }
+
+    private void FillInTitles()
+    {
+      LabelTitle.Text = Elections.GetElectoralClassDescription(_ElectionKey);
+      LabelDirectory.Text = GetHeadingText();
+      LabelElection.Text = _ElectionDescription;
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      // The OnPreInit method of the parent class handles serving from cache, 
+      // in which case this method is never called.
+
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/SecondaryCommon.css");
+      this.IncludeCss("~/css/All.css");
+      this.IncludeCss("~/css/Election.css");
+      this.IncludeJs(
+        "http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js");
+      this.IncludeJs(
+        "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js");
+      this.IncludeJs("~/js/Election.js");
+      this.IncludeCss("~/js/jq/jquery-ui.css");
+
+      if (PageCache.Elections.GetElectionDate(_ElectionKey) < DateTime.Today)
+        NoIndex = true;
+      else
+        PastElectionWarningTable.Visible = false;
+
+      _ElectionDescription = PageCache.Elections.GetElectionDesc(_ElectionKey);
+      _StateCode = Elections.GetStateCodeFromKey(_ElectionKey);
+
+      PopulateMetaTags();
+      FillInTitles();
+      FillInAdditionalInfo();
+      FillInReportInstructions();
+      FillInReport();
+    }
+
+    #region Dead code
+
+    //public static string CacheElectionPageKey(string DomainDesignCode,
+    //  string DomainDataCode, string StateCode, string ElectionKey)
+    //{
+    //  return (
+    //    DomainDesignCode //VOTE-USA VOTE-VA
+    //    + "." + DomainDataCode //US VA
+    //    + "." + "Election"
+    //    + "." + StateCode
+    //    + "." + ElectionKey
+    //    );
+    //}
+
+    //private static string County_Links_Desc()
+    //{
+    //  return StateCache.GetStateName(db.StateCode_Or_FederalCode_In_ElectionKey(db.QueryString("Election")))
+    //            + " County Elections for "
+    //            + db.Elections_Str(db.ElectionKey_State(db.QueryString("Election")), "ElectionDesc");
+    //}
+
+    //private static string Local_Links_Desc()
+    //{
+    //  return CountyCache.GetCountyName(db.StateCode_Or_FederalCode_In_ElectionKey(db.QueryString("Election"))
+    //      , db.CountyCode_In_ElectionKey(db.QueryString("Election")))
+    //    + ", "
+    //    + StateCache.GetStateName(db.StateCode_Or_FederalCode_In_ElectionKey(db.QueryString("Election")))
+    //    + " Local Elections for "
+    //    + db.Elections_Str(db.ElectionKey_State(db.QueryString("Election")), "ElectionDesc");
+    //}
+
+    //private static void FillInReportInstructions(PageCache cache,
+    //  ITextControl reportInstructions, Control electionInstructionTable)
+    //{
+    //  var electionKey = db.QueryString("Election");
+
+    //  if (Is_ElectionKey_Election(electionKey))
+    //  {
+    //    #region Election
+    //    switch (db.Electoral_Class_Election(electionKey))
+    //    {
+    //      case db.Electoral.USPresident:
+    //        if (cache.Elections.GetElectionType(electionKey) == "A")//National Presidental Primary
+    //          reportInstructions.Text = DomainDesigns.GetDesignStringWithSubstitutions(
+    //            DomainDesigns.Column.InstructionsElectionPageUSPresPrimary,
+    //            DomainDesigns.Column.IsTextInstructionsElectionPageUSPresPrimary);
+    //        else
+    //          reportInstructions.Text = DomainDesigns.GetDesignStringWithSubstitutions(
+    //            DomainDesigns.Column.InstructionsElectionPageUSPres,
+    //            DomainDesigns.Column.IsTextInstructionsElectionPageUSPres);
+    //        break;
+
+    //      case db.Electoral.USSenate:
+    //        reportInstructions.Text = DomainDesigns.GetDesignStringWithSubstitutions(
+    //            DomainDesigns.Column.InstructionsElectionPageUSSenate,
+    //            DomainDesigns.Column.IsTextInstructionsElectionPageUSSenate);
+    //        break;
+
+    //      case db.Electoral.USHouse:
+    //        reportInstructions.Text = DomainDesigns.GetDesignStringWithSubstitutions(
+    //            DomainDesigns.Column.InstructionsElectionPageUSHouse,
+    //            DomainDesigns.Column.IsTextInstructionsElectionPageUSHouse);
+    //        break;
+
+    //      case db.Electoral.USGovernors:
+    //        reportInstructions.Text = DomainDesigns.GetDesignStringWithSubstitutions(
+    //            DomainDesigns.Column.InstructionsElectedOfficialsPageGovernors,
+    //            DomainDesigns.Column.IsTextInstructionsElectedOfficialsPageGovernors);
+    //        break;
+
+    //      case db.Electoral.State:
+    //        reportInstructions.Text = DomainDesigns.GetDesignStringWithSubstitutions(
+    //            DomainDesigns.Column.InstructionsElectionPageState,
+    //            DomainDesigns.Column.IsTextInstructionsElectionPageState);
+    //        break;
+
+    //      case db.Electoral.County:
+    //        reportInstructions.Text = DomainDesigns.GetDesignStringWithSubstitutions(
+    //            DomainDesigns.Column.InstructionsElectionPageCounty,
+    //            DomainDesigns.Column.IsTextInstructionsElectionPageCounty);
+    //        break;
+
+    //      case db.Electoral.Local:
+    //        reportInstructions.Text = DomainDesigns.GetDesignStringWithSubstitutions(
+    //            DomainDesigns.Column.InstructionsElectionPageCounty,
+    //            DomainDesigns.Column.IsTextInstructionsElectionPageCounty);
+    //        break;
+
+    //      default:
+    //        reportInstructions.Text = string.Empty;
+    //        break;
+    //    }
+
+    //    electionInstructionTable.Visible = reportInstructions.Text != string.Empty;
+
+    //    #endregion Election
+    //  }
+    //  else
+    //  {
+    //    #region County or Local Links
+    //    if (Is_ElectionKey_Links_County(electionKey))
+    //      reportInstructions.Text =
+    //        "Use these links to obtain county elections in the " +
+    //        Offices.GetElectoralLevelDescription(db.StateCode_Or_FederalCode_In_ElectionKey(electionKey)) +
+    //        " Counties. The reports will also provide links" +
+    //        " to obtain reports of local district elections.";
+    //    else
+    //      reportInstructions.Text =
+    //        "Use these links to obtain local district elections in  " +
+    //        db.Contest_Name() + ".";
+
+    //    #endregion County or Local Links
+    //  }
+    //}
+
+    //private void FillInElectionResults()
+    //{
+    //  var electionKey = db.QueryString("Election");
+
+    //  if (Is_ElectionKey_Election(electionKey) &&
+    //    MemCache.IsValidElection(electionKey) &&
+    //    db.Url_ImageElectionOrEmpty(electionKey) != string.Empty)
+    //  {
+    //    ElectionResultsTable.Visible = true;
+    //    ResultsImage.ImageUrl = db.Url_ImageElectionOrEmpty(electionKey);
+    //    var resultsSource = PageCache.Elections.GetElectionResultsSource(electionKey);
+    //    if (resultsSource != string.Empty)
+    //    {
+    //      ElectionResultsSource.Text = resultsSource;
+    //    }
+    //  }
+    //  else
+    //  {
+    //    ElectionResultsTable.Visible = false;
+    //  }
+
+    //private static void FillInAdditionalInfo(PageCache cache,
+    //  ITextControl additionalElectionInfo, Control electionInfoTable)
+    //{
+    //  var electionKey = db.QueryString("Election");
+    //  var additionalInfo = cache.Elections.GetElectionAdditionalInfo(electionKey);
+
+    //  #region Additional Election Information
+    //  if (Is_ElectionKey_Election(electionKey) &&
+    //    MemCache.IsValidElection(electionKey) &&
+    //    additionalInfo != string.Empty)
+    //  {
+    //    additionalElectionInfo.Text = additionalInfo.ReplaceNewLinesWithBreakTags();
+    //    electionInfoTable.Visible = true;
+    //  }
+    //  else
+    //  {
+    //    electionInfoTable.Visible = false;
+    //  }
+    //  #endregion Additional Election Information
+    //}
+
+    //private void FillInTitles()
+    //{
+    //  LabelTitle.Text = db.Election_Category_Name(_ElectionKey);
+
+    //  if (Is_ElectionKey_Election(_ElectionKey))
+    //  {
+    //    LabelDirectory.Text = db.Heading_Directory_Election(_ElectionKey);
+    //    LabelElection.Text = PageCache.Elections.GetElectionDesc(_ElectionKey);
+    //  }
+    //  else
+    //  {
+    //    LabelDirectory.Text = Is_ElectionKey_Links_County(_ElectionKey)
+    //      ? "County Elections"
+    //      : "Local District Elections";
+
+    //    LabelElection.Text = db.Elections_Str(_ElectionKey, "ElectionDesc");
+    //  }
+    //}
+
+    //private static bool Is_ElectionKey_Links_County(string electionKey)
+    //{
+    //  return db.CountyCode_In_ElectionKey(electionKey) == "000";
+    //}
+
+    //private static bool Is_ElectionKey_Links_Local(string electionKey)
+    //{
+    //  return db.LocalCode_In_ElectionKey(electionKey) == "00";
+    //}
+
+    //private static bool Is_ElectionKey_Links(string electionKey)
+    //{
+    //  return (Is_ElectionKey_Links_County(electionKey))
+    //    || (Is_ElectionKey_Links_Local(electionKey));
+    //}
+
+    //private static bool Is_ElectionKey_Election(string electionKey)
+    //{
+    //  return !Is_ElectionKey_Links(electionKey);
+    //}
+
+    #endregion Dead code
+  }
+}

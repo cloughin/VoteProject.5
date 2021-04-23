@@ -1,0 +1,98 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Net;
+using System.Web;
+using System.Web.Script.Serialization;
+using System.Xml;
+
+namespace Vote
+{
+  public class YouTubeVideoInfo
+  {
+    public readonly string Id;
+    public bool IsValid;
+    public readonly string Description;
+    public readonly DateTime PublishedAt;
+    public readonly TimeSpan Duration;
+    public readonly bool IsPublic;
+
+    public YouTubeVideoInfo(string id)
+    {
+      Id = id;
+    }
+
+    public YouTubeVideoInfo(string id, string description, DateTime publishedAt,
+      TimeSpan duration, bool isPublic)
+    {
+      Id = id;
+      Description = description;
+      PublishedAt = publishedAt;
+      Duration = duration;
+      IsPublic = isPublic;
+      IsValid = true;
+    }
+  }
+
+  public static class YouTubeUtility
+  {
+    private const string ApiKey = "AIzaSyBSJeY9MAMhf8AdUjzFl1apWzWshauqQFs";
+
+    private const string VideoInfoUrlTemplate =
+      "https://www.googleapis.com/youtube/v3/videos?id={0}&key={1}&part=snippet,contentDetails,status&fields=items(snippet/description,snippet/publishedAt,contentDetails/duration,status/privacyStatus)";
+
+    private static YouTubeVideoInfo DecodeJson(string youTubeId, string json)
+    {
+      // ReSharper disable AssignNullToNotNullAttribute
+      var serializer = new JavaScriptSerializer();
+      var jsonObj = serializer.Deserialize<Dictionary<string, object>>(json);
+      var items = jsonObj["items"] as ArrayList;
+      var dictionary = items[0] as Dictionary<string, object>;
+      var snippet = dictionary["snippet"] as Dictionary<string, object>;
+      var description = snippet["description"] as string;
+      var publishedAt = snippet["publishedAt"] as string;
+      var contentDetails = dictionary["contentDetails"] as Dictionary<string, object>;
+      var duration = contentDetails["duration"] as string;
+      var status = dictionary["status"] as Dictionary<string, object>;
+      var privacyStatus = status["privacyStatus"] as string;
+
+      return new YouTubeVideoInfo(youTubeId, description, DateTime.Parse(publishedAt).Date,
+        XmlConvert.ToTimeSpan(duration), privacyStatus == "public");
+      // ReSharper restore AssignNullToNotNullAttribute
+    }
+
+    public static YouTubeVideoInfo GetYouTubeVideoInfo(string youTubeId, int retries = 0)
+    {
+      try
+      {
+        var client = new WebClient();
+        var url = string.Format(VideoInfoUrlTemplate, youTubeId, ApiKey);
+        var json = client.DownloadString(url);
+        return DecodeJson(youTubeId, json);
+      }
+      catch
+      {
+        if (retries <= 0)
+          return new YouTubeVideoInfo(youTubeId);
+      }
+      return GetYouTubeVideoInfo(youTubeId, retries - 1);
+    }
+
+    public static YouTubeVideoInfo GetYouTubeVideoInfoViaProxy(string youTubeId, int retries = 0)
+    {
+      try
+      {
+        var client = new WebClient();
+        var url = string.Format(VideoInfoUrlTemplate, youTubeId, ApiKey);
+        var json = client.DownloadString("http://localhost:7734?" + HttpUtility.UrlEncode(url));
+        return DecodeJson(youTubeId, json);
+      }
+      catch
+      {
+        if (retries <= 0)
+          return new YouTubeVideoInfo(youTubeId);
+      }
+      return GetYouTubeVideoInfoViaProxy(youTubeId, retries - 1);
+    }
+  }
+}

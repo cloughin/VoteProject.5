@@ -1,0 +1,40 @@
+﻿define(["jquery", "vote/adminMaster", "vote/util", "monitor", 
+    "vote/politician/updateAnswer", "jqueryui"],
+  function ($, master, util, monitor, updateAnswer) {
+
+    var $$ = util.$$;
+
+    var afterUpdateContainer = function (group, args) {
+      if (!group) return;
+      initGroup($$(group.container));
+    };
+
+    var initGroup = function($group) {
+      if ($group != null && $group.hasClass("answer-container")) return; // handled in answer
+      $(".date-picker", $group).datepicker({
+        changeYear: true,
+        yearRange: "2010:+0"
+      });
+      $("#main-tabs")
+        .on("accordionactivate", ".accordion", function (event, ui) {
+          updateAnswer.initGroup(ui.newPanel.find(".answer-container"));
+        });
+    };
+
+  var initPage = function() {
+    monitor.init();
+    monitor.registerCallback("afterUpdateContainer", afterUpdateContainer);
+
+    initGroup(null);
+    
+    util.safeBind($(".vcentered-tab"), "click", util.tabClick);
+    window.onbeforeunload = function () {
+      if (monitor.hasChanges())
+        return "There are entries on your form that have not been submitted";
+    };
+  };
+
+  master.inititializePage({
+    callback: initPage
+  });
+});

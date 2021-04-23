@@ -1,0 +1,45 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="x500.aspx.cs" Inherits="Vote.Error500PageX" %>
+
+<%@ Register Src="/Controls/SocialMediaButtons.ascx" TagName="SocialMediaButtons" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonateBanner.ascx" TagName="DonateBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainBanner.ascx" TagName="MainBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainNavigation.ascx" TagName="MainNavigation" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainFooter.ascx" TagName="MainFooter" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeading.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntry.ascx" TagName="AddressEntry" TagPrefix="user" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+  <title runat="server" id="TitleTag" >Our Servers Had a Problem...</title>
+</head>
+<body class="error-500">
+    <form id="form1" runat="server" enableviewstate="True">
+    <div id="outer">
+    <div id="container">
+      <user:SocialMediaButtons runat="server" />
+      <user:DonateBanner runat="server" />
+      <user:MainBanner runat="server" />
+      <user:MainNavigation runat="server" />
+      <div id="mainContent">
+        <user:PageHeading ID="PageHeading" runat="server" 
+          MainHeadingText="Our Servers Had a Problem..." />
+
+        <div class="intro">
+        <p>We are sorry but our servers experienced a problem in processing your request.
+        We have captured information about the problem and will work to correct it.</p>
+        <p>For now please make a selection from the menus on this page, or go to our 
+        <a href="/">Home page</a>.</p>
+        </div>
+
+        <user:MainFooter runat="server" />
+      </div> <!-- id="mainContent" -->
+    </div> <!-- id="container" -->
+    </div> <!-- id="outer" -->
+
+    <user:AddressEntry runat="server" />
+
+    </form>
+</body>
+</html>

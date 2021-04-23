@@ -1,0 +1,64 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Public.Master" AutoEventWireup="true" CodeBehind="ElectionNew.aspx.cs" Inherits="Vote.ElectionPage" %>
+
+<%@ Register Src="/Controls/PageHeadingResponsive.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonationRequestResponsive.ascx" TagName="DonationRequest" TagPrefix="user" %>
+
+<asp:Content ID="HeadTopContent" ContentPlaceHolderID="MasterHeadTopContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="HeadBottomContent" ContentPlaceHolderID="MasterHeadBottomContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+  <user:PageHeading ID="PageHeading" runat="server" MainHeadingText="Election Contests and Ballot Measures" />
+  <div id="mainContent">
+  <table class="tablePage" cellspacing="0" cellpadding="0" id="ElectionHeading"
+  border="0" enableviewstate="False">
+  <tr class="trElectionName">
+    <td class="tdElectionName">
+      <asp:Label ID="LabelTitle" runat="server" EnableViewState="False"></asp:Label></td>
+  </tr>
+  <tr class="trElectionTitle">
+    <td class="tdElectionTitle">
+      <asp:Label ID="LabelDirectory" runat="server" EnableViewState="False"></asp:Label></td>
+  </tr>
+  <tr class="trElectionElection">
+    <td class="tdElectionElection">
+      <asp:Label ID="LabelElection" runat="server" EnableViewState="False"></asp:Label></td>
+  </tr>
+  </table>
+  <!-- Table -->
+  <table class="tablePage" id="ElectionInfoTable" cellspacing="0" cellpadding="0"
+    border="0" runat="server" enableviewstate="False">
+    <tr class="trElectionElectionInfo">
+      <td class="tdElectionElectionInfo">
+        <asp:Label ID="ReportInstructions" runat="server" EnableViewState="False"></asp:Label></td>
+    </tr>
+  </table>
+  <table class="tablePage" id="PastElectionWarningTable" cellspacing="0" cellpadding="0"
+    border="0" runat="server" enableviewstate="False">
+    <tr class="trElectionElectionInfo">
+      <td class="tdElectionElectionInfo warning">
+        <asp:Label ID="PastElectionWarning" runat="server" EnableViewState="False">
+        <strong>WARNING:</strong> Candidate pictures are the most current we have on file. Because 
+        this is a past election, they may not show a candidate’s likeness at the 
+        time of the election. Likewise, some of the links to websites, emails, 
+        and social media may be broken.</asp:Label></td>
+    </tr>
+  </table>
+
+  <table class="tablePage" id="ElectionInstructionTable" cellspacing="0" cellpadding="0"
+    border="0" runat="server" enableviewstate="False">
+    <tr class="trElectionInstruction">
+      <td class="tdElectionInstruction">
+        <asp:Label ID="AdditionalElectionInfo" runat="server" EnableViewState="False"></asp:Label></td>
+    </tr>
+  </table>
+        
+  <asp:PlaceHolder ID="ElectionPlaceHolder" runat="server"  EnableViewState="False"></asp:PlaceHolder>
+  </div>
+</asp:Content>
+
+<asp:Content ID="BottomContent" ContentPlaceHolderID="MasterBottomContent" runat="server">
+  <user:DonationRequest ID="DonationRequest" runat="server" />
+</asp:Content>

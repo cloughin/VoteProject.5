@@ -1,0 +1,63 @@
+﻿    #mainContent .intro a.partner, 
+    #mainContent .intro a:hover.partner
+    {
+      display: block;
+      text-decoration: none;
+      color: #444;
+    }
+    #mainContent .intro a.nolabels
+    {
+      min-height: 73px;
+      background: url(/images/NoLabels.gif) no-repeat;
+      padding-top: 10px;
+      padding-left: 103px;
+    }
+    #mainContent .intro a.recovering
+    {
+      min-height: 91px;
+      background: url(/images/RecoveringPolitician.jpg) no-repeat;
+      padding-top: 20px;
+      padding-left: 301px;
+    }
+    #mainContent .intro a.ivn
+    {
+      min-height: 68px;
+      background: url(/images/ivn-main.png) no-repeat;
+      padding-top: 5px;
+      padding-left: 187px;
+    }
+    #mainContent .intro a.endpartisanship
+    {
+      min-height: 56px;
+      background: url(/images/end-partisanship.png) no-repeat;
+      padding-top: 5px;
+      padding-left: 311px;
+    }
+    #mainContent .intro a.bol
+    {
+      min-height: 22px;
+      background: url(/images/businessonlinelogosmall.png) no-repeat;
+      padding-top: 0px;
+      padding-left: 180px;
+    }
+    #mainContent .intro a.infiniden
+    {
+      min-height: 12px;
+      background: url(/images/infiniden.gif) no-repeat;
+      padding-top: 0px;
+      padding-left: 99px;
+    }
+    #mainContent .intro a.google
+    {
+      min-height: 29px;
+      background: url(/images/googlelogosmall.gif) no-repeat;
+      padding-top: 0px;
+      padding-left: 100px;
+    }
+    #mainContent .intro a.aristotle
+    {
+      min-height: 35px;
+      background: url(/images/Aristotle.png) no-repeat;
+      padding-top: 0px;
+      padding-left: 220px;
+    }

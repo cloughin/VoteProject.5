@@ -1,0 +1,293 @@
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Web;
+using System.Xml;
+using DB.VoteLog;
+
+namespace Vote
+{
+  /// <summary>
+  /// Summary description for Global.
+  /// </summary>
+  public class Global : HttpApplication
+  {
+    /// <summary>
+    /// Required designer variable.
+    /// </summary>
+// ReSharper disable NotAccessedField.Local
+    private IContainer components;
+    // ReSharper restore NotAccessedField.Local
+
+    #region from db
+
+    public static void Log_Page_Not_Found_404(string msg)
+    {
+      if (MemCache.IsLoggingErrors)
+        Log404PageNotFound.Insert(DateTime.Now, VotePage.CurrentUrl, msg);
+    }
+
+    #endregion from db
+
+    protected Global()
+    {
+      InitializeComponent();
+    }
+
+    protected void Application_Start(Object sender, EventArgs e) {}
+
+    protected void Session_Start(Object sender, EventArgs e)
+    {
+      Session["StateName"] = string.Empty;
+      Session["CongressCode"] = string.Empty;
+      Session["StateSenateCode"] = string.Empty;
+      Session["StateHouseCode"] = string.Empty;
+      //Session["LDSStateName"] = string.Empty;
+      //Session["LDSStateCode"] = string.Empty;
+      Session["CountyName"] = string.Empty;
+      Session["Addr1"] = string.Empty;
+      Session["Addr2"] = string.Empty;
+      Session["City"] = string.Empty;
+      Session["Zip5"] = string.Empty;
+      Session["Zip4"] = string.Empty;
+
+
+      //All MASTER, ADMIN, POLITICIAN, PARTY Users
+      Session["UserName"] = string.Empty;
+
+      //MASTER, ADMIN, COUNTY, LOCAL, POLITICIAN (levels of data)
+      //DESIGN, ORGANIZATION, ISSUES, PARTIES
+      Session["UserSecurity"] = string.Empty;
+
+      //LOGIN sets permissions and remains constant for ADMIN users (to limit Admin Users per Security Table): 
+      //MASTER Users dynamically change as need via the Master/Default.aspx page
+      Session["UserStateCode"] = string.Empty;
+      Session["UserCountyCode"] = string.Empty;
+        //Limits County Admin user to administer data for this county
+      Session["UserLocalCode"] = string.Empty;
+
+      //Session["UserDesignCode"] = string.Empty;
+      Session["UserOrganizationCode"] = string.Empty;
+
+      Session["UserPartyKey"] = string.Empty;
+
+      //Set when politician logs in
+      //or when an anonymous user navigates to the Intro.aspx page
+      Session["PoliticianKey"] = string.Empty;
+      Session["OfficeKey"] = string.Empty;
+
+      Session["LastCandidateBallotOrder"] = "0";
+
+      Session["IssuesGroup"] = string.Empty;
+
+#if TIMINGS
+			Session["BallotConstructionStartTime"] = DateTime.MinValue;
+			Session["BallotConstructionType"] = string.Empty;
+#endif
+
+      Session["IssueKey"] = string.Empty;
+      Session["QuestionKey"] = string.Empty;
+
+      Session["IsProcessModeSelected"] = false;
+      Session["IsTableDrivenProcessing"] = false;
+
+      //for Emails
+      Session["From"] = string.Empty;
+      Session["Subject"] = string.Empty;
+      Session["EmailBodyBefore"] = string.Empty;
+
+      //
+      Session["ErrNavBarAdmin"] = string.Empty;
+      Session["ErrSQL"] = string.Empty;
+
+      //for MASTER and INTERNS entering answers 
+      Session["Source"] = string.Empty;
+      Session["Date"] = string.Empty;
+
+#if DEBUG
+      ProcessVoteConfigForSessionStart();
+#endif
+    }
+
+    protected void Application_AcquireRequestState(Object sender, EventArgs e)
+    {
+#if DEBUG
+      ProcessVoteConfigForBeginRequest();
+#endif
+    }
+
+    private static readonly Regex SitemapPathRegex =
+      new Regex(@"/sitemap(?<dataCode>[a-z]{2})\.xml", RegexOptions.IgnoreCase);
+
+    protected void Application_BeginRequest(Object sender, EventArgs e)
+    {
+      // We intercept requests for sitemaps and handle them here
+      var path = HttpContext.Current.Request.Path;
+
+      var match = SitemapPathRegex.Match(path);
+      if (!match.Success) return;
+      var domainDataCode = match.Groups["dataCode"].Captures[0].Value;
+      SitemapManager.ServeSitemap(domainDataCode);
+      CompleteRequest();
+    }
+
+    protected void Application_PostMapRequestHandler(Object sender, EventArgs e) {}
+
+    protected void Application_EndRequest(Object sender, EventArgs e) {}
+
+    protected void Application_AuthenticateRequest(Object sender, EventArgs e) {}
+
+    private static readonly Regex EmbeddedUrlRegex =
+      new Regex(
+        @"^/.*(?:\.biz|\.com|\.info|\.name|\.net|\.org|\.edu|\.gov)(?:$|/.*)",
+        RegexOptions.IgnoreCase);
+
+    protected void Application_Error(Object sender, EventArgs e)
+    {
+      try
+      {
+        var path = HttpContext.Current.Request.Path;
+        var url = path;
+        var query = HttpContext.Current.Request.QueryString.ToString();
+        if (!string.IsNullOrEmpty(query))
+          url = url + '?' + query;
+
+        // check for embedded url
+        if (EmbeddedUrlRegex.Match(path)
+          .Success) // redirect to real url
+        {
+          Response.Redirect(Uri.UriSchemeHttp + "://" + url.Substring(1), true);
+          return;
+        }
+
+        //// check for url-encoded error
+        //string decoded = HttpUtility.UrlDecode(url);
+        //if (url != decoded)
+        //{
+        //  Response.RedirectPermanent(Uri.UriSchemeHttp + "://" + decoded.Substring(1), true);
+        //}
+
+        if (Context.Error != null)
+          if (
+            Context.Error.Message.StartsWith("A potentially dangerous Request.Path value was detected from the client", StringComparison.Ordinal) &&
+              //path.StartsWith("/image.aspx?", StringComparison.OrdinalIgnoreCase))
+              HttpUtility.UrlDecode(path) == path)
+          {
+            Response.RedirectPermanent(
+              HttpContext.Current.Request.Url.AbsoluteUri, true);
+          }
+          else
+            Log_Page_Not_Found_404(
+              "Global.asax Application_Error: " + Context.Error.Message);
+        else
+          Log_Page_Not_Found_404("Global.asax Application_Error");
+        //db.SafeTransferToPageNotFound();
+      }
+      catch {} // no exceptions may be thrown here
+    }
+
+    protected void Session_End(Object sender, EventArgs e) {}
+
+    protected void Application_End(Object sender, EventArgs e) {}
+
+    #region VoteConfig.xml
+
+#if DEBUG
+    private static XmlElement GetVoteConfiguration()
+    {
+      XmlElement documentElement = null;
+      var documentsFolder =
+        Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+      var voteConfigPath = Path.Combine(documentsFolder, @"Vote\VoteConfig.xml");
+      if (!File.Exists(voteConfigPath))
+        // Try c drive
+        voteConfigPath = @"C:\VoteConfig\VoteConfig.xml";
+      if (File.Exists(voteConfigPath))
+      {
+        var document = new XmlDocument();
+        document.Load(voteConfigPath);
+        documentElement = document.DocumentElement;
+        Debug.Assert(documentElement != null, "documentElement != null");
+        bool enabled;
+        if (!bool.TryParse(documentElement.GetAttribute("enabled"), out enabled))
+          enabled = false;
+        if (!enabled) documentElement = null; // only return an enabled document
+      }
+      return documentElement;
+    }
+
+    private void ProcessVoteConfigForSessionStart()
+    {
+      var documentElement = GetVoteConfiguration();
+      if (documentElement == null) return;
+      var optionsElement =
+        documentElement.SelectSingleNode("options") as XmlElement;
+      if (optionsElement == null) return;
+      bool autoLogin;
+      var sessionVariablesSet = optionsElement.GetAttribute(
+        "sessionVariablesSet");
+      if (!bool.TryParse(optionsElement.GetAttribute("autoLogin"), out autoLogin))
+        autoLogin = false;
+      if (string.IsNullOrEmpty(sessionVariablesSet)) return;
+      var sessionVariablesXPath =
+        "sessionVariablesSets/sessionVariablesSet[@name=\"" +
+          sessionVariablesSet + "\"]/sessionVariable";
+      var sessionVariables = documentElement.SelectNodes(sessionVariablesXPath);
+      Debug.Assert(sessionVariables != null, "sessionVariables != null");
+      foreach (XmlElement sessionVariable in sessionVariables)
+      {
+        var name = sessionVariable.GetAttribute("name");
+        var value = sessionVariable.GetAttribute("value");
+        if (string.IsNullOrEmpty(name)) continue;
+        Session[name] = value;
+        if (name == "UserName" && autoLogin)
+          Session["AutoLoginUserName"] = value;
+      }
+    }
+
+    private void ProcessVoteConfigForBeginRequest()
+    {
+      // we only do it for aspx pages with no query string
+      var path = HttpContext.Current.Request.Path;
+      var pathLowered = path.ToLowerInvariant();
+      var queryString = HttpContext.Current.Request.QueryString.ToString();
+      if (!string.IsNullOrEmpty(queryString) ||
+        Path.GetExtension(pathLowered) != ".aspx") return;
+      //this prevents infinite recursion on admin pages
+      if (VotePage.IsSessionStateEnabled && SecurePage.QueryStringMightNotBeNeeded)
+        return;
+      var documentElement = GetVoteConfiguration();
+      if (documentElement == null) return;
+      var pathXPath =
+        "queryStrings/queryString[@enabled=\"true\" and translate(@path, " +
+          // the translation enables a case-insensitive search
+          "'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')=\"" +
+          pathLowered + "\"]";
+      var queryStringElement =
+        documentElement.SelectSingleNode(pathXPath) as XmlElement;
+      if (queryStringElement == null) return;
+      queryString = queryStringElement.GetAttribute("queryString");
+      if (!string.IsNullOrEmpty(queryString))
+        //Context.RewritePath(path, null, queryString);
+        Response.Redirect(path + "?" + queryString);
+    }
+#endif
+
+    #endregion
+
+    #region Web Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+      this.components = new System.ComponentModel.Container();
+    }
+
+    #endregion
+  }
+}

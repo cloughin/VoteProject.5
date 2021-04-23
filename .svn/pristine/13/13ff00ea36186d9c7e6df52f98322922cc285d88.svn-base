@@ -1,0 +1,245 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using DB.Vote;
+
+namespace Vote
+{
+  public partial class ForVotersPage : CacheablePage
+  {
+    #region Caching support
+
+    protected override string GetCacheKey()
+    {
+      var cookies = LocationCookies.GetCookies();
+      var key = UrlManager.GetStateCodeFromHostName();
+      if (cookies.IsValid)
+        key = UrlManager.GetStateCodeFromHostName() + "." + cookies.Congress + "." +
+          cookies.StateSenate + "." + cookies.StateHouse + "." + cookies.County;
+
+      return key;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "forVoters";
+    }
+
+    #endregion Caching support
+
+    private static List<LinkInfo> GetUpcomingLinks(string stateCode)
+    {
+      var linkList = new List<LinkInfo>();
+
+      if (StateCache.IsValidStateCode(stateCode))
+      {
+        var table = Elections.GetFutureViewableDisplayDataByStateCode(stateCode);
+        linkList.AddRange(
+          table.Select(
+            row =>
+              new LinkInfo(row)
+              {
+                HRef = UrlManager.GetElectionPageUri(row.ElectionKey)
+              }));
+      }
+
+      return linkList;
+    }
+
+    private static void AddUpcomingLinksToDiv(HtmlGenericControl div,
+      string stateCode)
+    {
+      var links = GetUpcomingLinks(stateCode);
+      if (links.Count > 0)
+        ForResearchPage.AddLinksToLinkBox(div, links);
+      else
+      {
+        var p = new HtmlGenericControl("p").AddTo(div);
+        var message =
+          string.Format(
+            "No {0} upcoming election reports are available. " +
+              "Please check back later.", StateCache.GetStateName(stateCode));
+        new LiteralControl(message).AddTo(p);
+      }
+    }
+
+    private void CreateUpcomingLinks(string stateCode)
+    {
+      // Sample Ballot links
+      if (DomainData.IsValidStateCode) // Single state
+        AddUpcomingLinksToDiv(Upcoming, stateCode);
+    }
+
+    private static List<LinkInfo> GetRecentSampleBallotLinks(
+      LocationCookies cookies)
+    {
+      var linkList = new List<LinkInfo>();
+
+      if (StateCache.IsValidStateCode(cookies.State))
+      {
+        var table =
+          Elections.GetExtendedDisplayDataByStateCodeCountyCodeLocalCodeIsViewable(
+            cookies.State, string.Empty, string.Empty, true);
+
+        foreach (var row in table)
+        {
+          var linkInfo = new LinkInfo(row)
+          {
+            HRef =
+              UrlManager.GetBallotPageUri(row.ElectionKey, cookies.Congress,
+                cookies.StateSenate, cookies.StateHouse, cookies.County)
+          };
+          linkList.Add(linkInfo);
+          // go back to most recent general or offyear election
+          if (row.ElectionType == "G" || row.ElectionType == "O")
+            break;
+        }
+      }
+
+      return linkList;
+    }
+
+    private static HtmlControl CreateSampleBallotButton(LinkInfo link)
+    {
+      var button = new HtmlGenericControl("p").AddCssClasses("button");
+      new HtmlAnchor { HRef = link.HRef.ToString(), InnerText = "Enhanced Sample Ballot for the " + link.Description }.AddTo(button, "link-button");
+      return button;
+    }
+
+    private static void GetLinkBox(PlaceHolder linkBox, string title,
+      IEnumerable<LinkInfo> links)
+    {
+      new HtmlGenericControl("div") { InnerText = title }.AddTo(linkBox, "link-header");
+      var div = new HtmlGenericControl("div").AddTo(linkBox, "links");
+
+      ForResearchPage.AddLinksToLinkBox(div, links);
+    }
+
+    private void SetupHeading(LocationCookies cookies, IEnumerable<LinkInfo> links)
+    {
+      if (cookies.IsValid)
+      {
+        HeaderArea.AddCssClasses("has-address has-state");
+        ElectedOfficialsButton.Visible = true;
+        StatewideButton.Visible = true;
+
+        if (links != null)
+          foreach (var button in links.Select(CreateSampleBallotButton))
+            button.AddTo(SampleBallotPlaceHolder);
+        ElectedOfficialsLink.HRef =
+          UrlManager.GetElectedPageUri(cookies.State, cookies.Congress,
+            cookies.StateSenate, cookies.StateHouse, cookies.County)
+            .ToString();
+        StatewideLink.HRef = UrlManager.GetOfficialsPageUri(cookies.State)
+          .ToString();
+      }
+      else if (DomainData.IsValidStateCode)
+      {
+        HeaderArea.AddCssClasses("no-address has-state");
+        ElectedOfficialsButton.Visible = false;
+        StatewideButton.Visible = true;
+        StatewideLink.HRef =
+          UrlManager.GetOfficialsPageUri(DomainData.FromQueryStringOrDomain)
+            .ToString();
+      }
+      else
+      {
+        HeaderArea.AddCssClasses("no-address no-state");
+        ElectedOfficialsButton.Visible = false;
+        StatewideButton.Visible = false;
+      }
+      if (IsPostBack)
+        AddressEntryInline.Submit();
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (DomainData.IsValidStateCode) // Single state
+      {
+        if (DomainDesign.IncludeTitleForSingleState)
+          Title = DomainDesign.GetSubstitutionText(PageCache,
+            "TitleTagDefaultPageSingleStateDomain") + " | " + Master.SiteName;
+        if (DomainDesign.IncludeMetaDescriptionForSingleState)
+          MetaDescription = DomainDesign.GetSubstitutionText(PageCache,
+            "MetaDescriptionTagDefaultPageSingleStateDomain");
+        //if (DomainDesign.IncludeMetaKeywordsForSingleState)
+        //  MetaKeywords = DomainDesign.GetSubstitutionText(PageCache,
+        //    "MetaKeywordsTagDefaultPageSingleStateDomain");
+      }
+      else // use the All states domain
+      {
+        if (DomainDesign.IncludeTitleForAllStates)
+          Title = DomainDesign.GetSubstitutionText(PageCache,
+            "TitleTagDefaultPageAllStatesDomain") + " | " + Master.SiteName;
+        if (DomainDesign.IncludeMetaDescriptionForAllStates)
+          MetaDescription = DomainDesign.GetSubstitutionText(PageCache,
+            "MetaDescriptionTagDefaultPageAllStatesDomain");
+        //if (DomainDesign.IncludeMetaKeywordsForAllStates)
+        //  MetaKeywords = DomainDesign.GetSubstitutionText(PageCache,
+        //    "MetaKeywordsTagDefaultPageAllStatesDomain");
+        //GetStartedButton.Attributes["onclick"] = "openAddressEntryDialog(this);";
+      }
+
+      // My Sample Ballot Buttons
+
+      var cookies = LocationCookies.GetCookies();
+      List<LinkInfo> links = null;
+      var stateCode = DomainData.FromQueryStringOrDomain;
+      if (cookies.IsValid)
+        links = GetRecentSampleBallotLinks(cookies);
+
+      // Explorer
+      //bool explorerLink;
+      //if (
+      //  !Boolean.TryParse(
+      //    ConfigurationManager.AppSettings["LinkExplorerOnForVoters"],
+      //    out explorerLink)) explorerLink = false;
+      //if (explorerLink)
+      //{
+      //  var qsc = new QueryStringCollection();
+      //  if (cookies.IsValid)
+      //  {
+      //    qsc.Add("state", cookies.State);
+      //    qsc.Add("congress", cookies.Congress);
+      //    qsc.Add("statehouse", cookies.StateHouse);
+      //    qsc.Add("statesenate", cookies.StateSenate);
+      //    qsc.Add("county", cookies.County);
+      //  }
+      //  else if (!string.IsNullOrWhiteSpace(stateCode))
+      //    qsc.Add("state", stateCode);
+      //  ExplorerLink.NavigateUrl = qsc.AddToPath("/electionexplorer.aspx");
+      //}
+      //else 
+        ExplorerLinkBox.Visible = false;
+
+      SetupHeading(cookies, links);
+
+      if (DomainData.IsValidStateCode)
+        CreateUpcomingLinks(stateCode);
+      else
+        UpcomingLinkBox.Visible = false;
+
+      GetLinkBox(PresidentLinks, "US President and Vice-President",
+        ForResearchPage.GetPresidentLinks());
+      GetLinkBox(SenateLinks, "US Senate",
+        ForResearchPage.GetSenateLinks());
+      GetLinkBox(HouseLinks, "US House of Representatives",
+        ForResearchPage.GetHouseLinks());
+      GetLinkBox(GovernorLinks,
+        "State Governors and Lieutenant Governors",
+        ForResearchPage.GetGovernorLinks());
+
+      if (DomainData.IsValidStateCode)
+        ForResearchPage.AddStateLinksToDiv(ElectionResults, stateCode, false, false);
+      else
+        ElectionResultsLinkBox.Visible = false;
+
+      if (!string.IsNullOrEmpty(UrlManager.CurrentQuerySiteId))
+        IssueListLink.HRef = UrlManager.GetIssueListPageUri(stateCode)
+          .ToString();
+    }
+  }
+}

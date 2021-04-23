@@ -1,0 +1,2 @@
+﻿installutil.exe D:\Users\Curt\Dropbox\Documents\AmazonWorkspace\VoteProject\GetYouTubeVideoInfo\bin\Debug\GetYouTubeVideoInfo.exe
+installutil.exe /u D:\Users\Curt\Dropbox\Documents\AmazonWorkspace\VoteProject\GetYouTubeVideoInfo\bin\Debug\GetYouTubeVideoInfo.exe

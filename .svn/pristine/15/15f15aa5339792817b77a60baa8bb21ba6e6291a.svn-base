@@ -1,0 +1,100 @@
+<%@ Page Language="C#" EnableSessionState="ReadOnly" AutoEventWireup="true" 
+Codebehind="Issue.aspx.cs" Inherits="Vote.IssuePage" %>
+
+<%@ Register Src="/Controls/SocialMediaButtons.ascx" TagName="SocialMediaButtons" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonateBanner.ascx" TagName="DonateBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainBanner.ascx" TagName="MainBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainNavigation.ascx" TagName="MainNavigation" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainFooter.ascx" TagName="MainFooter" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeading.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntry.ascx" TagName="AddressEntry" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonationRequest.ascx" TagName="DonationRequest" TagPrefix="user" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+  <title runat="server" id="TitleTag" ></title>
+  <meta id="MetaDescriptionTag" content="" name="description" runat="server" EnableViewState="False" />
+  <meta id="MetaKeywordsTag" content="" name="keywords" runat="server" EnableViewState="False" />
+</head>
+<body class="issue-page">
+    <form id="form1" runat="server">
+
+    <div id="outer">
+    <div id="container">
+      <user:SocialMediaButtons ID="SocialMediaButtons1" runat="server" />
+      <user:DonateBanner ID="DonateBanner1" runat="server" />
+      <user:MainBanner ID="MainBanner1" runat="server" />
+      <user:MainNavigation ID="MainNavigation1" runat="server" />
+      <div id="mainContent">
+      <div id="InnerContent" runat="server">
+        <user:PageHeading ID="PageHeading" runat="server" 
+          MainHeadingText="Compare the Candidates"
+          SubHeadingText="on {0}" />
+
+    <table class="tablePage" cellspacing="0" cellpadding="0" id="ElectionHeading">
+      <tr class="trIssuePageHeading">
+        <td class="tdIssuePageHeadingLeft">
+          <table cellspacing="0" cellpadding="0">
+            <tr class="trIssuePositionViews">
+              <td class="tdIssuePositionViews">
+                <asp:Label ID="Heading" EnableViewState="False" runat="server"></asp:Label></td>
+            </tr>
+            <tr class="trIssueOffice">
+              <td class="tdIssueOffice">
+                for:
+                <asp:Label ID="Office" runat="server" EnableViewState="False"></asp:Label></td>
+            </tr>
+            <tr class="trIssueElection">
+              <td class="tdIssueElection">
+                <asp:Label ID="Election" runat="server" EnableViewState="False"></asp:Label></td>
+            </tr>
+          </table>
+        </td>
+        <td class="tdIssuePageHeadingRight">
+          <%-- 
+          <table id="IssueTitleTable" cellspacing="0" cellpadding="0" runat="server" enableviewstate="False">
+            <tr class="trIssueNote">
+              <td class="tdIssueNote">
+                on</td>
+            </tr>
+            <tr class="trIssueTitle">
+              <td class="tdIssueTitle">
+                <asp:Label ID="Issue" runat="server" EnableViewState="False"></asp:Label></td>
+            </tr>
+          </table>
+          --%>
+        </td>
+      </tr>
+    </table>
+
+    <table cellpadding="0" cellspacing="0" class="tablePage">
+      <tr class="trIssueLinksNoteHeading">
+        <td class="tdIssueLinksNoteHeading">
+          <asp:Label ID="IssueLinksHeading" runat="server" EnableViewState="False"></asp:Label></td>
+      </tr>
+      <tr class="trIssueLinksNote">
+        <td class="tdIssueLinksNote">
+          <asp:Label ID="LinksInstruction" runat="server" EnableViewState="False"></asp:Label></td>
+      </tr>
+    </table>
+
+    <table class="tablePage" id="IssueLinksTable" cellspacing="0" cellpadding="0" cols="2"
+      runat="server" enableviewstate="False">
+    </table>
+
+    <asp:PlaceHolder ID="ReportPlaceHolder" enableviewstate="False" runat="server"></asp:PlaceHolder>
+
+    </div>
+       <user:MainFooter ID="MainFooter1" runat="server" />
+      </div> <!-- id="mainContent" -->
+    </div> <!-- id="container" -->
+    </div> <!-- id="outer" -->
+
+    <user:AddressEntry ID="AddressEntry" runat="server" />
+    <user:DonationRequest runat="server" />
+
+    </form>
+</body>
+</html>

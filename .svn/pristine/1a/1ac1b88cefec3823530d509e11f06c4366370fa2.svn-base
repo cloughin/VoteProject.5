@@ -1,0 +1,506 @@
+﻿/***********************************************/
+/* Entire page                                 */
+/***********************************************/
+
+body.admin-page #outer
+{
+  position: relative;
+}
+
+body.admin-page .sub-heading.headings
+{
+  float: left;
+}
+
+body.admin-page .sub-heading.change-button
+{
+  position: absolute;
+  right: 0;
+  top: 10px;
+}
+
+body.admin-page h2.jurisdiction-message
+{
+  margin: 0;
+}
+
+body.admin-page h4.credential-message
+{
+  font-size: 12px;
+  font-style: italic;
+}
+
+body.admin-page .update-controls
+{
+  margin: 4px 0 0 0;
+  position: relative;
+}
+
+body.admin-page #main-tabs
+{
+  margin: 0 0 20px 0;
+  width: 933px;
+}
+
+body.admin-page #main-tabs .data-area
+{
+  min-height: 279px;
+}
+
+#main-tabs div.col
+{
+  float: left;
+}
+
+#main-tabs .spacer
+{
+  height: 10px;
+  width: 1px;
+}
+
+#main-tabs .input-element
+{
+  float: left;
+  margin: 0 16px 0 0;
+}
+
+#main-tabs .content-footer
+{
+  margin: 0;
+}
+
+#main-tabs .feedback-floater-for-ie7
+{
+  float: left;
+  min-height: 1px;
+  width: 702px;
+}
+
+#main-tabs div.htab-panel div.inner-panel .feedback
+{
+  width: 676px;
+}
+
+#main-tabs input[type=text]
+{
+  margin-left: 0;
+}
+
+#main-tabs .htab-panel
+{
+  min-height: 509px;
+}
+
+#main-tabs div.htab-panel div.inner-panel
+{
+  min-height: 483px;
+}
+
+#main-tabs div.htab-panel div.content-area
+{
+  min-height: 400px;
+}
+
+#main-tabs div.instructions 
+{
+  margin: 0 0 10px 15px;
+}
+
+#main-tabs div.instructions ul
+{
+  color: #bf9241;
+  list-style: disc;
+}
+
+#main-tabs div.instructions li
+{
+  margin-bottom: 2px;
+}
+
+#main-tabs div.instructions li span
+{
+  color: #334f80;
+  font-size: 11px;
+}
+
+#main-tabs div.instructions em
+{
+  color: #bf9241;
+  font-style: normal;
+  font-weight: bold;
+}
+ 
+/***********************************************/
+/* General Voter Information                   */
+/***********************************************/
+
+#main-tabs #tab-generalvoterinfo div.instructions
+{
+  font-size: 8pt;
+  margin: 8px 0 0 0;
+}
+
+#main-tabs #tab-generalvoterinfo .pollhours textarea
+{
+  height: 16px;
+  width: 840px;
+}
+
+#main-tabs #tab-generalvoterinfo input[type=text]
+{
+  width: 834px;
+}
+
+#main-tabs #tab-generalvoterinfo textarea
+{
+  height: 88px;
+  width: 840px;
+}
+
+#main-tabs #tab-generalvoterinfo .howvotingisdone .databox,
+#main-tabs #tab-generalvoterinfo .howprimariesaredone .databox {
+  margin-bottom: -16px;
+}
+ 
+/***********************************************/
+/* State Voter Urls                            */
+/***********************************************/
+
+#main-tabs #tab-voterurls .input-element.webaddress input
+{
+  width: 834px;
+}
+ 
+/***********************************************/
+/* Primary Voter Information                   */
+/***********************************************/
+/*
+#main-tabs #tab-primaryvoterinfo textarea
+{
+  height: 64px;
+  width: 840px;
+}
+*/
+ 
+/***********************************************/
+/* Ballot Settings                             */
+/***********************************************/
+ 
+#main-tabs #tab-ballot input[type=text]
+{
+  width: 834px;
+}
+ 
+#main-tabs #tab-ballot .check-boxes
+{
+  float: left;
+}
+ 
+#main-tabs #tab-ballot textarea
+{
+  height: 32px;
+  width: 840px;
+}
+
+#main-tabs #tab-ballot .disclaimer-buttons {
+  margin-top: 6px;
+}
+
+/***********************************************/
+/* Election Authority                          */
+/***********************************************/
+
+#main-tabs #tab-electionauthority .data-group
+{
+  float: left;
+}
+
+#main-tabs #tab-electionauthority .data-group input[type=text]
+{
+  width: 230px;
+}
+
+#main-tabs #tab-electionauthority p.fieldlabel.head
+{
+  float: left;
+}
+
+#main-tabs #tab-electionauthority p.move-button
+{
+  float: right;
+  margin-right: 13px;
+}
+
+#main-tabs #tab-electionauthority .input-element.jurisdictionname
+{
+  float: none;
+  margin-bottom: 10px;
+}
+
+#main-tabs #tab-electionauthority p.fieldlabel.name
+{
+  clear: both;
+}
+
+#main-tabs #tab-electionauthority .main-contact .input-element
+{
+  margin: 0;
+}
+
+#main-tabs #tab-electionauthority .swap-button
+{
+  height: 32px;
+  width: 32px;
+  background-image: url(/images/swap32.png);
+  background-position: 0 0;
+  margin: 60px 16px 0 0;
+}
+
+#main-tabs #tab-electionauthority .swap-button:hover
+{
+  background-position: 0 -32px;
+}
+
+#main-tabs #tab-electionauthority textarea
+{
+  height: 64px;
+  width: 840px;
+}
+
+#main-tabs #tab-electionauthority .input-element.url
+{
+  margin-right: 48px;
+}
+
+#main-tabs #tab-electionauthority .input-element.url input
+{
+  width: 504px;
+}
+
+#main-tabs #tab-electionauthority .input-element.email input
+{
+  width: 230px;
+}
+ 
+/***********************************************/
+/* View Reports                             */
+/***********************************************/
+
+#tab-viewreports .get-report {
+  float: left;
+  margin: 3px 5px 2px 5px;
+}
+
+#tab-viewreports .get-report-in-new-window {
+  float: left;
+  color: #334f80;
+  margin-top: 3px;
+}
+
+#tab-viewreports #Report {
+  margin-top: 10px;
+}
+
+#tab-viewreports #Report .tableAdmin {
+    margin-left: 0;
+    width: 100%;
+}
+
+#tab-viewreports #Report .trReportHeading {
+  background-color: #6396D8;
+  padding: 10px 0 10px 0;
+  vertical-align: top;
+  width: 100%;
+}
+
+#tab-viewreports #Report .tdReportHeading {
+  color: #373737;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 0;
+  padding: 5px;
+  vertical-align: top;
+  text-align: center;
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+}
+
+#tab-viewreports #Report .trReportGroupHeading {
+  padding: 7px 5px 7px 5px;
+  background-color: #CAE1FF;
+}
+
+#tab-viewreports #Report .tdReportGroupHeading {
+  text-align: center;
+  color: #373737;
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 6px;
+  vertical-align: top;
+}
+
+#tab-viewreports #Report .tdReportImage {
+  background-color: #FFFFFF;
+  border-bottom: solid 1px Gray;
+  padding: 5px 2px 5px 2px;
+  vertical-align: top;
+}
+
+#tab-viewreports #Report .tdReportDetail {
+  color: #26466D;
+  font-weight: normal;
+  font-size: 12px;
+  vertical-align: top;
+  background-color: #FFFFFF;
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 2px 5px 2px 5px;
+  text-align: left;
+  vertical-align: top;
+}
+
+#tab-viewreports #Report .TName {
+  color: #26466D;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  vertical-align: top;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 130%;
+}
+
+#tab-viewreports #Report .TWebsite {
+  color: #26466D;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  vertical-align: top;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 130%;
+}
+
+#tab-viewreports #Report ul.social-media-anchors {
+  list-style: none;
+}
+
+#tab-viewreports #Report ul.social-media-anchors li {
+  float: left;
+  margin-bottom: 4px;
+  margin-right: 8px;
+}
+
+/***********************************************/
+/* Master only                                 */
+/***********************************************/
+
+#main-tabs #tab-masteronly #master-only-tabs 
+{
+  margin-top: 10px;
+}
+
+#main-tabs #tab-masteronly #master-only-tabs li.tab a 
+{
+  font-size: 8pt;
+  padding: 3px 12px;
+}
+
+#main-tabs #tab-masteronly .ui-tabs-panel 
+{
+  min-height: 316px;
+}
+
+#main-tabs #tab-masteronly div.instructions
+{
+  float: none;
+}
+
+#main-tabs #tab-masteronly div.instructions ul
+{
+  margin: 0 0 0 20px;
+  width: 750px;
+}
+
+#main-tabs #tab-masteronly div.instructions ul ul
+{
+  margin: 7px 0 7px 20px;
+}
+
+/***********************************************/
+/* FIREFOX                                     */
+/***********************************************/
+
+@-moz-document url-prefix()
+{
+  #main-tabs #tab-bulkemail-emailoptions .upload-file
+  {
+    left: -142px;
+    top: 2px;
+  }    
+  #main-tabs #tab-bulkemail-emailoptions .browse-button
+  {
+    font-size: 11px;
+    left: 0;
+    padding: 1px 9px;
+    top: 4px;
+  }    
+}
+
+/***********************************************/
+/* CHROME                                      */
+/***********************************************/
+
+@media
+screen and (-webkit-min-device-pixel-ratio: 0)
+{
+  #main-tabs #tab-bulkemail-emailoptions .masker2
+  {
+    display: block;
+    height: 26px;
+    left: 82px;
+    opacity: 0;
+    width: 190px;
+  }
+  
+  #main-tabs #tab-bulkemail-emailoptions .browse-button
+  {
+    font-size: 11px;
+    padding: 2px 18px;
+    top: 1px;
+  }
+
+  #main-tabs #tab-bulkemail-emailoptions .upload-file
+  {
+    left: 0;
+    top: 0;
+  }
+}
+
+/***********************************************/
+/* IE10                                        */
+/***********************************************/
+
+.ie10 #main-tabs #tab-bulkemail-emailoptions .masker2
+{
+  display: block;
+  height: 26px;
+  left: -155px;
+  opacity: 0;
+  width: 155px;
+}
+
+.ie10 #main-tabs #tab-bulkemail-emailoptions .browse-button
+{
+  padding: 1px 21px;
+  top: 5px;
+}
+
+.ie10 #main-tabs #tab-bulkemail-emailoptions .upload-file
+{
+  left: -149px;
+  top: 4px;
+}

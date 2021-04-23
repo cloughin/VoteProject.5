@@ -1,0 +1,451 @@
+
+.trPoliticianInfoTop
+{
+  margin: 0;
+}
+
+.tdPoliticianInfoBio
+{
+  text-align: left;
+  vertical-align: top;
+}
+
+.tdPoliticianInfoPoliticianTitle
+{
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 18px;
+  margin: 0;
+  padding: 3px 10px 3px 10px;
+}
+
+#mainContent .tdOfficeName
+{
+  font-size: 18px;
+  line-height: normal;
+  padding: 8px 10px 0 10px;
+}
+
+#mainContent .tdElectionName
+{
+  font-size: 14px;
+  line-height: normal;
+  padding: 0 10px 3px 10px;
+}
+
+#mainContent .bioTable
+{
+  width: 600px;
+}
+
+#mainContent .trPoliticianInfoContact td
+{
+  padding-top: 6px;
+}
+
+#mainContent .trPoliticianInfoContactAge td
+{
+  padding-top: 10px;
+}
+
+.tdPoliticianInfoContactHeading
+{
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 3px 10px 3px 10px;
+}
+
+#mainContent .tdPoliticianInfoContactHeading
+{
+  font-size: 11px;
+  font-weight: normal;
+  padding-left: 0;
+  padding-right: 0; /*text-transform: lowercase;*/
+  width: 120px;
+}
+
+#mainContent .tdPoliticianInfoContactHeading span
+{
+  padding-left: 50px;
+}
+
+.tdPoliticianInfoContactDetail
+{
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: normal;
+  text-align: left;
+  padding: 0;
+}
+
+#mainContent .tdPoliticianInfoContactDetail
+{
+  color: Black;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 120%;
+  width: 480px;
+}
+
+#mainContent .tdPoliticianInfoContactDetail a
+{
+  color: Black;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 120%;
+}
+
+#mainContent .tdPoliticianInfoContactDetail a:hover
+{
+  color: #A00000;
+  text-decoration: underline;
+}
+
+#mainContent .socialMedia
+{
+  padding-top: 8px;
+}
+
+.tdPoliticianInfoImage
+{
+  text-align: right;
+  vertical-align: top;
+}
+
+
+
+
+/****/
+
+.trPoliticianIssuePoliticianName
+{
+  margin: 0;
+}
+
+.tdPoliticianIssuePoliticianName
+{
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: normal;
+  font-weight: bold;
+  margin: 0;
+  padding: 10px 10px 3px 10px;
+}
+
+.tdPoliticianIssueMyPositions
+{
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 18px;
+  margin: 0;
+  padding: 3px 10px 3px 10px;
+}
+
+.tdPoliticianIssueTitle
+{
+  color: red;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: normal;
+  font-weight: bold;
+  margin: 0;
+  padding: 10px 10px 3px 10px;
+}
+
+.tdPoliticianIssueNote
+{
+  color: red;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+  font-weight: bold;
+  margin: 0;
+  padding: 0 10px 0 10px;
+}
+
+.trPoliticianIssueLinksNoteHeading
+{
+  background-color: #E3E3E3;
+}
+
+.tdPoliticianIssueLinksNoteHeading
+{
+  color: red;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  font-weight: bold;
+  margin: 0;
+  padding: 5px 0 0 10px;
+}
+
+.tdPoliticianIssueLinksNote
+{
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif; /*font-size: 13px;*//*line-height: 16px;*/
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 120%;
+  margin: 0;
+  padding: 0 0 5px 10px;
+}
+
+.trPoliticianIssueLinks
+{
+  background-color: #365e77;
+  border-color: #365e77;
+  border-style: solid;
+  border-width: 10px;
+  margin: 0;
+}
+
+.tdPoliticianIssueLinks,
+.tdPoliticianIssueLinks a:link,
+.tdPoliticianIssueLinks a:visited,
+.tdPoliticianIssueLinks a:hover
+{
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  font-weight: bold;
+  line-height: 18px;
+  text-align: left;
+}
+
+.tdPoliticianIssueLinks
+{
+  padding: 3px;
+}
+
+.trPoliticianIssueHeading
+{
+  background-color: #E3E3E3;
+}
+
+.trPoliticianIssueHeading td
+{
+  border-bottom: solid 2px Black;
+  border-right: solid 1px Gray;
+  color: #A00000;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 15px 5px 11px 10px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.tdPoliticianIssueHeadingLeft
+{
+  width: 300px;
+}
+
+.tdPoliticianIssueQuestion
+{
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px;
+  vertical-align: top;
+  vertical-align: top;
+  width: 300px;
+}
+
+.tdPoliticianIssueAnswer
+{
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif; /*font-size: 13px;*/
+  font-size: 10pt;
+  font-weight: normal;
+  padding: 5px;
+  vertical-align: top;
+}
+.tdPoliticianIssueAnswer .source
+{
+  font-style: italic;
+}
+.tdPoliticianIssueAnswer div
+{
+  max-height: 175px;
+  font-size: 10pt;
+  overflow-y: scroll;
+}
+.tdPoliticianIssueAnswer div p
+{
+  margin-top: 5px;
+}
+.tdPoliticianIssueAnswer div p:first-child
+{
+  margin-top: 0;
+}
+
+.trNoResponsesHeading
+{
+  background-color: #E3E3E3;
+}
+
+.tdNoResponsesHeading
+{
+  background-color: #E3E3E3;
+  border: solid 1px Gray;
+  color: red;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  font-weight: bold;
+  margin: 0;
+  padding: 5px 10px 0 10px;
+}
+
+.tdPoliticianIssueFooter
+{
+  background-color: #f2f2f2;
+  color: black;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  padding: 10px 10px 3px 10px;
+}
+
+#mainContent .trPoliticianIssueLinksHeading
+{
+  background-color: #365e77;
+}
+
+#mainContent .tdPoliticianIssueLinksHeading
+{
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-top: 10px;
+  text-align: left;
+}
+
+#mainContent .subheading
+{
+  color: #aaa;
+  font-size: 75%;
+  font-weight: normal;
+}
+
+#mainContent .tdPoliticianIssueLinks
+{
+  padding-left: 10px;
+}
+
+#mainContent .tdPoliticianIssueLinks a
+{
+  border-bottom: 1px solid white;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+#mainContent .tdPoliticianIssueLinks a:visited
+{
+  color: #aaa;
+}
+
+#mainContent .tdPoliticianIssueLinks a:hover
+{
+  border-bottom: 3px solid white;
+  color: White;
+  text-decoration: none;
+}
+
+#mainContent .tdPoliticianIssueLinks a:first-child
+{
+  font-weight: bold;
+}
+
+#mainContent .tdIssueHeading
+{
+  border-bottom: solid 1px Black;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  color: #A00000;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 15px 5px 11px 10px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+#mainContent .tdIssueHeading:first-child
+{
+  border-right: solid 1px Gray;
+}
+
+#mainContent .tdIssue,
+#mainContent .tdQuestion,
+#mainContent .tdBlank
+{
+  border-left: none;
+  border-right: none;
+}
+
+#mainContent .tdIssue:first-child,
+#mainContent .tdBlank:first-child
+{
+  border-right: solid 1px Gray;
+}
+
+#mainContent .tdQuestion
+{
+  font-weight: normal;
+}
+
+#mainContent .tdPoliticianIssueAnswer
+{
+  line-height: 120%;
+}
+
+#mainContent .trPoliticianIssuePoliticianName,
+#mainContent .trPoliticianIssueLinksNoteHeading
+{
+  display: none;
+}
+
+#mainContent .header
+{
+  height: 76px;
+}
+
+#mainContent .tdNoResponsesHeading
+{
+  border-left: none;
+  border-right: none;
+  color: #A00000;
+}
+
+#mainContent #IssueResponsesTable .tdPoliticianIssueHeadingRight,
+#mainContent #IssueResponsesTable .tdPoliticianIssueAnswer,
+#mainContent #IssueResponsesTable .tdPoliticianIssueQuestion[colspan="2"]
+{
+  border-right: none;
+}
+
+#mainContent .tdPoliticianIssueAnswer .youtubedate
+{
+  display: inline-block;
+  font-size: 80%;
+  position: relative;
+  top: -8px;
+}

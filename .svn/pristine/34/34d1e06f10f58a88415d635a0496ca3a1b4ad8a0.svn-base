@@ -1,0 +1,1143 @@
+using System;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB.Vote;
+using Vote.Reports;
+
+namespace Vote
+{
+  public partial class IssuePageX : CacheablePage
+  {
+    protected IssuePageX()
+    {
+      No404OnUrlNormalizeError = true;
+      NoUrlEdit = true; /* bacause disabled */
+      NoIndex = true; /* bacause disabled */
+    }
+
+    #region Caching support
+
+    protected override bool SuppressCaching
+    {
+      get { return true; }
+    }
+
+    protected override string GetCacheKey()
+    {
+      var key = UrlManager.GetStateCodeFromHostName() + "." + QueryState + "." +
+        QueryElection + "." + QueryOffice + "." + QueryIssue;
+      var siteId = UrlManager.CurrentQuerySiteId;
+      if (!string.IsNullOrEmpty(siteId))
+        key += "." + siteId;
+
+      return key;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "Issue";
+    }
+
+    #endregion Caching support
+
+    private readonly string _ElectionKey = QueryElection;
+    private readonly string _OfficeKey = QueryOffice;
+    private readonly string _IssueKey = QueryIssue;
+    private string _ElectionDescription;
+    private string _OfficeDescription;
+    private string _IssueDescription;
+    private string _PoliticianNames;
+
+    private const string TitleTagAllStatesDomain =
+      "Candidates’ Positions on {2} Issues";
+
+    private const string MetaDescriptionAllStatesDomain =
+      "Candidate Position Comparisons on {2} Issues of {3} in {0}";
+
+    private const string MetaKeywordsAllStatesDomain = "{2}, {3}";
+
+    private const string TitleTagSingleStateDomain =
+      "Candidates’ Positions on {2} Issues";
+
+    private const string MetaDescriptionSingleStateDomain =
+      "Candidate Position Comparisons on {2} Issues of {3} in {0}";
+
+    private const string MetaKeywordsSingleStateDomain = "{2}, {3}";
+
+    private const string TitleTagBioAllStatesDomain =
+      "Candidates’ Biographical Information";
+
+    private const string MetaDescriptionBioAllStatesDomain =
+      "Candidate Biographical Information for {3} in {0}";
+
+    private const string MetaKeywordsBioAllStatesDomain =
+      "Biographical Information, {3}";
+
+    private const string TitleTagBioSingleStateDomain =
+      "Candidates’ Biographical Information";
+
+    private const string MetaDescriptionBioSingleStateDomain =
+      "Candidate Biographical Information for {3} in {0}";
+
+    private const string MetaKeywordsBioSingleStateDomain =
+      "Biographical Information, {3}";
+
+    private void PopulateMetaTags()
+    {
+      if (DomainData.IsValidStateCode) // Single state
+      {
+        var titleTagTemplate = TitleTagSingleStateDomain;
+        var metaDescriptionTemplate = MetaDescriptionSingleStateDomain;
+        var metaKeywordsTemplate = MetaKeywordsSingleStateDomain;
+        if (Issues.IsBiographicalKey(_IssueKey))
+        {
+          titleTagTemplate = TitleTagBioSingleStateDomain;
+          metaDescriptionTemplate = MetaDescriptionBioSingleStateDomain;
+          metaKeywordsTemplate = MetaKeywordsBioSingleStateDomain;
+        }
+        if (DomainDesign.IncludeTitleForSingleState)
+          TitleTag.Text = Substitute(titleTagTemplate);
+        if (DomainDesign.IncludeMetaDescriptionForSingleState)
+          MetaDescriptionTag.Content = Substitute(metaDescriptionTemplate);
+        if (DomainDesign.IncludeMetaKeywordsForSingleState)
+          MetaKeywordsTag.Content = Substitute(metaKeywordsTemplate);
+      }
+      else
+      {
+        var titleTagTemplate = TitleTagAllStatesDomain;
+        var metaDescriptionTemplate = MetaDescriptionAllStatesDomain;
+        var metaKeywordsTemplate = MetaKeywordsAllStatesDomain;
+        if (Issues.IsBiographicalKey(_IssueKey))
+        {
+          titleTagTemplate = TitleTagBioAllStatesDomain;
+          metaDescriptionTemplate = MetaDescriptionBioAllStatesDomain;
+          metaKeywordsTemplate = MetaKeywordsBioAllStatesDomain;
+        }
+        if (DomainDesign.IncludeTitleForAllStates)
+          TitleTag.Text = Substitute(titleTagTemplate);
+        if (DomainDesign.IncludeMetaDescriptionForAllStates)
+          MetaDescriptionTag.Content = Substitute(metaDescriptionTemplate);
+        if (DomainDesign.IncludeMetaKeywordsForAllStates)
+          MetaKeywordsTag.Content = Substitute(metaKeywordsTemplate);
+      }
+    }
+
+    private string Substitute(string tag)
+    {
+      return string.Format(tag, _ElectionDescription, _OfficeDescription,
+        _IssueDescription, _PoliticianNames);
+    }
+
+    private void SetUpMainHeading()
+    {
+      if (Issues.IsIssuesListKey(_IssueKey) || Issues.IsBiographicalKey(_IssueKey))
+      {
+        PageHeading.MainHeadingCssClass = "header";
+        PageHeading.SubHeadingText = null;
+      }
+      else
+      {
+        PageHeading.MainHeadingCssClass = "header longHeader";
+        PageHeading.SubHeadingText = string.Format(PageHeading.SubHeadingText,
+          Issues.GetIssueDescription(_IssueKey));
+      }
+    }
+
+    private void FillInSubheading()
+    {
+      if (Issues.IsIssuesListKey(_IssueKey))
+        Heading.Text =
+          "Questions Available to Candidates to Express Their Positions and Views";
+      else if (Issues.IsBiographicalKey(_IssueKey))
+        Heading.Text = "Candidates' Biographical Information";
+      else
+        Heading.Text = "Candidates' Positions and Views";
+
+      if (Elections.GetElectionTypeFromKey(_ElectionKey) ==
+        Elections.ElectionTypeUSPresidentialPrimary)
+        // Presidential comparison
+      {
+        Office.Text = PageCache.Elections.GetElectionDesc(_ElectionKey);
+        Election.Text = string.Empty;
+      }
+      else
+      {
+        Office.Text = Offices.GetLocalizedOfficeNameWithElectoralClass(PageCache,
+          _OfficeKey);
+        Election.Text = PageCache.Elections.GetElectionDesc(_ElectionKey);
+      }
+    }
+
+    private void FillInIssuesList()
+    {
+      var tr = new HtmlTableRow().AddTo(IssueLinksTable, "trIssueLinks");
+      var td = new HtmlTableCell().AddTo(tr, "tdIssueLinks");
+      IssuesListLinks.GetReport(_ElectionKey, _OfficeKey)
+        .AddTo(td);
+    }
+
+    private void FillInHeadings(int answerCount)
+    {
+      if (Issues.IsIssuesListKey(_IssueKey))
+      {
+        IssueLinksHeading.Text =
+          "Candidates' Positions and Views on Other Issues where Information" +
+            " is Available:";
+
+        LinksInstruction.Text =
+          Substitute("Below is a report of the issues and issue questions" +
+            " available to {3} seeking {1} in the {0}. The links" +
+            " immediately below will provide pages of the candidate responses to" +
+            " these questions. Since many candidates choose not to respond to many" +
+            " questions, links are only provided where we have response information." +
+            " Unfortunately, there are instances where we have not been provided" +
+            " with any of the candidates' positions and views.");
+      }
+      else if (Issues.IsBiographicalKey(_IssueKey))
+      {
+        IssueLinksHeading.Text =
+          "Candidates' Positions and Views on Other Issues where Information" +
+            " is Available:";
+        LinksInstruction.Text =
+          Substitute("The report below lists the candidate responses" +
+            " to  issue questions and biographical information. The responses were provided by" +
+            " {3} or were obtained from their websites. The candidates" +
+            " select the issues and questions for which they want to provide a" +
+            " response. The first link is a report of all the issues and questions" +
+            " made available to the candidates. Many issues and questions had no" +
+            " responses - links are only provided where we have information. If" +
+            " there are many candidates for this office, you may have to scroll" +
+            " down to compare all responses.");
+      }
+      else if (answerCount > 0)
+      {
+        IssueLinksHeading.Text =
+          "Candidates positions and views on other Issues where information" +
+            " is available:";
+        LinksInstruction.Text =
+          Substitute("The report below lists the candidate responses" +
+            " to {2} issue questions. The responses were provided by" +
+            " {3} or were obtained from their websites. The candidates" +
+            " select the issues and questions for which they want to provide a" +
+            " response. The first link is a report of all the issues and questions" +
+            " made available to the candidates. Many issues and questions had no" +
+            " responses - links are only provided where we have information. If" +
+            " there are many candidates for this office, you may have to scroll" +
+            " down to compare all responses.");
+      }
+      else
+      {
+        IssueLinksHeading.Text = "No candidates positions and views are available";
+        LinksInstruction.Text =
+          Substitute("Unfortunately, {3} seeking" +
+            " {1} in the {0} did not provide any responses" +
+            " to over 800 different issues and questions available to" +
+            " communicate positions and views. Use the List of Issues Link to" +
+            " obtain a report of these issues and questions.");
+      }
+    }
+
+    private int FillInReport()
+    {
+      if (Issues.IsIssuesListKey(_IssueKey))
+      {
+        IssueReportIssueList.GetReportByOfficeKey(_OfficeKey, _ElectionKey)
+          .AddTo(ReportPlaceHolder);
+        _PoliticianNames =
+          ElectionsPoliticians.GetPoliticianListForOfficeInElection(_ElectionKey,
+            _OfficeKey);
+        return 0;
+      }
+
+      if (Issues.IsBiographicalKey(_IssueKey))
+      {
+        var bioReportObject = new IssueReportBiographical();
+        bioReportObject.GenerateReport(_ElectionKey, _OfficeKey)
+          .AddTo(ReportPlaceHolder);
+        _PoliticianNames = bioReportObject.GetPoliticianNames();
+        return 0;
+      }
+
+      int answers;
+      var reportObject = new IssueReportIssues();
+      reportObject.GenerateReport(_ElectionKey, _OfficeKey, _IssueKey, out answers)
+        .AddTo(ReportPlaceHolder);
+      _PoliticianNames = reportObject.GetPoliticianNames();
+      return answers;
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      // The OnPreInit method of the parent class handles serving from cache, 
+      // in which case this method is never called.
+
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/SecondaryCommon.css");
+      this.IncludeCss("~/css/All.css");
+      this.IncludeCss("~/css/Issue.css");
+      this.IncludeJs(
+        "http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js");
+      this.IncludeJs(
+        "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js");
+      this.IncludeJs("~/js/Issue.js");
+      this.IncludeCss("~/js/jq/jquery-ui.css");
+
+      if (HasUrlError)
+      {
+        InnerContent.Controls.Clear();
+        var p = new HtmlGenericControl("p").AddTo(InnerContent, "not-found-error");
+        new LiteralControl("We could not show the information you requested: " +
+          UrlError).AddTo(p);
+        return;
+      }
+
+      _ElectionDescription = Elections.GetElectionDesc(_ElectionKey, string.Empty);
+      _OfficeDescription = Offices.GetLocalizedOfficeName(_OfficeKey);
+      _IssueDescription = Issues.GetIssueDescription(_IssueKey);
+      var answerCount = FillInReport();
+      PopulateMetaTags();
+      SetUpMainHeading();
+      FillInSubheading();
+      FillInIssuesList();
+      FillInHeadings(answerCount);
+    }
+
+    #region Dead code
+
+    //public static string CacheIssuePageKey(string DomainDesignCode,
+    //  string DomainDataCode, string StateCode, string ElectionKey,
+    //  string OfficeKey, string IssueKey)
+    //{
+    //  return (
+    //    DomainDesignCode //VOTE-USA VOTE-VA
+    //    + "." + DomainDataCode //US VA
+    //    + "." + "Issue"
+    //    + "." + StateCode
+    //    + "." + ElectionKey
+    //    + "." + OfficeKey
+    //    + "." + IssueKey
+    //    );
+    //}
+
+    //private static string Issue_Tag(PageCache cache)
+    //{
+    //  string issueKey = db.QueryString("Issue");
+    //  if (issueKey.ToUpper() == "BUSISSUESLIST")
+    //    return
+    //      "Issues Available";
+    //  else if (issueKey.ToUpper() == "ALLBIO")
+    //    return
+    //      "Biographical Candidate Comparisons";
+    //  else
+    //    return
+    //      "Candidate Position Comparisons on " +
+    //        db.Issue_Desc(cache, issueKey);
+    //}
+
+    //private static string Contest_Tag(PageCache cache)
+    //{
+    //  return ", " + db.Name_Office_State_Electoral(cache, db.QueryString("Office"));
+    //}
+
+    //private static string Election_Tag(PageCache cache)
+    //{
+    //  return " in " + cache.Elections.GetElectionDesc(db.QueryString("Election"));
+    //}
+
+    //private static string Candidates_Tag(PageCache cache)
+    //{
+    //  return " of " + HttpUtility.HtmlDecode(
+    //    cache.Politicians.GetPoliticianListForOffice(
+    //      db.QueryString("Election"), db.QueryString("Office")));
+    //}
+
+    //private static int Report_Candidates_Issue_Positions(PageCache cache,
+    //  HtmlTable issueResponsesTable)
+    //{
+    //  var electionKey = db.QueryString("Election");
+    //  var officeKey = db.QueryString("Office");
+    //  //bool isRunningMateOffice = officeKey == "USPresident";
+    //  var isRunningMateOffice = cache.Offices.GetIsRunningMateOffice(officeKey);
+    //  var maxPoliticiansPerRow = isRunningMateOffice ? 1 : 3;
+
+    //  #region Report of Candidates' Positions on the Issues
+
+    //  var answers = 0;
+
+    //  #region Politicians to compare for office
+
+    //  var politiciansTable = db.Table(Sql_Politicians());
+    //  var politicianCount = politiciansTable.Rows.Count;
+
+    //  #endregion
+
+    //  #region Politicians
+
+    //  //int colspan = 4;
+    //  //if (politicianCount < 3)
+    //  //  colspan = politicianCount + 1;
+    //  var colspan = Math.Min(maxPoliticiansPerRow, politicianCount) + 1;
+    //  var headingColspan = colspan.ToString();
+
+    //  #endregion
+
+    //  #region parameters for 1st set of Issues, Politicians, Questions and Answers
+
+    //  var endCandidateRow = politicianCount - 1;
+    //  //colSpan = 4;
+    //  ////Max of 3 Candidate cols commparisons 
+    //  //if (politicianCount < 3)
+    //  //  colSpan = politicianCount + 1;
+    //  var issuesColspan = colspan.ToString();
+
+    //  var thisStartCandidateRow = 0;
+    //  //int thisEndCandidateRow = 0;
+    //  //if (endCandidateRow >= (thisStartCandidateRow - 1) + 3)
+    //  //  thisEndCandidateRow = (thisStartCandidateRow - 1) + 3;
+    //  //else
+    //  //  thisEndCandidateRow = endCandidateRow;
+    //  var thisEndCandidateRow = Math.Min(endCandidateRow,
+    //    (thisStartCandidateRow - 1) + maxPoliticiansPerRow);
+
+    //  #endregion parameters for 1st set of Issues, Politicians, Questions and Answers
+
+    //  do
+    //  {
+    //    #region  |    Issue        |  Politician    |   Politician
+
+    //    // | Question        | Answer        | Answer
+    //    //<tr Class="trIssuePoliticiansHeading">
+    //    //<td Class="tdIssueHeading>
+    //    answers += Rows_Candidate_Comparison(cache, politiciansTable,
+    //      thisStartCandidateRow, thisEndCandidateRow, issueResponsesTable);
+
+    //    //Setup for next table set of Issues, Politicians, Questions and Answers
+    //    thisStartCandidateRow = thisEndCandidateRow + 1;
+    //    //if (endCandidateRow >= thisStartCandidateRow + 3)
+    //    //  thisEndCandidateRow = (thisStartCandidateRow - 1) + 3;
+    //    //else
+    //    //  thisEndCandidateRow = endCandidateRow;
+    //    thisEndCandidateRow = Math.Min(endCandidateRow,
+    //      (thisStartCandidateRow - 1) + maxPoliticiansPerRow);
+
+    //    #endregion
+    //  } while (thisStartCandidateRow <= endCandidateRow);
+
+    //  #endregion  Report of Cansidares' Positions on the Issues
+
+    //  return answers;
+    //}
+
+    //private static int Rows_Candidate_Comparison(PageCache cache,
+    //  DataTable politiciansTable, int startCandidateRow, int endCandidateRow,
+    //  HtmlTable issueResponsesTable)
+    //{
+    //  var electionKey = db.QueryString("Election");
+    //  var officeKey = db.QueryString("Office");
+    //  //bool isRunningMateOffice = officeKey == "USPresident";
+    //  var isRunningMateOffice = cache.Offices.GetIsRunningMateOffice(officeKey);
+    //  var answerCount = 0;
+
+    //  var politicianKeys = politiciansTable.Rows.Cast<DataRow>()
+    //    .Skip(startCandidateRow)
+    //    .Take(endCandidateRow - startCandidateRow + 1)
+    //    .Select(row => row["PoliticianKey"].ToString())
+    //    .ToList();
+    //  if (isRunningMateOffice) // append running mate
+    //  {
+    //    var runningMateKey =
+    //      cache.ElectionsPoliticians.GetRunningMateKey(electionKey, officeKey,
+    //        politicianKeys[0]);
+    //    if (runningMateKey == string.Empty)
+    //      runningMateKey = "NoRunningMate";
+    //    politicianKeys.Add(runningMateKey);
+    //  }
+    //  var issuePositions = IssuePositions.GetIssuePositionsInfo(cache,
+    //    politicianKeys, db.QueryString("Issue"));
+
+    //  // Heading
+    //  var headingTr = db.Add_Tr_To_Table_Return_Tr(issueResponsesTable,
+    //    "trIssuePoliticiansHeading");
+    //  // Heading | Issues cell
+    //  //string issueHeading = db.Issues_Issue(db.QueryString("Issue"));
+    //  //issueHeading += " Issues";
+    //  var issueHeading = db.Issue_Desc(cache, db.QueryString("Issue"));
+    //  db.Add_Td_To_Tr(headingTr, issueHeading, "tdIssueHeading");
+    //  // Heading: Candidate cells
+    //  //for (int i = startCandidateRow; i <= endCandidateRow; i++)
+    //  foreach (var politicianKey in politicianKeys)
+    //  {
+    //    //DataRow politiciansRow = politiciansTable.Rows[i];
+    //    //string politicianKey = politiciansRow["PoliticianKey"].ToString().Trim();
+    //    //string officeKey = politiciansRow["OfficeKey"].ToString().Trim();
+    //    //string partyKey = politiciansRow["PartyKey"].ToString().Trim();
+    //    var partyKey = cache.Politicians.GetPartyKey(politicianKey);
+    //    var politicianName = cache.Politicians.GetPoliticianName(politicianKey);
+
+    //    var toolTip = politicianName;
+    //    var displayName = string.Empty;
+    //    //if (db.Is_Incumbent(politicianKey, officeKey))
+    //    //  displayName = "* ";
+    //    displayName += politicianName;
+
+    //    var candidateLine = db.Anchor_Intro(politicianKey, displayName, toolTip);
+    //    if (db.Is_Incumbent(politicianKey, officeKey))
+    //      candidateLine = "* " + candidateLine;
+
+    //    #region party
+
+    //    var anchorParty = db.Anchor_Party(cache, partyKey)
+    //      .Trim();
+    //    if (!string.IsNullOrWhiteSpace(anchorParty))
+    //      candidateLine += " - " + anchorParty;
+
+    //    #endregion party
+
+    //    #region  image
+
+    //    candidateLine += "<br><br>";
+    //    candidateLine +=
+    //      db.AnchorPoliticianImageOrNoPhoto(
+    //        UrlManager.GetIntroPageUri(politicianKey)
+    //          .ToString(), politicianKey, db.Image_Size_200_Profile,
+    //        cache.Politicians.GetPoliticianName(politicianKey) +
+    //          " Introduction Page");
+
+    //    #endregion  image
+
+    //    #region Website
+
+    //    var website = db.Anchor_Website_Public_Class(cache, politicianKey);
+    //    if (!string.IsNullOrEmpty(website))
+    //      candidateLine += website;
+
+    //    #endregion Website
+
+    //    #region social media icons
+
+    //    candidateLine += "<br>" + db.Social_Media_Anchors(cache, politicianKey);
+    //    candidateLine += "<br>&nbsp";
+
+    //    #endregion social media icons
+
+    //    db.Add_Td_To_Tr(headingTr, candidateLine, "tdIssuePoliticiansHeading");
+    //  }
+
+    //  // Questions with answers
+    //  foreach (
+    //    var question in issuePositions.IssueQuestions.Where(q => q.HasAnswer))
+    //  {
+    //    answerCount++;
+
+    //    // Question
+    //    var questionRow = db.Add_Tr_To_Table_Return_Tr(issueResponsesTable,
+    //      "trIssueQuestion");
+    //    //<td Class="tdIssueIssueQuestion">
+    //    db.Add_Td_To_Tr(questionRow, question.QuestionDescription,
+    //      "tdIssueIssueQuestion");
+
+    //    // Answers
+    //    //for (int i = startCandidateRow; i <= endCandidateRow; i++)
+    //    foreach (var politicianKey in politicianKeys)
+    //    {
+    //      //string politicianKey = politiciansTable.Rows[i]["PoliticianKey"].ToString();
+    //      var answer = issuePositions.GetPoliticianAnswer(question.QuestionKey,
+    //        politicianKey);
+    //      var lastName = issuePositions.GetPoliticianLastName(politicianKey);
+    //      var answerHtml = answer.GetAnswerHtml(lastName, false);
+    //      db.Add_Td_To_Tr(questionRow, answerHtml, "tdIssueAnswer");
+    //    }
+    //  }
+
+    //  // Questions without answers
+    //  if (issuePositions.IssueQuestions.Exists(q => !q.HasAnswer))
+    //  {
+    //    var questionRow = db.Add_Tr_To_Table_Return_Tr(issueResponsesTable,
+    //      "trNoResponsesHeading");
+    //    db.Add_Td_To_Tr(questionRow,
+    //      "These are available issue topics for which there were no responses.",
+    //      "tdNoResponsesHeading", 4);
+    //    foreach (
+    //      var question in issuePositions.IssueQuestions.Where(q => !q.HasAnswer))
+    //    {
+    //      questionRow = db.Add_Tr_To_Table_Return_Tr(issueResponsesTable,
+    //        "trIssueQuestion");
+    //      db.Add_Td_To_Tr(questionRow, question.QuestionDescription,
+    //        "tdIssueIssueQuestion tdNoResponsesIssue", 4);
+    //    }
+    //  }
+
+    //  return answerCount;
+    //}
+
+    //private static string Remaining_Issue_Links(PageCache cache,
+    //  string electionKey, string officeKey)
+    //{
+    //  string Links = string.Empty;
+
+    //  //returns a table of IssueKey and Issue for a particular Office in an election
+    //  DataTable issuesTable = db.IssueTable(cache, electionKey, officeKey,
+    //    cache.Offices.GetStateCode(officeKey));
+    //  foreach (DataRow issueRow in issuesTable.Rows)
+    //  {
+    //    string issueKey = issueRow["IssueKey"].ToString();
+    //    //string anchorText = db.Issues_Issue(issueKey);
+    //    string anchorText = db.Issue_Desc(cache, issueKey);
+
+    //    //string toolTip = db.Issue_Desc(issueKey) + " " +
+    //    //  db.Issue_SubTitle(issueKey, officeKey, electionKey);
+
+    //    string toolTip = string.Format(
+    //      "Comparisons of positions and views of the candidates on {0}", anchorText);
+
+    //    Links += db.Anchor_Issue(electionKey, officeKey, issueKey, anchorText, toolTip, "_self");
+    //    Links += " | ";
+    //  }
+    //  return Links;
+    //}
+
+    //public static string Issue_Links(PageCache cache, string electionKey, string officeKey)
+    //{
+    //  string issueLinks = string.Empty;
+
+    //  #region First link 'List of Issues |'
+    //  issueLinks += db.Anchor_Issue(electionKey, officeKey,
+    //    db.Issues_List_Office(cache, officeKey),
+    //    "List of Issues",
+    //    "Complete list of issues and issue questions available for candidates' responses.");
+    //  issueLinks += " | ";
+    //  #endregion
+
+    //  #region Second link 'Biographical |'
+    //  issueLinks += db.Anchor_Issue(electionKey, officeKey,
+    //    "ALLBio",
+    //    "Biographical",
+    //    "Biographical comparison of candidates");
+    //  issueLinks += " | ";
+    //  #endregion
+
+    //  #region Remaining Issue Links
+    //  issueLinks +=
+    //    Remaining_Issue_Links(cache, electionKey, officeKey);
+    //  if (issueLinks.EndsWith(" | "))
+    //    issueLinks = issueLinks.Substring(0, issueLinks.Length - 3);
+    //  #endregion
+    //  return issueLinks;
+    //}
+
+    //private static void Report_Biographical(PageCache cache,
+    //  HtmlTable issueResponsesTable)
+    //{
+    //  var electionKey = db.QueryString("Election");
+    //  var officeKey = db.QueryString("Office");
+    //  //bool isRunningMateOffice = officeKey == "USPresident";
+    //  var isRunningMateOffice = cache.Offices.GetIsRunningMateOffice(officeKey);
+    //  var maxPoliticiansPerRow = isRunningMateOffice ? 1 : 3;
+
+    //  #region Politicians to compare for office
+
+    //  var PoliticiansTable = db.Table(Sql_Politicians());
+    //  var politicianCount = PoliticiansTable.Rows.Count;
+
+    //  #endregion
+
+    //  #region Politicians
+
+    //  //int colspan = 4;
+    //  //if (politicianCount < 3)
+    //  //  colspan = politicianCount + 1;
+    //  var colspan = Math.Min(maxPoliticiansPerRow, politicianCount) + 1;
+    //  var headingColspan = colspan.ToString();
+
+    //  #endregion
+
+    //  #region parameters for 1st set of Issues, Politicians, Questions and Answers
+
+    //  var endCandidateRow = politicianCount - 1;
+    //  //colspan = 4;
+    //  ////Max of 3 Candidate cols commparisons 
+    //  //if (politicianCount < 3)
+    //  //  colspan = politicianCount + 1;
+    //  var issuesColSpan = colspan.ToString();
+
+    //  var thisStartCandidateRow = 0;
+    //  //int thisEndCandidateRow = 0;
+    //  //if (endCandidateRow >= (thisStartCandidateRow - 1) + 3)
+    //  //  thisEndCandidateRow = (thisStartCandidateRow - 1) + 3;
+    //  //else
+    //  //  thisEndCandidateRow = endCandidateRow;
+    //  var thisEndCandidateRow = Math.Min(endCandidateRow,
+    //    (thisStartCandidateRow - 1) + maxPoliticiansPerRow);
+
+    //  #endregion parameters for 1st set of Issues, Politicians, Questions and Answers
+
+    //  do
+    //  {
+    //    #region  | Bio Title    |  Politician    |   Politician
+
+    //    //<tr Class="trIssuePoliticiansHeading">
+    //    //<td Class="tdIssueHeading>
+    //    Rows_Candidate_Bios(cache, PoliticiansTable, thisStartCandidateRow,
+    //      thisEndCandidateRow, issueResponsesTable);
+
+    //    //Setup for next table set of Issues, Politicians, Questions and Answers
+    //    thisStartCandidateRow = thisEndCandidateRow + 1;
+    //    //if (endCandidateRow >= thisStartCandidateRow + 3)
+    //    //  thisEndCandidateRow = (thisStartCandidateRow - 1) + 3;
+    //    //else
+    //    //  thisEndCandidateRow = endCandidateRow;
+    //    thisEndCandidateRow = Math.Min(endCandidateRow,
+    //      (thisStartCandidateRow - 1) + maxPoliticiansPerRow);
+
+    //    #endregion
+    //  } while (thisStartCandidateRow <= endCandidateRow);
+    //}
+
+    //private static string Sql_Politicians()
+    //{
+    //  var sql = string.Empty;
+    //  sql += "SELECT";
+    //  sql += " Politicians.PoliticianKey ";
+    //  sql += ",Politicians.PartyKey ";
+    //  sql += ",ElectionsPoliticians.OfficeKey ";
+    //  sql += " FROM ElectionsPoliticians,Politicians ";
+    //  sql +=
+    //    " WHERE ElectionsPoliticians.PoliticianKey = Politicians.PoliticianKey ";
+    //  sql += " AND ElectionsPoliticians.ElectionKey = " +
+    //    db.SQLLit(db.QueryString("Election"));
+    //  sql += " AND ElectionsPoliticians.OfficeKey = " +
+    //    db.SQLLit(db.QueryString("Office"));
+    //  sql += " ORDER BY ElectionsPoliticians.OrderOnBallot";
+    //  sql += ",Politicians.LName";
+    //  sql += ",Politicians.FName";
+    //  return sql;
+    //}
+
+    //private static void Rows_Candidate_Bios(PageCache cache,
+    //  DataTable politiciansTable, int startCandidateRow, int endCandidateRow,
+    //  HtmlTable issueResponsesTable)
+    //{
+    //  var electionKey = db.QueryString("Election");
+    //  var officeKey = db.QueryString("Office");
+    //  //bool isRunningMateOffice = officeKey == "USPresident";
+    //  var isRunningMateOffice = cache.Offices.GetIsRunningMateOffice(officeKey);
+
+    //  var politicianKeys = politiciansTable.Rows.Cast<DataRow>()
+    //    .Skip(startCandidateRow)
+    //    .Take(endCandidateRow - startCandidateRow + 1)
+    //    .Select(row => row["PoliticianKey"].ToString())
+    //    .ToList();
+    //  if (isRunningMateOffice) // append running mate
+    //  {
+    //    var runningMateKey =
+    //      cache.ElectionsPoliticians.GetRunningMateKey(electionKey, officeKey,
+    //        politicianKeys[0]);
+    //    if (runningMateKey == string.Empty)
+    //      runningMateKey = "NoRunningMate";
+    //    politicianKeys.Add(runningMateKey);
+    //  }
+
+    //  //<tr Class="trIssuePoliticiansHeading">
+    //  var headingTr = db.Add_Tr_To_Table_Return_Tr(issueResponsesTable,
+    //    "trIssuePoliticiansHeading");
+
+    //  #region  |    Issue        |
+
+    //  const string issueHeading = "Biographical";
+
+    //  db.Add_Td_To_Tr(headingTr, issueHeading, "tdIssueHeading");
+
+    //  #endregion
+
+    //  #region |    * Politician - R     |     Politician - D  |
+
+    //  //for (int i = startCandidateRow; i <= endCandidateRow; i++)
+    //  foreach (var politicianKey in politicianKeys)
+    //  {
+    //    //DataRow politicianRow = politiciansTable.Rows[i];
+    //    //string politicianKey = politicianRow["PoliticianKey"].ToString();
+    //    var partyKey = cache.Politicians.GetPartyKey(politicianKey);
+
+    //    #region Candidate Anchor * Candidate
+
+    //    //string ToolTip = db.Name_Politician(politicianKey);
+    //    var toolTip = "Biographical Information about " +
+    //      cache.Politicians.GetPoliticianName(politicianKey);
+
+    //    var politicianName = string.Empty;
+    //    //if (db.Is_Incumbent(politicianKey, politicianRow["OfficeKey"].ToString()))
+    //    //  politicianName = "* ";
+
+    //    politicianName += cache.Politicians.GetPoliticianName(politicianKey);
+
+    //    var candidateLine = db.Anchor_Intro(politicianKey.Trim(), politicianName,
+    //      toolTip);
+    //    if (db.Is_Incumbent(politicianKey, officeKey))
+    //      candidateLine = "* " + candidateLine;
+
+    //    #endregion
+
+    //    #region Party Anchor - R
+
+    //    //string Anchor_Party = db.Anchor_Party(PoliticianRow["PartyKey"].ToString().Trim());
+    //    //string anchorParty = db.Anchor_Party(cache,
+    //    //  politicianRow["PartyKey"].ToString().Trim());
+    //    var anchorParty = db.Anchor_Party(cache, partyKey)
+    //      .Trim();
+    //    if (!string.IsNullOrWhiteSpace(anchorParty))
+    //      candidateLine += " - " + anchorParty;
+
+    //    #endregion
+
+    //    #region Candidate Image Anchor
+
+    //    candidateLine += "<br><br>";
+    //    //if (db.xIs_Image_Methods_New_Being_Used())
+    //    //{
+    //    candidateLine +=
+    //      db.AnchorPoliticianImageOrNoPhoto(
+    //        UrlManager.GetIntroPageUri(politicianKey)
+    //          .ToString(), politicianKey, db.Image_Size_200_Profile,
+    //        cache.Politicians.GetPoliticianName(politicianKey) +
+    //          "'s Introduction Page");
+
+    //    //}
+    //    //else
+    //    //{
+    //    //  CandidateLine += db.Anchor_Image(
+    //    //    db.Url_Intro(politicianKey)
+    //    //    , db.Url_ImageCandidateSmallOrNoPhots(politicianKey)
+    //    //    , db.Name_Politician(politicianKey) + " Introduction Page"
+    //    //    );
+    //    //}
+
+    //    #endregion
+
+    //    #region Website
+
+    //    var website = db.Anchor_Website_Public_Class(cache, politicianKey);
+    //    if (!string.IsNullOrEmpty(website))
+    //      candidateLine += website;
+
+    //    #endregion Website
+
+    //    #region Social Media
+
+    //    candidateLine += "<br><br>" + db.Social_Media_Anchors(cache, politicianKey);
+
+    //    #endregion Social Media
+
+    //    //<td Class="tdIssuePoliticiansHeading colslpan=1">* Name - Party</td>
+    //    //CandidateNameCell = db.Add_Td_To_Tr(HeadingTr, "tdIssuePoliticiansHeading", CandidateLine, "center", "1");
+    //    db.Add_Td_To_Tr(headingTr, candidateLine, "tdIssuePoliticiansHeading");
+    //  }
+
+    //  #endregion
+
+    //  #region | Age:
+
+    //  var htmlRowBioCategory = db.Add_Tr_To_Table_Return_Tr(issueResponsesTable,
+    //    "trIssueQuestion");
+    //  db.Add_Td_To_Tr(htmlRowBioCategory, "Age:", "tdIssueIssueQuestion");
+
+    //  #region | Age | Age
+
+    //  //for (int i = startCandidateRow; i <= endCandidateRow; i++)
+    //  foreach (var politicianKey in politicianKeys)
+    //  {
+    //    //<td Class="Answer align = "center" colslpan=1">
+    //    //----- Answer -----------------------
+    //    //age = db.Age(cache, politiciansTable.Rows[i]["PoliticianKey"].ToString());
+    //    var age = db.Age(cache, politicianKey);
+    //    if (string.IsNullOrEmpty(age))
+    //      age = "&nbsp";
+
+    //    db.Add_Td_To_Tr(htmlRowBioCategory, age, "tdIssueAnswer");
+    //  }
+
+    //  #endregion | Age | Age
+
+    //  #endregion | Age:
+
+    //  #region |  General: (political statement of goals, objectives, views, philosophies)  |
+
+    //  //<tr Class="trIssueQuestion">
+    //  htmlRowBioCategory = db.Add_Tr_To_Table_Return_Tr(issueResponsesTable,
+    //    "trIssueQuestion");
+    //  //<td Class="tdIssueIssueQuestion">
+    //  db.Add_Td_To_Tr(htmlRowBioCategory,
+    //    "General: (goals, objectives, views, philosophies)", "tdIssueIssueQuestion");
+
+    //  #region  |   Answer   |      Answer
+
+    //  string answer;
+    //  //for (int i = startCandidateRow; i <= endCandidateRow; i++)
+    //  foreach (var politicianKey in politicianKeys)
+    //  {
+    //    //<td Class="Answer align = "center" colslpan=1">
+    //    //----- Answer -----------------------
+    //    //answer = db.Answer_Bio(cache,
+    //    //  politiciansTable.Rows[i]["PoliticianKey"].ToString(),
+    //    //  "GeneralStatement");
+    //    var nameToPrepend = isRunningMateOffice
+    //      ? cache.Politicians.GetLastName(politicianKey)
+    //      : null;
+    //    answer = db.Answer_Bio(cache, politicianKey, "GeneralStatement",
+    //      nameToPrepend);
+
+    //    db.Add_Td_To_Tr(htmlRowBioCategory, answer, "tdIssueAnswer");
+    //  }
+
+    //  #endregion |   Answer   |      Answer
+
+    //  #endregion |  General: (political statement of goals, objectives, views, philosophies)  |
+
+    //  #region |  Personal: (gender, age, marital status, spouse, children, residence) |
+
+    //  //<tr Class="trIssueQuestion">
+    //  htmlRowBioCategory = db.Add_Tr_To_Table_Return_Tr(issueResponsesTable,
+    //    "trIssueQuestion");
+    //  //<td Class="tdIssueIssueQuestion">
+    //  db.Add_Td_To_Tr(htmlRowBioCategory,
+    //    "Personal: (gender, age, marital status, spouse, children, residence)",
+    //    "tdIssueIssueQuestion");
+
+    //  #region  |   Answer   |      Answer
+
+    //  //for (int i = startCandidateRow; i <= endCandidateRow; i++)
+    //  foreach (var politicianKey in politicianKeys)
+    //  {
+    //    //<td Class="Answer align = "center" colslpan=1">
+    //    //----- Answer -----------------------
+    //    //answer = db.Answer_Bio(cache,
+    //    //  politiciansTable.Rows[i]["PoliticianKey"].ToString(),
+    //    //  "Personal");
+    //    var nameToPrepend = isRunningMateOffice
+    //      ? cache.Politicians.GetLastName(politicianKey)
+    //      : null;
+    //    answer = db.Answer_Bio(cache, politicianKey, "Personal", nameToPrepend);
+
+    //    db.Add_Td_To_Tr(htmlRowBioCategory, answer, "tdIssueAnswer");
+    //  }
+
+    //  #endregion |   Answer   |      Answer
+
+    //  #endregion |  Personal: (gender, age, marital status, spouse, children, residence)  |
+
+    //  #region |  Education: (schools, colleges, major, degrees) |
+
+    //  //<tr Class="trIssueQuestion">
+    //  htmlRowBioCategory = db.Add_Tr_To_Table_Return_Tr(issueResponsesTable,
+    //    "trIssueQuestion");
+    //  //<td Class="tdIssueIssueQuestion">
+    //  db.Add_Td_To_Tr(htmlRowBioCategory,
+    //    "Education: (schools, colleges, major, degrees)", "tdIssueIssueQuestion");
+
+    //  #region  |   Answer   |      Answer
+
+    //  //for (int i = startCandidateRow; i <= endCandidateRow; i++)
+    //  foreach (var politicianKey in politicianKeys)
+    //  {
+    //    //<td Class="Answer align = "center" colslpan=1">
+    //    //----- Answer -----------------------
+    //    //answer = db.Answer_Bio(cache,
+    //    //  politiciansTable.Rows[i]["PoliticianKey"].ToString(), "Education");
+    //    var nameToPrepend = isRunningMateOffice
+    //      ? cache.Politicians.GetLastName(politicianKey)
+    //      : null;
+    //    answer = db.Answer_Bio(cache, politicianKey, "Education", nameToPrepend);
+
+    //    db.Add_Td_To_Tr(htmlRowBioCategory, answer, "tdIssueAnswer");
+    //  }
+
+    //  #endregion |   Answer   |      Answer
+
+    //  #endregion | Education: (schools, colleges, major, degrees)  |
+
+    //  #region |  Profession: (profession,work experience outside politics) |
+
+    //  //<tr Class="trIssueQuestion">
+    //  htmlRowBioCategory = db.Add_Tr_To_Table_Return_Tr(issueResponsesTable,
+    //    "trIssueQuestion");
+    //  //<td Class="tdIssueIssueQuestion">
+    //  db.Add_Td_To_Tr(htmlRowBioCategory,
+    //    "Profession: (profession,work experience outside politics)",
+    //    "tdIssueIssueQuestion");
+
+    //  #region  |   Answer   |      Answer
+
+    //  //for (int i = startCandidateRow; i <= endCandidateRow; i++)
+    //  foreach (var politicianKey in politicianKeys)
+    //  {
+    //    //<td Class="Answer align = "center" colslpan=1">
+    //    //----- Answer -----------------------
+    //    //answer = db.Answer_Bio(cache,
+    //    //  politiciansTable.Rows[i]["PoliticianKey"].ToString(), "Profession");
+    //    var nameToPrepend = isRunningMateOffice
+    //      ? cache.Politicians.GetLastName(politicianKey)
+    //      : null;
+    //    answer = db.Answer_Bio(cache, politicianKey, "Profession", nameToPrepend);
+
+    //    db.Add_Td_To_Tr(htmlRowBioCategory, answer, "tdIssueAnswer");
+    //  }
+
+    //  #endregion |   Answer   |      Answer
+
+    //  #endregion | Profession: (profession,work experience outside politics) |
+
+    //  #region |  Military: (branch, service, active duty, rank, honors, discharge) |
+
+    //  //<tr Class="trIssueQuestion">
+    //  htmlRowBioCategory = db.Add_Tr_To_Table_Return_Tr(issueResponsesTable,
+    //    "trIssueQuestion");
+    //  //<td Class="tdIssueIssueQuestion">
+    //  db.Add_Td_To_Tr(htmlRowBioCategory,
+    //    "Military: (branch, service, active duty, rank, honors, discharge)",
+    //    "tdIssueIssueQuestion");
+
+    //  #region  |   Answer   |      Answer
+
+    //  //for (int i = startCandidateRow; i <= endCandidateRow; i++)
+    //  foreach (var politicianKey in politicianKeys)
+    //  {
+    //    //<td Class="Answer align = "center" colslpan=1">
+    //    //----- Answer -----------------------
+    //    //answer = db.Answer_Bio(cache,
+    //    //  politiciansTable.Rows[i]["PoliticianKey"].ToString(), "Military");
+    //    var nameToPrepend = isRunningMateOffice
+    //      ? cache.Politicians.GetLastName(politicianKey)
+    //      : null;
+    //    answer = db.Answer_Bio(cache, politicianKey, "Military", nameToPrepend);
+
+    //    db.Add_Td_To_Tr(htmlRowBioCategory, answer, "tdIssueAnswer");
+    //  }
+
+    //  #endregion |   Answer   |      Answer
+
+    //  #endregion | Military: (branch, service, active duty, rank, honors, discharge) |
+
+    //  #region | Civic: (organizations, charities) |
+
+    //  //<tr Class="trIssueQuestion">
+    //  htmlRowBioCategory = db.Add_Tr_To_Table_Return_Tr(issueResponsesTable,
+    //    "trIssueQuestion");
+    //  //<td Class="tdIssueIssueQuestion">
+    //  db.Add_Td_To_Tr(htmlRowBioCategory, "Civic: (organizations, charities)",
+    //    "tdIssueIssueQuestion");
+
+    //  #region  |   Answer   |      Answer
+
+    //  //for (int i = startCandidateRow; i <= endCandidateRow; i++)
+    //  foreach (var politicianKey in politicianKeys)
+    //  {
+    //    //<td Class="Answer align = "center" colslpan=1">
+    //    //----- Answer -----------------------
+    //    //answer = db.Answer_Bio(cache,
+    //    //  politiciansTable.Rows[i]["PoliticianKey"].ToString(), "Civic");
+    //    var nameToPrepend = isRunningMateOffice
+    //      ? cache.Politicians.GetLastName(politicianKey)
+    //      : null;
+    //    answer = db.Answer_Bio(cache, politicianKey, "Civic", nameToPrepend);
+
+    //    db.Add_Td_To_Tr(htmlRowBioCategory, answer, "tdIssueAnswer");
+    //  }
+
+    //  #endregion |   Answer   |      Answer
+
+    //  #endregion | Civic: (organizations, charities) |
+
+    //  #region |  Political: (offices held) |
+
+    //  //<tr Class="trIssueQuestion">
+    //  htmlRowBioCategory = db.Add_Tr_To_Table_Return_Tr(issueResponsesTable,
+    //    "trIssueQuestion");
+    //  //<td Class="tdIssueIssueQuestion">
+    //  db.Add_Td_To_Tr(htmlRowBioCategory, "Political: (offices held)",
+    //    "tdIssueIssueQuestion");
+
+    //  #region  |   Answer   |      Answer
+
+    //  //for (int i = startCandidateRow; i <= endCandidateRow; i++)
+    //  foreach (var politicianKey in politicianKeys)
+    //  {
+    //    //<td Class="Answer align = "center" colslpan=1">
+    //    //----- Answer -----------------------
+    //    //answer = db.Answer_Bio(cache,
+    //    //  politiciansTable.Rows[i]["PoliticianKey"].ToString(), "Political");
+    //    var nameToPrepend = isRunningMateOffice
+    //      ? cache.Politicians.GetLastName(politicianKey)
+    //      : null;
+    //    answer = db.Answer_Bio(cache, politicianKey, "Political", nameToPrepend);
+
+    //    db.Add_Td_To_Tr(htmlRowBioCategory, answer, "tdIssueAnswer");
+    //  }
+
+    //  #endregion |   Answer   |      Answer
+
+    //  #endregion |  Political: (offices held) |
+
+    //  #region |  Religion: (religious affiliations and beliefs) |
+
+    //  //<tr Class="trIssueQuestion">
+    //  htmlRowBioCategory = db.Add_Tr_To_Table_Return_Tr(issueResponsesTable,
+    //    "trIssueQuestion");
+    //  //<td Class="tdIssueIssueQuestion">
+    //  db.Add_Td_To_Tr(htmlRowBioCategory,
+    //    "Religion: (religious affiliations and beliefs)", "tdIssueIssueQuestion");
+
+    //  #region  |   Answer   |      Answer
+
+    //  //for (int i = startCandidateRow; i <= endCandidateRow; i++)
+    //  foreach (var politicianKey in politicianKeys)
+    //  {
+    //    //<td Class="Answer align = "center" colslpan=1">
+    //    //----- Answer -----------------------
+    //    //answer = db.Answer_Bio(cache,
+    //    //  politiciansTable.Rows[i]["PoliticianKey"].ToString(), "Religion");
+    //    var nameToPrepend = isRunningMateOffice
+    //      ? cache.Politicians.GetLastName(politicianKey)
+    //      : null;
+    //    answer = db.Answer_Bio(cache, politicianKey, "Religion", nameToPrepend);
+
+    //    db.Add_Td_To_Tr(htmlRowBioCategory, answer, "tdIssueAnswer");
+    //  }
+
+    //  #endregion |   Answer   |      Answer
+
+    //  #endregion |  Religion: (religious affiliations and beliefs)  |
+
+    //  #region |  Accomplishments: (awards, achievements) |
+
+    //  //<tr Class="trIssueQuestion">
+    //  htmlRowBioCategory = db.Add_Tr_To_Table_Return_Tr(issueResponsesTable,
+    //    "trIssueQuestion");
+    //  //<td Class="tdIssueIssueQuestion">
+    //  db.Add_Td_To_Tr(htmlRowBioCategory, "Accomplishments: (awards, achievements)",
+    //    "tdIssueIssueQuestion");
+
+    //  #region  |   Answer   |      Answer
+
+    //  //for (int i = startCandidateRow; i <= endCandidateRow; i++)
+    //  foreach (var politicianKey in politicianKeys)
+    //  {
+    //    //<td Class="Answer align = "center" colslpan=1">
+    //    //----- Answer -----------------------
+    //    //answer = db.Answer_Bio(cache,
+    //    //  politiciansTable.Rows[i]["PoliticianKey"].ToString(), "Accomplishments");
+    //    var nameToPrepend = isRunningMateOffice
+    //      ? cache.Politicians.GetLastName(politicianKey)
+    //      : null;
+    //    answer = db.Answer_Bio(cache, politicianKey, "Accomplishments",
+    //      nameToPrepend);
+
+    //    db.Add_Td_To_Tr(htmlRowBioCategory, answer, "tdIssueAnswer");
+    //  }
+
+    //  #endregion |   Answer   |      Answer
+
+    //  #endregion |  Accomplishments: (awards, achievements)  |
+    //}
+
+    #endregion Dead code
+  }
+}

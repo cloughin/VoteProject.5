@@ -1,0 +1,74 @@
+﻿#outer
+{
+  margin-bottom: 20px;
+}
+
+.boxed-group
+{
+  margin-top: 20px;
+}
+
+.boxed-group:first-of-type
+{
+  margin-top: 30px;
+}
+
+#FileUpload
+{
+  width: 920px;
+}
+
+.summary-container
+{
+  margin-top: 20px;
+}
+
+.summary
+{
+  width: 918px;
+  border: 1px solid #999;
+  min-height: 100px;
+  max-height: 300px;
+  overflow-y: scroll;
+  padding: 2px;
+}
+
+.submit-container
+{
+  margin-top: 10px;
+}
+
+.summary p.error
+{
+  color: red;
+}
+
+input.reversal
+{
+  width: 300px;
+  margin-right: 15px;
+}
+
+#reversals
+{
+  margin-top: 10px;
+}
+
+#reversals .reversal-label
+{
+  font-weight: bold;
+  font-size: 10pt;
+  margin-right: 5px;
+}
+
+#reversals .opt-out-checkbox
+{
+  margin-left: 8px;
+  position: relative;
+  top: 2px;
+}
+
+#reversals .do-reversal-button
+{
+  margin-left: 15px;
+}

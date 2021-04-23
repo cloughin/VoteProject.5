@@ -1,0 +1,1079 @@
+body
+{
+  border: 0;
+  color: #373737;
+  color: red;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+  margin: 0;
+}
+
+a img
+{
+  border: none;
+}
+
+a:link
+{
+  color: #26466D;
+  text-decoration: underline; /*color: #000099; bright blue */
+}
+
+a:visited
+{
+  /*color: #26466D; gray blue */
+  color: #990099; /*purple*/
+  text-decoration: underline;
+}
+
+a:hover
+{
+  /*color: #26466D;*/
+  color: red;
+  text-decoration: none;
+}
+
+a:active
+{
+  /*color: #26466D;*/
+  color: red;
+  text-decoration: underline;
+}
+
+.tableAdmin
+{
+  margin-left: 0;
+  width: 940px; /* 700px *//* NO padding else there is space on left */
+}
+
+.trBanner
+{
+  margin: 0;
+}
+
+.tdLeftBanner
+{
+  text-align: left;
+}
+
+.tdRightBanner
+{
+  text-align: right;
+}
+/* -------------LoginBar ------------- */
+
+.tdLoginBar
+{
+  color: #373737;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 10px;
+  padding: 0 10px 0 0;
+  text-align: right;
+}
+
+.trNavbarAdminTop
+{
+  background: #26466D;
+}
+
+.trNavbarAdminBottom
+{
+  background: #104E8B;
+}
+
+.tdNavbarAdminTop,
+.tdNavbarAdminBottom
+{
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 10px;
+  text-decoration: none;
+}
+
+.tdNavbarAdminTop a:link,
+.tdNavbarAdminBottom a:link
+{
+  color: #fff;
+  text-decoration: none;
+}
+
+.tdNavbarAdminTop a:visited,
+.tdNavbarAdminBottom a:visited
+{
+  color: #fff;
+  text-decoration: none;
+}
+
+.tdNavbarAdminTop a:hover,
+.tdNavbarAdminBottom a:hover
+{
+  color: red;
+  text-decoration: none;
+}
+
+.tdNavbarAdminTop a:active,
+.tdNavbarAdminBottom a:active
+{
+  color: #fff;
+  text-decoration: none;
+}
+
+/*----------------------------------[ Politician Navbar ]----------------------------------*/
+
+.NavbarComparisonsLinks
+{
+  background-color: #26466D; 
+  color: #fff;
+  font-size: 15px; 
+  font-weight: bold;
+  text-align: left;
+  text-decoration: none;
+}
+
+.NavbarComparisonsLinks a:link,
+.NavbarComparisonsLinks a:visited
+{
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.NavbarComparisonsLinks a:hover
+{
+  color: red;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+#HTMLTableIssueLinks td,
+#HTMLTableIssueLinks td
+{
+  padding: 2px 10px 2px 10px;
+}
+/* ------------Buttons ----------------- */
+
+.Buttons
+{
+  color: #26466D;
+  font-family: Arial, Verdana, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  margin: 5px; 
+  padding: 3px;
+  text-decoration: none;
+}
+/* ------------HyperLinks ----------------- */
+
+.HyperLink,
+.HyperLinkSmall
+{
+  font-weight: bold;
+  padding: 5px 0 0 5px; 
+}
+
+.CheckBoxes,
+.RadioButtons,
+.CheckBoxes td,
+.RadioButtons td,
+td .CheckBoxes,
+td .RadioButtons
+{
+  color: #26466D;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: bold; 
+  margin: 0; 
+  padding: 0; 
+  text-align: left;
+}
+/* ---------------- Input Textboxes ---------------------------------------- */
+
+.TextBoxInput
+{
+  background-color: #FFFFF0;
+  color: darkgreen; /*#254117 green red #26466D;*/
+  font-family: Verdana, Arial, Helvetica, sans-serif; /*Courier New,Lucida Console,Garamond,Verdana,Helvetica, Arial,Times New Roman,sans-serif; */
+  font-size: 13px; /* 11 13px */
+  font-weight: bold; /*margin-left: 169px;*/
+}
+
+.TextBoxInputSmall
+{
+  background-color: #FFFFF0;
+  color: darkgreen; /*#254117 green red #26466D;*/
+  font-family: Verdana, Arial, Helvetica, sans-serif; /*Courier New,Lucida Console,Garamond,Verdana,Helvetica, Arial,Times New Roman,sans-serif; */
+  font-size: 10px; /* 11 13px */
+  font-weight: bold; /*height: 19px;*/
+}
+
+.TextBoxInputMultiLine
+{
+  background-color: #FFFFF0; /* ##F2F2F2 light gray  #FFFFE0 = lightyellow(SVG), ivory(SVG) #FFFFF0*/
+  color: darkgreen; /*#254117 green red #26466D;*/
+  font-family: Verdana, Arial, Helvetica, sans-serif; /*Courier New,Lucida Console,Garamond,Verdana,Helvetica, Arial,Times New Roman,sans-serif; */
+  font-size: 10px; /* 11 13px */
+  font-weight: normal;
+}
+
+.TextBoxInputLogin
+{
+  background-color: #FFFFF0; /* ##F2F2F2 light gray  #FFFFE0 = lightyellow(SVG), ivory(SVG) #FFFFF0*/
+  color: #26466D;
+  font-family: Verdana, Arial, Helvetica, sans-serif; /*Courier New,Lucida Console,Garamond,Verdana,Helvetica, Arial,Times New Roman,sans-serif; */
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.TextBoxInputDisabled
+{
+  background-color: White;
+  font-family: Courier New; /*Courier New,Lucida Console,Garamond,Verdana,Helvetica, Arial,Times New Roman,sans-serif; */
+  font-size: 12px;
+}
+/* ------------ Forms ----------------------------- */
+
+.BorderLight,
+td.BorderLight
+{
+  border-color: silver;
+  border-style: solid;
+  border-width: 1px;
+  color: #373737;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+}
+
+td hr
+{
+  border-style: solid;
+  border-width: thin;
+  color: Black;
+  margin: 0;
+}
+
+.T,
+.TLarge,
+.TSmall,
+.TSmallBorder,
+.TLargeBorder,
+.TBold,
+.TBoldColor,
+.TSmallBold,
+.TSmallBorderBold,
+.H,
+.HLarge,
+.HSmall,
+.TColor,
+.TLargeColor,
+.TSmallColor,
+.HColor,
+.HLargeColor,
+.HSmallColor
+{
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  padding: 0 0 0 5px;
+}
+
+.HSmall
+{
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  padding: 5px 5px 5px 15px;
+}
+
+.T,
+.TLarge,
+.TSmall,
+.TSmallBorder,
+.TLargeBorder,
+.TColor,
+.TLargeColor,
+.TSmallColor
+{
+  font-weight: normal;
+}
+
+.H,
+.HLarge,
+.HSmall,
+.TBold,
+.TBoldColor,
+.TSmallBold,
+.TSmallBorderBold,
+.HColor,
+.HLargeColor,
+.HSmallColor
+{
+  font-weight: bold;
+}
+
+.T,
+.TLarge,
+.TSmall,
+.TSmallBorder,
+.TLargeBorder,
+.TBold,
+.TBoldColor,
+.TSmallBold,
+.TSmallBorderBold,
+.H,
+.HSmall
+{
+  color: #373737;
+}
+
+.HLarge
+{
+  color: #26466D;
+}
+
+.TColor,
+.TLargeColor,
+.TSmallColor,
+.HColor,
+.HLargeColor,
+.HSmallColor
+{
+  color: Red;
+}
+
+.T,
+.TBold,
+.TColor
+{
+  font-size: 11px;
+}
+
+.TLarge,
+.TLargeBorder,
+.TBoldColor,
+.TLargeColor
+{
+  font-size: 13px;
+}
+
+.TSmall,
+.TSmallBold,
+.TSmallColor,
+.TSmallBorder
+{
+  font-size: 9px;
+}
+
+.H,
+.HColor
+{
+  background-color: #E0E0E0;
+  border: solid 1px gray;
+  font-size: 13px;
+  padding: 2px;
+  text-align: center;
+}
+
+.H
+{
+  color: #26466D;
+}
+
+.HColor
+{
+  color: red;
+}
+
+.HLarge,
+.HLargeColor
+{
+  font-size: 13px;
+  padding: 3px 5px 3px 5px;
+}
+
+.HSmall,
+.HSmallColor
+{
+  background-color: #E0E0E0;
+  background-color: #F5F5F5;
+  border-top: solid 1px gray;
+  font-size: 12px;
+  text-align: left;
+}
+
+.HSmall
+{
+  color: #26466D;
+}
+
+.HSmallColor
+{
+  color: red;
+}
+
+.TSmallBorder,
+.TLargeBorder
+{
+  border-color: silver;
+  border-style: solid;
+  border-width: 1px;
+}
+
+/*--- end old stuff*/
+
+/* NEW STUFF  */
+/* Text Types for text and headings
+.T, .TLarge, .TSmall
+,.TBold, .TBoldColor,.TSmallBold
+,.TColor, .TLargeColor, .TSmallColor
+,.TBoldColor, .TLargeBoldColor,.TSmallBoldColor
+,.TBorder, .TLargeBorder, .TSmallBorder
+,.H, .HLarge, .HSmall
+,.HBold, .HLargeBold,.HSmallBold
+,.HColor, .HLargeColor, .HSmallColor
+,.HBoldColor, .HLargeBoldColor,.HSmallBoldColor
+{
+}
+*/
+
+/* Normal Text */
+
+.T,
+.TLarge,
+.TSmall,
+.TBold,
+.TBoldColor,
+.TSmallBold,
+.TLargeBold,
+.TColor,
+.TLargeColor,
+.TSmallColor,
+.TBoldColor,
+.TLargeBoldColor,
+.TSmallBoldColor,
+.TBorder,
+.TLargeBorder,
+.TSmallBorder
+{
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  padding: 0 0 0 5px;
+}
+
+/* Headings */
+
+.HSmall,
+.HSmallBold,
+.HSmallColor,
+.HSmallBoldColor
+{
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  padding: 3px;
+  text-align: left;
+}
+
+.H,
+.HBold,
+.HColor,
+.HBoldColor
+{
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  padding: 3px;
+  text-align: center;
+}
+
+.HLarge,
+.HLargeBold,
+.HLargeBoldColor,
+.HLargeColor
+{
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  padding: 3px 5px 3px 5px;
+  text-align: left;
+}
+
+.T,
+.TLarge,
+.TSmall,
+.TColor,
+.TLargeColor,
+.TSmallColor,
+.TBorder,
+.TLargeBorder,
+.TSmallBorder
+{
+  font-weight: normal;
+}
+
+.T,
+.TLarge,
+.TSmall,
+.TBold,
+.TBoldColor,
+.TSmallBold,
+.TLargeBold,
+.TBorder,
+.TLargeBorder,
+.TSmallBorder
+{
+  color: #373737; /*gray*/
+}
+
+.H,
+.HLarge,
+.HSmall,
+.HBold,
+.HLargeBold,
+.HSmallBold
+{
+  color: #26466D; /*blue-gray*/
+}
+
+.TColor,
+.TLargeColor,
+.TSmallColor,
+.TBoldColor,
+.TLargeBoldColor,
+.TSmallBoldColor,
+.HColor,
+.HLargeColor,
+.HSmallColor,
+.HBoldColor,
+.HLargeBoldColor,
+.HSmallBoldColor
+{
+  color: Red;
+}
+
+.TSmall,
+.TSmallBold,
+.TSmallColor,
+.TSmallBoldColor,
+.TSmallBorder
+{
+  font-size: 10px;
+}
+
+.T,
+.TBold,
+.TBoldColor,
+.TColor,
+.TBorder
+{
+  font-size: 11px;
+}
+
+.TLarge,
+.TLargeBold,
+.TLargeColor,
+.TLargeBoldColor,
+.TLargeBorder
+{
+  font-size: 14px;
+}
+
+.HSmall,
+.HSmallBold,
+.HSmallColor,
+.HSmallBoldColor
+{
+  font-size: 11px;
+}
+
+.H,
+.HBold,
+.HColor,
+.HBoldColor
+{
+  font-size: 13px;
+}
+
+.HLarge,
+.HLargeBold,
+.HLargeColor,
+.HLargeBoldColor
+{
+  font-size: 14px;
+}
+
+.H,
+.HBold,
+.HColor,
+.HBoldColor
+{
+  background-color: #E0E0E0; /*gray*/
+  border: solid 1px gray;
+}
+
+.HSmall,
+.HSmallBold,
+.HSmallColor,
+.HSmallBoldColor
+{
+  background-color: #F5F5F5; /*light gray*/
+  border-top: solid 1px gray;
+}
+
+.TBorder,
+.TLargeBorder,
+.TSmallBorder
+{
+  border-color: silver;
+  border-style: solid;
+  border-width: 1px;
+}
+/* END NEW STUFF  */
+
+
+/*--Msg--*/
+
+.Msg,
+.MsgSmall,
+.MsgFail,
+.MsgFailSmall,
+.MsgOk,
+.MsgOkSmall,
+.MsgWarn,
+.MsgWarnSmall
+{
+  background-color: Yellow; /*Yellow #FFFCCF*/
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  padding: 0 0 0 5px;
+}
+
+.Msg,
+.MsgFail,
+.MsgOk,
+.MsgWarn
+{
+  /*font-size: 15px;*/
+  font-size: 12px;
+}
+
+.MsgSmall,
+.MsgFailSmall,
+.MsgOkSmall,
+.MsgWarnSmall
+{
+  font-size: 12px;
+}
+
+.MsgFail,
+.MsgFailSmall
+{
+  color: Red;
+}
+
+.MsgOk,
+.MsgOkSmall
+{
+  color: Green;
+}
+
+.MsgWarn,
+.MsgWarnSmall
+{
+  color: Red;
+}
+
+.Msg,
+.MsgSmall
+{
+  color: Blue;
+}
+/*---- Reports--*/
+/*
+#tableReport
+{
+border:solid 1px Gray;
+}
+*/
+
+.tableReport
+{
+  border: solid 1px Gray;
+  margin-left: 0;
+  width: 700px;
+}
+
+.trReportGroupHeading,
+.trReportGroupHeadingLeft,
+.trReportGroupHeadingColor,
+.trReportGroupHeadingLeftColor
+{
+  background-color: #CAE1FF; /* light blue */
+}
+/*---- trReportHeading--*/
+
+.trReportHeading,
+.trReportHeadingLeft,
+.trReportHeadingColor,
+.trReportHeadingLeftColor
+{
+  background-color: #6396D8; /* medium blue */
+  padding: 10px 0 10px 0; /*background-color: #E0E0E0;*/
+  vertical-align: top;
+  width: 100%;
+}
+
+.tdReportHeading,
+.tdReportHeadingLeft,
+.tdReportHeadingColor,
+.tdReportHeadingLeftColor
+{
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+}
+
+.tdReportHeading,
+.tdReportHeadingLeft
+{
+  color: #373737;
+}
+
+.tdReportHeadingColor,
+.tdReportHeadingLeftColor
+{
+  color: red;
+}
+
+.tdReportHeading
+{
+  text-align: center;
+}
+
+.tdReportHeadingLeft
+{
+  text-align: left;
+}
+
+.tdReportHeading,
+.tdReportHeadingLeft
+{
+  color: #373737;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 0;
+  padding: 5px;
+  vertical-align: top;
+}
+
+/*---- trReportGroupHeading--*/
+
+.tdReportGroupHeading,
+.tdReportGroupHeadingLeft,
+.tdReportGroupHeadingColor,
+.tdReportGroupHeadingLeftColor
+{
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 6px;
+  vertical-align: top;
+}
+
+.tdReportGroupHeading,
+.tdReportGroupHeadingLeft
+{
+  color: #373737;
+}
+
+.tdReportGroupHeadingColor,
+.tdReportGroupHeadingLeftColor
+{
+  color: red;
+}
+
+.tdReportGroupHeading
+{
+  text-align: center;
+}
+
+.tdReportGroupHeadingLeft
+{
+  text-align: left;
+}
+/*
+.tdReportGroupHeading a:link
+,.tdReportGroupHeadingLeft a:link
+{
+color: #373737;
+}
+.tdReportGroupHeading a:visited
+,.tdReportGroupHeadingLeft a:visited
+{
+color: #26466D;
+color: #990099;
+}
+.tdReportGroupHeading a:hover
+,.tdReportGroupHeadingLeft a:hover
+{
+color: red;
+}
+.tdReportGroupHeading a:active
+,.tdReportGroupHeadingLeft a:active
+{
+color: #373737;
+}
+*/
+
+.trReportGroupHeading,
+.tdReportGroupHeadingLeft
+{
+  padding: 7px 5px 7px 5px;
+}
+
+.tdReportIncumbentKeyHeading
+{
+  background-color: #F5F5F5;
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 5px 2px 5px;
+}
+
+.trReportDetailHeading
+{
+  background-color: #F5F5F5;
+}
+
+.tdReportDetailHeading,
+.tdReportDetailHeadingLeft
+{
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px;
+}
+/*
+.tdReportDetailHeading a:link
+,.tdReportDetailHeading a:visited
+,.tdReportDetailHeading a:hover
+,.tdReportDetailHeadingLeft a:link
+,.tdReportDetailHeadingLeft a:visited
+,.tdReportDetailHeadingLeft a:hover
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 12px;
+font-weight:bold;
+border-bottom:solid 1px Gray;
+color: #373737;
+padding:2px;
+}
+.tdReportDetailHeading a:visited
+,.tdReportDetailHeadingLeft a:visited
+{
+color: #26466D;
+}
+*/
+
+.tdReportDetailHeading
+{
+  text-align: center;
+}
+
+.tdReportDetailHeadingLeft
+{
+  text-align: left;
+}
+
+/*
+.
+{
+text-align:left;
+}
+*/
+
+.tdReportImage
+{
+  background-color: #FFFFFF; /* WHITE */
+  border-bottom: solid 1px Gray;
+  padding: 5px 2px 5px 2px;
+  vertical-align: top;
+}
+
+.tdReportDetail,
+.tdReportDetailBold,
+.tdReportDetailLarge,
+.tdReportDetailLargeBold,
+.tdReportDetailColor,
+.tdReportDetailSmall
+{
+  background-color: #FFFFFF; /* WHITE */
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 2px 5px 2px 5px;
+  text-align: left;
+  vertical-align: top; /*width:900px;*//* 900px 210px*/
+}
+
+.tdReportDetail,
+.tdReportDetailColor,
+.tdReportDetailBold
+{
+  font-size: 12px;
+}
+
+.tdReportDetailSmall
+{
+  font-size: 10px;
+}
+
+.tdReportDetail,
+.tdReportDetailColor
+{
+  font-weight: normal;
+}
+
+.tdReportDetailBold
+{
+  font-weight: bold;
+}
+
+.tdReportDetailLarge,
+.tdReportDetailLargeBold
+{
+  font-size: 14px;
+}
+
+.tdReportDetailLarge
+{
+  font-weight: normal;
+}
+
+.tdReportDetailLargeBold
+{
+  font-weight: bold;
+}
+
+.tdReportDetail,
+.tdReportDetailBold,
+.tdReportDetailLarge,
+.tdReportDetailLargeBold,
+.tdReportDetailSmall
+{
+  /*color: #373737;*/
+  color: #26466D;
+}
+
+.tdReportDetailColor
+{
+  color: red;
+}
+
+.tdLinks
+/*
+,.tdLinks a:link
+,.tdLinks a:visited
+,.tdLinks a:hover
+*/
+{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: normal;
+  padding-left: 5px;
+}
+
+/*Anchors for County and Local Pages */
+
+.tdCountyLocalLinks
+{
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  color: #373737;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 6px 10px 6px 10px;
+}
+/*
+
+.tdCountyLocalLinks a:link
+,.tdCountyLocalLinks a:visited
+,.tdCountyLocalLinks a:hover
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 13px;
+font-weight:bold;
+color: #26466D;
+}
+
+*/
+/*-- Politician Cells on Reports---*/
+
+.TName
+{
+  color: #26466D; /*gray blue*/
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  vertical-align: top;
+  font-size: 15px;
+  font-weight: bold;;
+  line-height: 130%;
+}
+
+.TWebsite
+{
+  color: #26466D; /*gray blue*/
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  vertical-align: top;
+  font-size: 12px;
+  font-weight: bold;;
+  line-height: 130%;
+}
+
+.TAddress
+{
+  color: #26466D; /*gray blue*/
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  vertical-align: top;
+  font-size: 9px;
+  font-weight: normal;
+  line-height: 130%;
+}
+
+.TPhone
+{
+  color: #26466D; /*gray blue*/
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  vertical-align: top;
+  font-size: 9px;
+  font-weight: normal;;
+  line-height: 130%;
+}
+
+.TAge
+{
+  color: #26466D; /*gray blue*/
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  vertical-align: top;
+  font-size: 9px;
+  font-weight: bold;;
+  line-height: 130%;
+}
+
+ul.social-media-anchors
+{
+  list-style: none;
+}
+
+ul.social-media-anchors li
+{
+  float: left;
+  margin-bottom: 4px;
+  margin-right: 8px;
+}

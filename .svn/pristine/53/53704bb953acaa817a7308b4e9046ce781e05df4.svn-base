@@ -1,0 +1,21 @@
+﻿using System;
+
+namespace Vote
+{
+  public partial class Error404PageX : PublicPage
+  {
+    protected Error404PageX()
+    {
+      No404OnUrlNormalizeError = true;
+      NoUrlEdit = true; 
+      NoIndex = true; /* bacause disabled */
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/SecondaryCommon.css");
+      Response.StatusCode = 404;
+    }
+  }
+}

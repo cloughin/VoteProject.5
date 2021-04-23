@@ -1,0 +1,3735 @@
+using System;
+using System.Data;
+using System.IO;
+using System.Text;
+using System.Web.UI.WebControls;
+using System.Xml;
+using DB.Vote;
+using DB.VoteTemp;
+
+namespace Vote.Master
+{
+  public partial class SiteMap : VotePage
+  {
+    #region sql Sitemap Table
+
+    //Strings
+    //protected static string Sitemap_Str(string DomainDataCode, string Column)
+    //{
+    //  return db.Single_Key_Str("Sitemap", Column, "DomainDataCode", DomainDataCode);
+    //}
+    //protected static string Sitemap_DomainName(string DomainDataCode)
+    //{
+    //  return Sitemap_Str(DomainDataCode, "DomainName");
+    //}
+    //protected static string Sitemap_DomainDataCode(string DomainDataCode)
+    //{
+    //  return Sitemap_Str(DomainDataCode, "DomainDataCode");
+    //}
+    //protected static string Sitemap_FrequencyDefault(string DomainDataCode)
+    //{
+    //  return Sitemap_Str(DomainDataCode, "FrequencyDefault");
+    //}
+    //protected static string Sitemap_FrequencyElection(string DomainDataCode)
+    //{
+    //  return Sitemap_Str(DomainDataCode, "FrequencyElection");
+    //}
+    //protected static string Sitemap_FrequencyOfficials(string DomainDataCode)
+    //{
+    //  return Sitemap_Str(DomainDataCode, "FrequencyOfficials");
+    //}
+    //protected static string Sitemap_FrequencyIntro(string DomainDataCode)
+    //{
+    //  return Sitemap_Str(DomainDataCode, "FrequencyIntro");
+    //}
+    //protected static string Sitemap_FrequencyPoliticianIssue(string DomainDataCode)
+    //{
+    //  return Sitemap_Str(DomainDataCode, "FrequencyPoliticianIssue");
+    //}
+    //protected static string Sitemap_FrequencyIssue(string DomainDataCode)
+    //{
+    //  return Sitemap_Str(DomainDataCode, "FrequencyIssue");
+    //}
+    //protected static string Sitemap_FrequencyBallot(string DomainDataCode)
+    //{
+    //  return Sitemap_Str(DomainDataCode, "FrequencyBallot");
+    //}
+    //protected static string Sitemap_ElectionDirectories(string DomainDataCode)
+    //{
+    //  return Sitemap_Str(DomainDataCode, "ElectionDirectories");
+    //}
+    //protected static string Sitemap_PoliticianElections(string DomainDataCode)
+    //{
+    //  return Sitemap_Str(DomainDataCode, "PoliticianElections");
+    //}
+    //protected static string Sitemap_Ballots(string DomainDataCode)
+    //{
+    //  return Sitemap_Str(DomainDataCode, "Ballots");
+    //}
+
+    //Bool
+    //protected static bool Sitemap_Bool(string DomainDataCode, string Column)
+    //{
+    //  return db.Single_Key_Bool("Sitemap", Column, "DomainDataCode", DomainDataCode);
+    //}
+    //protected static bool xSitemap_IncludeDefault(string DomainDataCode)
+    //{
+    //  return Sitemap_Bool(DomainDataCode, "IncludeDefault");
+    //}
+    //protected static bool xSitemap_IncludeElection(string DomainDataCode)
+    //{
+    //  return Sitemap_Bool(DomainDataCode, "IncludeElection");
+    //}
+    //protected static bool xSitemap_IncludeOfficials(string DomainDataCode)
+    //{
+    //  return Sitemap_Bool(DomainDataCode, "IncludeOfficials");
+    //}
+    //protected static bool xSitemap_IncludeIntro(string DomainDataCode)
+    //{
+    //  return Sitemap_Bool(DomainDataCode, "IncludeIntro");
+    //}
+    //protected static bool xSitemap_IncludePoliticianIssue(string DomainDataCode)
+    //{
+    //  return Sitemap_Bool(DomainDataCode, "IncludePoliticianIssue");
+    //}
+    //protected static bool xSitemap_IncludeIssue(string DomainDataCode)
+    //{
+    //  return Sitemap_Bool(DomainDataCode, "IncludeIssue");
+    //}
+    //protected static bool xSitemap_IncludeBallot(string DomainDataCode)
+    //{
+    //  return Sitemap_Bool(DomainDataCode, "IncludeBallot");
+    //}
+
+    //protected static bool xIsCurrentlyElected(string DomainDataCode)
+    //{
+    //  return Sitemap_Bool(DomainDataCode, "IsCurrentlyElected");
+    //}
+    //protected static bool Sitemap_MustHavePicture(string DomainDataCode)
+    //{
+    //  return Sitemap_Bool(DomainDataCode, "MustHavePicture");
+    //}
+    //protected static bool Sitemap_MustHaveStatement(string DomainDataCode)
+    //{
+    //  return Sitemap_Bool(DomainDataCode, "MustHaveStatement");
+    //}
+    //protected static bool xSitemap_ComputePriorityPoliticianIssue(string DomainDataCode)
+    //{
+    //  return Sitemap_Bool(DomainDataCode, "ComputePriorityPoliticianIssue");
+    //}
+    //protected static bool xSitemap_ComputePriorityIssue(string DomainDataCode)
+    //{
+    //  return Sitemap_Bool(DomainDataCode, "ComputePriorityIssue");
+    //}
+
+    //Int
+    //protected static int Sitemap_Int(string DomainDataCode, string Column)
+    //{
+    //  return db.Single_Key_Int("Sitemap", Column, "DomainDataCode", DomainDataCode);
+    //}
+    //protected static int Sitemap_PriorityDefault(string DomainDataCode)
+    //{
+    //  return Sitemap_Int(DomainDataCode, "PriorityDefault");
+    //}
+    //protected static int Sitemap_PriorityElection(string DomainDataCode)
+    //{
+    //  return Sitemap_Int(DomainDataCode, "PriorityElection");
+    //}
+    //protected static int Sitemap_PriorityOfficials(string DomainDataCode)
+    //{
+    //  return Sitemap_Int(DomainDataCode, "PriorityOfficials");
+    //}
+    //protected static int Sitemap_PriorityIntro(string DomainDataCode)
+    //{
+    //  return Sitemap_Int(DomainDataCode, "PriorityIntro");
+    //}
+    //protected static int Sitemap_PriorityPoliticianIssue(string DomainDataCode)
+    //{
+    //  return Sitemap_Int(DomainDataCode, "PriorityPoliticianIssue");
+    //}
+    //protected static int Sitemap_PriorityIssue(string DomainDataCode)
+    //{
+    //  return Sitemap_Int(DomainDataCode, "PriorityIssue");
+    //}
+    //protected static int Sitemap_PriorityBallot(string DomainDataCode)
+    //{
+    //  return Sitemap_Int(DomainDataCode, "PriorityBallot");
+    //}
+    //protected static int Sitemap_MinimumCandidates(string DomainDataCode)
+    //{
+    //  return Sitemap_Int(DomainDataCode, "MinimumCandidates");
+    //}
+    //protected static int Sitemap_MinimumAnswers(string DomainDataCode)
+    //{
+    //  return Sitemap_Int(DomainDataCode, "MinimumAnswers");
+    //}
+    //protected static int Sitemap_FactorIssue(string DomainDataCode)
+    //{
+    //  return Sitemap_Int(DomainDataCode, "FactorIssue");
+    //}
+
+    //BigInt
+    //protected int Sitemap_IntBig(string DomainDataCode, string Column)
+    //{
+    //  return db.Single_Key_Int_Big("Sitemap", Column, "DomainDataCode", DomainDataCode);
+    //}
+    //protected int Sitemap_UrlsDefault(string DomainDataCode)
+    //{
+    //  return Sitemap_IntBig(DomainDataCode, "UrlsDefault");
+    //}
+    //protected int Sitemap_UrlsElection(string DomainDataCode)
+    //{
+    //  return Sitemap_IntBig(DomainDataCode, "UrlsElection");
+    //}
+    //protected int Sitemap_UrlsOfficials(string DomainDataCode)
+    //{
+    //  return Sitemap_IntBig(DomainDataCode, "UrlsOfficials");
+    //}
+    //protected int Sitemap_UrlsIntro(string DomainDataCode)
+    //{
+    //  return Sitemap_IntBig(DomainDataCode, "UrlsIntro");
+    //}
+    //protected int Sitemap_UrlsPoliticianIssue(string DomainDataCode)
+    //{
+    //  return Sitemap_IntBig(DomainDataCode, "UrlsPoliticianIssue");
+    //}
+    //protected int Sitemap_UrlsIssue(string DomainDataCode)
+    //{
+    //  return Sitemap_IntBig(DomainDataCode, "UrlsIssue");
+    //}
+    //protected int Sitemap_UrlsBallot(string DomainDataCode)
+    //{
+    //  return Sitemap_IntBig(DomainDataCode, "UrlsBallot");
+    //}
+    //protected int Sitemap_RunTimeSeconds(string DomainDataCode)
+    //{
+    //  return Sitemap_IntBig(DomainDataCode, "RunTimeSeconds");
+    //}
+
+    //Date
+    //protected DateTime Sitemap_Date(string DomainDataCode, string Column)
+    //{
+    //  return db.Single_Key_Date("Sitemap", Column, "DomainDataCode", DomainDataCode);
+    //}
+    //protected DateTime Sitemap_LastCreated(string DomainDataCode)
+    //{
+    //  return Sitemap_Date(DomainDataCode, "LastCreated");
+    //}
+
+    //Str Update
+    //protected void Sitemap_Update_Str(string DomainDataCode, string Column, string ColumnValue)
+    //{
+    //  db.Single_Key_Update_Str("Sitemap", Column, ColumnValue, "DomainDataCode", DomainDataCode);
+    //}
+    //protected void Sitemap_Update_DomainName(string DomainDataCode, string ColumnValue)
+    //{
+    //  Sitemap_Update_Str(DomainDataCode, "DomainName", ColumnValue);
+    //}
+    //protected void Sitemap_Update_FrequencyDefault(string DomainDataCode, string ColumnValue)
+    //{
+    //  Sitemap_Update_Str(DomainDataCode, "FrequencyDefault", ColumnValue);
+    //}
+    //protected void Sitemap_Update_FrequencyElection(string DomainDataCode, string ColumnValue)
+    //{
+    //  Sitemap_Update_Str(DomainDataCode, "FrequencyElection", ColumnValue);
+    //}
+    //protected void Sitemap_Update_FrequencyOfficials(string DomainDataCode, string ColumnValue)
+    //{
+    //  Sitemap_Update_Str(DomainDataCode, "FrequencyOfficials", ColumnValue);
+    //}
+    //protected void Sitemap_Update_FrequencyIntro(string DomainDataCode, string ColumnValue)
+    //{
+    //  Sitemap_Update_Str(DomainDataCode, "FrequencyIntro", ColumnValue);
+    //}
+    //protected void Sitemap_Update_FrequencyPoliticianIssue(string DomainDataCode, string ColumnValue)
+    //{
+    //  Sitemap_Update_Str(DomainDataCode, "FrequencyPoliticianIssue", ColumnValue);
+    //}
+    //protected void Sitemap_Update_FrequencyIssue(string DomainDataCode, string ColumnValue)
+    //{
+    //  Sitemap_Update_Str(DomainDataCode, "FrequencyIssue", ColumnValue);
+    //}
+    //protected void Sitemap_Update_FrequencyBallot(string DomainDataCode, string ColumnValue)
+    //{
+    //  Sitemap_Update_Str(DomainDataCode, "FrequencyBallot", ColumnValue);
+    //}
+    //protected void Sitemap_Update_ElectionDirectories(string DomainDataCode, string ColumnValue)
+    //{
+    //  Sitemap_Update_Str(DomainDataCode, "ElectionDirectories", ColumnValue);
+    //}
+    //protected void Sitemap_Update_PoliticianElections(string DomainDataCode, string ColumnValue)
+    //{
+    //  Sitemap_Update_Str(DomainDataCode, "PoliticianElections", ColumnValue);
+    //}
+    //protected void Sitemap_Update_Ballots(string DomainDataCode, string ColumnValue)
+    //{
+    //  Sitemap_Update_Str(DomainDataCode, "Ballots", ColumnValue);
+    //}
+
+    //Int Update
+    //protected void Sitemap_Update_Int(string DomainDataCode, string Column, int ColumnValue)
+    //{
+    //  db.Single_Key_Update_Int("Sitemap", Column, ColumnValue, "DomainDataCode", DomainDataCode);
+    //}
+    //protected void Sitemap_Update_PriorityDefault(string DomainDataCode, int ColumnValue)
+    //{
+    //  Sitemap_Update_Int(DomainDataCode, "PriorityDefault", ColumnValue);
+    //}
+    //protected void Sitemap_Update_PriorityElection(string DomainDataCode, int ColumnValue)
+    //{
+    //  Sitemap_Update_Int(DomainDataCode, "PriorityElection", ColumnValue);
+    //}
+    //protected void Sitemap_Update_PriorityOfficials(string DomainDataCode, int ColumnValue)
+    //{
+    //  Sitemap_Update_Int(DomainDataCode, "PriorityOfficials", ColumnValue);
+    //}
+    //protected void Sitemap_Update_PriorityIntro(string DomainDataCode, int ColumnValue)
+    //{
+    //  Sitemap_Update_Int(DomainDataCode, "PriorityIntro", ColumnValue);
+    //}
+    //protected void Sitemap_Update_PriorityPoliticianIssue(string DomainDataCode, int ColumnValue)
+    //{
+    //  Sitemap_Update_Int(DomainDataCode, "PriorityPoliticianIssue", ColumnValue);
+    //}
+    //protected void Sitemap_Update_PriorityIssue(string DomainDataCode, int ColumnValue)
+    //{
+    //  Sitemap_Update_Int(DomainDataCode, "PriorityIssue", ColumnValue);
+    //}
+    //protected void Sitemap_Update_PriorityBallot(string DomainDataCode, int ColumnValue)
+    //{
+    //  Sitemap_Update_Int(DomainDataCode, "PriorityBallot", ColumnValue);
+    //}
+    //protected void Sitemap_Update_MinimumCandidates(string DomainDataCode, int ColumnValue)
+    //{
+    //  Sitemap_Update_Int(DomainDataCode, "MinimumCandidates", ColumnValue);
+    //}
+    //protected void Sitemap_Update_MinimumAnswers(string DomainDataCode, int ColumnValue)
+    //{
+    //  Sitemap_Update_Int(DomainDataCode, "MinimumAnswers", ColumnValue);
+    //}
+    //protected void Sitemap_Update_FactorIssue(string DomainDataCode, int ColumnValue)
+    //{
+    //  Sitemap_Update_Int(DomainDataCode, "FactorIssue", ColumnValue);
+    //}
+
+    //BigInt Update
+    //protected static void Sitemap_Update_IntBig(string DomainDataCode, string Column, Int32 ColumnValue)
+    //{
+    //  db.Single_Key_Update_IntBig("Sitemap", Column, ColumnValue, "DomainDataCode", DomainDataCode);
+    //}
+    //protected static void Sitemap_Update_UrlsDefault(string DomainDataCode, Int32 ColumnValue)
+    //{
+    //  Sitemap_Update_IntBig(DomainDataCode, "UrlsDefault", ColumnValue);
+    //}
+    //protected static void Sitemap_Update_UrlsElection(string DomainDataCode, Int32 ColumnValue)
+    //{
+    //  Sitemap_Update_IntBig(DomainDataCode, "UrlsElection", ColumnValue);
+    //}
+    //protected static void Sitemap_Update_UrlsOfficials(string DomainDataCode, Int32 ColumnValue)
+    //{
+    //  Sitemap_Update_IntBig(DomainDataCode, "UrlsOfficials", ColumnValue);
+    //}
+    //protected static void Sitemap_Update_UrlsIntro(string DomainDataCode, Int32 ColumnValue)
+    //{
+    //  Sitemap_Update_IntBig(DomainDataCode, "UrlsIntro", ColumnValue);
+    //}
+    //protected static void Sitemap_Update_UrlsPoliticianIssue(string DomainDataCode, Int32 ColumnValue)
+    //{
+    //  Sitemap_Update_IntBig(DomainDataCode, "UrlsPoliticianIssue", ColumnValue);
+    //}
+    //protected static void Sitemap_Update_UrlsIssue(string DomainDataCode, Int32 ColumnValue)
+    //{
+    //  Sitemap_Update_IntBig(DomainDataCode, "UrlsIssue", ColumnValue);
+    //}
+    //protected static void Sitemap_Update_UrlsBallot(string DomainDataCode, Int32 ColumnValue)
+    //{
+    //  Sitemap_Update_IntBig(DomainDataCode, "UrlsBallot", ColumnValue);
+    //}
+    //protected static void Sitemap_Update_RunTimeSeconds(string DomainDataCode, Int32 ColumnValue)
+    //{
+    //  Sitemap_Update_IntBig(DomainDataCode, "RunTimeSeconds", ColumnValue);
+    //}
+
+    //bool Update
+    //protected void Sitemap_Update_Bool(string DomainDataCode, string Column, bool ColumnValue)
+    //{
+    //  db.Single_Key_Update_Bool("Sitemap", Column, ColumnValue, "DomainDataCode", DomainDataCode);
+    //}
+    //protected void Sitemap_Update_IncludeDefault(string DomainDataCode, bool ColumnValue)
+    //{
+    //  Sitemap_Update_Bool(DomainDataCode, "IncludeDefault", ColumnValue);
+    //}
+    //protected void Sitemap_Update_IncludeElection(string DomainDataCode, bool ColumnValue)
+    //{
+    //  Sitemap_Update_Bool(DomainDataCode, "IncludeElection", ColumnValue);
+    //}
+    //protected void Sitemap_Update_IncludeOfficials(string DomainDataCode, bool ColumnValue)
+    //{
+    //  Sitemap_Update_Bool(DomainDataCode, "IncludeOfficials", ColumnValue);
+    //}
+    //protected void Sitemap_Update_IncludeIntro(string DomainDataCode, bool ColumnValue)
+    //{
+    //  Sitemap_Update_Bool(DomainDataCode, "IncludeIntro", ColumnValue);
+    //}
+    //protected void Sitemap_Update_IncludePoliticianIssue(string DomainDataCode, bool ColumnValue)
+    //{
+    //  Sitemap_Update_Bool(DomainDataCode, "IncludePoliticianIssue", ColumnValue);
+    //}
+    //protected void Sitemap_Update_IncludeIssue(string DomainDataCode, bool ColumnValue)
+    //{
+    //  Sitemap_Update_Bool(DomainDataCode, "IncludeIssue", ColumnValue);
+    //}
+    //protected void Sitemap_Update_IncludeBallot(string DomainDataCode, bool ColumnValue)
+    //{
+    //  Sitemap_Update_Bool(DomainDataCode, "IncludeBallot", ColumnValue);
+    //}
+    //protected void Sitemap_Update_IsCurrentlyElected(string DomainDataCode, bool ColumnValue)
+    //{
+    //  Sitemap_Update_Bool(DomainDataCode, "IsCurrentlyElected", ColumnValue);
+    //}
+    //protected void Sitemap_Update_MustHavePicture(string DomainDataCode, bool ColumnValue)
+    //{
+    //  Sitemap_Update_Bool(DomainDataCode, "MustHavePicture", ColumnValue);
+    //}
+    //protected void Sitemap_Update_MustHaveStatement(string DomainDataCode, bool ColumnValue)
+    //{
+    //  Sitemap_Update_Bool(DomainDataCode, "MustHaveStatement", ColumnValue);
+    //}
+    //protected void xSitemap_Update_ComputePriorityPoliticianIssue(string DomainDataCode, bool ColumnValue)
+    //{
+    //  Sitemap_Update_Bool(DomainDataCode, "ComputePriorityPoliticianIssue", ColumnValue);
+    //}
+    //protected void xSitemap_Update_ComputePriorityIssue(string DomainDataCode, bool ColumnValue)
+    //{
+    //  Sitemap_Update_Bool(DomainDataCode, "ComputePriorityIssue", ColumnValue);
+    //}
+
+    //Date Update
+    //protected static void Sitemap_Update_Date(string DomainDataCode, string Column, DateTime ColumnValue)
+    //{
+    //  db.Single_Key_Update_Date("Sitemap", Column, ColumnValue, "DomainDataCode", DomainDataCode);
+    //}
+    //protected static void Sitemap_Update_LastCreated(string DomainDataCode, DateTime ColumnValue)
+    //{
+    //  Sitemap_Update_Date(DomainDataCode, "LastCreated", ColumnValue);
+    //}
+
+    #endregion sql Sitemap Table
+
+    #region DataLastUpdated
+
+    protected static DateTime DataLastUpdated_Officials(string StateCode,
+      string OfficeLevel_Condition)
+    {
+      var SQL = string.Empty;
+      SQL += " SELECT OfficesOfficials.DataLastUpdated";
+      SQL += " FROM Offices,OfficesOfficials";
+      SQL += " WHERE Offices.OfficeKey = OfficesOfficials.OfficeKey";
+
+      if (!string.IsNullOrEmpty(StateCode))
+        SQL += " AND Offices.StateCode = " + db.SQLLit(StateCode);
+
+      SQL += " AND OfficeLevel " + OfficeLevel_Condition;
+      SQL += " ORDER BY OfficesOfficials.DataLastUpdated DESC";
+
+      var Row_Officials = db.Row_First_Optional(SQL);
+      if (Row_Officials != null)
+        return Convert.ToDateTime(Row_Officials["DataLastUpdated"]);
+      else
+        return DateTime.MinValue;
+    }
+
+    #endregion DataLastUpdated
+
+    // ToDo: convert return type to Uri
+    protected static string Domain(string State_Code)
+    {
+      if (StateCache.IsValidStateCode(State_Code))
+        return UrlManager.GetDefaultPageUri(State_Code)
+          .ToString();
+      else
+        return UrlManager.GetDefaultPageUri()
+          .ToString();
+    }
+
+    #region Priority
+
+    protected static string Priority(int Sitemap_Priority)
+    {
+      var Priority = Sitemap_Priority.ToString();
+      if (Priority.Length == 1) //1 - 9
+        Priority = Priority.PadLeft(2, '0'); //02
+      return Priority.Insert(1, ".");
+    }
+
+    protected static string Priority(DateTime Last_Changed)
+    {
+      if (Last_Changed > DateTime.MinValue)
+      {
+        var Today = DateTime.Today;
+        var Age_Of_Last_Change = Today.Subtract(Last_Changed);
+        var Days_Old = Age_Of_Last_Change.Days;
+
+        if (Days_Old <= 1)
+          return "1.0";
+        else if (Days_Old <= 3)
+          return "0.9";
+        else if (Days_Old <= 7)
+          return "0.8";
+        else if (Days_Old <= 30)
+          return "0.7";
+        else if (Days_Old <= 60)
+          return "0.6";
+        else if (Days_Old <= 120)
+          return "0.5";
+        else if (Days_Old <= 365)
+          return "0.4";
+        else if (Days_Old <= 730)
+          return "0.3";
+        else if (Days_Old <= 1460)
+          return "0.2";
+        else
+          return "0.1";
+      }
+      else
+        return "0.1";
+    }
+
+    protected static string Priority_Default(string DomainDataCode)
+    {
+      if (db.Is_Election_Upcoming_Viewable_State(DomainDataCode))
+        return "1.0";
+      else
+        return "0.4";
+    }
+
+    protected static string Priority_Officials(DateTime Last_Changed)
+    {
+      if (Last_Changed > DateTime.MinValue)
+      {
+        var Today = DateTime.Today;
+        var Age_Of_Last_Change = Today.Subtract(Last_Changed);
+        var Days_Old = Age_Of_Last_Change.Days;
+
+        if (Days_Old <= 120)
+          return "0.8";
+        else
+          return "0.3";
+      }
+      else
+        return "0.1";
+    }
+
+    protected static string Priority_Election(string DomainDataCode)
+    {
+      if (db.Is_Election_Upcoming_Viewable_State(DomainDataCode))
+        return "0.9";
+      else
+        return "0.4";
+    }
+
+    protected static string Priority_Url(int Sitemap_Priority, DateTime Date_Updated)
+    {
+      if (Sitemap_Priority == 0)
+        return Priority(Date_Updated);
+      else
+        return Priority(Sitemap_Priority);
+    }
+
+    protected static string Priority_Url(int Sitemap_Priority,
+      string Automatic_Priority)
+    {
+      if (Sitemap_Priority == 0)
+        return Automatic_Priority;
+      else
+        return Priority(Sitemap_Priority);
+    }
+
+    protected static string Frequency_Last_Changed(DateTime Last_Changed)
+    {
+      if (Last_Changed > DateTime.MinValue)
+      {
+        var Today = DateTime.Today;
+        var Age_Of_Last_Change = Today.Subtract(Last_Changed);
+        var Days_Old = Age_Of_Last_Change.Days;
+        if (Days_Old <= 1)
+          return "hourly";
+        else if (Days_Old <= 3)
+          return "daily";
+        else if (Days_Old <= 15)
+          return "weekly";
+        else if (Days_Old <= 60)
+          return "monthly";
+        else
+          return "yearly";
+      }
+      else
+        return "never";
+    }
+
+    #endregion Priority
+
+    #region sql
+
+    protected static DateTime Sql_Date_Last_Previous_Viewable_Election(
+      string DomainDataCode)
+    {
+      var SQL = string.Empty;
+      SQL += "SELECT ElectionDate";
+      SQL += " FROM Elections";
+      SQL += " WHERE IsViewable = 1";
+      if (DomainDataCode == "US")
+      {
+        SQL += " AND (";
+        SQL += " StateCode = 'U1'";
+        SQL += " OR StateCode = 'U2'";
+        SQL += " OR StateCode = 'U3'";
+        SQL += " OR StateCode = 'U4'";
+        SQL += ")";
+      }
+      else
+      {
+        SQL += " AND StateCode = " + db.SQLLit(DomainDataCode);
+        SQL += " AND CountyCode = ''";
+        SQL += " AND LocalCode = ''";
+      }
+      SQL += " AND ElectionDate < " + db.SQLLit(Db.DbToday);
+      SQL += " ORDER BY ElectionDate DESC";
+      var Row_Election = db.Row_First_Optional(SQL);
+      if (Row_Election != null)
+        return Convert.ToDateTime(Row_Election["ElectionDate"]);
+      else
+        return DateTime.MinValue;
+    }
+
+    protected static DateTime Sql_Date_Last_General_Election(string DomainDataCode)
+    {
+      var SQL = string.Empty;
+      SQL += "SELECT ElectionDate";
+      SQL += " FROM Elections";
+      SQL += " WHERE IsViewable = 1";
+      if (DomainDataCode == "US")
+      {
+        SQL += " AND (";
+        SQL += " StateCode = 'U1'";
+        SQL += " OR StateCode = 'U2'";
+        SQL += " OR StateCode = 'U3'";
+        SQL += " OR StateCode = 'U4'";
+        SQL += ")";
+      }
+      else
+      {
+        SQL += " AND StateCode = " + db.SQLLit(DomainDataCode);
+        SQL += " AND CountyCode = ''";
+        SQL += " AND LocalCode = ''";
+      }
+      SQL += " AND ElectionDate < " + db.SQLLit(Db.DbToday);
+      SQL += " AND ElectionType = 'G'";
+      SQL += " ORDER BY ElectionDate DESC";
+      var Row_Election = db.Row_First_Optional(SQL);
+      if (Row_Election != null)
+        return Convert.ToDateTime(Row_Election["ElectionDate"]);
+      else
+        return DateTime.MinValue;
+    }
+
+    protected static string Sql_Elections(string DomainDataCode,
+      string Previous_Elections_To_Include)
+    {
+      var SQL = string.Empty;
+      SQL += " SELECT";
+      SQL += " ElectionKey";
+      SQL += " FROM Elections ";
+      SQL += " WHERE IsViewable = 1";
+      if (DomainDataCode == "US")
+      {
+        SQL += " AND (";
+        SQL += " StateCode = 'U1'";
+        SQL += " OR StateCode = 'U2'";
+        SQL += " OR StateCode = 'U3'";
+        SQL += " OR StateCode = 'U4'";
+        SQL += ")";
+      }
+      else
+        SQL += " AND StateCode = " + db.SQLLit(DomainDataCode);
+      //SQL += " AND CountyCode = ''";
+      //SQL += " AND LocalCode = ''";
+
+      if (db.Is_Election_Upcoming_Viewable_State(DomainDataCode))
+
+        #region Upcoming Viewable Election(s)
+
+        SQL += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+        #endregion Upcoming Viewable Election(s)
+
+      else
+        #region Previous Elections
+
+        switch (Previous_Elections_To_Include)
+        {
+            //case "Upcoming":
+            //  SQL += " AND ElectionDate >= '" + DateTime.Today.Date + "'";
+            //  break;
+          case "Last":
+            var Date_Last_Previous_Viewable_Election =
+              Sql_Date_Last_Previous_Viewable_Election(DomainDataCode);
+
+            SQL += " AND (";
+            SQL += " ElectionDate >= " + db.SQLLit(Db.DbToday);
+
+            if (Date_Last_Previous_Viewable_Election != DateTime.MinValue)
+              SQL += " OR ElectionDate = '" + Date_Last_Previous_Viewable_Election +
+                "'";
+
+            SQL += " )";
+            break;
+          case "LastG":
+            var Last_General_Election = Sql_Date_Last_General_Election(DomainDataCode);
+
+            //SQL += " AND (";
+            //SQL += " ElectionDate >= '" + DateTime.Today.Date + "'";
+
+            if (Last_General_Election != DateTime.MinValue)
+              SQL += " AND ElectionDate >= '" + Last_General_Election + "'";
+
+            //SQL += " )";
+            break;
+          case "All":
+            break;
+        }
+
+      #endregion Previous Elections
+
+      SQL += " ORDER BY ElectionDate DESC";
+      return SQL;
+    }
+
+    protected static void Insert_Sitemap_Politicians_Temp(string DomainDataCode,
+      string PoliticianKey)
+    {
+      //if (db.Rows_Count_From(
+      // "SitemapPoliticiansTemp WHERE PoliticianKey ="
+      // + db.SQLLit(PoliticianKey)) == 0)
+      if (!SitemapPoliticiansTemp.PoliticianKeyExists(PoliticianKey))
+
+        #region only add new unique politicians
+
+        if ((DomainDataCode == "US") ||
+          (Politicians.GetStateCodeFromKey(PoliticianKey) == DomainDataCode))
+
+          #region only if PoliticianKey is for the State (or US president)
+          //string SQLInsert = string.Empty;
+          //SQLInsert += "INSERT INTO SitemapPoliticiansTemp";
+
+          //SQLInsert += "(";
+          //SQLInsert += "PoliticianKey";
+          //SQLInsert += ")";
+          //SQLInsert += "VALUES";
+          //SQLInsert += "(";
+          //SQLInsert += db.SQLLit(PoliticianKey);
+          //SQLInsert += ")";
+          //db.ExecuteSQL(SQLInsert);
+
+          SitemapPoliticiansTemp.Insert(PoliticianKey);
+
+      #endregion only if PoliticianKey is for the State (or US president)
+
+      #endregion only add new unique politicians
+    }
+
+    //protected static void Insert_Sitemap_Elections_Temp(string ElectionKey)
+    //{
+    //  if (db.Rows_Count_From(
+    //   "SitemapElectionsTemp WHERE ElectionKey ="
+    //   + db.SQLLit(ElectionKey)) == 0)
+    //  {
+    //    #region only add new unique elections
+    //    string SQLInsert = string.Empty;
+    //    SQLInsert += "INSERT INTO SitemapElectionsTemp";
+
+    //    SQLInsert += "(";
+    //    SQLInsert += "ElectionKey";
+    //    SQLInsert += ")";
+    //    SQLInsert += "VALUES";
+    //    SQLInsert += "(";
+    //    SQLInsert += db.SQLLit(ElectionKey);
+    //    SQLInsert += ")";
+    //    db.ExecuteSQL(SQLInsert);
+    //    #endregion only add new unique elections
+    //  }
+    //}
+
+    protected static void Insert_Sitemap_Elections_Temp(string electionKey)
+    {
+      if (!SitemapElectionsTemp.ElectionKeyExists(electionKey))
+        SitemapElectionsTemp.Insert(electionKey);
+    }
+
+    //protected static void Insert_Sitemap_PoliticiansIssues_Temp(
+    //  string PoliticianKey
+    //  , string IssueKey
+    //  , int Answers
+    //  , DateTime LastResponse
+    //  )
+    //{
+    //  string SQLInsert = string.Empty;
+    //  SQLInsert += "INSERT INTO SitemapPoliticiansIssuesTemp";
+
+    //  SQLInsert += "(";
+    //  SQLInsert += "PoliticianKey";
+    //  SQLInsert += ",IssueKey";
+    //  SQLInsert += ",Answers";
+    //  SQLInsert += ",LastResponse";
+    //  SQLInsert += ")";
+    //  SQLInsert += "VALUES";
+    //  SQLInsert += "(";
+    //  SQLInsert += db.SQLLit(PoliticianKey);
+    //  SQLInsert += "," + db.SQLLit(IssueKey);
+    //  SQLInsert += "," + Answers.ToString();
+    //  SQLInsert += "," + db.SQLLit(Db.DbDateTime(LastResponse));
+    //  SQLInsert += ")";
+    //  db.ExecuteSQL(SQLInsert);
+    //}
+
+    #endregion sql
+
+    #region Urls
+
+    protected static void UrlLoc(XmlTextWriter Xml, string loc)
+    {
+      // <loc>http://Vote-UT.com/</loc>
+      Xml.WriteStartElement("loc");
+      Xml.WriteString(loc);
+      Xml.WriteEndElement();
+    }
+
+    protected static void UrlPriority(XmlTextWriter Xml, string priority)
+    {
+      //<priority>0.8</priority>
+      Xml.WriteStartElement("priority");
+      Xml.WriteString(priority);
+      Xml.WriteEndElement();
+    }
+
+    protected static void UrlChangefreq(XmlTextWriter Xml, string changefreq)
+    {
+      //<changefreq>monthly</changefreq>
+      Xml.WriteStartElement("changefreq");
+      Xml.WriteString(changefreq);
+      Xml.WriteEndElement();
+    }
+
+    protected static void UrlLastmod(XmlTextWriter Xml, string lastmod)
+    {
+      //			// <lastmod>2005-01-01</lastmod>
+      Xml.WriteStartElement("lastmod");
+      Xml.WriteString(lastmod);
+      Xml.WriteEndElement();
+    }
+
+    protected static void Url(XmlTextWriter Xml, string url, string priority,
+      string changefreq, string lastmod)
+    {
+      //<url>
+      Xml.WriteStartElement("url");
+
+      UrlLoc(Xml, url);
+
+      if (!string.IsNullOrEmpty(priority))
+        UrlPriority(Xml, priority);
+
+      if (!string.IsNullOrEmpty(changefreq))
+        UrlChangefreq(Xml, changefreq);
+
+      if (!string.IsNullOrEmpty(lastmod))
+        UrlLastmod(Xml, lastmod);
+      //</url>
+      Xml.WriteEndElement();
+    }
+
+    protected static void Url(XmlTextWriter Xml, string loc)
+    {
+      Url(Xml, loc, string.Empty, string.Empty, string.Empty);
+    }
+
+    protected long Domain_Urls(string DomainDataCode)
+    {
+      return Sitemap.GetUrlsDefault(DomainDataCode, 0) +
+        Sitemap.GetUrlsElection(DomainDataCode, 0) +
+        Sitemap.GetUrlsOfficials(DomainDataCode, 0) +
+        Sitemap.GetUrlsIntro(DomainDataCode, 0) +
+        Sitemap.GetUrlsPoliticianIssue(DomainDataCode, 0) +
+        Sitemap.GetUrlsIssue(DomainDataCode, 0) +
+        Sitemap.GetUrlsBallot(DomainDataCode, 0);
+    }
+
+    protected void Total_Urls_RunTime_All_Domains()
+    {
+      //string SQL = string.Empty;
+      //SQL += " SELECT DomainDataCode,RunTimeSeconds";
+      //SQL += " FROM Sitemap";
+      //DataTable Table_SiteMap = db.Table(SQL);
+      var runTimeTable = Sitemap.GetAllRunTimeData();
+      long Urls = 0;
+      long Seconds = 0;
+      foreach (var runtimeRow in runTimeTable)
+      {
+        Urls += Domain_Urls(runtimeRow.DomainDataCode);
+        //Seconds += Sitemap.GetRunTimeSeconds(runtimeRow["DomainDataCode"].ToString(), 0);
+        Seconds += runtimeRow.RunTimeSeconds;
+      }
+
+      Label_Urls_Total_All_Domains.Text = Urls.ToString();
+      var Run_Time = TimeSpan.FromSeconds(Seconds);
+      //Label_Run_Time_All_Domains.Text = string.Format("{0:D2}h:{1:D2}m:{2:D2}s",
+      //                Run_Time.Hours,
+      //                Run_Time.Minutes,
+      //                Run_Time.Seconds);
+      Label_Run_Time_All_Domains.Text = db.Str_Run_Time(Run_Time);
+    }
+
+    #endregion Urls
+
+    protected void Load_Selected_Domain_Controls()
+    {
+      if (!string.IsNullOrEmpty(DropDownList_Domain.SelectedValue))
+      {
+        #region DropDownList Labels
+
+        Label_Domain_Code.Text = DropDownList_Domain.SelectedValue;
+        Label_Domain.Text = DropDownList_Domain.SelectedItem.Text;
+
+        #endregion DropDownList Labels
+
+        #region Load DropDownList Settings
+
+        RadioButtonList_Election_Directories.SelectedValue =
+          Sitemap.GetElectionDirectories(DropDownList_Domain.SelectedValue);
+        //= Sitemap_ElectionDirectories(
+        //DropDownList_Domain.SelectedValue
+        //);
+
+        RadioButtonList_Politician_Elections.SelectedValue =
+          Sitemap.GetPoliticianElections(DropDownList_Domain.SelectedValue);
+        //= Sitemap_PoliticianElections(
+        //DropDownList_Domain.SelectedValue
+        //);
+
+        //RadioButtonList_Ballots.SelectedValue
+        //  = Sitemap_Str(
+        //  DropDownList_Domain.SelectedValue
+        //  , "Ballots"
+        //  );
+
+        #endregion Load DropDownList Settings
+
+        #region CheckBoxes
+
+        //if (Sitemap_Bool(
+        //  DropDownList_Domain.SelectedValue
+        //  , "IsCurrentlyElected")
+        //  )
+        //  CheckBox_Is_Currently_Elected.Checked = true;
+        //else
+        //  CheckBox_Is_Currently_Elected.Checked = false;
+
+        CheckBox_Must_Have_Picture.Checked =
+          Sitemap.GetMustHavePicture(DropDownList_Domain.SelectedValue, false);
+
+        CheckBox_Must_Have_Statement.Checked =
+          Sitemap.GetMustHaveStatement(DropDownList_Domain.SelectedValue, false);
+
+        #endregion CheckBoxes
+
+        #region TextBox Settings
+
+        TextBox_Minium_Candidates_Per_Page.Text =
+          Sitemap.GetMinimumCandidates(DropDownList_Domain.SelectedValue, 0)
+            .ToString();
+
+        TextBox_Minium_Answers_Per_Page.Text =
+          Sitemap.GetMinimumAnswers(DropDownList_Domain.SelectedValue, 0)
+            .ToString();
+
+        //TextBox_Factor.Text
+        //  = Sitemap_FactorIssue(
+        //  DropDownList_Domain.SelectedValue
+        //  ).ToString();
+
+        #endregion TextBox Settings
+
+        #region Domain Settings
+
+        #region Global Labels
+
+        Label_Sitemap.Text = "Sitemap" + DropDownList_Domain.SelectedValue + ".xml";
+
+        Label_Last_Created.Text =
+          Sitemap.GetLastCreated(DropDownList_Domain.SelectedValue)
+            .ToString();
+
+        #endregion Global Labels
+
+        #region commented out Include
+
+        //if (xSitemap_IncludeDefault(
+        //  DropDownList_Domain.SelectedValue
+        //  )
+        //  )
+        //  CheckBox_Include_Default.Checked = true;
+        //else
+        //  CheckBox_Include_Default.Checked = false;
+
+        //if (xSitemap_IncludeElection(
+        //  DropDownList_Domain.SelectedValue
+        //  )
+        //  )
+        //  CheckBox_Include_Election.Checked = true;
+        //else
+        //  CheckBox_Include_Election.Checked = false;
+
+        //if (xSitemap_IncludeOfficials(
+        //  DropDownList_Domain.SelectedValue
+        //  )
+        //  )
+        //  CheckBox_Include_Officials.Checked = true;
+        //else
+        //  CheckBox_Include_Officials.Checked = false;
+
+        //if (xSitemap_IncludeIntro(
+        //  DropDownList_Domain.SelectedValue
+        //  )
+        //  )
+        //  CheckBox_Include_Intro.Checked = true;
+        //else
+        //  CheckBox_Include_Intro.Checked = false;
+
+        //if (xSitemap_IncludePoliticianIssue(
+        //  DropDownList_Domain.SelectedValue
+        //  )
+        //  )
+        //  CheckBox_Include_PoliticianIssue.Checked = true;
+        //else
+        //  CheckBox_Include_PoliticianIssue.Checked = false;
+
+        //if (xSitemap_IncludeIssue(
+        //  DropDownList_Domain.SelectedValue
+        //  )
+        //  )
+        //  CheckBox_Include_Issue.Checked = true;
+        //else
+        //  CheckBox_Include_Issue.Checked = false;
+
+        //if (xSitemap_IncludeBallot(
+        //  DropDownList_Domain.SelectedValue
+        //  )
+        //  )
+        //  CheckBox_Include_Ballot.Checked = true;
+        //else
+        //  CheckBox_Include_Ballot.Checked = false;
+
+        #endregion commented out Include
+
+        #region Urls
+
+        #region Urls Pages
+
+        Label_Urls_Default.Text =
+          Sitemap.GetUrlsDefault(DropDownList_Domain.SelectedValue, 0)
+            .ToString();
+
+        Label_Urls_Election.Text =
+          Sitemap.GetUrlsElection(DropDownList_Domain.SelectedValue, 0)
+            .ToString();
+
+        Label_Urls_Officials.Text =
+          Sitemap.GetUrlsOfficials(DropDownList_Domain.SelectedValue, 0)
+            .ToString();
+
+        Label_Urls_Intro.Text =
+          Sitemap.GetUrlsIntro(DropDownList_Domain.SelectedValue, 0)
+            .ToString();
+
+        Label_Urls_PoliticianIssue.Text =
+          Sitemap.GetUrlsPoliticianIssue(DropDownList_Domain.SelectedValue, 0)
+            .ToString();
+
+        Label_Urls_Issue.Text =
+          Sitemap.GetUrlsIssue(DropDownList_Domain.SelectedValue, 0)
+            .ToString();
+
+        Label_Urls_Ballot.Text =
+          Sitemap.GetUrlsBallot(DropDownList_Domain.SelectedValue, 0)
+            .ToString();
+
+        #endregion Urls Pages
+
+        #region Total Domain Urls
+
+        //Int32 Urls =
+        //  Sitemap_IntBig(
+        //  DropDownList_Domain.SelectedValue
+        //  , "UrlsDefault"
+        //  )
+        //  +
+        //  Sitemap_IntBig(
+        //  DropDownList_Domain.SelectedValue
+        //  , "UrlsElection"
+        //  )
+        //  +
+        //  Sitemap_IntBig(
+        //    DropDownList_Domain.SelectedValue
+        //    , "UrlsOfficials"
+        //    )
+        //  +
+        //  Sitemap_IntBig(
+        //    DropDownList_Domain.SelectedValue
+        //    , "UrlsIntro"
+        //    )
+        //  +
+        //  Sitemap_IntBig(
+        //    DropDownList_Domain.SelectedValue
+        //    , "UrlsPoliticianIssue"
+        //    )
+        //  +
+        //  Sitemap_IntBig(
+        //    DropDownList_Domain.SelectedValue
+        //    , "UrlsIssue"
+        //    )
+        //  +
+        //  Sitemap_IntBig(
+        //    DropDownList_Domain.SelectedValue
+        //    , "UrlsBallot"
+        //    );
+
+        //Label_Urls_Total.Text = Urls.ToString();
+        Label_Urls_Total.Text = Domain_Urls(DropDownList_Domain.SelectedValue)
+          .ToString();
+
+        #endregion Total Domain Urls
+
+        #region Total Domain Run Time
+
+        //Int32 Run_Time_Seconds = 0;
+        //Run_Time_Seconds = Sitemap_IntBig(
+        //    DropDownList_Domain.SelectedValue
+        //    , "RunTimeSeconds"
+        //    );
+
+        //TimeSpan Run_Time = Run_Time_Seconds.
+        //TimeSpan Run_Time = Convert.ToDateTime(Run_Time_Seconds);
+        //int Hours = Run_Time.Hours;
+        //int Minutes = Run_Time.Minutes;
+        //int Seconds = Run_Time.Seconds;
+
+        //Label_Run_Time.Text = Sitemap_Str(
+        //  DropDownList_Domain.SelectedValue
+        //  , "RunTime"
+        //  ).Substring(0, 8);
+
+        var Seconds = Sitemap.GetRunTimeSeconds(DropDownList_Domain.SelectedValue, 0);
+
+        var Run_Time = TimeSpan.FromSeconds(Seconds);
+        //Label_Run_Time.Text = string.Format("{0:D2}h:{1:D2}m:{2:D2}s",
+        //                Run_Time.Hours,
+        //                Run_Time.Minutes,
+        //                Run_Time.Seconds);
+        Label_Run_Time.Text = db.Str_Run_Time(Run_Time);
+
+        #endregion Total Domain Run Time
+
+        #endregion Urls
+
+        #region Priority
+
+        TextBox_Priority_Default.Text =
+          Sitemap.GetPriorityDefault(DropDownList_Domain.SelectedValue, 0)
+            .ToString();
+
+        TextBox_Priority_Election.Text =
+          Sitemap.GetPriorityElection(DropDownList_Domain.SelectedValue, 0)
+            .ToString();
+
+        TextBox_Priority_Officials.Text =
+          Sitemap.GetPriorityOfficials(DropDownList_Domain.SelectedValue, 0)
+            .ToString();
+
+        TextBox_Priority_Intro.Text =
+          Sitemap.GetPriorityIntro(DropDownList_Domain.SelectedValue, 0)
+            .ToString();
+
+        TextBox_Priority_PoliticianIssue.Text =
+          Sitemap.GetPriorityPoliticianIssue(DropDownList_Domain.SelectedValue, 0)
+            .ToString();
+
+        TextBox_Priority_Issue.Text =
+          Sitemap.GetPriorityIssue(DropDownList_Domain.SelectedValue, 0)
+            .ToString();
+
+        TextBox_Priority_Ballot.Text =
+          Sitemap.GetPriorityBallot(DropDownList_Domain.SelectedValue, 0)
+            .ToString();
+
+        #endregion Priority
+
+        #region Frequency
+
+        RadioButtonList_Frequency_Default.SelectedValue =
+          Sitemap.GetFrequencyDefault(DropDownList_Domain.SelectedValue);
+        //= Sitemap_FrequencyDefault(
+        //DropDownList_Domain.SelectedValue
+        //);
+
+        RadioButtonList_Frequency_Election.SelectedValue =
+          Sitemap.GetFrequencyElection(DropDownList_Domain.SelectedValue);
+        //= Sitemap_FrequencyElection(
+        //DropDownList_Domain.SelectedValue
+        //);
+
+        RadioButtonList_Frequency_Officials.SelectedValue =
+          Sitemap.GetFrequencyOfficials(DropDownList_Domain.SelectedValue);
+        //= Sitemap_FrequencyOfficials(
+        //DropDownList_Domain.SelectedValue
+        //);
+
+        RadioButtonList_Frequency_Intro.SelectedValue =
+          Sitemap.GetFrequencyIntro(DropDownList_Domain.SelectedValue);
+        //= Sitemap_FrequencyIntro(
+        //DropDownList_Domain.SelectedValue
+        //);
+
+        RadioButtonList_Frequency_PoliticianIssue.SelectedValue =
+          Sitemap.GetFrequencyPoliticianIssue(DropDownList_Domain.SelectedValue);
+        //= Sitemap_FrequencyPoliticianIssue(
+        //DropDownList_Domain.SelectedValue
+        //);
+
+        RadioButtonList_Frequency_Issue.SelectedValue =
+          Sitemap.GetFrequencyIssue(DropDownList_Domain.SelectedValue);
+        //= Sitemap_FrequencyIssue(
+        //DropDownList_Domain.SelectedValue
+        //);
+
+        RadioButtonList_Frequency_Ballot.SelectedValue =
+          Sitemap.GetFrequencyBallot(DropDownList_Domain.SelectedValue);
+        //= Sitemap_FrequencyBallot(
+        //DropDownList_Domain.SelectedValue
+        //);
+
+        #endregion Frequency
+
+        #endregion  Domain Settings
+
+        #region Parameters
+
+        RadioButtonList_Election_Directories.SelectedValue =
+          Sitemap.GetElectionDirectories(DropDownList_Domain.SelectedValue);
+
+        #endregion Parameters
+
+        #region Msg
+
+        Msg.Text =
+          db.Msg("These are the values for Sitemap: Sitemap" +
+            DropDownList_Domain.SelectedValue + ".xml for Domain: " +
+            DropDownList_Domain.SelectedItem.Text);
+
+        #endregion Msg
+      }
+      else
+      {
+        #region clear all controls
+
+        //CheckBox_Include_Default.Checked = false;
+        //CheckBox_Include_Election.Checked = false;
+        //CheckBox_Include_Officials.Checked = false;
+        //CheckBox_Include_Intro.Checked = false;
+        //CheckBox_Include_PoliticianIssue.Checked = false;
+        //CheckBox_Include_Issue.Checked = false;
+        //CheckBox_Include_Ballot.Checked = false;
+
+        TextBox_Priority_Default.Text = string.Empty;
+        TextBox_Priority_Election.Text = string.Empty;
+        TextBox_Priority_Officials.Text = string.Empty;
+        TextBox_Priority_Intro.Text = string.Empty;
+        TextBox_Priority_PoliticianIssue.Text = string.Empty;
+        TextBox_Priority_Issue.Text = string.Empty;
+        TextBox_Priority_Ballot.Text = string.Empty;
+
+        Label_Domain_Code.Text = string.Empty;
+        Label_Domain.Text = string.Empty;
+        Label_Sitemap.Text = string.Empty;
+        Label_Last_Created.Text = string.Empty;
+
+        Label_Urls_Default.Text = string.Empty;
+        Label_Urls_Election.Text = string.Empty;
+        Label_Urls_Officials.Text = string.Empty;
+        Label_Urls_Intro.Text = string.Empty;
+        Label_Urls_PoliticianIssue.Text = string.Empty;
+        Label_Urls_Issue.Text = string.Empty;
+        Label_Urls_Ballot.Text = string.Empty;
+        Label_Urls_Total.Text = string.Empty;
+        Label_Run_Time.Text = string.Empty;
+        Label_Urls_Total_All_Domains.Text = string.Empty;
+        Label_Run_Time_All_Domains.Text = string.Empty;
+
+        RadioButtonList_Election_Directories.SelectedValue = "Last";
+        RadioButtonList_Politician_Elections.SelectedValue = "Last";
+
+        #endregion clear all controls
+
+        Msg.Text = db.Msg("Select a Domain or Create Sitemaps");
+      }
+    }
+
+    #region Updates
+
+    protected void Update_TextBox_Priority(string Sitemap_Column,
+      TextBox TextBox_Priority, Label Label_Page)
+    {
+      //if (!db.Is_Digit(TextBox_Priority.Text.Trim()))
+      if ((!db.Is_Valid_Integer(TextBox_Priority.Text.Trim())) ||
+        ((Convert.ToInt16(TextBox_Priority.Text.Trim()) < 0) ||
+          (Convert.ToInt16(TextBox_Priority.Text.Trim()) > 10)))
+        throw new ApplicationException(
+          "Priority must be a integer number between 0 and 10.");
+
+      var column = Sitemap.GetColumn(Sitemap_Column);
+      //Sitemap_Update_Int(
+      //  Label_Domain_Code.Text
+      //, Sitemap_Column
+      //, Convert.ToUInt16(TextBox_Priority.Text)
+      //);
+      Sitemap.UpdateColumn(column, Convert.ToUInt16(TextBox_Priority.Text),
+        Label_Domain_Code.Text);
+
+      Msg.Text =
+        db.Ok(Label_Page.Text + " Urls PRIORITY was updated to " +
+          TextBox_Priority.Text);
+    }
+
+    protected void Update_RadioButtonList_Frequency(string Sitemap_Column,
+      RadioButtonList RadioButtonList_Frequency, Label Label_Page)
+    {
+      var column = Sitemap.GetColumn(Sitemap_Column);
+      Sitemap.UpdateColumn(column, RadioButtonList_Frequency.SelectedValue,
+        Label_Domain_Code.Text);
+      //Sitemap_Update_Str(
+      //  Label_Domain_Code.Text
+      //, Sitemap_Column
+      //, RadioButtonList_Frequency.SelectedValue
+      //);
+
+      Msg.Text =
+        db.Ok(Label_Page.Text + " Urls FREQUENCY was updated to " +
+          RadioButtonList_Frequency.SelectedValue);
+    }
+
+    protected void Check_Domain_Selected()
+    {
+      if (string.IsNullOrEmpty(DropDownList_Domain.SelectedValue))
+        throw new ApplicationException(
+          "You need to select a domain to have ALL Domains set.");
+    }
+
+    protected void Button_All(string Include_Str
+      //, CheckBox CheckBox_Include
+      , string Priority_Str, TextBox TextBox_Priority, string Frequency_Str,
+      RadioButtonList RadioButtonList_Frequency, Label Label_Page)
+    {
+      //string sql = string.Empty;
+      //sql += " UPDATE Sitemap SET ";
+      ////sql += " SET " + Include_Str + " = ";
+      ////if (CheckBox_Include.Checked)
+      ////  sql += "1";
+      ////else
+      ////  sql += "0";
+      //sql += " " + Priority_Str + " = "
+      //  + TextBox_Priority.Text.Trim();
+      //sql += "," + Frequency_Str + " ="
+      //  + db.SQLLit(RadioButtonList_Frequency.SelectedValue);
+      //db.ExecuteSQL(sql);
+
+      Sitemap.Column column;
+      column = Sitemap.GetColumn(Priority_Str);
+      Sitemap.UpdateColumnAllRows(column, int.Parse(TextBox_Priority.Text.Trim()));
+      column = Sitemap.GetColumn(Frequency_Str);
+      Sitemap.UpdateColumnAllRows(column, RadioButtonList_Frequency.SelectedValue);
+
+      Msg.Text =
+        db.Ok("ALL PARAMETERS for ALL DOMAINS for " + Label_Page.Text +
+          "  have been updated with these values.");
+    }
+
+    #endregion Updates
+
+    #region commented out CheckBox_Include
+
+    //protected void CheckBox_Include_Default_CheckedChanged(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    Update_CheckBox_Include(
+    //          "IncludeDefault"
+    //         , CheckBox_Include_Default
+    //         , Label_Page_Default
+    //         );
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //  }
+    //}
+
+    //protected void CheckBox_Include_Election_CheckedChanged(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    Update_CheckBox_Include(
+    //          "IncludeElection"
+    //         , CheckBox_Include_Election
+    //         , Label_Page_Election
+    //         );
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //  }
+    //}
+
+    //protected void CheckBox_Include_Officials_CheckedChanged(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    Update_CheckBox_Include(
+    //          "IncludeOfficials"
+    //         , CheckBox_Include_Officials
+    //         , Label_Page_Officials
+    //         );
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //  }
+    //}
+
+    //protected void CheckBox_Include_Intro_CheckedChanged(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    Update_CheckBox_Include(
+    //          "IncludeIntro"
+    //         , CheckBox_Include_Intro
+    //         , Label_Page_Intro
+    //         );
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //  }
+    //}
+
+    //protected void CheckBox_Include_PoliticianIssue_CheckedChanged(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    Update_CheckBox_Include(
+    //          "IncludePoliticianIssue"
+    //         , CheckBox_Include_PoliticianIssue
+    //         , Label_Page_PoliticianIssue
+    //         );
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //  }
+    //}
+
+    //protected void CheckBox_Include_Issue_CheckedChanged(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    Update_CheckBox_Include(
+    //          "IncludeIssue"
+    //         , CheckBox_Include_Issue
+    //         , Label_Page_Issue
+    //         );
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //  }
+    //}
+
+    //protected void CheckBox_Include_Ballot_CheckedChanged(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    Update_CheckBox_Include(
+    //          "IncludeBallot"
+    //         , CheckBox_Include_Ballot
+    //         , Label_Page_Ballot
+    //         );
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //  }
+    //}
+
+    #endregion commented out CheckBox_Include
+
+    #region Priority Textboxes
+
+    protected void TextBox_Priority_Default_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        Update_TextBox_Priority("PriorityDefault", TextBox_Priority_Default,
+          Label_Page_Default);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void TextBox_Priority_Election_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        Update_TextBox_Priority("PriorityElection", TextBox_Priority_Election,
+          Label_Page_Election);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void TextBox_Priority_Officials_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        Update_TextBox_Priority("PriorityOfficials", TextBox_Priority_Officials,
+          Label_Page_Officials);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void TextBox_Priority_Intro_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        Update_TextBox_Priority("PriorityIntro", TextBox_Priority_Intro,
+          Label_Page_Intro);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void TextBox_Priority_PoliticianIssue_TextChanged(object sender,
+      EventArgs e)
+    {
+      try
+      {
+        Update_TextBox_Priority("PriorityPoliticianIssue",
+          TextBox_Priority_PoliticianIssue, Label_Page_PoliticianIssue);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void TextBox_Priority_Issue_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        Update_TextBox_Priority("PriorityIssue", TextBox_Priority_Issue,
+          Label_Page_Issue);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void TextBox_Priority_Ballot_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        Update_TextBox_Priority("PriorityBallot", TextBox_Priority_Ballot,
+          Label_Page_Ballot);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    #endregion Priority Textboxes
+
+    #region RadioButtonList_Frequency
+
+    protected void RadioButtonList_Frequency_Default_SelectedIndexChanged(
+      object sender, EventArgs e)
+    {
+      try
+      {
+        Update_RadioButtonList_Frequency("FrequencyDefault",
+          RadioButtonList_Frequency_Default, Label_Page_Default);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void RadioButtonList_Frequency_Election_SelectedIndexChanged(
+      object sender, EventArgs e)
+    {
+      try
+      {
+        Update_RadioButtonList_Frequency("FrequencyElection",
+          RadioButtonList_Frequency_Election, Label_Page_Election);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void RadioButtonList_Frequency_Officials_SelectedIndexChanged(
+      object sender, EventArgs e)
+    {
+      try
+      {
+        Update_RadioButtonList_Frequency("FrequencyOfficials",
+          RadioButtonList_Frequency_Officials, Label_Page_Officials);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void RadioButtonList_Frequency_Intro_SelectedIndexChanged(
+      object sender, EventArgs e)
+    {
+      try
+      {
+        Update_RadioButtonList_Frequency("FrequencyIntro",
+          RadioButtonList_Frequency_Intro, Label_Page_Intro);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void RadioButtonList_Frequency_PoliticianIssue_SelectedIndexChanged(
+      object sender, EventArgs e)
+    {
+      try
+      {
+        Update_RadioButtonList_Frequency("FrequencyPoliticianIssue",
+          RadioButtonList_Frequency_PoliticianIssue, Label_Page_PoliticianIssue);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void RadioButtonList_Frequency_Issue_SelectedIndexChanged(
+      object sender, EventArgs e)
+    {
+      try
+      {
+        Update_RadioButtonList_Frequency("FrequencyIssue",
+          RadioButtonList_Frequency_Issue, Label_Page_Issue);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void RadioButtonList_Frequency_Ballot_SelectedIndexChanged(
+      object sender, EventArgs e)
+    {
+      try
+      {
+        Update_RadioButtonList_Frequency("FrequencyBallot",
+          RadioButtonList_Frequency_Ballot, Label_Page_Ballot);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    #endregion RadioButtonList_Frequency
+
+    #region Button_All
+
+    protected void Button_All_Default_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Check_Domain_Selected();
+        Button_All("IncludeDefault"
+          //, CheckBox_Include_Default
+          , "PriorityDefault", TextBox_Priority_Default, "FrequencyDefault",
+          RadioButtonList_Frequency_Default, Label_Page_Default);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Button_All_Election_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Check_Domain_Selected();
+        Button_All("IncludeElection"
+          //, CheckBox_Include_Election
+          , "PriorityElection", TextBox_Priority_Election, "FrequencyElection",
+          RadioButtonList_Frequency_Election, Label_Page_Election);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Button_All_Officials_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Check_Domain_Selected();
+        Button_All("IncludeOfficials"
+          //, CheckBox_Include_Officials
+          , "PriorityOfficials", TextBox_Priority_Officials, "FrequencyOfficials",
+          RadioButtonList_Frequency_Officials, Label_Page_Officials);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Button_All_Intro_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Check_Domain_Selected();
+        Button_All("IncludeIntro"
+          //, CheckBox_Include_Intro
+          , "PriorityIntro", TextBox_Priority_Intro, "FrequencyIntro",
+          RadioButtonList_Frequency_Intro, Label_Page_Intro);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Button_All_PoliticianIssue_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Check_Domain_Selected();
+        Button_All("IncludePoliticianIssue"
+          //, CheckBox_Include_PoliticianIssue
+          , "PriorityPoliticianIssue", TextBox_Priority_PoliticianIssue,
+          "FrequencyPoliticianIssue", RadioButtonList_Frequency_PoliticianIssue,
+          Label_Page_PoliticianIssue);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Button_All_Issue_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Check_Domain_Selected();
+        Button_All("IncludeIssue"
+          //, CheckBox_Include_Issue
+          , "PriorityIssue", TextBox_Priority_Issue, "FrequencyIssue",
+          RadioButtonList_Frequency_Issue, Label_Page_Issue);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Button_All_Ballot_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Check_Domain_Selected();
+        Button_All("IncludeBallot"
+          //, CheckBox_Include_Ballot
+          , "PriorityBallot", TextBox_Priority_Ballot, "FrequencyBallot",
+          RadioButtonList_Frequency_Ballot, Label_Page_Ballot);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Button_Election_Directories_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Check_Domain_Selected();
+
+        //string sql = string.Empty;
+        //sql += " UPDATE Sitemap";
+        //sql += " SET";
+        //sql += " ElectionDirectories = ";
+        //sql += db.SQLLit(RadioButtonList_Election_Directories.SelectedValue);
+        //db.ExecuteSQL(sql);
+
+        Sitemap.UpdateElectionDirectoriesAllRows(
+          RadioButtonList_Election_Directories.SelectedValue);
+
+        Msg.Text =
+          db.Ok("ALL domains for Election Directories" + " have been updated with " +
+            RadioButtonList_Election_Directories.SelectedValue);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Button_Politician_Elections_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Check_Domain_Selected();
+
+        //string sql = string.Empty;
+        //sql += " UPDATE Sitemap";
+        //sql += " SET";
+        //sql += " PoliticianElections = ";
+        //sql += db.SQLLit(RadioButtonList_Politician_Elections.SelectedValue);
+        //db.ExecuteSQL(sql);
+
+        Sitemap.UpdatePoliticianElectionsAllRows(
+          RadioButtonList_Politician_Elections.SelectedValue);
+
+        Msg.Text =
+          db.Ok("ALL domains for parameter " + " have been updated with " +
+            RadioButtonList_Politician_Elections.SelectedValue);
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Button_Must_Have_Picture_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Check_Domain_Selected();
+
+        //string sql = string.Empty;
+        //sql += " UPDATE Sitemap";
+        //sql += " SET";
+        //sql += " MustHavePicture = ";
+        //if (CheckBox_Must_Have_Picture.Checked)
+        //  sql += "1";
+        //else
+        //  sql += "0";
+        //db.ExecuteSQL(sql);
+
+        Sitemap.UpdateMustHavePictureAllRows(CheckBox_Must_Have_Picture.Checked);
+
+        //sql = string.Empty;
+        //sql += " UPDATE Sitemap";
+        //sql += " SET";
+        //sql += " MustHaveStatement = ";
+        //if (CheckBox_Must_Have_Statement.Checked)
+        //  sql += "1";
+        //else
+        //  sql += "0";
+        //db.ExecuteSQL(sql);
+
+        Sitemap.UpdateMustHaveStatementAllRows(CheckBox_Must_Have_Statement.Checked);
+
+        Msg.Text = db.Ok("ALL domains for parameters have been updated.");
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Button_Minimum_Candidates_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Check_Domain_Selected();
+
+        if (!db.Is_Digits(TextBox_Minium_Candidates_Per_Page.Text.Trim()))
+          throw new ApplicationException(
+            "Minimum Number of Candidates must be digits.");
+        if (!db.Is_Digits(TextBox_Minium_Answers_Per_Page.Text.Trim()))
+          throw new ApplicationException("Minimun Number of Answers must be digits.");
+
+        //string sql = string.Empty;
+        //sql += " UPDATE Sitemap";
+        //sql += " SET";
+        //sql += " MinimumCandidates = ";
+        //sql += TextBox_Minium_Candidates_Per_Page.Text.ToString();
+        //db.ExecuteSQL(sql);
+
+        Sitemap.UpdateMinimumCandidatesAllRows(
+          int.Parse(TextBox_Minium_Candidates_Per_Page.Text.Trim()));
+
+        //sql = string.Empty;
+        //sql += " UPDATE Sitemap";
+        //sql += " SET";
+        //sql += " MinimumAnswers = ";
+        //sql += TextBox_Minium_Answers_Per_Page.Text.ToString();
+        //db.ExecuteSQL(sql);
+
+        Sitemap.UpdateMinimumAnswersAllRows(
+          int.Parse(TextBox_Minium_Answers_Per_Page.Text.Trim()));
+
+        Msg.Text = db.Ok("ALL domains for parameters have been updated.");
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Button_Set_Or_Compute_Priority_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Check_Domain_Selected();
+
+        if (!db.Is_Single_Digit(TextBox_Factor.Text.Trim()))
+          throw new ApplicationException("Factor must be a single digit.");
+
+        //string sql = string.Empty;
+        //sql += " UPDATE Sitemap";
+        //sql += " SET";
+        //sql += " ComputePriorityIssue = ";
+        //if (CheckBox_Compute_Priority_Issue.Checked)
+        //  sql += "1";
+        //else
+        //  sql += "0";
+        //db.ExecuteSQL(sql);
+
+        //string sql = string.Empty;
+        //sql += " UPDATE Sitemap";
+        //sql += " SET";
+        //sql += " FactorIssue = ";
+        //sql += TextBox_Factor.Text.ToString();
+        //db.ExecuteSQL(sql);
+
+        Sitemap.UpdateFactorIssueAllRows(int.Parse(TextBox_Factor.Text.Trim()));
+
+        Msg.Text =
+          db.Fail("ALL domains for factor have been updated." +
+            " BUT THIS FACTOR IS NO LONGER USED.");
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    #endregion Button_All
+
+    #region Controls
+
+    protected void CheckBox_Must_Have_Picture_CheckedChanged(object sender,
+      EventArgs e)
+    {
+      Sitemap.UpdateMustHavePicture(CheckBox_Must_Have_Picture.Checked,
+        DropDownList_Domain.SelectedValue);
+      Msg.Text = db.Ok("CheckBox_Must_Have_Picture updated.");
+    }
+
+    protected void CheckBox_Must_Have_Statement_CheckedChanged(object sender,
+      EventArgs e)
+    {
+      Sitemap.UpdateMustHaveStatement(CheckBox_Must_Have_Statement.Checked,
+        DropDownList_Domain.SelectedValue);
+      Msg.Text = db.Ok("CheckBox_Must_Have_Statement updated.");
+    }
+
+    protected void TextBox_Factor_TextChanged(object sender, EventArgs e)
+    {
+      if (!db.Is_Single_Digit(TextBox_Factor.Text.Trim()))
+        throw new ApplicationException("Priority must be a single digit.");
+
+      //Sitemap_Update_FactorIssue(
+      //  DropDownList_Domain.SelectedValue
+      //  , Convert.ToUInt16(TextBox_Factor.Text.Trim())
+      //);
+
+      Sitemap.UpdateFactorIssue(Convert.ToUInt16(TextBox_Factor.Text.Trim()),
+        DropDownList_Domain.SelectedValue);
+
+      Msg.Text =
+        db.Fail("Issue.aspx Page FACTOR was updated to be " +
+          TextBox_Factor.Text.Trim() + " BUT THE FACTOR IS NO LONGER USED.");
+    }
+
+    protected void RadioButtonList_Election_Directories_SelectedIndexChanged(
+      object sender, EventArgs e)
+    {
+      //Sitemap_Update_Str(
+      //"ElectionDirectories"
+      //, RadioButtonList_Election_Directories.SelectedValue
+      //);
+      //Sitemap_Update_ElectionDirectories(
+      //    DropDownList_Domain.SelectedValue
+      //    , RadioButtonList_Election_Directories.SelectedValue
+      //    );
+      Sitemap.UpdateElectionDirectories(
+        RadioButtonList_Election_Directories.SelectedValue,
+        DropDownList_Domain.SelectedValue);
+
+      Msg.Text =
+        db.Ok("Election.aspx Pages was updated for ELECTIONS to include " +
+          RadioButtonList_Election_Directories.SelectedValue);
+    }
+
+    protected void RadioButtonList_Politician_Elections_SelectedIndexChanged(
+      object sender, EventArgs e)
+    {
+      //Sitemap_Update_PoliticianElections(
+      //DropDownList_Domain.SelectedValue
+      //, RadioButtonList_Politician_Elections.SelectedValue
+      //);
+      Sitemap.UpdatePoliticianElections(
+        RadioButtonList_Politician_Elections.SelectedValue,
+        DropDownList_Domain.SelectedValue);
+
+      Msg.Text =
+        db.Ok("PoliticianIssue.aspx Pages were updated to include " +
+          RadioButtonList_Politician_Elections.SelectedValue);
+    }
+
+    protected void TextBox_Minium_Candidates_Per_Page_TextChanged(object sender,
+      EventArgs e)
+    {
+      if (!db.Is_Single_Digit(TextBox_Minium_Candidates_Per_Page.Text.Trim()))
+        throw new ApplicationException("Minimum candidates must be a single digit.");
+
+      //Sitemap_Update_MinimumCandidates(
+      //  DropDownList_Domain.SelectedValue
+      //  , Convert.ToUInt16(TextBox_Minium_Candidates_Per_Page.Text.Trim())
+      //);
+
+      Sitemap.UpdateMinimumCandidates(
+        Convert.ToUInt16(TextBox_Minium_Candidates_Per_Page.Text.Trim()),
+        DropDownList_Domain.SelectedValue);
+
+      Msg.Text =
+        db.Ok("Minimum candidates per page was updated to be " +
+          TextBox_Minium_Candidates_Per_Page.Text.Trim());
+    }
+
+    protected void TextBox_Minium_Answers_Per_Page_TextChanged(object sender,
+      EventArgs e)
+    {
+      if (!db.Is_Digits(TextBox_Minium_Answers_Per_Page.Text.Trim()))
+        throw new ApplicationException("Minimum answers per page must be all digits.");
+
+      //Sitemap_Update_MinimumAnswers(
+      //  DropDownList_Domain.SelectedValue
+      //  , Convert.ToUInt16(TextBox_Minium_Answers_Per_Page.Text.Trim())
+      //);
+
+      Sitemap.UpdateMinimumAnswers(
+        Convert.ToUInt16(TextBox_Minium_Answers_Per_Page.Text.Trim()),
+        DropDownList_Domain.SelectedValue);
+
+      Msg.Text =
+        db.Ok("Minimum answers per page was updated to be " +
+          TextBox_Minium_Answers_Per_Page.Text.Trim());
+    }
+
+    #endregion Controls
+
+    protected static XmlTextWriter XmlTextWriter_New(string Path_Xml)
+    {
+      var Xml = new XmlTextWriter(Path_Xml, Encoding.UTF8);
+      InitializeXmlForSitemap(Xml);
+      return Xml;
+    }
+
+    private static void InitializeXmlForSitemap(XmlTextWriter writer)
+    {
+      writer.WriteStartDocument(true);
+
+      //<urlset xmlns="http://www.google.com/schemas/Sitemap/0.84">
+      var UrlSet = "http://www.google.com/schemas/Sitemap/0.84";
+      writer.WriteStartElement("urlset", UrlSet);
+    }
+
+    protected void Index_Sitemap()
+    {
+      var SQL = string.Empty;
+      var Frequency = string.Empty;
+
+//      #region Impersonate
+//#if ! DEBUG
+//      using (Impersonate imp = new Impersonate(Environment.MachineName, "Administrator", "v0+3u$@"))
+//      {
+//#endif
+//      #endregion Impersonate
+
+      #region Xml Path
+
+      //string Path_Xml = string.Empty;
+      //if (db.Is_Localhost)
+      //  Path_Xml = db.PathDevelopment();
+      //else
+      //  Path_Xml = db.PathServer();
+
+      //Path_Xml += "SitemapIndex.xml";
+
+      var Path_Xml = GetServerPath() + "SitemapIndex.xml";
+
+      #endregion Xml Path
+
+      if (File.Exists(Path_Xml))
+        File.Delete(Path_Xml);
+
+      var Xml = XmlTextWriter_New(Path_Xml);
+
+      //#region sql Sitemap
+      //string Sql_Sitemap = string.Empty;
+      //Sql_Sitemap += " SELECT";
+      //Sql_Sitemap += " DomainDataCode";
+      //Sql_Sitemap += ",DomainName";
+      //Sql_Sitemap += " FROM Sitemap";
+      //Sql_Sitemap += " ORDER BY DomainDataCode";
+      //#endregion sql Sitemap
+      //DataTable Table_Sitemap = db.Table(Sql_Sitemap);
+      var sitemapTable = Sitemap.GetDomainDataSorted();
+      foreach (var sitemapRow in sitemapTable)
+        Url(Xml,
+          NormalizeUrl(sitemapRow.DomainName + "/Sitemap" + sitemapRow.DomainDataCode +
+            ".xml"));
+
+      #region Close Sitemap Index
+
+      Xml.WriteEndElement(); //</urlset>
+
+      Xml.WriteEndDocument();
+
+      Xml.Close();
+
+      #endregion Close Sitemap Index
+
+//      #region Impersonate
+//#if ! DEBUG
+//      }
+//#endif
+//      #endregion Impersonate
+    }
+
+    //// Modified to remove assumption that we are outputting to a fle
+    //public static void Domain_Sitemap(string domainDataCode)
+    //{
+    //  SitemapManager.UpdateSitemapVirtualPage(domainDataCode);
+    //}
+
+    //public static void Domain_Sitemap(string DomainDataCode)
+    //{
+    //  string xmlPathOnServer = db.PathServer()
+    //    + "Sitemap"
+    //    + DomainDataCode
+    //    + ".xml";
+
+    //  if (File.Exists(xmlPathOnServer))
+    //    File.Delete(xmlPathOnServer);
+
+    //  XmlTextWriter writer = new XmlTextWriter(xmlPathOnServer, System.Text.Encoding.UTF8);
+    //  Domain_Sitemap(DomainDataCode, writer);
+    //}
+
+    public static void Domain_Sitemap(string DomainDataCode, XmlTextWriter writer)
+    {
+      #region Note
+
+      //This method must NOT use any form controls
+      //because it is run as a scheduled batch job.
+
+      #endregion Note
+
+      #region Inits
+
+      var SQL = string.Empty;
+      var Priority_Str = string.Empty;
+      var Frequency = string.Empty;
+      //DataTable Table_SitemapPoliticiansTemp = null;
+
+      var Run_Time_Start = DateTime.Now;
+
+      #endregion Inits
+
+      #region commented Xml Path
+
+      ////string Path_Xml = string.Empty;
+      ////if (db.Is_Localhost)
+      ////  Path_Xml = db.PathDevelopment();
+      ////else
+      ////  Path_Xml = db.PathServer();
+
+      //string Path_Xml = db.PathServer()
+      //  + "Sitemap"
+      //  + DomainDataCode
+      //  + ".xml";
+      //if (File.Exists(Path_Xml))
+      //  File.Delete(Path_Xml);
+
+      //XmlTextWriter writer = XmlTextWriter_New(Path_Xml);
+
+      #endregion Xml Path
+
+      #region --- Create an Xml file of Urls for the Domain --
+
+      InitializeXmlForSitemap(writer);
+
+      #region Create 3 Temp Tables used to generate Urls
+
+      //db.ExecuteSQL("TRUNCATE TABLE SitemapPoliticiansTemp");
+      //db.ExecuteSQL("TRUNCATE TABLE SitemapElectionsTemp");
+      //db.ExecuteSQL("TRUNCATE TABLE SitemapPoliticiansIssuesTemp");
+      SitemapPoliticiansTemp.TruncateTable();
+      SitemapElectionsTemp.TruncateTable();
+      SitemapPoliticiansIssuesTemp.TruncateTable();
+
+      DataTable Table_Elections = null;
+
+      if (db.Is_Election_Upcoming_Viewable_State(DomainDataCode))
+      {
+        #region Candidates for the viewable upcoming elections
+
+        Table_Elections = db.Table(Sql_Elections(DomainDataCode
+          //, RadioButtonList_Politician_Elections.SelectedValue
+          , Sitemap.GetPoliticianElections(DomainDataCode)));
+        //
+        foreach (DataRow Row_Election in Table_Elections.Rows)
+          if (
+            db.Is_Election_Has_Office_Contests(Row_Election["ElectionKey"].ToString()))
+          {
+            #region An Election
+
+            Insert_Sitemap_Elections_Temp(Row_Election["ElectionKey"].ToString());
+
+            if (DomainDataCode != "US")
+            {
+              #region Vote-XX.org Election (All Offices including Federal Offices)
+
+              #region Note
+
+              //No Intro.aspx, PoliticianIssue.aspx, and Issue.aspx pages 
+              //are included for Vote-USA.org, only Vote-XX.org pages
+
+              #endregion
+
+              #region Make SitemapPoliticiansTemp Table
+
+              //for Politicians in upcoming or selected elections
+
+              #region sql ElectionsPoliticians
+
+              SQL = string.Empty;
+              SQL += "SELECT PoliticianKey";
+              SQL += " FROM ElectionsPoliticians";
+              SQL += " WHERE ElectionKey = " +
+                db.SQLLit(Row_Election["ElectionKey"].ToString());
+
+              #endregion sql ElectionsPoliticians
+
+              var Table_ElectionsPoliticians = db.Table(SQL);
+              foreach (
+                DataRow Row_Election_Politician in Table_ElectionsPoliticians.Rows)
+                Insert_Sitemap_Politicians_Temp(DomainDataCode,
+                  Row_Election_Politician["PoliticianKey"].ToString());
+
+              #endregion Make SitemapPoliticiansTemp Table
+
+              #endregion Vote-XX.org Election (All Offices including Federal Offices)
+            }
+
+            #endregion An Election
+          }
+
+        #endregion Candidates for the viewable upcoming elections
+      }
+      else
+      {
+        #region Currently Elected Officials when no upcoming election
+
+        SQL = string.Empty;
+        SQL += "SELECT PoliticianKey";
+        SQL += " FROM OfficesOfficials";
+        if (DomainDataCode != "US")
+
+          #region Vote-XX.org
+
+          SQL += " WHERE StateCode = " + db.SQLLit(DomainDataCode);
+          #endregion Vote-XX.org
+
+        else
+          #region Vote-USA.org only include US President if Currently Elected selected
+
+          SQL += " WHERE StateCode = 'US'";
+
+        #endregion Vote-USA.org only include US President if Currently Elected selected
+
+        var Table_OfficesOfficials = db.Table(SQL);
+        foreach (DataRow Row_OfficesOfficials in Table_OfficesOfficials.Rows)
+          Insert_Sitemap_Politicians_Temp(DomainDataCode,
+            Row_OfficesOfficials["PoliticianKey"].ToString());
+
+        #endregion Currently Elected Officials when no upcoming election
+      }
+
+      #region Create SitemapPoliticiansIssuesTemp Table
+
+      #region Issue.aspx and PoliticianIssue.aspx Urls
+
+      //SQL = string.Empty;
+      //SQL += "SELECT PoliticianKey";
+      //SQL += " FROM SitemapPoliticiansTemp";
+      //Table_SitemapPoliticiansTemp = db.Table(SQL);
+      var politiciansTempTable = SitemapPoliticiansTemp.GetAllData();
+      foreach (var politiciansTempRow in politiciansTempTable)
+      {
+        #region Issue ALLBio (Biographical Answers)
+
+        var BioAnswers = 0;
+        SQL = string.Empty;
+        SQL += "SELECT PoliticianKey";
+        SQL += " PoliticianKey";
+        SQL += ",GeneralStatement";
+        SQL += ",Personal";
+        SQL += ",Education";
+        SQL += ",Profession";
+        SQL += ",Military";
+        SQL += ",Civic";
+        SQL += ",Political";
+        SQL += ",Religion";
+        SQL += ",Accomplishments";
+        SQL += ",DataLastUpdated";
+        SQL += " FROM Politicians";
+        SQL += " WHERE PoliticianKey=" + db.SQLLit(politiciansTempRow.PoliticianKey);
+        var Row_Politician = db.Row(SQL);
+        if (!string.IsNullOrEmpty(Row_Politician["GeneralStatement"].ToString()
+          .Trim()))
+          BioAnswers++;
+        if (!string.IsNullOrEmpty(Row_Politician["Personal"].ToString()
+          .Trim()))
+          BioAnswers++;
+        if (!string.IsNullOrEmpty(Row_Politician["Education"].ToString()
+          .Trim()))
+          BioAnswers++;
+        if (!string.IsNullOrEmpty(Row_Politician["Profession"].ToString()
+          .Trim()))
+          BioAnswers++;
+        if (!string.IsNullOrEmpty(Row_Politician["Military"].ToString()
+          .Trim()))
+          BioAnswers++;
+        if (!string.IsNullOrEmpty(Row_Politician["Civic"].ToString()
+          .Trim()))
+          BioAnswers++;
+        if (!string.IsNullOrEmpty(Row_Politician["Political"].ToString()
+          .Trim()))
+          BioAnswers++;
+        if (!string.IsNullOrEmpty(Row_Politician["Religion"].ToString()
+          .Trim()))
+          BioAnswers++;
+        if (!string.IsNullOrEmpty(Row_Politician["Accomplishments"].ToString()
+          .Trim()))
+          BioAnswers++;
+
+        if (BioAnswers != 0)
+          //Insert_Sitemap_PoliticiansIssues_Temp(
+          //  Row_Politician["PoliticianKey"].ToString()
+          //, "ALLBio"
+          //, BioAnswers
+          //, Convert.ToDateTime(Row_Politician["DataLastUpdated"].ToString())
+          //);
+          SitemapPoliticiansIssuesTemp.Insert(
+            Row_Politician["PoliticianKey"].ToString(), "ALLBio", BioAnswers,
+            Convert.ToDateTime(Row_Politician["DataLastUpdated"].ToString()));
+
+        #endregion Issue ALLBio (Biographical Answers)
+
+        #region Other Issues
+
+        SQL = string.Empty;
+        SQL += "SELECT PoliticianKey,IssueKey";
+        SQL += " FROM Answers";
+        SQL += " WHERE PoliticianKey = " +
+          db.SQLLit(politiciansTempRow.PoliticianKey);
+        SQL += " GROUP BY PoliticianKey,IssueKey";
+        var Table_Politician_Issue_Answers = db.Table(SQL);
+        foreach (
+          DataRow Row_Politician_Issue_Answers in Table_Politician_Issue_Answers.Rows
+          )
+        {
+          SQL = string.Empty;
+          SQL += "SELECT DateStamp";
+          SQL += " FROM Answers";
+          SQL += " WHERE PoliticianKey = " +
+            db.SQLLit(Row_Politician_Issue_Answers["PoliticianKey"].ToString());
+          SQL += " AND IssueKey = " +
+            db.SQLLit(Row_Politician_Issue_Answers["IssueKey"].ToString());
+          var Table_Politicians_Issues_Answers = db.Table(SQL);
+          var Answers = 0;
+          var LastResponse = DateTime.MinValue;
+          foreach (DataRow Row_Politician_Issue_Answer in
+            Table_Politicians_Issues_Answers.Rows)
+          {
+            Answers++;
+            if (Convert.ToDateTime(Row_Politician_Issue_Answer["DateStamp"]) >
+              LastResponse)
+              LastResponse =
+                Convert.ToDateTime(Row_Politician_Issue_Answer["DateStamp"]);
+          }
+
+          //Insert_Sitemap_PoliticiansIssues_Temp(
+          //    Row_Politician_Issue_Answers["PoliticianKey"].ToString()
+          //  , Row_Politician_Issue_Answers["IssueKey"].ToString()
+          //  , Answers
+          //  , LastResponse
+          //  );
+          SitemapPoliticiansIssuesTemp.Insert(
+            Row_Politician_Issue_Answers["PoliticianKey"].ToString(),
+            Row_Politician_Issue_Answers["IssueKey"].ToString(), Answers,
+            LastResponse);
+        }
+
+        #endregion Other Issues
+      }
+
+      #endregion Issue.aspx and PoliticianIssue.aspx Urls
+
+      #endregion Create SitemapPoliticiansIssuesTemp Table
+
+      #endregion Create 3 Temp Tables used to generate Urls
+
+      #region Default.aspx Urls
+
+      #region Frequency
+
+      if (Sitemap.GetFrequencyDefault(DomainDataCode) != "automatic")
+        //if (Sitemap_FrequencyDefault(DomainDataCode) != "automatic")
+        Frequency = Sitemap.GetFrequencyDefault(DomainDataCode);
+      else
+        //Frequency = "monthly";
+        Frequency =
+          Frequency_Last_Changed(db.States_Date(DomainDataCode, "HomePageUpdated"));
+
+      #endregion Frequency
+
+      #region Url
+
+      Url(writer, Domain(DomainDataCode),
+        Priority_Url(Sitemap.GetPriorityDefault(DomainDataCode, 0),
+          Priority_Default(DomainDataCode)), Frequency,
+        db.YYYY_MM_DD(db.States_HomePageUpdated(DomainDataCode)
+          .ToString()));
+
+      Sitemap.UpdateUrlsDefault(1, DomainDataCode);
+
+      #endregion Url
+
+      #endregion Default.aspx Urls
+
+      #region Election.aspx Urls
+
+      Table_Elections =
+        db.Table(Sql_Elections(DomainDataCode,
+          Sitemap.GetElectionDirectories(DomainDataCode)));
+      foreach (DataRow Row_Election in Table_Elections.Rows)
+        if (db.Is_Election_Has_Office_Contests(Row_Election["ElectionKey"].ToString()))
+        {
+          #region Frequency
+
+          if (Sitemap.GetFrequencyElection(DomainDataCode) != "automatic")
+            //if (Sitemap_FrequencyElection(DomainDataCode) != "automatic")
+            Frequency = Sitemap.GetFrequencyElection(DomainDataCode);
+          else
+            Frequency =
+              Frequency_Last_Changed(DateTime.UtcNow//db.ReportsElections_Date(Row_Election["ElectionKey"].ToString(), "ReportLastUpdated")
+              );
+
+          #endregion Frequency
+
+          #region Url
+
+          var Url_Election = string.Empty;
+          //Url_Election += Domain(db.StateCode_In_ElectionKey(Row_Election["ElectionKey"].ToString()));
+          //Url_Election += @"/Election.aspx";
+          //if (!string.IsNullOrEmpty(db.StateCode_In_ElectionKey(Row_Election["ElectionKey"].ToString())))
+          //{
+          //  if (db.Is_StateCode_State(db.StateCode_In_ElectionKey(Row_Election["ElectionKey"].ToString())))
+          //    Url_Election += "&State=" + db.StateCode_In_ElectionKey(Row_Election["ElectionKey"].ToString());
+          //}
+          //Url_Election += "&Election=" + Row_Election["ElectionKey"].ToString();
+          //Url_Election = db.Fix_Url_Parms(Url_Election);
+
+          var electionKey = Row_Election["ElectionKey"].ToString();
+          Url_Election = UrlManager.GetElectionPageUri(electionKey)
+            .ToString();
+
+          Url(writer
+            //, db.Url_Election(Row_Election["ElectionKey"].ToString())
+            //, db.Url_Election(
+            //   Domain(DomainDataCode)
+            //   ,Row_Election["ElectionKey"].ToString()
+            //   )
+            , Url_Election
+
+            //, Priority(Sitemap_PriorityElection(DomainDataCode))
+            //, Priority_Election(DomainDataCode)
+            ,
+            Priority_Url(Sitemap.GetPriorityElection(DomainDataCode, 0),
+              Priority_Election(DomainDataCode)), Frequency,
+            db.YYYY_MM_DD(
+              DateTime.UtcNow//db.ReportsElections_Date(Row_Election["ElectionKey"].ToString(), "ReportLastUpdated")
+                .ToString()));
+
+          #endregion Url
+        }
+
+      Sitemap.UpdateUrlsElection(Table_Elections.Rows.Count, DomainDataCode);
+
+      #endregion Election.aspx Urls
+
+      #region Officials.aspx Urls
+
+      //if (xSitemap_IncludeOfficials(DomainDataCode))
+      //{
+      if (!db.Is_Election_Upcoming_Viewable_State(DomainDataCode))
+        if (DomainDataCode == "US")
+        {
+          #region US President, US Senate, US House
+
+          #region Frequency
+
+          if (Sitemap.GetFrequencyOfficials(DomainDataCode) != "automatic")
+            Frequency = Sitemap.GetFrequencyOfficials(DomainDataCode);
+          else
+          {
+            //Frequency = "yearly";
+            var DataLastUpdated = DataLastUpdated_Officials(string.Empty, "= 1");
+            Frequency = Frequency_Last_Changed(DataLastUpdated);
+          }
+
+          #endregion Frequency
+
+          #region Url U1
+
+          //string Url_Officials = string.Empty;
+
+          //Url_Officials = Domain("U1");
+          //Url_Officials += @"/Officials.aspx";
+          //Url_Officials += "&Report=" + "U1";
+          //Url_Officials = db.Fix_Url_Parms(Url_Officials);
+
+          string Url_Officials;
+
+          Url_Officials = UrlManager.GetOfficialsPageUri("U1")
+            .ToString();
+
+          Url(writer, Url_Officials,
+            Priority_Url(Sitemap.GetPriorityOfficials(DomainDataCode, 0),
+              Priority_Officials(
+               DateTime.UtcNow //db.ReportsOfficials_Date("U1", string.Empty, string.Empty, "ReportLastUpdated")
+               )), Frequency,
+            db.YYYY_MM_DD(
+               DateTime.UtcNow //db.ReportsOfficials_Date("U1", string.Empty, string.Empty, "ReportLastUpdated")
+                .ToString()));
+
+          #endregion Url U1
+
+          #region Frequency
+
+          if (Sitemap.GetFrequencyOfficials(DomainDataCode) != "automatic")
+            Frequency = Sitemap.GetFrequencyOfficials(DomainDataCode);
+          else
+          {
+            //Frequency = "yearly";
+            var DataLastUpdated = DataLastUpdated_Officials(string.Empty, "= 2");
+            Frequency = Frequency_Last_Changed(DataLastUpdated);
+          }
+
+          #endregion Frequency
+
+          #region Url U2
+
+          //Url_Officials = Domain("U2");
+          //Url_Officials += @"/Officials.aspx";
+          //Url_Officials += "&Report=" + "U2";
+          //Url_Officials = db.Fix_Url_Parms(Url_Officials);
+
+          Url_Officials = UrlManager.GetOfficialsPageUri("U2")
+            .ToString();
+
+          Url(writer, Url_Officials,
+            Priority_Url(Sitemap.GetPriorityOfficials(DomainDataCode, 0),
+              Priority_Officials(
+              DateTime.UtcNow//db.ReportsOfficials_Date("U2", string.Empty, string.Empty, "ReportLastUpdated")
+              )), Frequency,
+            db.YYYY_MM_DD(
+              DateTime.UtcNow//db.ReportsOfficials_Date("U2", string.Empty, string.Empty, "ReportLastUpdated")
+                .ToString()));
+
+          #endregion Url U2
+
+          #region Frequency
+
+          if (Sitemap.GetFrequencyOfficials(DomainDataCode) != "automatic")
+            Frequency = Sitemap.GetFrequencyOfficials(DomainDataCode);
+          else
+          {
+            //Frequency = "yearly";
+            var DataLastUpdated = DataLastUpdated_Officials(string.Empty, "= 3");
+            Frequency = Frequency_Last_Changed(DataLastUpdated);
+          }
+
+          #endregion Frequency
+
+          #region Frequency
+
+          Frequency = Sitemap.GetFrequencyOfficials(DomainDataCode);
+
+          #endregion Frequency
+
+          #region Url U3
+
+          //Url_Officials = Domain("U3");
+          //Url_Officials += @"/Officials.aspx";
+          //Url_Officials += "&Report=" + "U3";
+          //Url_Officials = db.Fix_Url_Parms(Url_Officials);
+
+          Url_Officials = UrlManager.GetOfficialsPageUri("U3")
+            .ToString();
+
+          Url(writer, Url_Officials,
+            Priority_Url(Sitemap.GetPriorityOfficials(DomainDataCode, 0),
+              Priority_Officials(
+               DateTime.UtcNow//db.ReportsOfficials_Date("U3", string.Empty, string.Empty, "ReportLastUpdated")
+               )), Frequency,
+            db.YYYY_MM_DD(
+              DateTime.UtcNow//db.ReportsOfficials_Date("U3", string.Empty, string.Empty, "ReportLastUpdated")
+                .ToString()));
+
+          #endregion Url U3
+
+          #region Url U4
+
+          //Url_Officials = Domain("U4");
+          //Url_Officials += @"/Officials.aspx";
+          //Url_Officials += "&Report=" + "U4";
+          //Url_Officials = db.Fix_Url_Parms(Url_Officials);
+
+          Url_Officials = UrlManager.GetOfficialsPageUri("U4")
+            .ToString();
+
+          Url(writer, Url_Officials,
+            Priority_Url(Sitemap.GetPriorityOfficials(DomainDataCode, 0),
+              Priority_Officials(
+              DateTime.UtcNow//db.ReportsOfficials_Date("U4", string.Empty, string.Empty, "ReportLastUpdated")
+              )), Frequency,
+            db.YYYY_MM_DD(
+              DateTime.UtcNow//db.ReportsOfficials_Date("U4", string.Empty, string.Empty, "ReportLastUpdated")
+                .ToString()));
+
+          #endregion Url U4
+
+          Sitemap.UpdateUrlsOfficials(4, DomainDataCode);
+
+          #endregion US Presidend, US Senate, US House
+        }
+        else
+        {
+          #region State Elected Officials
+
+          #region Frequency
+
+          if (Sitemap.GetFrequencyOfficials(DomainDataCode) != "automatic")
+            Frequency = Sitemap.GetFrequencyOfficials(DomainDataCode);
+          else
+          {
+            //Frequency = "monthly";
+            var DataLastUpdated = DataLastUpdated_Officials(DomainDataCode, "<= 6");
+            Frequency = Frequency_Last_Changed(DataLastUpdated);
+          }
+
+          #endregion Frequency
+
+          #region Url
+
+          //string Url_Officials = string.Empty;
+          //Url_Officials += Domain(DomainDataCode);
+          //Url_Officials += @"/Officials.aspx";
+          //Url_Officials += "&Report=" + DomainDataCode;
+          //Url_Officials = db.Fix_Url_Parms(Url_Officials);
+
+          var Url_Officials = UrlManager.GetOfficialsPageUri(DomainDataCode)
+            .ToString();
+
+          Url(writer, Url_Officials,
+            Priority_Url(Sitemap.GetPriorityOfficials(DomainDataCode, 0),
+              Priority_Officials(
+              DateTime.UtcNow//db.ReportsOfficials_Date(DomainDataCode, string.Empty, string.Empty, "ReportLastUpdated")
+              )), Frequency,
+            db.YYYY_MM_DD(
+              DateTime.UtcNow//db.ReportsOfficials_Date(DomainDataCode, string.Empty, string.Empty, "ReportLastUpdated")
+                .ToString()));
+
+          #endregion Url
+
+          Sitemap.UpdateUrlsOfficials(1, DomainDataCode);
+
+          #endregion State Elected Officials
+        }
+      else
+        #region 0 Officials.aspx Urls
+
+        Sitemap.UpdateUrlsOfficials(0, DomainDataCode);
+
+      #endregion 0 Officials.aspx Urls
+
+      #endregion Officials.aspx Urls
+
+      #region Intro.aspx Urls
+
+      if (DomainDataCode != "US")
+      {
+        #region A State
+
+        var Urls = 0;
+
+        #region Create Sitemap
+
+        //SQL = string.Empty;
+        //SQL += "SELECT PoliticianKey";
+        //SQL += " FROM SitemapPoliticiansTemp";
+        //Table_SitemapPoliticiansTemp = db.Table(SQL);
+        var politiciansTempTable2 = SitemapPoliticiansTemp.GetAllData();
+        foreach (var politiciansTempRow in politiciansTempTable2)
+        {
+          var politicianKey = politiciansTempRow.PoliticianKey;
+
+          #region Each Politician in SitemapPoliticiansTemp Table
+
+          #region Conditions to create Intro.aspx url
+
+          var Is_Insert = true;
+
+          #region Must have picture to be included
+
+          if (Sitemap.GetMustHavePicture(DomainDataCode, false) &&
+            !db.Is_Valid_PoliticiansImages(politicianKey))
+            Is_Insert = false;
+
+          #endregion Must have picture to be included
+
+          #region Must have general statement to be included
+
+          if (Is_Insert && Sitemap.GetMustHaveStatement(DomainDataCode, false) &&
+            db.Politicians_Str(politicianKey, "GeneralStatement") == string.Empty)
+            Is_Insert = false;
+
+          #endregion Must have general statement to be included
+
+          #endregion Conditions to create Intro.aspx url
+
+          if (Is_Insert)
+          {
+            #region Frequency
+
+            if (Sitemap.GetFrequencyIntro(DomainDataCode) != "automatic")
+              Frequency = Sitemap.GetFrequencyIntro(DomainDataCode);
+            else
+              Frequency =
+                Frequency_Last_Changed(db.Politicians_Date(politicianKey,
+                  "DataLastUpdated"));
+
+            #endregion Frequency
+
+            //if (DomainDataCode == "US")
+            //{
+            //  #region All urls must be of Vote-XX.org
+            //  Url(
+            //    Xml
+            //    //, db.Url_State_Domain(db.StateCode_In_PoliticianKey(
+            //    //     politicianKey))
+            //    //  + db.Url_Intro(
+            //    , db.Url_Intro(
+            //        politicianKey
+            //        )
+            //    //, Priority(Sitemap_PriorityIntro(DomainDataCode))
+            //    //, Priority(db.Politicians_Date(
+            //    //    politicianKey
+            //    //    , "DataLastUpdated")
+            //    //   )
+            //    , Priority_Url(
+            //        Sitemap_PriorityIntro(DomainDataCode)
+            //        , Priority(db.Politicians_Date(
+            //           politicianKey
+            //           , "DataLastUpdated")
+            //          )
+            //        )
+            //     , Frequency
+            //     , db.YYYY_MM_DD(db.Politicians_Date(
+            //         politicianKey
+            //         , "DataLastUpdated").ToString()
+            //         )
+            //      );
+            //  #endregion All urls must be of Vote-XX.org
+            //}
+            //else
+            //{
+
+            #region Url
+
+            //string Url_Intro = string.Empty;
+            //Url_Intro += Domain(db.StateCode_In_PoliticianKey(politicianKey));
+            //Url_Intro += @"/Intro.aspx";
+            //Url_Intro += "&State=" + db.StateCode_In_PoliticianKey(politicianKey);
+            //Url_Intro += "&Id=" + politicianKey;
+            //Url_Intro = db.Fix_Url_Parms(Url_Intro);
+
+            var Url_Intro = UrlManager.GetIntroPageUri(politicianKey)
+              .ToString();
+
+            Url(writer, Url_Intro,
+              Priority_Url(Sitemap.GetPriorityIntro(DomainDataCode, 0),
+                db.Politicians_Date(politicianKey, "DataLastUpdated")), Frequency,
+              db.YYYY_MM_DD(db.Politicians_Date(politicianKey, "DataLastUpdated")
+                .ToString()));
+
+            #endregion Url
+
+            //}
+            Urls++;
+          }
+
+          #endregion Each Politician in SitemapPoliticiansTemp Table
+        }
+
+        #endregion Create Sitemap
+
+        Sitemap.UpdateUrlsIntro(Urls, DomainDataCode);
+
+        #endregion A State
+      }
+      else
+        #region 0 Intro.aspx Urls
+
+        Sitemap.UpdateUrlsIntro(0, DomainDataCode);
+
+      #endregion 0 Intro.aspx Urls
+
+      #endregion Intro.aspx Urls
+
+      #region PoliticianIssue.aspx Urls
+
+      if (!db.Is_Election_Upcoming_Viewable_State(DomainDataCode))
+      {
+        #region PoliticianIssue.aspx Urls
+
+        //SQL = string.Empty;
+        //SQL += "SELECT PoliticianKey,IssueKey,Answers,LastResponse";
+        //SQL += " FROM SitemapPoliticiansIssuesTemp";
+        //DataTable Table_SitemapPoliticians_Issues = db.Table(SQL);
+        var politiciansIssuesTempTable = SitemapPoliticiansIssuesTemp.GetAllData();
+        var Urls = 0;
+        foreach (var politiciansIssuesTempRow in politiciansIssuesTempTable)
+        {
+          #region Conditions to create PoliticianIssue.aspx url
+
+          var issueKey = politiciansIssuesTempRow.IssueKey;
+          var politicianKey = politiciansIssuesTempRow.PoliticianKey;
+          var Is_Insert = true;
+          if (issueKey == "ALLBio")
+            //Bios are on Intro.aspx page, not PoliticianIssue.aspx
+            Is_Insert = false;
+
+          #endregion Conditions to create PoliticianIssue.aspx url
+
+          #region Compute Str or not
+
+          var Priority_Answers = string.Empty;
+          //if (Sitemap_ComputePriorityPoliticianIssue(DomainDataCode))
+          //{
+          //  if (Convert.ToUInt16(Row_Politician_Issue["Answers"]) <= 9)
+          //    Priority_Answers = "0." + Convert.ToUInt16(Row_Politician_Issue["Answers"]).ToString();
+          //  else
+          //    Priority_Answers = "0.9";
+          //}
+          //else
+          //{
+          //  //Str = Sitemap_PriorityPoliticianIssue"].ToString();
+          //  Priority_Answers = Str(Sitemap_PriorityPoliticianIssue(DomainDataCode));
+          //}
+
+          #endregion Compute Str or not
+
+          if (Is_Insert)
+          {
+            #region Frequency
+
+            if (Sitemap.GetFrequencyPoliticianIssue(DomainDataCode) != "automatic")
+              Frequency = Sitemap.GetFrequencyPoliticianIssue(DomainDataCode);
+            else
+              Frequency =
+                Frequency_Last_Changed(politiciansIssuesTempRow.LastResponse);
+
+            #endregion Frequency
+
+            var State_Code = Politicians.GetStateCodeFromKey(politicianKey);
+            if (string.IsNullOrEmpty(State_Code))
+              State_Code = Issues.GetStateCodeFromKey(issueKey);
+
+            //if (DomainDataCode == "US")
+            //{
+            //  #region All urls must be of Vote-XX.org
+            //  Url(
+            //    Xml
+            //      , db.Url_PoliticianIssue(
+            //          Row_Politician_Issue["PoliticianKey"].ToString()
+            //         , Row_Politician_Issue["IssueKey"].ToString()
+            //          )
+            //      , Priority_Url(
+            //          Sitemap_PriorityPoliticianIssue(DomainDataCode)
+            //          , Priority(Convert.ToDateTime(Row_Politician_Issue["LastResponse"]))
+            //            )
+            //      , Frequency
+            //    , db.YYYY_MM_DD(Row_Politician_Issue["LastResponse"].ToString())
+            //    );
+            //  #endregion All urls must be of Vote-XX.org
+            //}
+            //else
+            //{
+
+            #region Url
+
+            //string Url_PoliticianIssue = string.Empty;
+            //Url_PoliticianIssue += Domain(State_Code);
+            //Url_PoliticianIssue += @"/PoliticianIssue.aspx";
+
+            //Url_PoliticianIssue += "&State=" + State_Code;
+
+            //if (!string.IsNullOrEmpty(Row_Politician_Issue["PoliticianKey"].ToString()))
+            //  Url_PoliticianIssue += "&Id=" + Row_Politician_Issue["PoliticianKey"].ToString();
+
+            //if (!string.IsNullOrEmpty(Row_Politician_Issue["IssueKey"].ToString()))
+            //  Url_PoliticianIssue += "&Issue=" + Row_Politician_Issue["IssueKey"].ToString();
+
+            //Url_PoliticianIssue = db.Fix_Url_Parms(Url_PoliticianIssue);
+
+            var Url_PoliticianIssue =
+              UrlManager.GetPoliticianIssuePageUri(State_Code, politicianKey,
+                issueKey)
+                .ToString();
+
+            Url(writer
+              // , db.Url_PoliticianIssue(
+              // Row_Politician_Issue["PoliticianKey"].ToString()
+              //, Row_Politician_Issue["IssueKey"].ToString()
+              // )
+              , Url_PoliticianIssue,
+              Priority_Url(Sitemap.GetPriorityPoliticianIssue(DomainDataCode, 0),
+                Priority(politiciansIssuesTempRow.LastResponse)), Frequency,
+              db.YYYY_MM_DD(politiciansIssuesTempRow.LastResponse.ToString()));
+
+            #endregion Url
+
+            //}
+            Urls++;
+          }
+        }
+        Sitemap.UpdateUrlsPoliticianIssue(Urls, DomainDataCode);
+
+        #endregion PoliticianIssue.aspx Urls
+      }
+      else
+        #region 0 PoliticianIssue.aspx Urls
+
+        Sitemap.UpdateUrlsPoliticianIssue(0, DomainDataCode);
+
+      #endregion 0 PoliticianIssue.aspx Urls
+
+      #endregion PoliticianIssue.aspx Urls
+
+      #region Issue.aspx Urls
+
+      if (db.Is_Election_Upcoming_Viewable_State(DomainDataCode))
+      {
+        #region Issue.aspx Urls
+
+        //db.ExecuteSQL("TRUNCATE TABLE SitemapIssuesTemp");
+        SitemapIssuesTemp.TruncateTable();
+
+        #region Build new SitemapIssuesTemp Table
+
+        //SQL = string.Empty;
+        //SQL += " SELECT ElectionKey";
+        //SQL += " FROM SitemapElectionsTemp";
+        //Table_Elections = db.Table(SQL);
+        var electionsTempTable = SitemapElectionsTemp.GetAllData();
+        foreach (var electionsTempRow in electionsTempTable)
+        {
+          SQL = string.Empty;
+          SQL += "SELECT ElectionKey,OfficeKey";
+          SQL += " FROM ElectionsOffices";
+          SQL += " WHERE ElectionKey = " + db.SQLLit(electionsTempRow.ElectionKey);
+          var Table_Offices = db.Table(SQL);
+          foreach (DataRow Row_Office in Table_Offices.Rows)
+          {
+            SQL = string.Empty;
+            SQL += "SELECT ElectionKey,OfficeKey,PoliticianKey";
+            SQL += " FROM ElectionsPoliticians";
+            SQL += " WHERE ElectionKey = " +
+              db.SQLLit(Row_Office["ElectionKey"].ToString());
+            SQL += " AND OfficeKey = " +
+              db.SQLLit(Row_Office["OfficeKey"].ToString());
+            var Table_Politicians = db.Table(SQL);
+            var Candidates = Table_Politicians.Rows.Count;
+            foreach (DataRow Row_Politician in Table_Politicians.Rows)
+            {
+              //SQL = string.Empty;
+              //SQL += " SELECT PoliticianKey,IssueKey,Answers,LastResponse";
+              //SQL += " FROM SitemapPoliticiansIssuesTemp";
+              //SQL += " WHERE PoliticianKey = "
+              //  + db.SQLLit(Row_Politician["PoliticianKey"].ToString());
+              //DataTable Table_Politicians_Issues = db.Table(SQL);
+              var politiciansIssuesTable =
+                SitemapPoliticiansIssuesTemp.GetDataByPoliticianKey(
+                  Row_Politician["PoliticianKey"].ToString());
+              foreach (var politiciansIssuesRow in politiciansIssuesTable)
+              {
+                //SQL = string.Empty;
+                //SQL += " SELECT ElectionKey,OfficeKey,IssueKey,Answers,LastResponse";
+                //SQL += " FROM SitemapIssuesTemp";
+                //SQL += " WHERE ElectionKey = "
+                //  + db.SQLLit(electionsTempRow.ElectionKey);
+                //SQL += " AND OfficeKey = "
+                //  + db.SQLLit(Row_Office["OfficeKey"].ToString());
+                //SQL += " AND IssueKey = "
+                //  + db.SQLLit(Row_Politician_Issue["IssueKey"].ToString());
+                //DataRow Row_Election_Office_Issue = db.Row_Optional(SQL);
+                var issuesTempTable =
+                  SitemapIssuesTemp.GetDataByElectionKeyOfficeKeyIssueKey(
+                    electionsTempRow.ElectionKey, Row_Office["OfficeKey"].ToString(),
+                    politiciansIssuesRow.IssueKey);
+                if (issuesTempTable.Count == 0)
+                  //if (Row_Election_Office_Issue == null)
+                  #region Insert SitemapIssuesTemp
+                  //string SQLInsert = string.Empty;
+                  //SQLInsert += "INSERT INTO SitemapIssuesTemp";
+
+                  //SQLInsert += "(";
+                  //SQLInsert += "ElectionKey";
+                  //SQLInsert += ",OfficeKey";
+                  //SQLInsert += ",IssueKey";
+                  //SQLInsert += ",Candidates";
+                  //SQLInsert += ",Answers";
+                  //SQLInsert += ",LastResponse";
+                  //SQLInsert += ")";
+                  //SQLInsert += "VALUES";
+                  //SQLInsert += "(";
+                  //SQLInsert += db.SQLLit(electionsTempRow.ElectionKey);
+                  //SQLInsert += "," + db.SQLLit(Row_Office["OfficeKey"].ToString());
+                  //SQLInsert += "," + db.SQLLit(Row_Politician_Issue["IssueKey"].ToString());
+                  //SQLInsert += "," + Candidates.ToString();
+                  //SQLInsert += "," + Row_Politician_Issue["Answers"].ToString();
+                  //SQLInsert += "," + db.SQLLit(Db.DbDateTime(Convert.ToDateTime(Row_Politician_Issue["LastResponse"])));
+                  //SQLInsert += ")";
+                  //db.ExecuteSQL(SQLInsert);
+
+                  SitemapIssuesTemp.Insert(electionsTempRow.ElectionKey,
+                    Row_Office["OfficeKey"].ToString(), politiciansIssuesRow.IssueKey,
+                    Candidates, politiciansIssuesRow.Answers,
+                    politiciansIssuesRow.LastResponse);
+
+                  #endregion Insert SitemapIssuesTemp
+
+                else
+                {
+                  #region Update SitemapIssuesTemp
+
+                  var issuesTempRow = issuesTempTable[0];
+                  var Answers = politiciansIssuesRow.Answers;
+                  Answers += issuesTempRow.Answers;
+
+                  var LastResponse = politiciansIssuesRow.LastResponse;
+                  if (issuesTempRow.LastResponse > LastResponse)
+                    LastResponse = issuesTempRow.LastResponse;
+
+                  //string SQLUpdate = string.Empty;
+                  //SQLUpdate += " UPDATE SitemapIssuesTemp";
+                  //SQLUpdate += " SET Answers = "
+                  //  + Answers.ToString();
+                  //SQLUpdate += " ,LastResponse = "
+                  //  + db.SQLLit(Db.DbDateTime(Convert.ToDateTime(LastResponse)));
+                  //SQLUpdate += " WHERE ElectionKey = "
+                  //  + db.SQLLit(electionsTempRow.ElectionKey);
+                  //SQLUpdate += " AND OfficeKey = "
+                  //   + db.SQLLit(Row_Office["OfficeKey"].ToString());
+                  //SQLUpdate += " AND IssueKey = "
+                  //   + db.SQLLit(Row_Politician_Issue["IssueKey"].ToString());
+                  //db.ExecuteSQL(SQLUpdate);
+
+                  SitemapIssuesTemp.UpdateAnswersByElectionKeyOfficeKeyIssueKey(
+                    Answers, electionsTempRow.ElectionKey,
+                    Row_Office["OfficeKey"].ToString(), politiciansIssuesRow.IssueKey);
+
+                  #endregion Update SitemapIssuesTemp
+                }
+              }
+            }
+          }
+        }
+
+        #endregion Build new SitemapIssuesTemp Table
+
+        #region Insert Issue.aspx urls in Sitemap
+
+        //SQL = string.Empty;
+        //SQL += "SELECT ElectionKey,OfficeKey,IssueKey,Candidates,Answers,LastResponse";
+        //SQL += " FROM SitemapIssuesTemp";
+        //DataTable Table_Sitemap_Issues = db.Table(SQL);
+        var issuesTempTable2 = SitemapIssuesTemp.GetAllData();
+        var Urls = 0;
+        foreach (var issuesTempRow in issuesTempTable2)
+        {
+          #region Conditions to create Issue.aspx url
+
+          var Is_Insert = true;
+
+          #region Minimum Candidates to include
+
+          if (issuesTempRow.Candidates <
+            Sitemap.GetMinimumCandidates(DomainDataCode, 0))
+            Is_Insert = false;
+
+          #endregion Minimum Candidates to include
+
+          #region Minimum Answers to include
+
+          if (issuesTempRow.Answers < Sitemap.GetMinimumAnswers(DomainDataCode, 0))
+            Is_Insert = false;
+
+          #endregion Minimum Answers to include
+
+          #endregion Conditions to create Issue.aspx url
+
+          if (Is_Insert)
+          {
+            #region Priority - Set or Compute
+
+            var Priority_Answers = string.Empty;
+            //int Answers = 0;
+            //if (Sitemap_ComputePriorityIssue(DomainDataCode))
+            //{
+            //  Answers = Convert.ToInt16(Row_Issue["Answers"].ToString())
+            //    / Convert.ToInt16(TextBox_Factor.Text);
+
+            //  if (Answers > 9)
+            //    Priority_Answers = "0.9";
+            //  else if (Answers == 0)
+            //    Priority_Answers = "0.1";
+            //  else
+            //    Priority_Answers = "0." + Answers.ToString();
+            //}
+            //else
+            //{
+            //  Priority_Answers = Priority(Sitemap_PriorityIssue(DomainDataCode));
+            //}
+
+            #endregion Priority - Set or Compute
+
+            #region Frequency
+
+            if (Sitemap.GetFrequencyIssue(DomainDataCode) != "automatic")
+              Frequency = Sitemap.GetFrequencyIssue(DomainDataCode);
+            else
+              Frequency = Frequency_Last_Changed(issuesTempRow.LastResponse);
+
+            #endregion Frequency
+
+            #region url
+
+            var State_Code = Offices.GetStateCodeFromKey(issuesTempRow.OfficeKey);
+            if (string.IsNullOrEmpty(State_Code))
+              State_Code = Issues.GetStateCodeFromKey(issuesTempRow.IssueKey);
+            if (string.IsNullOrEmpty(State_Code))
+              State_Code = Elections.GetStateCodeFromKey(issuesTempRow.ElectionKey);
+
+            //string Url_Issue = string.Empty;
+            //Url_Issue += Domain(State_Code);
+            //Url_Issue += @"/Issue.aspx";
+
+            //Url_Issue += "&State=" + State_Code;
+
+            //if (Row_Issue["ElectionKey"].ToString() != string.Empty)
+            //  Url_Issue += "&Election=" + Row_Issue["ElectionKey"].ToString();
+
+            //if (Row_Issue["OfficeKey"].ToString() != string.Empty)
+            //  Url_Issue += "&Office=" + Row_Issue["OfficeKey"].ToString();
+
+            //if (Row_Issue["IssueKey"].ToString() != string.Empty)
+            //  Url_Issue += "&Issue=" + HttpUtility.UrlEncode(Row_Issue["IssueKey"].ToString());
+            //else
+            //  //Url_Issue += "&Issue=ALLPersonal";
+            //  Url_Issue += "&Issue=ALLBio";
+
+            //Url_Issue = db.Fix_Url_Parms(Url_Issue);
+
+            var electionKey = issuesTempRow.ElectionKey;
+            var officeKey = issuesTempRow.OfficeKey;
+            var issueKey = issuesTempRow.IssueKey;
+            if (string.IsNullOrWhiteSpace(issueKey))
+              issueKey = "ALLBio";
+
+            var Url_Issue =
+              UrlManager.GetIssuePageUri(State_Code, electionKey, officeKey, issueKey)
+                .ToString();
+
+            #endregion url
+
+            //if (DomainDataCode == "US")
+            //{
+
+            #region All urls must be of Vote-XX.org
+
+            Url(writer
+              //, db.Url_Issue(
+              //      Row_Issue["ElectionKey"].ToString()
+              //      , Row_Issue["OfficeKey"].ToString()
+              //      , Row_Issue["IssueKey"].ToString()
+              //      , DomainDataCode
+              //      )
+              , Url_Issue,
+              Priority_Url(Sitemap.GetPriorityIssue(DomainDataCode, 0),
+                Priority(issuesTempRow.LastResponse)), Frequency,
+              db.YYYY_MM_DD(issuesTempRow.LastResponse.ToString()));
+
+            #endregion All urls must be of Vote-XX.org
+
+            //}
+            //else
+            //{
+            //  #region Url
+            //  Url(
+            //      Xml
+            //        , db.Url_Issue(
+            //          Row_Issue["ElectionKey"].ToString()
+            //          , Row_Issue["OfficeKey"].ToString()
+            //          , Row_Issue["IssueKey"].ToString()
+            //          , DomainDataCode
+            //          )
+            //        , Priority_Url(
+            //            Sitemap_PriorityIssue(DomainDataCode)
+            //            , Priority_Issue(Convert.ToDateTime(Row_Issue["LastResponse"])
+            //            , Row_Issue["IssueKey"].ToString())
+            //              )
+            //         , Frequency
+            //      , db.YYYY_MM_DD(Row_Issue["LastResponse"].ToString())
+            //      );
+            //  #endregion Url
+            //}
+            Urls++;
+          }
+        }
+
+        #endregion Insert Issue.aspx urls in Sitemap
+
+        Sitemap.UpdateUrlsIssue(Urls, DomainDataCode);
+
+        #endregion Issue.aspx Urls
+      }
+      else
+        #region 0 Issue.aspx Urls
+
+        Sitemap.UpdateUrlsIssue(0, DomainDataCode);
+
+      #endregion 0 Issue.aspx Urls
+
+      #endregion Issue.aspx Urls
+
+      #region Ballot.aspx Urls
+
+      #region Note
+
+      //Ballots have been removed from the sitemaps
+      //because they can produce duplicate content. 
+      //For example, in the special DC election all 8 wards 
+      //would produce the same ballot because all 8 wards 
+      //only have the At-Large Council Seat contest.
+      //Hence the: if (true == false)
+
+      #endregion Note
+
+#if false
+      if (
+        (true == false)
+        && (db.Is_Election_Upcoming_Viewable_State(DomainDataCode))
+        && (DomainDataCode != "US")
+        )
+      {
+        #region Ballot.aspx Urls
+        int Urls = 0;
+        //Need to redo
+        Table_Elections = db.Table(
+          Sql_Election(DomainDataCode)
+          );
+        foreach (DataRow Row_Election in Table_Elections.Rows)
+        {
+          #region Note
+          //Only insert ballot urls if ALL ballots will have 
+          //at least one office contest on it.
+          //Later Special Elections and 
+          //elections with just statewide ballot measures can be added
+          #endregion Note
+          if (db.Rows_ElectionsOffices(Row_Election["ElectionKey"].ToString()) > 0)
+          {
+
+            #region sql
+            #region Note
+            //The Ballots Table was created by a ONe Shot Utility
+            //It represents 14,055 different possible ballots at county level
+            #endregion Note
+            SQL = string.Empty;
+            SQL += "SELECT";
+            SQL += " StateCode";
+            SQL += ",USHouseCode";
+            SQL += ",StateSenateCode";
+            SQL += ",StateHouseCode";
+            SQL += ",CountyCode";
+            SQL += " FROM Ballots ";
+            SQL += " WHERE StateCode = "
+                  + db.SQLLit(DomainDataCode);
+            SQL += " ORDER BY USHouseCode,StateSenateCode,StateHouseCode,CountyCode";
+            #endregion sql
+            DataTable BallotsTable = db.Table(SQL);
+            foreach (DataRow Row_Ballot in BallotsTable.Rows)
+            {
+
+              #region Frequency
+              if (Sitemap_FrequencyBallot(DomainDataCode) != "automatic")
+                Frequency = Sitemap_FrequencyBallot(DomainDataCode);
+              else
+              {
+                Frequency = Frequency_Last_Changed(db.ReportsElections_Date(
+                  Row_Election["ElectionKey"].ToString()
+                  , "ReportLastUpdated")
+                );
+              }
+              #endregion Frequency
+
+              #region Url
+              string Url_Ballot = string.Empty;
+              Url_Ballot += Domain(db.StateCode_In_ElectionKey(Row_Election["ElectionKey"].ToString()));
+              Url_Ballot += @"/Ballot.aspx";
+              if (!string.IsNullOrEmpty(db.StateCode_In_ElectionKey(Row_Election["ElectionKey"].ToString())))
+                Url_Ballot += "&State=" + db.StateCode_In_ElectionKey(Row_Election["ElectionKey"].ToString());
+              Url_Ballot += "&Election=" + Row_Election["ElectionKey"].ToString()
+              + "&Congress=" + Row_Ballot["USHouseCode"].ToString()
+              + "&StateSenate=" + Row_Ballot["StateSenateCode"].ToString()
+              + "&StateHouse=" + Row_Ballot["StateHouseCode"].ToString()
+              + "&County=" + Row_Ballot["CountyCode"].ToString();
+              Url_Ballot = db.Fix_Url_Parms(Url_Ballot);
+
+              Url(
+                Xml
+                //, db.Url_Ballot(
+                //Domain(DomainDataCode)
+                //, Row_Election["ElectionKey"].ToString()
+                //, Row_Ballot["USHouseCode"].ToString()
+                //, Row_Ballot["StateSenateCode"].ToString()
+                //, Row_Ballot["StateHouseCode"].ToString()
+                //, Row_Ballot["CountyCode"].ToString())
+
+               , Url_Ballot
+
+              , Priority_Url(
+                  Sitemap_PriorityBallot(DomainDataCode)
+                  , Priority_Ballot(
+                      db.ReportsElections_Date(
+                      Row_Election["ElectionKey"].ToString()
+                      , "ReportLastUpdated"))
+                      )
+
+               , Frequency
+                //, db.Str_MM_DD_YYYY(Last_Modified_Date)xxxxx
+               , db.YYYY_MM_DD(db.ReportsElections_Date(
+                  Row_Election["ElectionKey"].ToString()
+                  , "ReportLastUpdated").ToString()
+                  )
+                );
+              Urls++;
+              #endregion Url
+            }
+          }
+        }
+
+
+        Sitemap_Update_UrlsBallot(
+          DomainDataCode
+          , Urls
+          );
+
+        #endregion Ballot.aspx Urls
+      }
+      else
+#endif
+      {
+        #region 0 Ballot.aspx Urls
+
+        Sitemap.UpdateUrlsBallot(0, DomainDataCode);
+
+        #endregion 0 Ballot.aspx Urls
+      }
+
+      #endregion Ballot.aspx Urls
+
+      #region Close Sitemap for Domain
+
+      writer.WriteEndElement(); //</urlset>
+
+      writer.WriteEndDocument();
+
+      writer.Close();
+
+      #endregion Close Sitemap for Domain
+
+      #endregion --- Create an Xml file of Urls for the Domain --
+
+      //xxxxx
+
+      #region Update Last Created for Domain
+
+      //Sitemap_Update_Date(
+      //  Row_Sitemap["DomainDataCode"].ToString()
+      //  , "LastCreated"
+      //  , DateTime.Now
+      //  );
+      Sitemap.UpdateLastCreated(DateTime.Now, DomainDataCode);
+
+      #endregion Update Last Created for Domain
+
+      #region Run Time for one domain Sitemap
+
+      var Run_Time_End = DateTime.Now;
+      var Run_Time = Run_Time_End.Subtract(Run_Time_Start);
+      var RunTime_Seconds = Run_Time.Seconds;
+
+      Sitemap.UpdateRunTimeSeconds(RunTime_Seconds, DomainDataCode);
+
+      #endregion Run Time for one domain Sitemap
+
+//      #region Impersonate
+//#if ! DEBUG
+//      }
+//#endif
+//      #endregion Impersonate
+    }
+
+    public static void Sitemaps_52_Domains()
+    {
+      #region Note
+
+      //This method must NOT use any form controls
+      //because it is run as a scheduled batch job.
+
+      #endregion Note
+
+      #region sql Sitemap
+
+      var Sql_Sitemap = string.Empty;
+      Sql_Sitemap += " SELECT";
+      Sql_Sitemap += " DomainDataCode";
+      Sql_Sitemap += ",DomainName";
+      Sql_Sitemap += " FROM Sitemap";
+      Sql_Sitemap += " ORDER BY DomainDataCode";
+
+      #endregion sql Sitemap
+
+      var Table_Sitemap = db.Table(Sql_Sitemap);
+      var sitemapTable = Sitemap.GetDomainDataSorted();
+      foreach (var sitemapRow in sitemapTable)
+        SitemapManager.UpdateSitemapVirtualPage(sitemapRow.DomainDataCode);
+    }
+
+    protected void Button_Create_Sitemap_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        SitemapManager.UpdateSitemapVirtualPage(DropDownList_Domain.SelectedValue);
+
+        Load_Selected_Domain_Controls();
+
+        Msg.Text = db.Ok("The Sitemap has been created.");
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Button_Create_Sitemaps_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Server.ScriptTimeout = 6000; //6000 sec = 100 min = 1.66 hours
+
+        Sitemaps_52_Domains();
+
+        Index_Sitemap();
+
+        Load_Selected_Domain_Controls();
+
+        Total_Urls_RunTime_All_Domains();
+
+        Msg.Text = db.Ok("The 52 Statemaps have been created.");
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void DropDownListState_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        Load_Selected_Domain_Controls();
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        if (!SecurePage.IsMasterUser)
+          SecurePage.HandleSecurityException();
+
+        try
+        {
+          Load_Selected_Domain_Controls();
+          Total_Urls_RunTime_All_Domains();
+        }
+        catch (Exception ex)
+        {
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+        }
+      }
+    }
+
+    #region Dead code
+
+    //protected static string Priority_Ballot(DateTime Last_Changed)
+    //{
+    //  if (Last_Changed > DateTime.MinValue)
+    //  {
+    //    DateTime Today = DateTime.Today;
+    //    TimeSpan Age_Of_Last_Change = Today.Subtract(Last_Changed);
+    //    int Days_Old = Age_Of_Last_Change.Days;
+
+    //    if (Days_Old <= 120)
+    //      return "0.3";
+    //    else
+    //      return "0.1";
+    //  }
+    //  else
+    //  {
+    //    return "0.1";
+    //  }
+    //}
+
+    //protected static string Priority_Issue(DateTime Last_Changed, string IssueKey)
+    //{
+    //  if (IssueKey.ToLower() == "allbio")
+    //  {
+    //    return "1.0";
+    //  }
+    //  else
+    //  {
+    //    #region commented out - old method based on age of data
+    //    //if (Last_Changed > DateTime.MinValue)
+    //    //{
+    //    //  DateTime Today = DateTime.Today;
+    //    //  TimeSpan Age_Of_Last_Change = Today.Subtract(Last_Changed);
+    //    //  int Days_Old = Age_Of_Last_Change.Days;
+
+    //    //  if (Days_Old <= 1)
+    //    //    return "1.0";
+    //    //  else if (Days_Old <= 3)
+    //    //    return "0.9";
+    //    //  else if (Days_Old <= 7)
+    //    //    return "0.8";
+    //    //  else if (Days_Old <= 30)
+    //    //    return "0.7";
+    //    //  else if (Days_Old <= 60)
+    //    //    return "0.6";
+    //    //  else if (Days_Old <= 120)
+    //    //    return "0.5";
+    //    //  else if (Days_Old <= 365)
+    //    //    return "0.4";
+    //    //  else if (Days_Old <= 730)
+    //    //    return "0.3";
+    //    //  else if (Days_Old <= 1460)
+    //    //    return "0.2";
+    //    //  else
+    //    //    return "0.1";
+    //    //}
+    //    //else
+    //    //{
+    //    //  return "0.1";
+    //    //}
+    //    #endregion commented out - old method based on age of data
+    //    return "0.8";
+    //  }
+    //}
+
+    //protected bool Is_Has_All_Office_Contests_In_Election(
+    //  string DomainDataCode
+    //  , string ElectionKey
+    //  , int Office_Class
+    //  )
+    //{
+    //  int Offices_In_Class = db.Rows_Offices_In_Class(
+    //    DomainDataCode
+    //  , Office_Class
+    //  );
+
+    //  string SQL = string.Empty;
+    //  SQL += " ElectionsOffices";
+    //  SQL += " WHERE ElectionKey = "
+    //    + db.SQLLit(ElectionKey);
+    //  SQL += " AND OfficeLevel = "
+    //    + Office_Class.ToString();
+    //  int Offices_In_Election_In_Class = db.Rows_Count_From(SQL);
+
+    //  if (Offices_In_Class == Offices_In_Election_In_Class)
+    //    return true;
+    //  else
+    //    return false;
+    //}
+
+    //protected void Update_CheckBox_Include(
+    //  string Sitemap_Column
+    //  , CheckBox CheckBox_Include
+    //  , Label Label_Page
+    //  )
+    //{
+    //  Sitemap.Column column = Sitemap.GetColumn(Sitemap_Column);
+    //  Sitemap.UpdateColumn(
+    //    column,
+    //    CheckBox_Include.Checked,
+    //    Label_Domain_Code.Text);
+    //  //Sitemap_Update_Bool(
+    //  //  Label_Domain_Code.Text
+    //  //, Sitemap_Column
+    //  //, CheckBox_Include.Checked
+    //  //);
+
+    //  string Action = "EXCLUDED";
+    //  if (CheckBox_Include.Checked)
+    //    Action = "INCLUDED";
+    //  Msg.Text = db.Ok(
+    //    Label_Page.Text
+    //    + " will be "
+    //    + Action
+    //    + " from Sitemap" + Label_Domain_Code.Text + ".xml"
+    //    );
+    //}
+
+    //protected void CheckBox_Compute_Priority_Issue_CheckedChanged(object sender, EventArgs e)
+    //{
+    //  //if (CheckBox_Compute_Priority_Issue.Checked)
+    //  //  Sitemap_Update_ComputePriorityIssue(
+    //  //    DropDownList_Domain.SelectedValue
+    //  //    , true
+    //  //    );
+    //  //else
+    //  //  Sitemap_Update_ComputePriorityIssue(
+    //  //    DropDownList_Domain.SelectedValue
+    //  //    , false
+    //  //    );
+    //  //Msg.Text = db.Ok("CheckBox_Compute_Priority_Issue updated.");
+    //}
+
+    #endregion Dead code
+  }
+}

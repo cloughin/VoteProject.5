@@ -1,0 +1,3565 @@
+using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using DB.Vote;
+using Vote.Reports;
+
+namespace Vote.Admin
+{
+  public partial class Office : SecureAdminPage
+  {
+    #region checks
+    protected void Check_TextBoxs_Illeagal_Input()
+    {
+      //Election Authority Contact Information for Vote-USA
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Office_Line_Add_1);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Office_Line_Add_2);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBoxDistrict);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Order);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Remove_Incumbent);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Vote_Instructions);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Office_Line_Edit_1);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Office_Line_Edit_2);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_WriteIn_Instructions);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Vote_Wording);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_WriteIn_Wording);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBoxWriteInLines);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBoxOfficeOrderOnBallot);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBoxOfficePositions);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBoxElectionPositions);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBoxPrimaryPositions);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_RunningMate);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Office_Title_Search);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_CountyCode);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_LocalCode);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_OfficeKey);
+    }
+    #endregion checks
+    private enum FormFunction
+    {
+      Update_Office_Election,
+      Add_Office_Contest,
+      Update_Office,
+      Add_Office_At_Level,
+      Bulk_Office_Additions_County,
+      Bulk_Office_Additions_Local,
+      Unknown
+    }
+    private FormFunction Function()
+    {
+      if (Convert.ToInt16(ViewState["Electoral"]) == db.Electoral_County)
+        return FormFunction.Bulk_Office_Additions_County;
+      else if (Convert.ToInt16(ViewState["Electoral"]) == db.Electoral_Local)
+        return FormFunction.Bulk_Office_Additions_Local;
+      else if (
+        (!string.IsNullOrEmpty(ViewState["ElectionKey"].ToString()))
+        && (!string.IsNullOrEmpty(ViewState["OfficeKey"].ToString()))
+        )
+        return FormFunction.Update_Office_Election;
+      else if (
+        (!string.IsNullOrEmpty(ViewState["ElectionKey"].ToString()))
+        && (string.IsNullOrEmpty(ViewState["OfficeKey"].ToString()))
+        )
+        return FormFunction.Add_Office_Contest;
+      else if (
+        (!string.IsNullOrEmpty(ViewState["OfficeKey"].ToString()))
+        && (string.IsNullOrEmpty(ViewState["ElectionKey"].ToString()))
+        )
+        return FormFunction.Update_Office;
+      else if (Offices.GetOfficeClass(ViewState["OfficeKey"].ToString()) != 
+        OfficeClass.Undefined)
+        return FormFunction.Add_Office_At_Level;
+      else
+        return FormFunction.Unknown;
+    }
+    private string Form_Function_Description()
+    {
+      switch (Function())
+      {
+        case FormFunction.Update_Office_Election:
+          return "Update this Office Contest in this Election";
+        case FormFunction.Add_Office_Contest:
+          return "Add an Office Contest in this Election";
+        case FormFunction.Update_Office:
+          return "Update this Office";
+        case FormFunction.Add_Office_At_Level:
+          return "Add Office(s)";
+        case FormFunction.Bulk_Office_Additions_County:
+          return "Bulk COUNTY Office Additions";
+        case FormFunction.Bulk_Office_Additions_Local:
+          return "Bulk LOCAL DISTRICT Office Additions";
+        case FormFunction.Unknown:
+          return "Form Purpose is Unknown";
+        default:
+          return "Form Purpose is Unknown";
+      }
+    }
+    private void Clear_Office_Title_Textboxes()
+    {
+      TextBox_Office_Line_Add_1.Text = string.Empty;
+      TextBox_Office_Line_Add_2.Text = string.Empty;
+      TextBox_Order.Text = string.Empty;
+    }
+    private void Page_Title()
+    {
+      H1.InnerHtml = string.Empty;
+
+      #region commented
+      //if (db.QueryString("Mode") == "Bulk")
+      ////if (string.IsNullOrEmpty(ViewState["OfficeKey"].ToString()))
+      //{
+      //  if (Convert.ToInt16(ViewState["OfficeClass"]) == db.Office_Undefined)
+      //    H1.InnerHtml += "Maintenance of All Counties and Local Districts ";
+      //  else if (db.Is_Electoral_Class_County(Convert.ToInt16(ViewState["OfficeClass"])))
+      //    H1.InnerHtml += "All Counties in ";
+      //  else
+      //    H1.InnerHtml += "All Local Districts in ";
+
+      //  H1.InnerHtml += db.Name_State(ViewState["StateCode"].ToString());
+
+      //  if (Convert.ToInt16(ViewState["OfficeClass"]) != db.Office_Undefined)
+      //  {
+      //    H1.InnerHtml += "<br>";
+      //    H1.InnerHtml += db.Electoral_Class_Type(
+      //      Convert.ToInt16(ViewState["OfficeClass"])
+      //      );
+      //  }
+      //}
+      //else
+      //{
+      #endregion commented
+      H1.InnerHtml += Offices.GetElectoralClassDescription(
+           ViewState["StateCode"].ToString()
+          , ViewState["CountyCode"].ToString()
+          , ViewState["LocalCode"].ToString());
+
+      #region commented out
+      //--------------
+      //if (
+      //  (!string.IsNullOrEmpty(ViewState["ElectionKey"].ToString()))
+      //  && (!string.IsNullOrEmpty(ViewState["OfficeKey"].ToString()))
+      //  )
+      //{
+      //  #region Update Office in this election
+      //  H1.InnerHtml += db.Name_Office(
+      //    ViewState["OfficeKey"].ToString()
+      //    , db.Separator.br);
+
+      //  H1.InnerHtml += "<br>";
+      //  H1.InnerHtml += db.PageTitle_Election(ViewState["ElectionKey"].ToString());
+
+      //  #endregion Update Office in this election
+      //}
+      //else if (
+      //  (!string.IsNullOrEmpty(ViewState["ElectionKey"].ToString()))
+      //  && (string.IsNullOrEmpty(ViewState["OfficeKey"].ToString()))
+      //  )
+      //{
+      //  #region Add Office Contest in this election
+      //  H1.InnerHtml += "<br>";
+      //  H1.InnerHtml += db.PageTitle_Election(ViewState["ElectionKey"].ToString());
+
+      //  #endregion Add Office Contest in this election
+      //}
+      //else if (
+      //  (!string.IsNullOrEmpty(ViewState["OfficeKey"].ToString()))
+      //  && (string.IsNullOrEmpty(ViewState["ElectionKey"].ToString()))
+      //  )
+      //{
+      //  #region Update this Office
+      //  H1.InnerHtml += db.Name_Office(
+      //    ViewState["OfficeKey"].ToString()
+      //    , db.Separator.space
+      //    );
+
+      //  #endregion Update this Office
+
+      //}
+      //else if (db.Office_Class(ViewState["OfficeKey"].ToString()) != db.Office_Undefined)
+      //{
+      //  #region Add Office at Office Level
+      //  H1.InnerHtml += db.Name_Electoral(
+      //    Convert.ToInt16(ViewState["OfficeClass"])
+      //    );
+
+      //  #endregion Add Office at Office Level
+      //}
+      //else
+      //{
+      //  throw new ApplicationException("Invalid parameters were passed in the QueryString for Office.aspx.");
+      //}
+      ////--------------------
+      #endregion commented out
+
+      if (Convert.ToInt16(ViewState["OfficeClass"]) != db.Electoral_Undefined)
+      {
+        H1.InnerHtml += "<br>";
+        H1.InnerHtml += db.Electoral_Class_Type(ViewState["OfficeClass"].ToOfficeClass());
+      }
+
+      H1.InnerHtml += "<br>";
+      switch (Function())
+      {
+        case FormFunction.Update_Office_Election:
+          H1.InnerHtml += Offices.FormatOfficeName(ViewState["OfficeKey"].ToString(), 
+            "<br />");
+
+          H1.InnerHtml += "<br>";
+          H1.InnerHtml += db.PageTitle_Election(ViewState["ElectionKey"].ToString());
+          H1.InnerHtml += " Update this Office Contest in this Election";
+          break;
+        case FormFunction.Add_Office_Contest:
+          H1.InnerHtml += "<br>";
+          H1.InnerHtml += db.PageTitle_Election(ViewState["ElectionKey"].ToString());
+          H1.InnerHtml += " Add an Office Contest in this Election";
+          break;
+        case FormFunction.Update_Office:
+          H1.InnerHtml += Offices.FormatOfficeName(ViewState["OfficeKey"].ToString());
+          H1.InnerHtml += " Update this Office";
+          break;
+        case FormFunction.Add_Office_At_Level:
+          H1.InnerHtml += " Add Office";
+          break;
+        case FormFunction.Bulk_Office_Additions_County:
+          H1.InnerHtml += " Bulk COUNTY Office Additions";
+          break;
+        case FormFunction.Bulk_Office_Additions_Local:
+          H1.InnerHtml += " Bulk LOCAL DISTRICT Office Additions";
+          break;
+      }
+      //}
+
+      //H1.InnerHtml += "<br>";
+      //H1.InnerHtml += Form_Function_Description().ToUpper();
+    }
+
+    #region SQL
+    protected string sqlOffices4USPres()
+    {
+      string SQL = string.Empty;
+      SQL += " SELECT ";
+      SQL += " Offices.OfficeKey ";
+      SQL += " ,Offices.StateCode ";
+      SQL += " ,Offices.OfficeLevel ";
+      SQL += " ,Offices.OfficeOrderWithinLevel ";
+      SQL += " ,Offices.OfficeLine1 ";
+      SQL += " ,Offices.OfficeLine2 ";
+      SQL += " ,Offices.DistrictCode ";
+      SQL += " ,Offices.DistrictCodeAlpha ";
+      SQL += " ,Offices.CountyCode ";
+      SQL += " ,Offices.LocalCode ";
+      SQL += " ,Offices.OfficeOrderWithinLevel ";
+      SQL += " ,Offices.IsRunningMateOffice ";
+      SQL += " ,Offices.Incumbents ";
+      SQL += " ,Offices.VoteInstructions ";
+      SQL += " ,Offices.VoteForWording ";
+      SQL += " ,Offices.WriteInInstructions ";
+      SQL += " ,Offices.WriteInWording ";
+      SQL += " ,Offices.WriteInLines ";
+      SQL += ",Offices.IsOnlyForPrimaries ";
+      SQL += ",Offices.IsInactive";
+      SQL += " FROM Offices ";
+      SQL += " WHERE Offices.OfficeLevel = " + OfficeClass.USPresident.ToInt();
+      return SQL;
+    }
+    protected string sqlOffices4Level(string StateCode, int Office_Class)
+    {
+      string SQL = string.Empty;
+      SQL += " SELECT ";
+      SQL += " Offices.OfficeKey ";
+      SQL += " ,Offices.StateCode ";
+      SQL += " ,Offices.OfficeLevel ";
+      SQL += " ,Offices.OfficeOrderWithinLevel ";
+      SQL += " ,Offices.OfficeLine1 ";
+      SQL += " ,Offices.OfficeLine2 ";
+      SQL += " ,Offices.DistrictCode ";
+      SQL += " ,Offices.DistrictCodeAlpha ";
+      SQL += " ,Offices.CountyCode ";
+      SQL += " ,Offices.LocalCode ";
+      SQL += " ,Offices.OfficeOrderWithinLevel ";
+      SQL += " ,Offices.IsRunningMateOffice ";
+      SQL += " ,Offices.Incumbents ";
+      SQL += " ,Offices.VoteInstructions ";
+      SQL += " ,Offices.VoteForWording ";
+      SQL += " ,Offices.WriteInInstructions ";
+      SQL += " ,Offices.WriteInWording ";
+      SQL += " ,Offices.WriteInLines ";
+      SQL += ",Offices.IsOnlyForPrimaries ";
+      SQL += ",Offices.IsInactive";
+      SQL += " FROM Offices ";
+      SQL += " WHERE Offices.StateCode = " + db.SQLLit(StateCode);
+      SQL += " AND Offices.OfficeLevel = " + Office_Class.ToString();
+      SQL += " ORDER BY Offices.OfficeOrderWithinLevel";
+      //SQL += " ,CONVERT(int,Offices.DistrictCode)";
+      SQL += " ,Offices.DistrictCode";
+      return SQL;
+    }
+    protected string sqlOffices4Level(string StateCode, int Office_Class, string CountyCode)
+    {
+      string SQL = string.Empty;
+      SQL += " SELECT ";
+      SQL += " Offices.OfficeKey ";
+      SQL += " ,Offices.StateCode ";
+      SQL += " ,Offices.OfficeLevel ";
+      SQL += " ,Offices.OfficeOrderWithinLevel ";
+      SQL += " ,Offices.OfficeLine1 ";
+      SQL += " ,Offices.OfficeLine2 ";
+      SQL += " ,Offices.DistrictCode ";
+      SQL += " ,Offices.DistrictCodeAlpha ";
+      SQL += " ,Offices.CountyCode ";
+      SQL += " ,Offices.LocalCode ";
+      SQL += " ,Offices.OfficeOrderWithinLevel ";
+      SQL += " ,Offices.IsRunningMateOffice ";
+      SQL += " ,Offices.Incumbents ";
+      SQL += " ,Offices.VoteInstructions ";
+      SQL += " ,Offices.VoteForWording ";
+      SQL += " ,Offices.WriteInInstructions ";
+      SQL += " ,Offices.WriteInWording ";
+      SQL += " ,Offices.WriteInLines ";
+      SQL += ",Offices.IsOnlyForPrimaries ";
+      SQL += ",Offices.IsInactive";
+      SQL += " FROM Offices ";
+      SQL += " WHERE Offices.StateCode = " + db.SQLLit(StateCode);
+      SQL += " AND Offices.OfficeLevel = " + Office_Class.ToString();
+      SQL += " AND Offices.CountyCode = " + db.SQLLit(CountyCode);
+      SQL += " ORDER BY Offices.OfficeOrderWithinLevel";
+      return SQL;
+    }
+    protected string sqlOffices4Level(string StateCode, int Office_Class, string CountyCode, string LocalCode)
+    {
+      string SQL = string.Empty;
+      SQL += " SELECT ";
+      SQL += " Offices.OfficeKey ";
+      SQL += " ,Offices.StateCode ";
+      SQL += " ,Offices.OfficeLevel ";
+      SQL += " ,Offices.OfficeOrderWithinLevel ";
+      SQL += " ,Offices.OfficeLine1 ";
+      SQL += " ,Offices.OfficeLine2 ";
+      SQL += " ,Offices.DistrictCode ";
+      SQL += " ,Offices.DistrictCodeAlpha ";
+      SQL += " ,Offices.CountyCode ";
+      SQL += " ,Offices.LocalCode ";
+      SQL += " ,Offices.OfficeOrderWithinLevel ";
+      SQL += " ,Offices.IsRunningMateOffice ";
+      SQL += " ,Offices.Incumbents ";
+      SQL += " ,Offices.VoteInstructions ";
+      SQL += " ,Offices.VoteForWording ";
+      SQL += " ,Offices.WriteInInstructions ";
+      SQL += " ,Offices.WriteInWording ";
+      SQL += " ,Offices.WriteInLines ";
+      SQL += ",Offices.IsOnlyForPrimaries ";
+      SQL += ",Offices.IsInactive";
+      SQL += " FROM Offices ";
+      SQL += " WHERE Offices.StateCode = " + db.SQLLit(StateCode);
+      SQL += " AND Offices.OfficeLevel = " + Office_Class.ToString();
+      SQL += " AND Offices.CountyCode = " + db.SQLLit(CountyCode);
+      SQL += " AND Offices.LocalCode = " + db.SQLLit(LocalCode);
+      SQL += " ORDER BY Offices.OfficeOrderWithinLevel";
+      return SQL;
+    }
+    protected string sqlOffices4Level()
+    {
+      if (ViewState["OfficeClass"].ToOfficeClass() == OfficeClass.USPresident)
+      {
+        #region US President
+        return sqlOffices4USPres();
+        #endregion US President
+      }
+      else if (ViewState["OfficeClass"].ToOfficeClass().IsStateOrFederal())
+      {
+        #region Federal and State Offices
+        return sqlOffices4Level(ViewState["StateCode"].ToString()
+          , Convert.ToInt32(ViewState["OfficeClass"])
+          );
+        #endregion Federal and State Offices
+      }
+      else if (ViewState["OfficeClass"].ToOfficeClass().IsCounty())
+      {
+        #region County Offices
+        return sqlOffices4Level(ViewState["StateCode"].ToString()
+          , Convert.ToInt32(ViewState["OfficeClass"])
+          , ViewState["CountyCode"].ToString()
+          );
+        #endregion County Offices
+      }
+      else if (ViewState["OfficeClass"].ToOfficeClass().IsLocal())
+      {
+        #region Local District Offices
+        return sqlOffices4Level(ViewState["StateCode"].ToString()
+          , Convert.ToInt32(ViewState["OfficeClass"])
+          , ViewState["CountyCode"].ToString()
+          , ViewState["LocalCode"].ToString()
+          );
+        #endregion Local District Offices
+      }
+      else
+        return string.Empty;
+    }
+    #endregion SQL
+
+    #region Visible Controls
+
+    // [Add an Office]
+    private void Table_Add_Office_Data_Visible_Load()
+    {
+      #region Conditions for Visible and Load
+      //no ElectionKey
+      //no OfficeKey        
+      if (
+      (string.IsNullOrEmpty(ViewState["ElectionKey"].ToString()))
+      && (string.IsNullOrEmpty(ViewState["OfficeKey"].ToString()))
+        //&& (string.IsNullOrEmpty(ViewState["Electoral"].ToString()))
+        )
+      #endregion Conditions for Visible and Load
+      {
+        Table_Add_Office_Data.Visible = true;
+
+        trAdditionalLinesAdd.Visible = false;//
+        if (ViewState["CountyCode"].ToString() != string.Empty)
+        {
+          trAdditionalLinesAdd.Visible = true;//
+          trCountyNameAdd.Visible = true;//
+          LabelCountyNameAdd.Text = CountyCache.GetCountyName(
+            ViewState["StateCode"].ToString()
+          , ViewState["CountyCode"].ToString()
+          );//
+        }
+        else
+        {
+          trCountyNameAdd.Visible = false;//
+        }
+
+        if (ViewState["LocalCode"].ToString() != string.Empty)
+        {
+          trAdditionalLinesAdd.Visible = true;//
+          trLocalDistrictNameAdd.Visible = true;//
+          LabelLocalDistrictNameAdd.Text = VotePage.GetPageCache().LocalDistricts.GetLocalDistrict(
+            ViewState["StateCode"].ToString()
+          , ViewState["CountyCode"].ToString()
+          , ViewState["LocalCode"].ToString());//
+        }
+        else
+        {
+          trLocalDistrictNameAdd.Visible = false;//
+        }
+      }
+      else
+      {
+        Table_Add_Office_Data.Visible = false;
+      }
+    }
+
+    //[Add Office]
+    private void Table_Add_Office_Visible()
+    {
+      #region Conditions for Visible and Load
+      //no ElectionKey
+      //no OfficeKey        
+      if (
+        (string.IsNullOrEmpty(ViewState["ElectionKey"].ToString()))
+        && (string.IsNullOrEmpty(ViewState["OfficeKey"].ToString()))
+        //&& (db.QueryString("Mode") != "Bulk")
+        && (string.IsNullOrEmpty(GetQueryString("Electoral")))
+        )
+      //if (string.IsNullOrEmpty(ViewState["OfficeKey"].ToString()))
+      #endregion Conditions for Visible and Load
+      {
+        Table_Add_Office.Visible = true;
+      }
+      else
+      {
+        Table_Add_Office.Visible = false;
+      }
+    }
+
+    // [Add Office and Add as Office Contest in this Election]
+    private void Table_Add_Office_And_In_Election_Visible()
+    {
+      #region Conditions for Visible and Load
+      //For now - supress when creating an election
+      //need ElectionKey
+      //need OfficeKey        
+      //if (
+      //(!string.IsNullOrEmpty(ViewState["ElectionKey"].ToString()))
+      //&& (!string.IsNullOrEmpty(ViewState["OfficeKey"].ToString()))
+      //&&(db.QueryString("Mode") != "Bulk")
+      //  )
+      #endregion Conditions for Visible and Load
+      //{
+      //  Table_Add_Office_And_In_Election.Visible = true;
+      //}
+      //else
+      //{
+      Table_Add_Office_And_In_Election.Visible = false;
+      //}
+    }
+
+    // [Add Another Office]
+    private void Table_Another_Office_Visible()
+    {
+      #region Conditions for Visible and Load
+      //need OfficeLevel
+      if (ViewState["OfficeClass"].ToOfficeClass() != OfficeClass.Undefined
+        && (string.IsNullOrEmpty(GetQueryString("Electoral"))))
+      #endregion Conditions for Visible and Load
+      {
+        Table_Another_Office.Visible = true;
+
+        HyperLinkAddAnotherOffice.NavigateUrl = db.Url_Admin_Office_ADD(
+          ViewState["OfficeClass"].ToOfficeClass());
+      }
+      else
+      {
+        Table_Another_Office.Visible = false;
+      }
+    }
+
+    // [Current Office Incumbent(s)]
+    private void Table_Incumbent_Visible_Load()
+    {
+      #region Conditions for Visible and Load
+      //no ElectionKey
+      //need OfficeKey
+      if (
+        (string.IsNullOrEmpty(ViewState["ElectionKey"].ToString()))
+        && (!string.IsNullOrEmpty(ViewState["OfficeKey"].ToString()))
+        )
+      #endregion Conditions for Visible and Load
+      {
+        Table_Incumbent.Visible = true;
+
+        #region Incumbnet Msg.
+        int OfficeIncumbents = db.Office_Positions(ViewState["OfficeKey"].ToString());
+        int OfficesOfficialsRows = db.Rows("OfficesOfficials"
+          , "OfficeKey", ViewState["OfficeKey"].ToString());
+        int Incumbent_Positions_Open = OfficeIncumbents - OfficesOfficialsRows;
+        if (Incumbent_Positions_Open == 0)
+        {
+          LabelIncumbentMsg.Text = "Currently the incumbent(s) have been identified.";
+          LabelIncumbentMsg.Text += " To change an incumbent, you need to first remove an incumbent"
+          + " and then add the correct incumbent.";
+        }
+        else if (Incumbent_Positions_Open > 0)
+          LabelIncumbentMsg.Text = "Currently " + Incumbent_Positions_Open.ToString()
+            + " positions are vacant or not yet identified.";
+        else
+        {
+          Incumbent_Positions_Open = -Incumbent_Positions_Open;
+          LabelIncumbentMsg.Text = "Currently there are " + Incumbent_Positions_Open.ToString()
+            + " more incumbents than there are incumbent positions.";
+          LabelIncumbentMsg.Text += " You need to first remove the extra incumbent(s)"
+          + " before you can add any correct incumbent(s).";
+        }
+        #endregion Incumbnet Msg.
+
+        TextBox_Remove_Incumbent.Text = string.Empty;
+        TextBoxSelectIncumbent.Text = string.Empty;
+
+        //IncumbentTable.Text = db.Report_Incumbents(ViewState["OfficeKey"].ToString());
+        IncumbentsReport.GetReport(ViewState["OfficeKey"].ToString()).
+          AddTo(IncumbentsReportPlaceHolder);
+
+        #region Remove Incumbent with ID tr
+        string SQL = "OfficesOfficials,Politicians";
+        SQL += " WHERE OfficesOfficials.OfficeKey = " + db.SQLLit(ViewState["OfficeKey"].ToString());
+        SQL += " AND OfficesOfficials.PoliticianKey = Politicians.PoliticianKey";
+
+        int Incumbents = db.Rows_Count_From(SQL);
+        if (Incumbents > 0)
+          trRemoveIncumbent.Visible = true;
+        else
+          trRemoveIncumbent.Visible = false;
+        #endregion Remove Incumbent with ID tr
+
+        #region Find Politicianss HyperLink
+        if (Offices.GetOfficeClass(ViewState["OfficeKey"].ToString()).IsValid())
+        {
+          HyperLink_Find_PoliticianID_Incumbent.NavigateUrl =
+            db.Url_Admin_Politicians(
+            OfficeClass.All
+            , Offices.GetStateCodeFromKey(ViewState["OfficeKey"].ToString())
+            );
+          Table_Incumbent.Visible = true;
+        }
+        #endregion Find Politicianss HyperLink
+      }
+      else
+      {
+        Table_Incumbent.Visible = false;
+      }
+    }
+
+    //[Edit Office]
+    private void Table_Edit_Office_Visible_Load()
+    {
+      #region Conditions for Visible and Load
+      //need OfficeKey
+      if (!string.IsNullOrEmpty(ViewState["OfficeKey"].ToString()))
+      #endregion Conditions for Visible and Load
+      {
+        Table_Edit_Office.Visible = true;
+
+        Label_Edit_Name.Text = Offices.FormatOfficeName(
+              ViewState["OfficeKey"].ToString(), ", ");
+        Label_Add_Politician.Text = Offices.FormatOfficeName(
+              ViewState["OfficeKey"].ToString(), ", ");
+
+        trAdditionalLines.Visible = false;
+        if (
+          (ViewState["CountyCode"].ToString() != string.Empty)
+          || (ViewState["LocalCode"].ToString() != string.Empty)
+          )
+        {
+          trAdditionalLines.Visible = true;
+        }
+
+        #region Load Textboxes & Labels
+        string SQL = string.Empty;
+        SQL += " SELECT ";
+        SQL += " Offices.OfficeKey ";
+        SQL += ",Offices.OfficeLevel ";
+        SQL += ",Offices.OfficeOrderWithinLevel ";
+        SQL += ",Offices.DistrictCode ";
+        SQL += ",Offices.DistrictCodeAlpha ";
+        SQL += ",Offices.CountyCode ";
+        SQL += ",Offices.LocalCode ";
+        SQL += ",Offices.OfficeLine1 ";
+        SQL += ",Offices.OfficeLine2 ";
+        SQL += ",Offices.IsRunningMateOffice ";
+        SQL += ",Offices.IsOnlyForPrimaries ";
+        SQL += ",Offices.Incumbents ";
+        SQL += ",Offices.VoteInstructions ";
+        SQL += ",Offices.VoteForWording ";
+        SQL += ",Offices.WriteInInstructions ";
+        SQL += ",Offices.WriteInWording ";
+        SQL += ",Offices.WriteInLines ";
+        SQL += ",Offices.IsInactive";
+        SQL += ",Offices.ElectionPositions";
+        SQL += ",Offices.PrimaryPositions";
+        SQL += ",Offices.PrimaryRunoffPositions";
+        SQL += ",Offices.GeneralRunoffPositions";
+        SQL += " FROM Offices ";
+        SQL += " WHERE Offices.OfficeKey = " + db.SQLLit(ViewState["OfficeKey"].ToString());
+
+        DataRow OfficeRow = db.Row(SQL);
+        TextBox_Office_Line_Edit_1.Text = OfficeRow["OfficeLine1"].ToString().Trim();//
+        TextBox_Office_Line_Edit_2.Text = OfficeRow["OfficeLine2"].ToString().Trim();//
+
+        trAdditionalLines.Visible = false;
+        if (ViewState["CountyCode"].ToString() != string.Empty)
+        {
+          trAdditionalLines.Visible = true;
+          trCountyName.Visible = true;
+          LabelCountyName.Text = CountyCache.GetCountyName(
+            ViewState["StateCode"].ToString()
+          , ViewState["CountyCode"].ToString()
+          );//
+        }
+        else
+        {
+          trCountyName.Visible = false;
+        }
+
+        if (ViewState["LocalCode"].ToString() != string.Empty)
+        {
+          trAdditionalLines.Visible = true;
+          trLocalDistrictName.Visible = true;//
+          LabelLocalDistrictName.Text = VotePage.GetPageCache().LocalDistricts.GetLocalDistrict(
+            ViewState["StateCode"].ToString()
+          , ViewState["CountyCode"].ToString()
+          , ViewState["LocalCode"].ToString());//
+        }
+        else
+        {
+          trLocalDistrictName.Visible = false;//
+        }
+
+        TextBox_Vote_Instructions.Text = OfficeRow["VoteInstructions"].ToString();//
+        TextBox_Vote_Wording.Text = OfficeRow["VoteForWording"].ToString();//
+        TextBox_WriteIn_Instructions.Text = OfficeRow["WriteInInstructions"].ToString();//
+        TextBox_WriteIn_Wording.Text = OfficeRow["WriteInWording"].ToString();//
+        TextBoxWriteInLines.Text = OfficeRow["WriteInLines"].ToString();//
+
+        TextBoxOfficePositions.Text = OfficeRow["Incumbents"].ToString();//
+        TextBoxElectionPositions.Text = OfficeRow["ElectionPositions"].ToString();//
+        TextBoxPrimaryPositions.Text = OfficeRow["PrimaryPositions"].ToString();//
+        TextBoxPrimaryRunoffPositions.Text = OfficeRow["PrimaryRunoffPositions"].ToString();//
+        TextBoxGeneralRunoffPositions.Text = OfficeRow["GeneralRunoffPositions"].ToString();//
+        TextBoxOfficeOrderOnBallot.Text = OfficeRow["OfficeOrderWithinLevel"].ToString();//
+
+        if ((bool)OfficeRow["IsRunningMateOffice"] == true)
+          RadioButtonListRunningMateOffice.SelectedValue = "Yes";
+        else
+          RadioButtonListRunningMateOffice.SelectedValue = "No";
+
+        if ((bool)OfficeRow["IsOnlyForPrimaries"] == true)
+          RadioButtonListIsOnlyForPrimaries.SelectedValue = "Yes";
+        else
+          RadioButtonListIsOnlyForPrimaries.SelectedValue = "No";
+
+        if ((bool)OfficeRow["IsInactive"] == true)
+          RadioButtonListActive.SelectedValue = "Yes";
+        else
+          RadioButtonListActive.SelectedValue = "No";
+        #endregion Load Textboxes & Labels
+
+        //if (db.Is_Office_HaveBallotOrder(db.Office_Class(ViewState["OfficeKey"].ToString())))
+        //  trBallotOrder.Visible = true;
+        //else
+        //  trBallotOrder.Visible = false;
+
+        #region USPresident
+        if (ViewState["OfficeKey"].ToString() == "USPresident")
+        {
+          if (SecurePage.IsSuperUser)
+          {
+            TextBox_Office_Line_Edit_1.Enabled = true;
+            TextBox_Office_Line_Edit_2.Enabled = true;
+            TextBox_Vote_Instructions.Enabled = true;
+            TextBox_Vote_Wording.Enabled = true;
+            TextBox_WriteIn_Instructions.Enabled = true;
+            TextBox_WriteIn_Wording.Enabled = true;
+            TextBoxWriteInLines.Enabled = true;
+            TextBoxOfficePositions.Enabled = true;
+            TextBoxElectionPositions.Enabled = true;
+            TextBoxPrimaryPositions.Enabled = true;
+            RadioButtonListRunningMateOffice.Enabled = true;
+            TextBox_Remove_Incumbent.Enabled = true;
+            TextBoxSelectIncumbent.Enabled = true;
+            TextBox_RunningMate.Enabled = true;
+            //IncumbentTable.Enabled = true;
+          }
+          else
+          {
+            TextBox_Office_Line_Edit_1.Enabled = false;
+            TextBox_Office_Line_Edit_2.Enabled = false;
+            TextBox_Vote_Instructions.Enabled = false;
+            TextBox_Vote_Wording.Enabled = false;
+            TextBox_WriteIn_Instructions.Enabled = false;
+            TextBox_WriteIn_Wording.Enabled = false;
+            TextBoxWriteInLines.Enabled = false;
+            TextBoxOfficePositions.Enabled = false;
+            TextBoxElectionPositions.Enabled = false;
+            TextBoxPrimaryPositions.Enabled = false;
+            RadioButtonListRunningMateOffice.Enabled = false;
+            TextBox_Remove_Incumbent.Enabled = false;
+            TextBoxSelectIncumbent.Enabled = false;
+            TextBox_RunningMate.Enabled = false;
+            //IncumbentTable.Enabled = false;
+          }
+        #endregion USPresident
+        }
+      }
+      else
+      {
+        Table_Edit_Office.Visible = false;
+      }
+    }
+
+    // [Add New Politician as Incumbent for this Office]
+    private void Table_Add_New_Politician_Without_Election_Visible_Load()
+    {
+      #region Conditions for Visible and Load
+      //no ElectionKey
+      //need OfficeKey
+      if (
+        (string.IsNullOrEmpty(ViewState["ElectionKey"].ToString()))
+        && (!string.IsNullOrEmpty(ViewState["OfficeKey"].ToString()))
+        )
+      #endregion Conditions for Visible and Load
+      {
+        Table_Add_New_Politician_Without_Election.Visible = true;
+
+        HyperLink_Add_Politician.NavigateUrl =
+          //db.Url_Admin_Politician_Incumbent(ViewState["OfficeKey"].ToString());
+          db.Url_Admin_Politician_Office(ViewState["OfficeKey"].ToString());
+      }
+      else
+      {
+        Table_Add_New_Politician_Without_Election.Visible = false;
+      }
+    }
+
+    //[Current Office Running Mate]
+    private void Table_Running_Mate_Visible()
+    {
+      #region Conditions for Visible and Load
+      //need ElectionKey
+      //need OfficeKey 
+      //is a running mate office
+      if (
+      Offices.IsRunningMateOffice(ViewState["OfficeKey"].ToString())
+        )
+      #endregion Conditions for Visible and Load
+      {
+        Table_Running_Mate.Visible = true;
+
+        if (!string.IsNullOrEmpty(db.OfficesOfficials_Str(ViewState["OfficeKey"].ToString(), "RunningMateKey")))
+        {
+          TextBox_RunningMate.Text = db.OfficesOfficials_Str(ViewState["OfficeKey"].ToString(), "RunningMateKey");
+          Label_RunningMate.Text = Politicians.GetFormattedName(TextBox_RunningMate.Text);
+        }
+        else
+        {
+          TextBox_RunningMate.Text = string.Empty;
+          Label_RunningMate.Text = string.Empty;
+        }
+      }
+      else
+      {
+        Table_Running_Mate.Visible = false;
+      }
+    }
+
+    // [Add Offices Report]
+    private void Table_Report_Add_Office_Anchors_Visible_Load()
+    {
+      #region Conditions for Visible and Load
+      //no ElectionKey
+      //need OfficeKey
+      //valid office level to add offices
+      if (
+        (string.IsNullOrEmpty(ViewState["ElectionKey"].ToString()))
+        && (!string.IsNullOrEmpty(ViewState["OfficeKey"].ToString()))
+        && (Offices.CanAddOfficesToOfficeClass(ViewState["OfficeKey"].ToString()))
+        )
+      #endregion Conditions for Visible and Load
+      {
+        Table_Report_Add_Office_Anchors.Visible = true;
+
+        #region Create HTML Table for Add Offices report and set attributes
+        HTMLTableAddOfficesInThisCategory.Text = string.Empty;
+        HtmlTable HTMLTableAddLinks = new System.Web.UI.HtmlControls.HtmlTable();
+        HTMLTableAddLinks.Attributes["cellspacing"] = "0";
+        HTMLTableAddLinks.Attributes["border"] = "0";
+        HTMLTableAddLinks.Attributes["class"] = "tableAdmin";
+        HTMLTableAddLinks.Attributes["align"] = "left";
+        #endregion Create HTML Table for Add Offices report and set attributes
+
+        #region Table Heading
+        if (
+          Offices.GetOfficeClass(ViewState["OfficeKey"].ToString()).IsState())
+        {
+          #region State Offices
+          LabelAddOffices.Text = "Add Other " + StateCache.GetStateName(ViewState["StateCode"].ToString())
+            + " Statewide Offices (Non-Judicial)";
+          #endregion Federal and State Offices
+        }
+        else if (
+          Offices.GetOfficeClass(ViewState["OfficeKey"].ToString()).IsCounty())
+        {
+          #region County Offices
+          LabelAddOffices.Text = "Add Other " + CountyCache.GetCountyName(ViewState["StateCode"].ToString()
+            , ViewState["CountyCode"].ToString()
+            )
+            + " Offices in a Differnt Ballot Category";
+          #endregion County Offices
+        }
+        else if (
+         Offices.GetOfficeClass(ViewState["OfficeKey"].ToString()).IsLocal())
+        {
+          #region Local District Offices
+          LabelAddOffices.Text = "Add Other "
+            + VotePage.GetPageCache().LocalDistricts.GetLocalDistrict(ViewState["StateCode"].ToString()
+            , ViewState["CountyCode"].ToString()
+            , ViewState["LocalCode"].ToString())
+            + ", " + CountyCache.GetCountyName(ViewState["StateCode"].ToString()
+            , ViewState["CountyCode"].ToString()
+            )
+            + " Offices in a Different Ballot Category";
+          #endregion Local District Offices
+        }
+        #endregion Table Heading
+
+        if (Offices.CanAddOfficesToOfficeClass(ViewState["OfficeKey"].ToString()))
+        {
+          #region Add Office Category Title Link to add offices at this level
+
+          switch (db.Electoral_Class(
+                 ViewState["StateCode"].ToString()
+                , ViewState["CountyCode"].ToString()
+                , ViewState["LocalCode"].ToString()
+           ))
+          {
+            case db.ElectoralClass.State:
+              #region State Offices
+              //db.AddTr2HtmlTable4AddOffices(ref HTMLTableAddLinks
+              //  , db.Anchor_Admin_Office_ADD(Convert.ToInt32(ViewState["OfficeClass"])
+              //  , "ADD " + db.Name_Office_Contest_And_Electoral_Plus_Offices(Convert.ToInt32(ViewState["OfficeClass"]))));
+
+              //Non-Judicial Statewide
+              db.TrAddOfficesAnchor(ref HTMLTableAddLinks
+                , OfficeClass.StateWide
+                , ViewState["StateCode"].ToString()
+                );
+
+              //Judicial Statewide
+              db.TrAddOfficesAnchor(ref HTMLTableAddLinks
+                , OfficeClass.StateJudicial
+                , ViewState["StateCode"].ToString()
+                );
+
+              //Party Statewide
+              db.TrAddOfficesAnchor(ref HTMLTableAddLinks
+                , OfficeClass.StateParty
+                , ViewState["StateCode"].ToString()
+                );
+              #endregion Federal and State Offices
+              break;
+            case db.ElectoralClass.County:
+              #region County Offices
+              //County Executive
+              db.TrAddOfficesAnchor(ref HTMLTableAddLinks
+                , OfficeClass.CountyExecutive
+                , ViewState["StateCode"].ToString()
+                , ViewState["CountyCode"].ToString()
+                );
+
+              //County Legislative
+              db.TrAddOfficesAnchor(ref HTMLTableAddLinks
+                , OfficeClass.CountyLegislative
+                , ViewState["StateCode"].ToString()
+                , ViewState["CountyCode"].ToString()
+                );
+
+              //County SchoolBoard
+              db.TrAddOfficesAnchor(ref HTMLTableAddLinks
+                , OfficeClass.CountySchoolBoard
+                , ViewState["StateCode"].ToString()
+                , ViewState["CountyCode"].ToString()
+                );
+
+              //County Commission
+              db.TrAddOfficesAnchor(ref HTMLTableAddLinks
+                , OfficeClass.CountyCommission
+                , ViewState["StateCode"].ToString()
+                , ViewState["CountyCode"].ToString()
+                );
+
+              //County Judicial
+              db.TrAddOfficesAnchor(ref HTMLTableAddLinks
+                , OfficeClass.CountyJudicial
+                , ViewState["StateCode"].ToString()
+                , ViewState["CountyCode"].ToString()
+                );
+
+              //County Party
+              db.TrAddOfficesAnchor(ref HTMLTableAddLinks
+                , OfficeClass.CountyParty
+                , ViewState["StateCode"].ToString()
+                , ViewState["CountyCode"].ToString()
+                );
+
+              #endregion County Offices
+              break;
+            case db.ElectoralClass.Local:
+              #region Local District Offices
+              //Local Executive
+              db.TrAddOfficesAnchor(ref HTMLTableAddLinks
+                , OfficeClass.LocalExecutive
+                , ViewState["StateCode"].ToString()
+                , ViewState["CountyCode"].ToString()
+                , ViewState["LocalCode"].ToString()
+                );
+
+              //Local Legislative
+              db.TrAddOfficesAnchor(ref HTMLTableAddLinks
+                , OfficeClass.LocalLegislative
+                , ViewState["StateCode"].ToString()
+                , ViewState["CountyCode"].ToString()
+                , ViewState["LocalCode"].ToString()
+                );
+
+              //Local SchoolBoard
+              db.TrAddOfficesAnchor(ref HTMLTableAddLinks
+                , OfficeClass.LocalSchoolBoard
+                , ViewState["StateCode"].ToString()
+                , ViewState["CountyCode"].ToString()
+                , ViewState["LocalCode"].ToString()
+                );
+
+              //Local Commission
+              db.TrAddOfficesAnchor(ref HTMLTableAddLinks
+                , OfficeClass.LocalCommission
+                , ViewState["StateCode"].ToString()
+                , ViewState["CountyCode"].ToString()
+                , ViewState["LocalCode"].ToString()
+                );
+
+              //Local Judicial
+              db.TrAddOfficesAnchor(ref HTMLTableAddLinks
+                , OfficeClass.LocalJudicial
+                , ViewState["StateCode"].ToString()
+                , ViewState["CountyCode"].ToString()
+                , ViewState["LocalCode"].ToString()
+                );
+
+              //Local Party
+              db.TrAddOfficesAnchor(ref HTMLTableAddLinks
+                , OfficeClass.LocalParty
+                , ViewState["StateCode"].ToString()
+                , ViewState["CountyCode"].ToString()
+                , ViewState["LocalCode"].ToString()
+                );
+
+              #endregion Local District Offices
+              break;
+            default:
+              break;
+          }
+          //HTMLTableAddOfficesInThisCategory.Text = db.RenderToString(HTMLTableAddLinks);
+
+          HTMLTableAddOfficesInThisCategory.Text = db.RenderToString(HTMLTableAddLinks);
+          #endregion Add Office Category Title Link to add offices at this level
+        }
+      }
+      else
+      {
+        Table_Report_Add_Office_Anchors.Visible = false;
+      }
+    }
+
+    //[Edit Offices Report]
+    private void Table_Report_Edit_Other_Offices_At_Level_Visible_Load()
+    {
+      #region Conditions for Visible and Load
+      //no ElectionKey
+      //need OfficeKey
+      //valid office level to add offices
+      if (
+        (string.IsNullOrEmpty(ViewState["ElectionKey"].ToString()))
+        && (!string.IsNullOrEmpty(ViewState["OfficeKey"].ToString()))
+        // federals are excluded by following condition
+        && Offices.CanAddOfficesToOfficeClass(ViewState["OfficeKey"].ToString())
+        )
+      #endregion Conditions for Visible and Load
+      {
+        Table_Report_Edit_Other_Offices_At_Level.Visible = true;
+
+        #region Offices Report Header
+        LabelOfficesHeader.Text = db.Name_Office_Contest_And_Electoral_Plus_Offices(
+          //Convert.ToUInt16(ViewState["OfficeClass"]
+          //)
+          Offices.GetOfficeClass(ViewState["OfficeKey"].ToString()
+          )
+          , ViewState["StateCode"].ToString()
+          , ViewState["CountyCode"].ToString()
+          , ViewState["LocalCode"].ToString()
+          );
+        #endregion Offices Report Header
+
+        #region Offices Report
+
+        #region StateCode of Office because ViewState["StateCode"] could be U1, U2 OR U3
+        string StateCode = ViewState["StateCode"].ToString();
+        if (StateCache.IsValidFederalCode(ViewState["StateCode"].ToString()))
+          StateCode = Offices.GetStateCodeFromKey(ViewState["OfficeKey"].ToString());
+        #endregion StateCode of Politician because ViewState["StateCode"] could be U1, u2 OR U3
+
+        // Done on the fly now
+        //db.Report_Offices_Update(
+        //  db.Office_Class(ViewState["OfficeKey"].ToString())
+        //  , StateCode
+        //  , ViewState["CountyCode"].ToString()
+        //  , ViewState["LocalCode"].ToString()
+        //  );
+
+        //HTMLTableOfficesInThisCategory.Text = db.Report_Offices_Get(
+        //  Offices.GetOfficeClass(ViewState["OfficeKey"].ToString()).ToInt()
+        //  , StateCode
+        //  , ViewState["CountyCode"].ToString()
+        //  , ViewState["LocalCode"].ToString()
+        //  );
+
+        var options = new OfficesAdminReportViewOptions
+        {
+          OfficeClass = Offices.GetOfficeClass(ViewState["OfficeKey"].ToString()),
+          StateCode = StateCode,
+          CountyCode = ViewState["CountyCode"].ToString(),
+          LocalCode = ViewState["LocalCode"].ToString(),
+          Option = OfficesAdminReportViewOption.ByLocal
+        };
+        HTMLTableOfficesInThisCategory.Text =
+          OfficesAdminReport.GetReport(options).RenderToString();
+
+        #endregion Offices Report
+      }
+      else
+      {
+        Table_Report_Edit_Other_Offices_At_Level.Visible = false;
+      }
+    }
+
+    private void Controls_Visible_Load()
+    {
+      Table_Add_Office_Data_Visible_Load();
+      Table_Add_Office_Visible();
+      Table_Add_Office_And_In_Election_Visible();
+      Table_Another_Office_Visible();
+      Table_Edit_Office_Visible_Load();
+      Table_Incumbent_Visible_Load();
+      Table_Add_New_Politician_Without_Election_Visible_Load();
+      Table_Running_Mate_Visible();
+      Table_Report_Add_Office_Anchors_Visible_Load();
+      Table_Report_Edit_Other_Offices_At_Level_Visible_Load();
+
+      if (
+        (SecurePage.IsSuperUser)
+        //only for bulk adding of County and Local Offices
+        //&& (string.IsNullOrEmpty(ViewState["OfficeKey"].ToString()))
+        //&& (db.QueryString("Mode") == "Bulk")
+        && (!string.IsNullOrEmpty(GetQueryString("Electoral")))
+        )
+      {
+        TableMasterOnly.Visible = true;
+        ViewState["OfficeClass"] = OfficeClass.Undefined.ToInt();
+        //if (db.QueryString("County") == "ALL")
+        //{
+        //  RadioButtonList_County_Classes.Visible = true;
+        //  RadioButtonList_Local_Classes.Visible = false;
+        //  if (RadioButtonList_County_Classes.SelectedIndex != -1)
+        //    ViewState["OfficeClass"] = RadioButtonList_County_Classes.SelectedValue;
+        //}
+        //else
+        //{
+        //  RadioButtonList_County_Classes.Visible = false;
+        //  RadioButtonList_Local_Classes.Visible = true;
+        //  if (RadioButtonList_Local_Classes.SelectedIndex != -1)
+        //    ViewState["OfficeClass"] = RadioButtonList_Local_Classes.SelectedValue;
+        //}
+        if (RadioButtonList_Office_Classes.SelectedIndex != -1)
+          ViewState["OfficeClass"] = RadioButtonList_Office_Classes.SelectedValue;
+
+      }
+      else
+        TableMasterOnly.Visible = false;
+    }
+
+    #endregion Visible Controls
+
+    #region DB Utilities
+    private int OfficeOrderWithinLevelNext(string StateCode, int Office_Class)
+    {
+      DataRow LastOfficeOnBallotRow = db.Row_Last_Optional(sqlOffices4Level());
+      if (LastOfficeOnBallotRow == null)
+        return 10;
+      else
+      {
+        return Convert.ToInt32(LastOfficeOnBallotRow["OfficeOrderWithinLevel"]) + 10;
+      }
+    }
+    private string OfficeOrder()
+    {
+      if (TextBoxOfficeOrderOnBallot.Text.Trim() != string.Empty)
+      {
+        if (!db.Is_Valid_Integer(TextBoxOfficeOrderOnBallot.Text.Trim()))
+          throw new ApplicationException(
+            "The Ballot Order needs to be a whole number or left empty.");
+        return TextBoxOfficeOrderOnBallot.Text.Trim();
+      }
+      else
+        //{
+        //  int NewOrder = Convert.ToInt16(OfficeOrderOnBallot.Text.Trim()) + 10;
+        //  return NewOrder.ToString();
+        //}
+        return "10";
+    }
+    #endregion DB Utilities
+
+    #region Checks
+
+    private void Check_Is_Integer(TextBox TextBox)
+    {
+      if (!db.Is_Valid_Integer(TextBox.Text.Trim()))
+        throw new ApplicationException(
+          "The value entered needs to be a whole number.");
+    }
+
+    private void Check_Politician_Exists(string PoliticianKey)
+    {
+      if (!Politicians.IsValid(PoliticianKey))
+        throw new ApplicationException(
+          "The Politician ID: "
+          + PoliticianKey
+          + " entered in the text box is invalid.");
+    }
+    protected void Check_Both_Office_Title_And_BallotOrder_Not_Empty()
+    {
+      if (
+        (string.IsNullOrEmpty(TextBox_Office_Line_Add_1.Text.Trim()))
+        && (string.IsNullOrEmpty(TextBox_Order.Text.Trim()))
+        )
+        throw new ApplicationException("The 1st line of the office title and ballot order are empty.");
+    }
+    protected void Check_Office_Title_Or_BallotOrder_Empty()
+    {
+      if (string.IsNullOrEmpty(TextBox_Office_Line_Add_1.Text.Trim()))
+        throw new ApplicationException("The 1st line of the office title is empty.");
+      if (string.IsNullOrEmpty(TextBox_Order.Text.Trim()))
+        throw new ApplicationException("The ballot order is empty.");
+    }
+    protected void Check_Search_And_OfficeTitle_Compatable()
+    {
+      if (
+       (TextBox_Office_Line_Add_1.Text.ToLower().IndexOf(TextBox_Office_Title_Search.Text.Trim().ToLower()) != -1)
+       || (TextBox_Office_Line_Add_1.Text.ToLower().IndexOf(TextBox_Office_Title_Search.Text.Trim().ToLower()) != -1)
+       )
+      { }
+      else
+        throw new ApplicationException("The part of the office title must be in one or the office title lines.");
+    }
+
+    #endregion Checks
+
+    #region Edits
+    private string EditIsRunningMateOffice()
+    {
+      if (RadioButtonListRunningMateOffice.SelectedValue == "Yes")
+        return "1";
+      else
+        return "0";
+    }
+    #endregion Edits
+
+    #region Logs
+    protected void Offices_Update_Log_Str(string ColumnName, TextBox TextBox)
+    {
+      db.LogOfficeChange(
+        ViewState["OfficeKey"].ToString()
+        , ColumnName
+        , db.Offices_Str(ViewState["OfficeKey"].ToString(), ColumnName)
+        , TextBox.Text.Trim()
+        );
+
+      db.Offices_Update_Str(ViewState["OfficeKey"].ToString(), ColumnName, TextBox.Text.Trim());
+    }
+    protected void Offices_Update_Log_Int(string ColumnName, TextBox TextBox)
+    {
+      db.LogOfficeChange(
+        ViewState["OfficeKey"].ToString()
+        , ColumnName
+        , db.Offices_Int(ViewState["OfficeKey"].ToString(), ColumnName)
+        , Convert.ToInt16(TextBox.Text.Trim())
+        );
+
+      db.Offices_Update_Str(ViewState["OfficeKey"].ToString(), ColumnName, TextBox.Text.Trim());
+
+      Msg.Text = db.Ok("Office Data has been changed to: " + TextBox.Text.Trim());
+    }
+    protected void OfficesUpdateAndLogBool(string ColumnName, RadioButtonList RadioButtonListTo)
+    {
+      bool FromBool = true;
+      bool ToBool = false;
+      if (RadioButtonListTo.SelectedValue == "Yes")
+      {
+        FromBool = false;
+        ToBool = true;
+      }
+
+      db.LogOfficeChange(
+        ViewState["OfficeKey"].ToString()
+        , ColumnName
+        , FromBool
+        , ToBool
+        );
+
+      db.Offices_Update_Bool(ViewState["OfficeKey"].ToString(), ColumnName, ToBool);
+
+      Msg.Text = db.Ok("Office Data has been changed to: " + ToBool.ToString());
+    }
+
+    #endregion Logs
+
+    #region Msg
+    protected string MsgCommonUpdateOffice(string Information, TextBox TextBox)
+    {
+      string Msg = string.Empty;
+
+      if (Information != string.Empty)
+      {
+        if (TextBox != null)
+        {
+          if (TextBox.Text.Trim() == string.Empty)
+            Msg = Information + " has been deleted.";
+          else
+            Msg = Information + " has been changed to: " + TextBox.Text.Trim() + ".";
+        }
+        else
+          Msg = Information + " has been changed.";
+      }
+
+      Msg += " On this form you may "
+      + " make additional changes to this office using the textboxes."
+      + " You can also add, change or delete the incumbent for this office."
+      + " Use the 'Add' links to add offices in different office categories."
+      + " Use the office title links to edit information about a different office.";
+
+      return Msg;
+    }
+    protected string MsgCommonUpdateOffice(string Information)
+    {
+      return MsgCommonUpdateOffice(Information, null);
+    }
+    protected string MsgCommonUpdateOffice()
+    {
+      return MsgCommonUpdateOffice(string.Empty, null);
+    }
+    #endregion Msg
+
+    private int IncumbentsOnFile(string OfficeKey)
+    {
+      //return db.Rows(sql.Incumbents(ViewState["OfficeKey"].ToString()));
+      return db.Rows(sql.OfficesOfficials_Select(ViewState["OfficeKey"].ToString()));
+    }
+
+    private string Insert_Into_Offices(string StateCode, string CountyCode,
+      string LocalCode, string DistrictCode, string DistrictCodeAlpha,
+      string OfficeLine1, string OfficeLine2, OfficeClass officeClass,
+      string Str_OfficeOrderWithinLevel, string ElectionKey)
+    {
+      db.Throw_Exception_If_Html_Or_Script(OfficeLine1);
+      db.Throw_Exception_If_Html_Or_Script(OfficeLine2);
+
+      //if (!db.Is_Valid_Office_To_Add_Offices(
+      // Convert.ToUInt16(Office_Class)
+      // , StateCode))
+      if (OfficesAllIdentified.GetIsOfficesAllIdentified(StateCode, 
+        officeClass.ToInt(), CountyCode, LocalCode))
+        throw new ApplicationException(
+          "Offices can not be added in this category of offices.");
+
+      if (OfficeLine1 == string.Empty)
+        throw new ApplicationException(
+          "The first line of the office title is required");
+
+      var OfficeKey = db.OfficeKey(officeClass.ToInt(), StateCode,
+        CountyCode, LocalCode, DistrictCode, DistrictCodeAlpha,
+        db.Str_ReCase_Office_Title(OfficeLine1.Trim()),
+        db.Str_ReCase_Office_Title(OfficeLine2.Trim()));
+
+      //Check_Office_Not_Already_Exists(OfficeKey);
+      if (Offices.OfficeKeyExists(OfficeKey))
+        throw new ApplicationException(Offices.GetLocalizedOfficeName(OfficeKey) +
+          " Office with Office OfficeKey: (" + OfficeKey + ")" + " already exists.");
+
+      var OfficeOrderWithinLevel = 0;
+      if (Str_OfficeOrderWithinLevel != string.Empty)
+      {
+        #region  ballot passed
+
+        if (!db.Is_Valid_Integer(Str_OfficeOrderWithinLevel.Trim()))
+          throw new ApplicationException("The Ballot order is not an integer");
+        OfficeOrderWithinLevel = Convert.ToInt16(Str_OfficeOrderWithinLevel.Trim());
+
+        #endregion  ballot passed
+      }
+      else
+        #region No ballot order passed
+
+        OfficeOrderWithinLevel =
+          OfficeOrderWithinLevelNext(ViewState["StateCode"].ToString(),
+            officeClass.ToInt());
+        #endregion No ballot order passed
+
+      Offices.Insert(OfficeKey, StateCode, CountyCode, LocalCode, DistrictCode,
+        DistrictCodeAlpha, db.Str_ReCase_Office_Title(OfficeLine1.Trim()),
+        db.Str_ReCase_Office_Title(OfficeLine2.Trim()), officeClass.ToInt(), 0,
+        OfficeOrderWithinLevel, false, false, 1, string.Empty,
+        "(Vote for no more than one)", string.Empty, "Write in", 1, string.Empty,
+        string.Empty, string.Empty, string.Empty, string.Empty, DateTime.MinValue,
+        false, DateTime.Now, false, false, false, 1, 1, 0, 0);
+
+      #region Adding Office in the election
+
+      if (!string.IsNullOrEmpty(ElectionKey))
+        if (Offices.IsInElection(OfficeKey, ElectionKey))
+          throw new ApplicationException(Offices.FormatOfficeName(OfficeKey) +
+            " Office with Office Id: (" + OfficeKey + ")" +
+            " already exists for this election and has been deleted. Please try to add again.");
+
+      #endregion Adding Office in the election
+
+      //db.Invalidate_Office(OfficeKey);
+
+      return OfficeKey;
+    }
+
+    #region TextBoxs Change
+    protected void TextBoxOfficeLine1_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Office_Line_Edit_1);
+
+        if (db.Offices_Str(ViewState["OfficeKey"].ToString(), "OfficeLine1") != TextBox_Office_Line_Edit_1.Text.Trim())
+        {
+          //TextBox_Office_Line_Edit_1.Text = db.Str_ReCase_Office_Title(TextBox_Office_Line_Edit_1.Text);
+
+          Offices_Update_Log_Str("OfficeLine1", TextBox_Office_Line_Edit_1);
+
+          Msg.Text = db.Ok(MsgCommonUpdateOffice("First line of the office title", TextBox_Office_Line_Edit_1));
+
+          Page_Title();
+
+          //db.Invalidate_Office(ViewState["OfficeKey"].ToString());
+
+          Controls_Visible_Load();
+        }
+
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void TextBoxOfficeLine2_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Office_Line_Edit_2);
+
+        if (db.Offices_Str(ViewState["OfficeKey"].ToString(), "OfficeLine2") != TextBox_Office_Line_Edit_2.Text.Trim())
+        {
+          //TextBox_Office_Line_Edit_2.Text = db.Str_ReCase_Office_Title(TextBox_Office_Line_Edit_2.Text);
+
+          Offices_Update_Log_Str("OfficeLine2", TextBox_Office_Line_Edit_2);
+
+          Msg.Text = db.Ok(MsgCommonUpdateOffice("Second line of office title", TextBox_Office_Line_Edit_2));
+
+          Page_Title();
+
+          //db.Invalidate_Office(ViewState["OfficeKey"].ToString());
+
+          Controls_Visible_Load();
+        }
+
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void TextBoxVoteInstructions_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Vote_Instructions);
+
+        if (db.Offices_Str(ViewState["OfficeKey"].ToString(), "VoteInstructions") != TextBox_Vote_Instructions.Text.Trim())
+        {
+          Offices_Update_Log_Str("VoteInstructions", TextBox_Vote_Instructions);
+
+          //db.Invalidate_Office(ViewState["OfficeKey"].ToString());
+
+          Msg.Text = db.Ok(MsgCommonUpdateOffice("Vote instructions", TextBox_Vote_Instructions));
+
+          Controls_Visible_Load();
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void TextBoxVoteForWording_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Vote_Wording);
+
+        if (db.Offices_Str(ViewState["OfficeKey"].ToString(), "VoteForWording") != TextBox_Vote_Wording.Text.Trim())
+        {
+          Offices_Update_Log_Str("VoteForWording", TextBox_Vote_Wording);
+
+          //db.Invalidate_Office(ViewState["OfficeKey"].ToString());
+
+          Msg.Text = db.Ok(MsgCommonUpdateOffice("Vote for wording", TextBox_Vote_Wording));
+
+          Controls_Visible_Load();
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void TextBoxWriteInInstructions_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBox_WriteIn_Instructions);
+
+        if (db.Offices_Str(ViewState["OfficeKey"].ToString(), "WriteInInstructions") != TextBox_WriteIn_Instructions.Text.Trim())
+        {
+          Offices_Update_Log_Str("WriteInInstructions", TextBox_WriteIn_Instructions);
+
+          Msg.Text = db.Ok(MsgCommonUpdateOffice("Write in instructions", TextBox_WriteIn_Instructions));
+
+          Controls_Visible_Load();
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void TextBoxWriteInWording_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBox_WriteIn_Wording);
+
+        if (db.Offices_Str(ViewState["OfficeKey"].ToString(), "WriteInWording") != TextBox_WriteIn_Wording.Text.Trim())
+        {
+          Offices_Update_Log_Str("WriteInWording", TextBox_WriteIn_Wording);
+
+          //db.Invalidate_Office(ViewState["OfficeKey"].ToString());
+
+          Msg.Text = db.Ok(MsgCommonUpdateOffice("Write in wording", TextBox_WriteIn_Wording));
+
+          Controls_Visible_Load();
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void TextBoxOfficeOrderOnBallot_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBoxOfficeOrderOnBallot);
+
+        Check_Is_Integer(TextBoxOfficeOrderOnBallot);
+
+        if (db.Offices_Int(ViewState["OfficeKey"].ToString(), "OfficeOrderWithinLevel") != Convert.ToUInt16(TextBoxOfficeOrderOnBallot.Text.Trim()))
+        {
+          Offices_Update_Log_Int("OfficeOrderWithinLevel", TextBoxOfficeOrderOnBallot);
+
+          //db.Invalidate_Office(ViewState["OfficeKey"].ToString());
+
+          // 10/29/2013 JCL test
+          //Controls_Visible_Load();
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void TextBoxWriteInLines_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBoxWriteInLines);
+
+        Check_Is_Integer(TextBoxWriteInLines);
+
+        //CheckWriteInLines0To5();
+        if (!db.Is_Valid_Integer(TextBoxWriteInLines.Text.Trim()))
+          throw new ApplicationException(
+            "The Write in Lines needs to be a whole number between 0 and 5.");
+        int Lines = Convert.ToUInt16(TextBoxWriteInLines.Text.Trim());
+        if ((Lines < 0) | (Lines > 5))
+          throw new ApplicationException(
+            "The Write in Lines needs to be a number between 0 and 5.");
+
+        if (db.Offices_Int(ViewState["OfficeKey"].ToString(), "WriteInLines") != Convert.ToUInt16(TextBoxWriteInLines.Text.Trim()))
+        {
+          Offices_Update_Log_Int("WriteInLines", TextBoxWriteInLines);
+
+          //db.Invalidate_Office(ViewState["OfficeKey"].ToString());
+
+          Msg.Text = db.Ok(MsgCommonUpdateOffice("Write in lines", TextBoxWriteInLines));
+
+          Controls_Visible_Load();
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void TextBoxOfficePositions_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBoxOfficePositions);
+
+        Check_Is_Integer(TextBoxOfficePositions);
+        int Positions = Convert.ToUInt16(TextBoxOfficePositions.Text.Trim());
+        //if ((Positions < 1) | (Positions > 2))
+        //  throw new ApplicationException("Office positions needs to be 1 or 2 ony.");
+        if (Positions < 1)
+          throw new ApplicationException(
+            "Office positions needs to be 1 or more.");
+
+        if (db.Office_Positions(ViewState["OfficeKey"].ToString()) !=
+          Convert.ToUInt16(TextBoxOfficePositions.Text.Trim()))
+        {
+          Offices_Update_Log_Int("Incumbents", TextBoxOfficePositions);
+
+          if (Positions > 1)
+            Msg.Text = db.Warn(
+              "You changed the number of incumbents to " + TextBoxOfficePositions.Text
+              + " which is greater than the nomal 1.");
+          else
+
+            Msg.Text = db.Ok(MsgCommonUpdateOffice("The number of incumbents", TextBoxOfficePositions));
+
+          Controls_Visible_Load();
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void TextBoxElectionPositions_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBoxElectionPositions);
+
+        Check_Is_Integer(TextBoxElectionPositions);
+        int Positions = Convert.ToUInt16(TextBoxElectionPositions.Text.Trim());
+        if (Positions < 1)
+          throw new ApplicationException(
+            "Election positions needs to be 1 or more.");
+
+        if (db.Offices_Int(ViewState["OfficeKey"].ToString(), "ElectionPositions") !=
+          Convert.ToUInt16(TextBoxElectionPositions.Text.Trim()))
+        {
+          Offices_Update_Log_Int("ElectionPositions", TextBoxElectionPositions);
+
+          if (Positions > 1)
+            Msg.Text = db.Warn(
+              "You changed the number of elected positions to " + TextBoxElectionPositions.Text
+              + " which is greater than the nomal 1.");
+          else
+
+            Msg.Text = db.Ok(MsgCommonUpdateOffice("The number of elected positions was set to", TextBoxElectionPositions));
+
+          Controls_Visible_Load();
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void TextBoxPrimaryPositions_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBoxPrimaryPositions);
+
+        Check_Is_Integer(TextBoxPrimaryPositions);
+        int Positions = Convert.ToUInt16(TextBoxPrimaryPositions.Text.Trim());
+        if (Positions < 1)
+          throw new ApplicationException(
+            "Primary positions needs to be 1 or more.");
+
+        if (db.Offices_Int(ViewState["OfficeKey"].ToString(), "PrimaryPositions") !=
+          Convert.ToUInt16(TextBoxPrimaryPositions.Text.Trim()))
+        {
+          Offices_Update_Log_Int("PrimaryPositions", TextBoxPrimaryPositions);
+
+          if (Positions > 1)
+            Msg.Text = db.Warn(
+              "You changed the number of primary positions to " + TextBoxPrimaryPositions.Text
+              + " which is greater than the normal 1.");
+          else
+
+            Msg.Text = db.Ok(MsgCommonUpdateOffice("The number of primary positions was set to", TextBoxPrimaryPositions));
+
+          Controls_Visible_Load();
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void TextBoxPrimaryRunoffPositions_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBoxPrimaryRunoffPositions);
+
+        Check_Is_Integer(TextBoxPrimaryRunoffPositions);
+        int positions = Convert.ToInt16(TextBoxPrimaryRunoffPositions.Text.Trim());
+        if (positions == 1 || positions < -1)
+          throw new ApplicationException(
+            "Primary runoff positions must be -1, 0 or greater than 1");
+
+        if (db.Offices_Int(ViewState["OfficeKey"].ToString(), "PrimaryRunoffPositions") !=  positions)
+        {
+          Offices_Update_Log_Int("PrimaryRunoffPositions", TextBoxPrimaryRunoffPositions);
+
+            Msg.Text = db.Ok(MsgCommonUpdateOffice("The number of primary runoff positions was set to", TextBoxPrimaryRunoffPositions));
+
+          Controls_Visible_Load();
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void TextBoxGeneralRunoffPositions_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBoxGeneralRunoffPositions);
+
+        Check_Is_Integer(TextBoxGeneralRunoffPositions);
+        int positions = Convert.ToInt16(TextBoxGeneralRunoffPositions.Text.Trim());
+        if (positions == 1 || positions < -1)
+          throw new ApplicationException(
+            "General runoff positions must be -1, 0 or greater than 1");
+
+        if (db.Offices_Int(ViewState["OfficeKey"].ToString(), "GeneralRunoffPositions") !=  positions)
+        {
+          Offices_Update_Log_Int("GeneralRunoffPositions", TextBoxGeneralRunoffPositions);
+
+            Msg.Text = db.Ok(MsgCommonUpdateOffice("The number of general runoff positions was set to", TextBoxGeneralRunoffPositions));
+
+          Controls_Visible_Load();
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void TextBoxRemoveIncumbent_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Remove_Incumbent);
+
+        #region Check if politician one of the incumbents
+        if (TextBox_Remove_Incumbent.Visible)
+        {
+          Check_Politician_Exists(TextBox_Remove_Incumbent.Text.Trim());
+
+          if (!db.Is_Valid_Office_Politician(
+            ViewState["OfficeKey"].ToString()
+            , TextBox_Remove_Incumbent.Text.Trim())
+            )
+            throw new ApplicationException(
+              "The Politician ID is not an incumbent for this office and was not be removed.");
+        }
+        #endregion
+
+        #region PoliticianKey to Remove
+        string PoliticianKey = string.Empty;
+        if (IncumbentsOnFile(ViewState["OfficeKey"].ToString()) == 1)//use only Politician ID for this office
+        {
+          DataRow PoliticianRow = db.Row_First(sql.OfficesOfficials_Select(ViewState["OfficeKey"].ToString()));
+          PoliticianKey = PoliticianRow["PoliticianKey"].ToString();
+        }
+        else //use ID provided by user in text box
+        {
+          PoliticianKey = TextBox_Remove_Incumbent.Text.Trim();
+        }
+        //db.Invalidate_Politician(PoliticianKey);
+        #endregion
+
+        db.Log_OfficesOfficials_Change(
+          PoliticianKey
+          , ViewState["OfficeKey"].ToString()
+          , ViewState["StateCode"].ToString()
+          , "PoliticianKey"
+          , PoliticianKey
+          , string.Empty
+          //, db.User_Security()
+          //, db.User_Name()
+          );
+
+        db.OfficesOfficials_Delete(
+           ViewState["OfficeKey"].ToString()
+          , PoliticianKey
+          //, db.User_Security()
+          //, db.User_Name()
+          );
+
+        //db.Invalidate_Office_Incumbent(ViewState["OfficeKey"].ToString());
+        //db.Invalidate_Politician(PoliticianKey);
+
+        Msg.Text = db.Ok(Politicians.GetFormattedName(PoliticianKey)
+          + " was REMOVED as the currently elected official for this office."
+          + MsgCommonUpdateOffice());
+
+        Controls_Visible_Load();
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void TextBoxSelectIncumbent_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        #region checks
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBoxSelectIncumbent);
+
+        Check_Politician_Exists(TextBoxSelectIncumbent.Text.Trim());
+
+        if (ViewState["OfficeKey"].ToString() == string.Empty)
+          throw new ApplicationException(
+            "You need to enter the 1st line of the Office Title to create an office before you can identify the incumbent.");
+
+        if (db.Is_Valid_Office_Politician(
+          ViewState["OfficeKey"].ToString()
+          , TextBoxSelectIncumbent.Text.Trim())
+          )
+          throw new ApplicationException(
+            "The Politician ID IS ALREADY an incumbent for this office and can not be selected a second time.");
+
+        #region can not exceed the number of incumbents for this office
+        int OfficeIncumbents = db.Office_Positions(ViewState["OfficeKey"].ToString());
+        int OfficesOfficialsRows = db.Rows("OfficesOfficials"
+          , "OfficeKey", ViewState["OfficeKey"].ToString());
+        //if (OfficesOfficialsRows + 1 > OfficeIncumbents)
+        if (OfficesOfficialsRows + 1 > OfficeIncumbents)
+          throw new ApplicationException("The " + OfficeIncumbents.ToString()
+            + " Incumbent for this office is already identified."
+            + " Please Remove an incumbent in the list above and try again.");
+        #endregion
+        #endregion checks
+
+        db.Log_OfficesOfficials_Change(
+          TextBoxSelectIncumbent.Text.Trim()
+          , ViewState["OfficeKey"].ToString()
+          , ViewState["StateCode"].ToString()
+          , "PoliticianKey"
+          , string.Empty
+          , TextBoxSelectIncumbent.Text.Trim()
+          //, db.User_Security()
+          //, db.User_Name()
+          );
+
+
+        db.OfficesOfficials_INSERT(
+          ViewState["OfficeKey"].ToString()
+          , TextBoxSelectIncumbent.Text.Trim()
+          //, db.User_Security()
+          //, db.User_Name()
+          );
+
+        //associate politician with this office as incumbent or seeking office
+        db.Politicians_Update_Str(
+          TextBoxSelectIncumbent.Text.Trim()
+          //, "OfficeKey"
+          , "TemporaryOfficeKey"
+          , ViewState["OfficeKey"].ToString()
+          );
+
+        //db.Invalidate_Office(ViewState["OfficeKey"].ToString());
+        //db.Invalidate_Politician(TextBoxSelectIncumbent.Text.Trim());
+
+        Msg.Text = db.Ok(Politicians.GetFormattedName(TextBoxSelectIncumbent.Text.Trim())
+          + " was IDENTIFIED as the currently elected official for this office."
+          + MsgCommonUpdateOffice());
+
+        Controls_Visible_Load();
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void TextBoxRunningMate_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBox_RunningMate);
+
+        Check_Politician_Exists(TextBox_RunningMate.Text.Trim());
+
+        if (Offices.IsRunningMateOffice(ViewState["OfficeKey"].ToString()))
+        {
+          #region office has a running mate
+          //the main Politician for office like Governor
+          string politicianKey = db.OfficesOfficials_Str(ViewState["OfficeKey"].ToString(), "politicianKey");
+          if (politicianKey != string.Empty)
+          {
+            db.OfficesOfficialsUpdate(ViewState["OfficeKey"].ToString()
+            , politicianKey//the main Politician for office like Governor
+            , "RunningMateKey"
+            , TextBox_RunningMate.Text.Trim());//the Running Mate like Lt. Governor
+            //db.Invalidate_Politician(TextBox_RunningMate.Text.Trim());
+
+            //db.Invalidate_Office(ViewState["OfficeKey"].ToString());
+            //db.Invalidate_Politician(politicianKey);
+
+            Msg.Text = db.Ok(Politicians.GetFormattedName(TextBox_RunningMate.Text.Trim())
+              + " was recorded as the currently elected running mate for "
+              + Politicians.GetFormattedName(politicianKey));
+
+            Controls_Visible_Load();
+          }
+          else
+          {
+            throw new ApplicationException(
+              "The main Politician holding this office, like President or Governor,"
+            + " has not yet been identified.");
+          }
+          #endregion office has a running mate
+        }
+        else
+        {
+          Msg.Text = db.Msg("This is not a Running Mate Office");
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+    #endregion TextBoxs Change
+
+    #region Radio Button Changes
+
+    protected void RadioButtonListRunningMateOffice_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        bool IsRunningMateOffice = 
+          RadioButtonListRunningMateOffice.SelectedValue == "Yes";
+
+        if (db.Offices_Bool(ViewState["OfficeKey"].ToString(), "IsRunningMateOffice")
+          != IsRunningMateOffice)
+        {
+          OfficesUpdateAndLogBool(
+            "IsRunningMateOffice"
+            , RadioButtonListRunningMateOffice
+            );
+          //Visible_Table_Running_Mate();
+
+          //db.Invalidate_Office(ViewState["OfficeKey"].ToString());
+
+          Msg.Text = db.Ok(MsgCommonUpdateOffice("The office running mate status"));
+
+          Controls_Visible_Load();
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void RadioButtonListIsOnlyForPrimaries_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        bool IsOnlyForPrimaries = 
+          RadioButtonListIsOnlyForPrimaries.SelectedValue == "Yes";
+
+        if (db.Offices_Bool(ViewState["OfficeKey"].ToString(), "IsOnlyForPrimaries")
+          != IsOnlyForPrimaries)
+        {
+          OfficesUpdateAndLogBool(
+            "IsOnlyForPrimaries"
+            , RadioButtonListIsOnlyForPrimaries
+            );
+
+          //db.Invalidate_Office(ViewState["OfficeKey"].ToString());
+
+          Msg.Text = db.Ok(MsgCommonUpdateOffice("The office only for primaries status"));
+
+          Controls_Visible_Load();
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+    protected void RadioButtonListActive_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        bool IsInactive = RadioButtonListActive.SelectedValue == "Yes";
+
+        if (db.Offices_Bool(ViewState["OfficeKey"].ToString(), "IsInactive")
+          != IsInactive)
+        {
+          OfficesUpdateAndLogBool(
+            "IsInactive"
+            , RadioButtonListActive
+            );
+
+          //db.Invalidate_Office(ViewState["OfficeKey"].ToString());
+
+          Msg.Text = db.Ok(MsgCommonUpdateOffice("The office active status"));
+
+          Controls_Visible_Load();
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+    #endregion Radio Button Changes
+
+
+    protected void Button_Add_Office_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Check_TextBoxs_Illeagal_Input();
+
+        string districtCode = ViewState["DistrictCode"].ToString();
+
+        bool Is_Has_District_Number = false;
+        if (
+          ViewState["OfficeClass"].ToOfficeClass() == OfficeClass.USHouse
+          || ViewState["OfficeClass"].ToOfficeClass() == OfficeClass.StateSenate
+          || ViewState["OfficeClass"].ToOfficeClass() == OfficeClass.StateHouse
+          )
+        {
+          if (!db.Is_Valid_Integer(TextBoxDistrict.Text.Trim()))
+            throw new ApplicationException("The District Number is not an integer.");
+          Is_Has_District_Number = true;
+          TextBoxDistrict.Enabled = true;
+        }
+        else
+          TextBoxDistrict.Enabled = true;
+
+
+        if ((!string.IsNullOrEmpty(TextBoxDistrict.Text.Trim()))
+          && (Is_Has_District_Number)
+          )
+          districtCode = TextBoxDistrict.Text.Trim();
+
+        //Checks done in Insert_Into_Offices
+        ViewState["OfficeKey"] = Insert_Into_Offices(
+          ViewState["StateCode"].ToString()
+          , ViewState["CountyCode"].ToString()
+          , ViewState["LocalCode"].ToString()
+          //, ViewState["DistrictCode"].ToString()
+          , districtCode
+          , ViewState["DistrictCodeAlpha"].ToString()
+          , TextBox_Office_Line_Add_1.Text.Trim()
+          , TextBox_Office_Line_Add_2.Text.Trim()
+          , ViewState["OfficeClass"].ToOfficeClass()
+          , TextBoxOfficeOrderOnBallot.Text.Trim()
+          , string.Empty
+          );
+
+        //db.Invalidate_Office(ViewState["OfficeKey"].ToString());
+
+        #region Msg.Text
+        Msg.Text = db.Ok(TextBox_Office_Line_Add_1.Text + " " + TextBox_Office_Line_Add_2.Text
+          + " was ADDED."
+          + " You may now edit or complete the information about this office on ballots."
+          + " Click on Add Another Office to continue adding offices for this office type."
+          + " Use the other sections as described.");
+        #endregion
+
+        Controls_Visible_Load();
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Button_Add_Office_And_In_Election_Click1(object sender, EventArgs e)
+    {
+      try
+      {
+        Check_TextBoxs_Illeagal_Input();
+
+        //Checks done in Insert_Into_Offices
+        ViewState["OfficeKey"] = Insert_Into_Offices(
+          ViewState["StateCode"].ToString()
+          , ViewState["CountyCode"].ToString()
+          , ViewState["LocalCode"].ToString()
+          , ViewState["DistrictCode"].ToString()
+          , ViewState["DistrictCodeAlpha"].ToString()
+          , TextBox_Office_Line_Add_1.Text.Trim()
+          , TextBox_Office_Line_Add_2.Text.Trim()
+          , ViewState["OfficeClass"].ToOfficeClass()
+          , TextBoxOfficeOrderOnBallot.Text.Trim()
+          , string.Empty
+          );
+
+        //db.Invalidate_Office(ViewState["OfficeKey"].ToString());
+
+
+        #region Add ElectionsOffices for any upcoming election so it will appear on list of offices to select
+        //Needed so that offices can be created after an election is created
+        DataTable UpcomingElectionsTable = null;
+        //if (
+        //  (Convert.ToInt16(ViewState["OfficeClass"]) < db.Office_County_Executive)
+        //  || (Convert.ToInt16(ViewState["OfficeClass"]) == db.Judicial)//Judicial
+        //  )//Statewide Offices (State and Federal Elections)
+        if (ViewState["CountyCode"].ToString() == string.Empty)
+        {
+          //State Elections
+          UpcomingElectionsTable = db.Table(sql.ElectionsUpcoming(ViewState["StateCode"].ToString()));
+        }
+        else//County Town and Local Elections
+        {
+          UpcomingElectionsTable = db.Table(sql.ElectionsUpcomingCountyLocal(ViewState["StateCode"].ToString(), ViewState["CountyCode"].ToString()));
+        }
+        if (UpcomingElectionsTable.Rows.Count > 0)
+        {
+          //string ElectionKey_Federal = string.Empty;
+          foreach (DataRow UpcomingElectionRow in UpcomingElectionsTable.Rows)
+          {
+            //if (db.Row_Optional(sql.ElectionsOffices4ElectionKeyOfficeKey(
+            //  ViewState["ElectionKey"].ToString(), ViewState["OfficeKey"].ToString())) == null)
+            //{
+            #region Add ElectionsOffices Row if not exist
+            #region Add ElectionsOffices for Election
+            #region replaced
+            //ElectionKey_Federal = db.ElectionKey_Federal(UpcomingElectionRow["ElectionKey"].ToString(), ViewState["OfficeKey"].ToString());
+
+            //Add an ElectionsOffices row
+            //string SQLINSERT = "INSERT INTO ElectionsOffices "
+            //  + "("
+            //  + "ElectionKey"
+            //  + ",ElectionKeyState"
+            //  + ",ElectionKeyFederal"
+            //  + ",OfficeKey"
+            //  + ",OfficeLevel"
+            //  + ",StateCode"
+            //  + ",DistrictCode"
+            //  + ",CountyCode"
+            //  + ",LocalCode"
+            //  + ")"
+            //  + " VALUES"
+            //  + "("
+            //  + db.SQLLit(UpcomingElectionRow["ElectionKey"].ToString())
+            //  + db.SQLLit(db.ElectionKey_State(UpcomingElectionRow["ElectionKey"].ToString()))
+            //  + "," + db.SQLLit(ElectionKey_Federal)
+            //  + "," + db.SQLLit(ViewState["OfficeKey"].ToString())
+            //  + "," + db.SQLLit(ViewState["OfficeClass"].ToString())
+            //  + "," + db.SQLLit(UpcomingElectionRow["StateCode"].ToString())
+            //  + "," + db.SQLLit(ViewState["DistrictCode"].ToString())
+            //  + "," + db.SQLLit(ViewState["CountyCode"].ToString())
+            //  + "," + db.SQLLit(ViewState["LocalCode"].ToString())
+            //  + ")";
+
+            //db.ExecuteSQL(SQLINSERT);
+            #endregion replaced
+
+            db.ElectionsOffices_INSERT(
+              UpcomingElectionRow["ElectionKey"].ToString()
+            , ViewState["OfficeKey"].ToString()
+            , ViewState["DistrictCode"].ToString()
+            );
+
+
+            //db.Invalidate_Election(ViewState["ElectionKey"].ToString());
+
+            string x = string.Empty;
+            #endregion
+
+            #region LogOfficeAddsDeletes
+            DB.VoteLog.LogOfficeAddsDeletes.Insert(
+              DateTime.Now,
+              "A",
+              UserSecurityClass,
+              UserName,
+              ViewState["OfficeKey"].ToString(),
+              ViewState["StateCode"].ToString(),
+              int.Parse(ViewState["OfficeClass"].ToString()),
+              int.Parse(OfficeOrder()),
+              ViewState["DistrictCode"].ToString(),
+              string.Empty,
+              ViewState["CountyCode"].ToString(),
+              ViewState["LocalCode"].ToString(),
+              TextBox_Office_Line_Edit_1.Text.Trim(),
+              TextBox_Office_Line_Edit_2.Text.Trim(),
+              false,
+              EditIsRunningMateOffice() == "1",
+              1,
+              string.Empty,
+              string.Empty,
+              string.Empty,
+              string.Empty,
+              1);
+            //string InsertSQL = "INSERT INTO LogOfficeAddsDeletes "
+            //  + "("
+            //  + "DateStamp"
+            //  + ",AddOrDelete"
+            //  + ",UserSecurity"
+            //  + ",UserName"
+            //  + ",OfficeKey"
+            //  + ",StateCode"
+            //  + ",OfficeLevel"
+            //  + ",OfficeOrderWithinLevel"
+            //  + ",DistrictCode"
+            //  + ",DistrictCodeAlpha"
+            //  + ",CountyCode"
+            //  + ",LocalCode"
+            //  + ",OfficeLine1"
+            //  + ",OfficeLine2"
+            //  + ",IsRunningMateOffice"
+            //  //+ ",Incumbents"
+            //  //+ ",VoteInstructions"
+            //  //+ ",VoteForWording"
+            //  //+ ",WriteInInstructions"
+            //  //+ ",WriteInWording"
+            //  //+ ",WriteInLines"
+            //  + ")"
+            //  + " VALUES"
+            //  + "("
+            //  + db.SQLLit(Db.DbNow)
+            //  + ",'A'"
+            //  + "," + db.SQLLit(db.User_Security())
+            //  + "," + db.SQLLit(db.User_Name())
+            //  + "," + db.SQLLit(ViewState["OfficeKey"].ToString())
+            //  + "," + db.SQLLit(ViewState["StateCode"].ToString())
+            //  + "," + ViewState["OfficeClass"].ToString()
+            //  + "," + OfficeOrder()
+            //  + "," + db.SQLLit(ViewState["DistrictCode"].ToString())
+            //  + ",''" //DistrictCodeAlpha
+            //  + "," + db.SQLLit(ViewState["CountyCode"].ToString())
+            //  + "," + db.SQLLit(ViewState["LocalCode"].ToString())
+            //  + "," + db.SQLLit(TextBox_Office_Line_Edit_1.Text.Trim())//Intensionally not recased
+            //  + "," + db.SQLLit(TextBox_Office_Line_Edit_2.Text.Trim())
+            //  + "," + EditIsRunningMateOffice()
+            //  //+ "," + xEditIncumbents()
+            //  //+ "," + db.SQLLit(xEditVoteInstructions())
+            //  //+ "," + db.SQLLit(xEditVoteForWording())
+            //  //+ "," + db.SQLLit(xEditWriteInInstructions())
+            //  //+ "," + db.SQLLit(xEditWriteInWording())
+            //  //+ "," + xEditWriteInLines()
+            //  + ")";
+            //db.ExecuteSQL(InsertSQL);
+            #endregion
+            #endregion
+            //}
+          }
+        }
+        #endregion Add ElectionsOffices for any upcoming election so it will appear on list of offices to select
+
+        #region Msg.Text
+        Msg.Text = db.Ok(TextBox_Office_Line_Edit_1.Text + " " + TextBox_Office_Line_Edit_2.Text
+          + ": was ADDED at position " + OfficeOrder()
+          + " for " + db.Name_Office_Contest_And_Electoral_Plus_Offices(
+              TextBoxOfficeOrderOnBallot.Text.Trim().ToOfficeClass()
+              , ViewState["StateCode"].ToString()
+              , ViewState["CountyCode"].ToString()
+              , ViewState["LocalCode"].ToString()
+              )
+          + " Offices. "
+          + " The data recorded for the office is shown in red."
+          + " You can now identify the incumbent or current elected official for this office."
+          + " Or you can add another office, make additional changes "
+          + " or make changes to one of the offices in the Table below.");
+        #endregion
+
+        Controls_Visible_Load();
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void Button_Remove_RunningMate_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Check_TextBoxs_Illeagal_Input();
+        
+        if (!string.IsNullOrEmpty(TextBox_RunningMate.Text))
+        {
+          if (!Politicians.IsValid(TextBox_RunningMate.Text.Trim()))
+            throw new ApplicationException("The politician ID is invalid");
+
+          db.OfficesOfficialsUpdate(
+            ViewState["OfficeKey"].ToString()
+            //, TextBox_RunningMate.Text.Trim()
+            , db.OfficesOfficials_Str(
+              ViewState["OfficeKey"].ToString()
+              , "PoliticianKey"
+              )
+            , "RunningMateKey"
+            , string.Empty
+            );
+
+          Controls_Visible_Load();
+
+          Msg.Text = db.Ok("The elected official as the running mate has been removed.");
+        }
+        else
+        {
+          Msg.Text = db.Fail("The is no elected official running mate currently identified"
+          + " and so none was removed.");
+        }
+      }
+
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+    protected void TextBox_Order_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Order);
+
+        if (!string.IsNullOrEmpty(TextBox_Order.Text.Trim()))
+        {
+          if (!db.Is_Valid_Integer(TextBox_Order.Text.Trim()))
+            throw new ApplicationException(
+              "The Ballot Order is not an integer.");
+
+          Msg.Text = db.Ok("Ballot Order is ok.");
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected DataTable Counties_Or_Locals_Table()
+    {
+      string SQL = string.Empty;
+      if (db.Is_Electoral_Class_County(Convert.ToInt16(ViewState["OfficeClass"])))
+      {
+        #region Counties
+        SQL = "SELECT CountyCode FROM Counties WHERE StateCode = "
+          + db.SQLLit(ViewState["StateCode"].ToString());
+        return db.Table(SQL);
+        #endregion Counties
+      }
+      else
+      {
+        #region Local Districts
+        SQL = "SELECT CountyCode,LocalCode FROM LocalDistricts WHERE StateCode = "
+          + db.SQLLit(ViewState["StateCode"].ToString());
+        return db.Table(SQL);
+        #endregion Local Districts
+      }
+    }
+
+    protected DataTable Offices_Table(
+      string StateCode
+      , string CountyCode
+      , string LocalCode
+      , int OfficeClass
+        )
+    {
+      string SQL = string.Empty;
+      SQL += " SELECT OfficeKey,CountyCode,LocalCode,OfficeLine1,OfficeLine2,OfficeOrderWithinLevel";
+      SQL += " FROM vote.Offices";
+      SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+      SQL += " AND CountyCode = " + db.SQLLit(CountyCode);
+      SQL += " AND LocalCode = " + db.SQLLit(LocalCode);
+      SQL += " AND OfficeLevel = " + OfficeClass;
+      SQL += " ORDER BY CountyCode,LocalCode";
+      return db.Table(SQL);
+    }
+    protected bool Is_Office_Exist(string OfficeLine1, string OfficeLine2)
+    {
+      if (
+       (OfficeLine1.ToLower().IndexOf(TextBox_Office_Title_Search.Text.Trim().ToLower()) != -1)
+       || (OfficeLine2.ToLower().IndexOf(TextBox_Office_Title_Search.Text.Trim().ToLower()) != -1)
+        //|| (TextBox_Office_Title_Search.Text.Trim().ToLower().IndexOf(OfficeLine1.ToLower()) != -1)
+        //|| (TextBox_Office_Title_Search.Text.Trim().ToLower().IndexOf(OfficeLine2.ToLower()) != -1)
+       )
+        return true;
+      else
+        return false;
+    }
+    protected bool Is_Office_In_Table(
+      string StateCode
+      , string CountyCode
+      , string LocalCode
+      , ref string OfficeKey
+      , ref string OfficeLine1
+      , ref string OfficeLine2
+      , int OfficeClass
+      , ref int OfficeOrderWithinLevel
+      )
+    {
+      bool Is_Office_Already_Exist = false;
+      if (CheckBox_SkipCheck.Checked)
+      {
+        DataTable Table_County_Or_Local_Offices = Offices_Table(
+         StateCode
+         , CountyCode
+         , LocalCode
+         , OfficeClass
+         );
+        foreach (DataRow Row_Office in Table_County_Or_Local_Offices.Rows)
+        {
+          //if (
+          // (Row_Office["OfficeLine1"].ToString().ToLower().IndexOf(TextBox_Office_Title_Search.Text.Trim().ToLower()) > 0)
+          // || (Row_Office["OfficeLine2"].ToString().ToLower().IndexOf(TextBox_Office_Title_Search.Text.Trim().ToLower()) > 0)
+          // )
+          if (Is_Office_Exist(
+            Row_Office["OfficeLine1"].ToString()
+            , Row_Office["OfficeLine2"].ToString())
+            )
+          {
+            Is_Office_Already_Exist = true;
+            OfficeKey = Row_Office["OfficeKey"].ToString();
+            OfficeLine1 = Row_Office["OfficeLine1"].ToString();
+            OfficeLine2 = Row_Office["OfficeLine2"].ToString();
+            OfficeOrderWithinLevel = Convert.ToInt16(Row_Office["OfficeOrderWithinLevel"].ToString());
+          }
+        }
+      }
+      return Is_Office_Already_Exist;
+    }
+    protected void Report_Office_With_Title(
+      string OfficeKey
+      , string OfficeLine1
+      , string OfficeLine2
+      , string CountyCode
+      , string LocalCode
+      , int OfficeOrderWithinLevel
+      , string CountyCode_Old
+      )
+    {
+      #region local offices break between counties
+      if (
+       (db.Is_Electoral_Class_Local(Convert.ToInt16(ViewState["OfficeClass"])))
+        && (CountyCode.CompareTo(CountyCode_Old) != 0)
+       )
+        Label_Bulk_Offices_Report.Text += "<br>";
+      #endregion local offices break between counties
+
+      Label_Bulk_Offices_Report.Text += "<br>";
+      Label_Bulk_Offices_Report.Text += OfficeLine1;
+      //Label_Bulk_Offices_Report.Text += db.Anchor_Admin_Office_UPDATE_Office(OfficeKey, OfficeLine1, "_edit2");
+      if (string.IsNullOrEmpty(OfficeLine2))
+        OfficeLine2 = "_";
+      Label_Bulk_Offices_Report.Text += " | " + OfficeLine2;
+      Label_Bulk_Offices_Report.Text += " - "
+        + CountyCache.GetCountyName(ViewState["StateCode"].ToString(), CountyCode);
+      if (db.Is_Electoral_Class_Local(Convert.ToInt16(ViewState["OfficeClass"])))
+        Label_Bulk_Offices_Report.Text += " - "
+        + VotePage.GetPageCache().LocalDistricts.GetLocalDistrict(ViewState["StateCode"].ToString()
+          , CountyCode, LocalCode);
+      Label_Bulk_Offices_Report.Text += " (" + OfficeOrderWithinLevel + ")";
+      Label_Bulk_Offices_Report.Text += " [" + CountyCode + "]";
+      if (db.Is_Electoral_Class_Local(Convert.ToInt16(ViewState["OfficeClass"])))
+        Label_Bulk_Offices_Report.Text += " [" + LocalCode + "]";
+      Label_Bulk_Offices_Report.Text += " - " + OfficeKey;
+      //+db.Anchor_Admin_Office_UPDATE_Office(OfficeKey, OfficeKey, "_edit2");
+      //Anchor_Admin_Office_DELETE
+      //Label_Bulk_Offices_Report.Text += " - " 
+      //  + db.Anchor_Admin_Office_DELETE(
+      //    Convert.ToInt16(ViewState["OfficeClass"])
+      //    ,OfficeKey
+      //    ,"_self"
+      //    );
+      Label_Bulk_Offices_Report.Text += " - [";
+      Label_Bulk_Offices_Report.Text += db.Anchor_Admin_Office_UPDATE_Office(OfficeKey, "edit", "_edit2") + "]";
+    }
+    protected void Report_Search_Results()
+    {
+      if (string.IsNullOrEmpty(TextBox_Office_Title_Search.Text.Trim()))
+        throw new ApplicationException("Part of Office Titles to Search is empty.");
+      if (ViewState["OfficeClass"].ToOfficeClass() == OfficeClass.Undefined)
+        throw new ApplicationException("An office class needs to be selected from the radio button list");
+
+      #region Inits
+      string SQL = string.Empty;
+      int Count_Counties_Or_Locals = 0;
+      int Count_Offices_With_Title = 0;
+      int Count_Offices_Without_Title = 0;
+      Label_Bulk_Offices_Report.Text = string.Empty;
+      string CountyCode_Old = string.Empty;
+      DataTable Table_Counties_Or_Locals = null;
+      #endregion Inits
+
+      #region Offices WITH Part in Office Title
+      Label_Bulk_Offices_Report.Text += "<strong>Offices WITH Search Part in Office Title (Ballot Order) [CountyCode]</strong><br>";
+      Table_Counties_Or_Locals = Counties_Or_Locals_Table();
+      foreach (DataRow Row_County_Or_Local in Table_Counties_Or_Locals.Rows)
+      {
+        Count_Counties_Or_Locals++;
+
+        #region A County or Local District
+
+        #region Inits
+        string OfficeKey = string.Empty;
+        string OfficeLine1 = string.Empty;
+        string OfficeLine2 = string.Empty;
+        int OfficeOrderWithinLevel = 0;
+        string CountyCode_New = Row_County_Or_Local["CountyCode"].ToString();
+        #endregion Inits
+
+        string LocalCode = string.Empty;
+        if (db.Is_Electoral_Class_Local(Convert.ToInt16(ViewState["OfficeClass"])))
+          LocalCode = Row_County_Or_Local["LocalCode"].ToString();
+
+        if (Is_Office_In_Table(
+          ViewState["StateCode"].ToString()
+          , Row_County_Or_Local["CountyCode"].ToString()
+          , LocalCode
+          , ref OfficeKey
+          , ref OfficeLine1
+          , ref OfficeLine2
+          , Convert.ToInt16(ViewState["OfficeClass"])
+          , ref OfficeOrderWithinLevel
+          )
+        )
+        {
+          Count_Offices_With_Title++;
+
+          //bool Is_County_Break_For_Local_Offices = false;
+          //if (
+          //  (db.Is_Electoral_Class_Local(Convert.ToInt16(ViewState["OfficeClass"])))
+          //  && (CountyCode_New != CountyCode_Old)
+          //  )
+          //  Is_County_Break_For_Local_Offices = true;
+
+
+          Report_Office_With_Title(
+             OfficeKey
+            , OfficeLine1
+            , OfficeLine2
+            , Row_County_Or_Local["CountyCode"].ToString()
+            , LocalCode
+            , OfficeOrderWithinLevel
+            , CountyCode_Old
+            );
+          CountyCode_Old = Row_County_Or_Local["CountyCode"].ToString();
+        }
+        else
+        {
+          Count_Offices_Without_Title++;
+        }
+
+        #endregion A County or Local District
+      }
+      #endregion Offices WITH Part in Office Title
+
+      #region Offices WITHOUT Part in Office Title
+      Label_Bulk_Offices_Report.Text += "<br><br><strong>Offices WITHOUT Search Part in Office Title [CountyCode]</strong><br>";
+      Table_Counties_Or_Locals = Counties_Or_Locals_Table();
+      foreach (DataRow Row_County_Or_Local in Table_Counties_Or_Locals.Rows)
+      {
+        #region A County or Local District
+
+        string OfficeKey = string.Empty;
+        string OfficeLine1 = string.Empty;
+        string OfficeLine2 = string.Empty;
+        int OfficeOrderWithinLevel = 0;
+        string LocalCode = string.Empty;
+
+        if (db.Is_Electoral_Class_Local(Convert.ToInt16(ViewState["OfficeClass"])))
+          LocalCode = Row_County_Or_Local["LocalCode"].ToString();
+
+        string CountyCode = Row_County_Or_Local["CountyCode"].ToString();
+
+        if (!Is_Office_In_Table(
+          ViewState["StateCode"].ToString()
+          , Row_County_Or_Local["CountyCode"].ToString()
+          , LocalCode
+          , ref OfficeKey
+          , ref OfficeLine1
+          , ref OfficeLine2
+          , Convert.ToInt16(ViewState["OfficeClass"])
+          , ref OfficeOrderWithinLevel
+          )
+        )
+        {
+          #region Report Office
+          Label_Bulk_Offices_Report.Text += "<br>";
+          Label_Bulk_Offices_Report.Text += CountyCache.GetCountyName(ViewState["StateCode"].ToString(), Row_County_Or_Local["CountyCode"].ToString());
+          if (db.Is_Electoral_Class_Local(Convert.ToInt16(ViewState["OfficeClass"])))
+            Label_Bulk_Offices_Report.Text += " - "
+            + VotePage.GetPageCache().LocalDistricts.GetLocalDistrict(ViewState["StateCode"].ToString()
+              , Row_County_Or_Local["CountyCode"].ToString(), LocalCode);
+          Label_Bulk_Offices_Report.Text += " [" + Row_County_Or_Local["CountyCode"].ToString() + "]";
+          if (db.Is_Electoral_Class_Local(Convert.ToInt16(ViewState["OfficeClass"])))
+            Label_Bulk_Offices_Report.Text += " [" + LocalCode + "]";
+          #endregion Report Office
+        }
+
+        #endregion A County or Local District
+      }
+      #endregion Offices WITHOUT Part in Office Title
+
+      #region results
+      Label_Bulk_Offices_Report.Text += "<br><br>";
+      Label_Bulk_Offices_Report.Text += Count_Offices_With_Title
+        + " offices WITH test string in title.";
+      Label_Bulk_Offices_Report.Text += "<br>";
+      Label_Bulk_Offices_Report.Text += Count_Offices_Without_Title.ToString()
+        + " offices WITHOUT test string in title.";
+
+      Label_Bulk_Offices_Report.Text += "<br><br>";
+      Label_Bulk_Offices_Report.Text += Count_Counties_Or_Locals.ToString();
+      if (db.Is_Electoral_Class_County(Convert.ToInt16(ViewState["OfficeClass"])))
+      {
+        Label_Bulk_Offices_Report.Text += " counties checked.";
+        int Counties = db.Rows_Count_From("Counties WHERE StateCode = "
+          + db.SQLLit(ViewState["StateCode"].ToString()));
+        Label_Bulk_Offices_Report.Text += "<br>" + Counties.ToString()
+          + " counties in the state.";
+      }
+      else
+      {
+        Label_Bulk_Offices_Report.Text += " local districts checked.";
+        int Locals = db.Rows_Count_From("LocalDistricts WHERE StateCode = "
+          + db.SQLLit(ViewState["StateCode"].ToString()));
+        Label_Bulk_Offices_Report.Text += "<br>" + Locals.ToString()
+          + " local districts in the state.";
+      }
+
+      #endregion results
+
+    }
+
+    protected void TextBox_Office_Title_Search_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        Report_Search_Results();
+
+        Msg.Text = db.Ok("Report is finished.");
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Button_Add_Bulk_Offices_Click1(object sender, EventArgs e)
+    {
+      try
+      {
+        #region checks
+        Check_TextBoxs_Illeagal_Input();
+
+        if (ViewState["OfficeClass"].ToOfficeClass() == OfficeClass.Undefined)
+          throw new ApplicationException("An office class needs to be selected from the radio button list");
+        if (string.IsNullOrEmpty(TextBox_Office_Line_Add_1.Text.Trim()))
+          throw new ApplicationException("The 1st line of the office title is empty.");
+        if (string.IsNullOrEmpty(TextBox_Order.Text.Trim()))
+          throw new ApplicationException("You need to provide a Ballot order.");
+        if (!db.Is_Valid_Integer(TextBox_Order.Text.Trim()))
+          throw new ApplicationException("The Ballot order is not an integer.");
+        if (!CheckBox_SkipCheck.Checked)
+          Check_Search_And_OfficeTitle_Compatable();
+        #endregion checks
+
+        string SQL = string.Empty;
+        int Count_Offices_Added = 0;
+        int Count_Counties_Or_Locals = 0;
+        Label_Bulk_Offices_Report.Text = string.Empty;
+        string CountyCode_Old = string.Empty;
+
+        DataTable Table_Counties_Or_Locals = Counties_Or_Locals_Table();
+        foreach (DataRow Row_County_Or_Local in Table_Counties_Or_Locals.Rows)
+        {
+          Count_Counties_Or_Locals++;
+
+          #region A County or Local District
+          {
+            #region Add Office if doesn't exist
+            string OfficeKey = string.Empty;
+            string OfficeLine1 = string.Empty;
+            string OfficeLine2 = string.Empty;
+            int OfficeOrderWithinLevel = 0;
+
+            string LocalCode = string.Empty;
+            if (db.Is_Electoral_Class_Local(Convert.ToInt16(ViewState["OfficeClass"])))
+              LocalCode = Row_County_Or_Local["LocalCode"].ToString();
+
+            if (!Is_Office_In_Table(
+                ViewState["StateCode"].ToString()
+                , Row_County_Or_Local["CountyCode"].ToString()
+                , LocalCode
+                , ref OfficeKey
+                , ref OfficeLine1
+                , ref OfficeLine2
+                , Convert.ToInt16(ViewState["OfficeClass"])
+                , ref OfficeOrderWithinLevel
+                )
+              )
+            {
+              OfficeKey = Insert_Into_Offices(
+                ViewState["StateCode"].ToString()
+                , Row_County_Or_Local["CountyCode"].ToString()
+                , LocalCode
+                , string.Empty
+                , string.Empty
+                , TextBox_Office_Line_Add_1.Text.Trim()
+                , TextBox_Office_Line_Add_2.Text.Trim()
+                , ViewState["OfficeClass"].ToOfficeClass()
+                , TextBox_Order.Text.Trim()
+                , string.Empty
+                );
+
+              Count_Offices_Added++;
+
+              Report_Office_With_Title(
+                 OfficeKey
+                , TextBox_Office_Line_Add_1.Text.Trim()
+                , TextBox_Office_Line_Add_2.Text.Trim()
+                , Row_County_Or_Local["CountyCode"].ToString()
+                , LocalCode
+                , Convert.ToInt16(TextBox_Order.Text.Trim())
+                , CountyCode_Old
+                );
+              CountyCode_Old = Row_County_Or_Local["CountyCode"].ToString();
+            }
+            #endregion Add Office if doesn't exist
+          }
+
+          #endregion A County or Local District
+        }
+
+        Clear_Office_Title_Textboxes();
+
+        #region results
+        Label_Bulk_Offices_Report.Text += "<br><br>";
+        if (Count_Offices_Added == 0)
+          Label_Bulk_Offices_Report.Text += "No offices were added.";
+        else
+          Label_Bulk_Offices_Report.Text += Count_Offices_Added.ToString()
+            + " offices were added.";
+
+        Label_Bulk_Offices_Report.Text += "<br><br>";
+        Label_Bulk_Offices_Report.Text += Count_Counties_Or_Locals.ToString();
+        if (db.Is_Electoral_Class_County(Convert.ToInt16(ViewState["OfficeClass"])))
+        {
+          Label_Bulk_Offices_Report.Text += " counties checked.";
+          int Counties = db.Rows_Count_From("Counties WHERE StateCode = "
+            + db.SQLLit(ViewState["StateCode"].ToString()));
+          Label_Bulk_Offices_Report.Text += "<br>" + Counties.ToString()
+            + " counties in the state.";
+
+          Msg.Text = db.Ok(TextBox_Office_Line_Add_1.Text + " " + TextBox_Office_Line_Add_2.Text
+           + " was ADDED for every COUNTY that did not have this office.");
+        }
+        else
+        {
+          Label_Bulk_Offices_Report.Text += " local districts checked.";
+          int Locals = db.Rows_Count_From("LocalDistricts WHERE StateCode = "
+            + db.SQLLit(ViewState["StateCode"].ToString()));
+          Label_Bulk_Offices_Report.Text += "<br>" + Locals.ToString()
+            + " local districts in the state.";
+
+          Msg.Text = db.Ok(TextBox_Office_Line_Add_1.Text + " " + TextBox_Office_Line_Add_2.Text
+            + " was ADDED for every LOCAL DISTRICT that did not have this office.");
+        }
+
+        #endregion results
+
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Button_Update_Bulk_Offices_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region checks
+        Check_TextBoxs_Illeagal_Input();
+
+        if (ViewState["OfficeClass"].ToOfficeClass() == OfficeClass.Undefined)
+          throw new ApplicationException("An office class needs to be selected from the radio button list");
+        if (!string.IsNullOrEmpty(TextBox_Order.Text.Trim()))
+        {
+          if (!db.Is_Valid_Integer(TextBox_Order.Text.Trim()))
+            throw new ApplicationException("The Ballot order is not an integer.");
+        }
+        Check_Both_Office_Title_And_BallotOrder_Not_Empty();
+
+        if (
+            (!CheckBox_SkipCheck.Checked)
+            && (!string.IsNullOrEmpty(TextBox_Office_Line_Add_1.Text.Trim()))
+          )
+          Check_Search_And_OfficeTitle_Compatable();
+        #endregion checks
+
+        string SQL = string.Empty;
+        int Count_Offices_Updated = 0;
+        int Count_Counties_Or_Locals = 0;
+        Label_Bulk_Offices_Report.Text = string.Empty;
+        string CountyCode_Old = string.Empty;
+
+        DataTable Table_Counties_Or_Locals = Counties_Or_Locals_Table();
+        foreach (DataRow Row_County_Or_Local in Table_Counties_Or_Locals.Rows)
+        {
+          Count_Counties_Or_Locals++;
+
+          #region A County or Local District
+          {
+            #region Update Office if office exist
+            string OfficeKey = string.Empty;
+            string OfficeLine1 = string.Empty;
+            string OfficeLine2 = string.Empty;
+            int OfficeOrderWithinLevel = 0;
+
+            string LocalCode = string.Empty;
+            if (db.Is_Electoral_Class_Local(Convert.ToInt16(ViewState["OfficeClass"])))
+              LocalCode = Row_County_Or_Local["LocalCode"].ToString();
+
+            if (Is_Office_In_Table(
+                ViewState["StateCode"].ToString()
+                , Row_County_Or_Local["CountyCode"].ToString()
+                , LocalCode
+                , ref OfficeKey
+                , ref OfficeLine1
+                , ref OfficeLine2
+                , Convert.ToInt16(ViewState["OfficeClass"])
+                , ref OfficeOrderWithinLevel
+                )
+              )
+            {
+              #region Update Office
+              if (!string.IsNullOrEmpty(TextBox_Office_Line_Add_1.Text.Trim()))
+              {
+                Offices.UpdateOfficeLine1(TextBox_Office_Line_Add_1.Text.Trim(), OfficeKey);
+                Offices.UpdateOfficeLine2(TextBox_Office_Line_Add_2.Text.Trim(), OfficeKey);
+                //db.Offices_Update_Str(OfficeKey, "OfficeLine1", TextBox_Office_Line_Add_1.Text.Trim());
+                //db.Offices_Update_Str(OfficeKey, "OfficeLine2", TextBox_Office_Line_Add_2.Text.Trim());
+              }
+              if (!string.IsNullOrEmpty(TextBox_Order.Text.Trim()))
+                db.Offices_Update_Int(OfficeKey, "OfficeOrderWithinLevel", Convert.ToInt16(TextBox_Order.Text.Trim()));
+
+              Count_Offices_Updated++;
+              #endregion Update Office
+
+              Report_Office_With_Title(
+                 OfficeKey
+                , db.Offices_Str(OfficeKey, "OfficeLine1")
+                , db.Offices_Str(OfficeKey, "OfficeLine2")
+                , Row_County_Or_Local["CountyCode"].ToString()
+                , LocalCode
+                , db.Offices_Int(OfficeKey, "OfficeOrderWithinLevel")
+                , CountyCode_Old
+                );
+              CountyCode_Old = Row_County_Or_Local["CountyCode"].ToString();
+            }
+            #endregion Add Office if doesn't exist
+          }
+
+          #endregion A County or Local District
+        }
+
+        Clear_Office_Title_Textboxes();
+
+        #region results
+        Label_Bulk_Offices_Report.Text += "<br><br>";
+        if (Count_Offices_Updated == 0)
+          Label_Bulk_Offices_Report.Text += "No offices were updated.";
+        else
+          Label_Bulk_Offices_Report.Text += Count_Offices_Updated.ToString()
+            + " offices were updated.";
+
+        Label_Bulk_Offices_Report.Text += "<br><br>";
+        Label_Bulk_Offices_Report.Text += Count_Counties_Or_Locals.ToString();
+        if (db.Is_Electoral_Class_County(Convert.ToInt16(ViewState["OfficeClass"])))
+        {
+          Label_Bulk_Offices_Report.Text += " counties checked.";
+          int Counties = db.Rows_Count_From("Counties WHERE StateCode = "
+            + db.SQLLit(ViewState["StateCode"].ToString()));
+          Label_Bulk_Offices_Report.Text += "<br>" + Counties.ToString()
+            + " counties in the state.";
+
+          Msg.Text = db.Ok(TextBox_Office_Line_Add_1.Text + " " + TextBox_Office_Line_Add_2.Text
+           + " was UPDATED for every COUNTY that did had this office title.");
+        }
+        else
+        {
+          Label_Bulk_Offices_Report.Text += " local districts checked.";
+          int Locals = db.Rows_Count_From("LocalDistricts WHERE StateCode = "
+            + db.SQLLit(ViewState["StateCode"].ToString()));
+          Label_Bulk_Offices_Report.Text += "<br>" + Locals.ToString()
+            + " local districts in the state.";
+
+          Msg.Text = db.Ok(TextBox_Office_Line_Add_1.Text + " " + TextBox_Office_Line_Add_2.Text
+            + " was UPDATED for every LOCAL DISTRICT that did had this office title.");
+        }
+
+        #endregion results
+
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Button_Delete_Office_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBox_OfficeKey);
+
+        if (!Offices.OfficeKeyExists(TextBox_OfficeKey.Text.Trim()))
+          throw new ApplicationException("The office does not exist so there was no office to delete.");
+
+        db.Office_Delete_All_Tables_All_Rows(TextBox_OfficeKey.Text.Trim());
+
+        if (!CheckBox_Supress_Report.Checked)
+          Report_Search_Results();
+
+        Msg.Text = db.Ok("The Office with the OfficeKey:"
+          + TextBox_OfficeKey.Text
+          + " has been DELETED in all Tables.");
+
+        TextBox_OfficeKey.Text = string.Empty;
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void Button_Run_Report_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Report_Search_Results();
+
+        Msg.Text = db.Ok("Report is finished.");
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Button_Add_One_Office_Click1(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBox_CountyCode);
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBox_LocalCode);
+
+        if (
+          (!db.Is_Digits(TextBox_CountyCode.Text.Trim()))
+          && (TextBox_CountyCode.Text.Trim().Length != 3)
+          )
+          throw new ApplicationException("The CountyCode must be 3 digits.");
+        if (!CountyCache.CountyExists(
+          ViewState["StateCode"].ToString()
+          , TextBox_CountyCode.Text.Trim()))
+          throw new ApplicationException("The CountyCode is not a valid.");
+
+        if (string.IsNullOrEmpty(TextBox_Office_Title_Search.Text.Trim()))
+          throw new ApplicationException("The partof office titles to search is empty."
+            + " This is needed to insure duplicate offices are not created.");
+
+        Check_Office_Title_Or_BallotOrder_Empty();
+
+        if (db.Is_Electoral_Class_County(Convert.ToInt16(ViewState["OfficeClass"])))
+        {
+          #region County
+
+          #region checks
+
+          if (!string.IsNullOrEmpty(TextBox_LocalCode.Text))
+            throw new ApplicationException("The LocalCode must be empty.");
+          #endregion checks
+
+          string OfficeKey = Insert_Into_Offices(
+           ViewState["StateCode"].ToString()
+           , TextBox_CountyCode.Text.Trim()
+           , string.Empty
+           , string.Empty
+           , string.Empty
+           , TextBox_Office_Line_Add_1.Text.Trim()
+           , TextBox_Office_Line_Add_2.Text.Trim()
+           , ViewState["OfficeClass"].ToOfficeClass()
+           , TextBox_Order.Text.Trim()
+           , string.Empty
+           );
+
+          if (!CheckBox_Supress_Report.Checked)
+            Report_Search_Results();
+
+          Msg.Text = db.Ok(TextBox_Office_Line_Add_1.Text.Trim()
+            + " " + TextBox_Office_Line_Add_2.Text.Trim()
+            + " was added in "
+            + CountyCache.GetCountyName(ViewState["StateCode"].ToString()
+                , TextBox_CountyCode.Text.Trim())
+            + " OfficeKey:" + OfficeKey
+            + " CountyCode:" + TextBox_CountyCode.Text.Trim()
+            );
+
+          TextBox_CountyCode.Text = string.Empty;
+
+          #endregion County
+        }
+        else
+        {
+          #region Local
+
+          #region checks
+          if (
+           (!db.Is_Digits(TextBox_LocalCode.Text.Trim()))
+           && (TextBox_CountyCode.Text.Trim().Length != 2)
+           )
+            throw new ApplicationException("The LocalCode must be 2 digits.");
+
+          if (!LocalDistricts.IsValid(
+                ViewState["StateCode"].ToString()
+                , TextBox_CountyCode.Text.Trim()
+                , TextBox_LocalCode.Text.Trim()
+                )
+              )
+            throw new ApplicationException("The LocalCode is not a valid.");
+
+          #endregion checks
+
+          string OfficeKey = Insert_Into_Offices(
+           ViewState["StateCode"].ToString()
+           , TextBox_CountyCode.Text.Trim()
+           , TextBox_LocalCode.Text.Trim()
+           , string.Empty
+           , string.Empty
+           , TextBox_Office_Line_Add_1.Text.Trim()
+           , TextBox_Office_Line_Add_2.Text.Trim()
+           , ViewState["OfficeClass"].ToOfficeClass()
+           , TextBox_Order.Text.Trim()
+           , string.Empty
+           );
+
+          if (!CheckBox_Supress_Report.Checked)
+            Report_Search_Results();
+
+          Msg.Text = db.Ok(TextBox_Office_Line_Add_1.Text.Trim()
+            + " " + TextBox_Office_Line_Add_2.Text.Trim()
+            + " was added in " + CountyCache.GetCountyName(
+              ViewState["StateCode"].ToString()
+              , TextBox_CountyCode.Text.Trim())
+            + ", " + VotePage.GetPageCache().LocalDistricts.GetLocalDistrict(
+              ViewState["StateCode"].ToString()
+              , TextBox_CountyCode.Text.Trim()
+              , TextBox_LocalCode.Text.Trim())
+            + " OfficeKey:" + OfficeKey
+            + " CountyCode:" + TextBox_CountyCode.Text.Trim()
+            + " LocalCode:" + TextBox_LocalCode.Text.Trim()
+             );
+
+          TextBox_CountyCode.Text = string.Empty;
+          TextBox_LocalCode.Text = string.Empty;
+          #endregion Local
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void RadioButtonList_Office_Classes_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        ViewState["OfficeClass"] = RadioButtonList_Office_Classes.SelectedValue;
+
+        Clear_Office_Title_Textboxes();
+        TextBox_Office_Title_Search.Text = string.Empty;
+
+        Page_Title();
+
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Button_Recase1_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Office_Line_Add_1);
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Office_Line_Add_2);
+
+        TextBox_Office_Line_Add_1.Text = db.Str_ReCase_Office_Title(TextBox_Office_Line_Add_1.Text);
+
+        TextBox_Office_Line_Add_2.Text = db.Str_ReCase_Office_Title(TextBox_Office_Line_Add_2.Text);
+
+        Msg.Text = db.Ok("Both office title lines were recased.");
+
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void Button_Recase2_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Office_Line_Edit_1);
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Office_Line_Edit_2);
+
+        TextBox_Office_Line_Edit_1.Text =
+          db.Str_ReCase_Office_Title(TextBox_Office_Line_Edit_1.Text);
+        Offices.UpdateOfficeLine1(TextBox_Office_Line_Edit_1.Text.Trim(),
+          ViewState["OfficeKey"].ToString());
+        //db.Offices_Update_Str(ViewState["OfficeKey"].ToString(), "OfficeLine1",
+        //  TextBox_Office_Line_Edit_1.Text.Trim());
+
+        TextBox_Office_Line_Edit_2.Text =
+          db.Str_ReCase_Office_Title(TextBox_Office_Line_Edit_2.Text);
+        Offices.UpdateOfficeLine2(TextBox_Office_Line_Edit_2.Text.Trim(),
+          ViewState["OfficeKey"].ToString());
+        //db.Offices_Update_Str(ViewState["OfficeKey"].ToString(), "OfficeLine2",
+        //  TextBox_Office_Line_Edit_2.Text.Trim());
+
+        Msg.Text = db.Ok("Both office title lines were recased.");
+      }
+      catch (Exception ex)
+      {
+        #region
+
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+
+        #endregion
+      }
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        #region ViewState Values and Security Checks
+        #region ViewState Values
+        ViewState["StateCode"] = string.Empty;
+        ViewState["OfficeKey"] = string.Empty;
+        ViewState["OfficeClass"] = OfficeClass.Undefined.ToInt();
+        ViewState["ElectionKey"] = string.Empty;
+        #region Note
+        //New Multi-County Offices may have a DistrictCode and DistrictCodeAlpha
+        //If so they are pass via querystrings
+        #endregion Note
+        ViewState["DistrictCode"] = string.Empty;
+        ViewState["DistrictCodeAlpha"] = string.Empty;
+        ViewState["Electoral"] = db.Electoral_Undefined;
+
+        if (!string.IsNullOrEmpty(QueryOffice))
+          ViewState["OfficeKey"] = QueryOffice;
+
+        if (!string.IsNullOrEmpty(GetQueryString("Class")))
+          ViewState["OfficeClass"] = Convert.ToUInt16(GetQueryString("Class"));
+
+        if (!string.IsNullOrEmpty(QueryElection))
+          ViewState["ElectionKey"] = QueryElection;
+
+        if (!string.IsNullOrEmpty(GetQueryString("District")))
+          ViewState["DistrictCode"] = GetQueryString("District");
+
+        if (!string.IsNullOrEmpty(GetQueryString("DistrictAlpha")))
+          ViewState["DistrictCodeAlpha"] = GetQueryString("District");
+
+        if (!string.IsNullOrEmpty(GetQueryString("Electoral")))
+          ViewState["Electoral"] = Convert.ToInt16(GetQueryString("Electoral"));
+
+        #endregion Values
+
+        #region Security Check and Values for ViewState["StateCode"] ViewState["CountyCode"] ViewState["LocalCode"]
+
+        #region Notes
+        //The Session UserStateCode, UserCountyCode, UserLocalCode can be changed
+        //by a higher administration level using query strings
+        //This is done in db.State_Code(), db.County_Code(), db.Local_Code()
+        //
+        //Using ViewState variables insures these values won't
+        //change on any postbacks or in different tab or browser Sessions.
+        //
+        //ViewState["StateCode"] can be a StateCode or U1, u2, u3 for FederalCode
+        #endregion Notes
+
+        if (!string.IsNullOrEmpty(QueryState))
+        {
+          ViewState["StateCode"] = QueryState;
+        }
+
+        if (!string.IsNullOrEmpty(QueryOffice))
+        {
+          ViewState["StateCode"] =
+            Offices.GetStateCodeFromKey(QueryOffice);
+          ViewState["CountyCode"] =
+            Offices.GetCountyCodeFromKey(QueryOffice);
+          ViewState["LocalCode"] =
+            Offices.GetLocalCodeFromKey(QueryOffice);
+        }
+        else if (!string.IsNullOrEmpty(QueryElection))
+        {
+          ViewState["StateCode"] =
+            Elections.GetStateCodeFromKey(QueryElection);
+          ViewState["CountyCode"] =
+            Elections.GetCountyCodeFromKey(QueryElection);
+          ViewState["LocalCode"] =
+            Elections.GetLocalCodeFromKey(QueryElection);
+        }
+        //else if (db.QueryString("County") == "ALL")
+        //{
+        //  ViewState["StateCode"] = db.State_Code();
+        //  ViewState["CountyCode"] = string.Empty;
+        //  ViewState["LocalCode"] = string.Empty;
+        //}
+        //else if (db.QueryString("Local") == "ALL")
+        //{
+        //  ViewState["StateCode"] = db.State_Code();
+        //  ViewState["CountyCode"] = db.QueryString("County");
+        //  ViewState["LocalCode"] = string.Empty;
+        //}
+        else
+        {
+          ViewState["StateCode"] = db.State_Code();
+          ViewState["CountyCode"] = db.County_Code();
+          ViewState["LocalCode"] = db.Local_Code();
+        }
+        if (!db.Is_User_Security_Ok())
+          SecurePage.HandleSecurityException();
+
+        #endregion Security Check and Values for ViewState["StateCode"] ViewState["CountyCode"] ViewState["LocalCode"]
+        #endregion ViewState Values and Security Checks
+
+        try
+        {
+          #region checks
+          var officeKey = ViewState["OfficeKey"].ToString();
+
+          if (!string.IsNullOrWhiteSpace(officeKey) && !Offices.OfficeKeyExists(officeKey))
+            throw new ApplicationException(
+              "No OfficeID in Offices Table: "
+              + officeKey);
+
+          if (ViewState["OfficeClass"].ToOfficeClass() != OfficeClass.Undefined)
+          {
+            if (!ViewState["OfficeClass"].ToOfficeClass().IsValid())
+              throw new ApplicationException(
+                "The Office Level is not valid.");
+          }
+
+          if (
+            (!string.IsNullOrEmpty(ViewState["ElectionKey"].ToString()))
+            && (!db.Is_Valid_Election(ViewState["ElectionKey"].ToString()))
+            )
+          {
+            throw new ApplicationException(
+              "No ElectionID in Elections Table: "
+              + ViewState["ElectionKey"].ToString());
+          }
+
+          if (
+            !string.IsNullOrEmpty(ViewState["ElectionKey"].ToString())
+            && !string.IsNullOrEmpty(ViewState["OfficeKey"].ToString())
+            && !Offices.IsInElection(officeKey, ViewState["ElectionKey"].ToString())
+                )
+          {
+            throw new ApplicationException(
+              "This office is not and office contest in this election.");
+          }
+          #endregion checks
+
+          #region form ID
+          if (officeKey != string.Empty)
+          {
+            OfficeID.Visible = true;
+            OfficeID.Text = "ID: " + db.Offices_Str(officeKey, "OfficeKey");
+          }
+          else
+            OfficeID.Visible = false;
+          #endregion form ID
+
+          Page_Title();
+
+          Controls_Visible_Load();
+
+          Msg.Text = db.Msg("Use this form to " + Form_Function_Description().ToLower() + ".");
+        }
+        catch (Exception ex)
+        {
+          #region
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+          #endregion
+        }
+      }
+    }
+
+    protected void TextBox_Office_Line_Add_1_TextChanged1(object sender, EventArgs e)
+    {
+
+    }
+
+    #region Dead code
+
+    //private void xCheck_Office_Not_Already_Exists(
+    //  string OfficeKey
+    //  )
+    //{
+    //  if (db.Is_Valid_Office(OfficeKey))
+    //    throw new ApplicationException(
+    //      db.Name_Office_State(OfficeKey)
+    //      + " Office with Office Id: (" + OfficeKey + ")"
+    //      + " already exists.");
+
+    //  DataTable Table_County_Or_Local_Offices = Offices_Table(
+    //    ViewState["StateCode"].ToString()
+    //    , TextBox_CountyCode.Text.Trim()
+    //    , TextBox_LocalCode.Text.Trim()
+    //    , Convert.ToInt16(ViewState["OfficeClass"])
+    //    );
+    //  foreach (DataRow Row_Office in Table_County_Or_Local_Offices.Rows)
+    //  {
+    //    //if (
+    //    // (TextBox_Office_Line_Add_1.Text.ToLower().IndexOf(TextBox_Office_Title_Search.Text.Trim().ToLower()) > 0)
+    //    // || (TextBox_Office_Line_Add_2.Text.ToLower().IndexOf(TextBox_Office_Title_Search.Text.Trim().ToLower()) > 0)
+    //    // || (TextBox_Office_Title_Search.Text.Trim().ToLower().IndexOf(TextBox_Office_Line_Add_1.Text.ToLower()) > 0)
+    //    // || (TextBox_Office_Title_Search.Text.Trim().ToLower().IndexOf(TextBox_Office_Line_Add_2.Text.ToLower()) > 0)
+    //    // )
+    //    if (Is_Office_Exist(
+    //      TextBox_Office_Line_Add_1.Text
+    //      , TextBox_Office_Line_Add_2.Text))
+    //    {
+    //      throw new ApplicationException("An office title containing the search part already exists.");
+    //    }
+    //  }
+
+    //}
+
+    //protected void RadioButtonListStateNameInTitle_SelectedIndexChanged(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    Msg.Text = db.Ok(MsgCommonUpdateOffice("The State name in the office title"));
+
+    //    Controls_Visible_Load();
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    #region
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //    #endregion
+    //  }
+    //}
+
+    //protected void Button_ReCase_Title_Edit_Click1(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    FomatTitle(TextBox_Office_Line_Edit_1, TextBox_Office_Line_Edit_2);
+
+    //    if (TextBox_Office_Line_Edit_1.Text.Trim() != string.Empty)
+    //      Offices_Update_Log_Str("OfficeLine1", TextBox_Office_Line_Edit_1);
+
+    //    if (TextBox_Office_Line_Edit_2.Text.Trim() != string.Empty)
+    //      Offices_Update_Log_Str("OfficeLine2", TextBox_Office_Line_Edit_2);
+
+    //    db.Invalidate_Office(ViewState["OfficeKey"].ToString());
+
+    //    Msg.Text = db.Ok("The Office Title has been recased.");
+    //  }
+
+    //  catch (Exception ex)
+    //  {
+    //    #region
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //    #endregion
+    //  }
+
+    //}
+
+    //protected void TextBox_Office_Line_Add_1_TextChanged(object sender, EventArgs e)
+    //{
+    //  //try
+    //  //{
+    //  //  db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Office_Line_Add_1);
+
+    //  //  TextBox_Office_Line_Add_1.Text = db.Str_ReCase_Office_Title(TextBox_Office_Line_Add_1.Text);
+
+    //  //  Msg.Text = db.Ok("First line of office title was recased and is ok.");
+
+    //  //}
+    //  //catch (Exception ex)
+    //  //{
+    //  //  #region
+    //  //  Msg.Text = db.Fail(ex.Message);
+    //  //  db.Log_Error_Admin(ex);
+    //  //  #endregion
+    //  //}
+    //}
+
+    //protected void TextBox_Office_Line_Add_2_TextChanged(object sender, EventArgs e)
+    //{
+    //  //try
+    //  //{
+    //  //  db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Office_Line_Add_2);
+
+    //  //  TextBox_Office_Line_Add_2.Text = db.Str_ReCase_Office_Title(TextBox_Office_Line_Add_2.Text);
+
+    //  //  Msg.Text = db.Ok("Second line of office title was recased and is ok.");
+    //  //}
+    //  //catch (Exception ex)
+    //  //{
+    //  //  #region
+    //  //  Msg.Text = db.Fail(ex.Message);
+    //  //  db.Log_Error_Admin(ex);
+    //  //  #endregion
+    //  //}
+    //}
+
+    //protected void FomatTitle(TextBox TextBox_Office_Line_Edit_1, TextBox TextBox_Office_Line_Edit_2)
+    //{
+    //  db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Office_Line_Edit_1);
+    //  db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Office_Line_Edit_2);
+
+    //  if (TextBox_Office_Line_Edit_1.Text.Trim() != string.Empty)
+    //    TextBox_Office_Line_Edit_1.Text = db.Str_ReCase_Office_Title(TextBox_Office_Line_Edit_1.Text);
+
+    //  if (TextBox_Office_Line_Edit_2.Text.Trim() != string.Empty)
+    //    TextBox_Office_Line_Edit_2.Text = db.Str_ReCase_Office_Title(TextBox_Office_Line_Edit_2.Text);
+
+    //  Msg.Text = db.Ok("The Office Title has been formatted."
+    //     + " Please check and make any necessary changes if it has not been formatted correctly.");
+    //}
+
+    #endregion Dead code
+
+
+
+  }
+}

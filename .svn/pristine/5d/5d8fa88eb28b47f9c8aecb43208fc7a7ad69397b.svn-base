@@ -1,0 +1,33 @@
+﻿
+var PUBLIC = (function ($) {
+
+  function accordionActivate(event, ui) {
+    // make sure heading is visible
+    var offset = ui.newHeader.offset().top - $(window).scrollTop();
+    if (offset < 0 || offset > window.innerHeight) {
+      // Not in view so scroll to it
+      $('html,body').animate({ scrollTop: ui.newHeader.offset().top }, 500);
+    }
+  }
+  
+  $(function () {
+    //return; // to simulate no-js
+    $("body").removeClass("no-js");
+    $("body").addClass("js");
+    $('.main-menu').slicknav({
+      prependTo: '.main-navigation',
+      label: "Main Menu"
+    });
+    $('.states-menu ul').slicknav({
+      prependTo: '.states-menu',
+      label: "Select a state",
+      duplicate: false
+    });
+    $(".main-banner .states-menu .slicknav_menutxt").text($(".main-banner .base-menu .slicknav_menutxt").text());
+  });
+
+  return {
+    accordionActivate: accordionActivate
+  };
+
+})(jQuery);

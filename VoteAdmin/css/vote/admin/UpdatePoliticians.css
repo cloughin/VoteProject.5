@@ -1,0 +1,139 @@
+﻿/***********************************************/
+/* Entire page                                 */
+/***********************************************/
+
+.mc-group-addcandidates.mc-button
+{
+  /* hide, but don't disable, the button */
+  position: absolute;
+  left: -10000px;
+}
+
+#tab-addpolitician .content-area
+{
+  margin-bottom: 15px;
+}
+
+/***********************************************/
+
+/* Search, Add, Consolidate                    */
+
+/***********************************************/
+
+#body #tab-addpolitician .change-state-container
+{
+  position: absolute;
+  top: 58px;
+  left: 20px;
+}
+
+#body #tab-addpolitician .change-state-head
+{
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+#body #tab-addpolitician .show-password-button
+{
+  position: absolute;
+  top: 60px;
+  right: 20px;
+}
+
+#body #tab-addpolitician .view-emails-button
+{
+  position: absolute;
+  top: 100px;
+  right: 20px;
+}
+
+#body #tab-addpolitician .edit-politician-button {
+  position: absolute;
+  top: 180px;
+  right: 20px;
+                                                 }
+
+#body #tab-addpolitician .edit-issues-button {
+  position: absolute;
+  top: 220px;
+  right: 20px;
+                                                 }
+
+#body #tab-addpolitician .delete-politician-button {
+  position: absolute;
+  top: 260px;
+  right: 20px;
+}
+
+#body #tab-addpolitician .override-container
+{
+  position: absolute;
+  top: 315px;
+  right: 20px;
+}
+
+#body #tab-addpolitician .override-container div
+{
+  display: inline-block;
+  vertical-align: top;
+}
+
+#body #tab-addpolitician .override-container div.kalypto-checkbox-label
+{
+  width: 165px;
+  float: none;
+}
+
+/***********************************************/
+
+/* AddPolitician control                       */
+
+/***********************************************/
+
+#body .content-area .add-politician-panel
+{
+  border-left: none;
+  display: none;
+  float: none;
+  padding-left: 0;
+}
+
+#body .content-area .add-politician-panel .inner
+{
+  margin: 0 auto;
+}
+
+#body .add-search-candidate-button
+{
+  display: none;
+}
+
+/***********************************************/
+
+/* View Emails Dialog                          */
+
+/***********************************************/
+
+#body .view-emails-dialog p.head
+{
+  font-weight: bold;
+  margin: 10px 0 4px 0;
+}
+
+#body .view-emails-dialog #view-emails-dialog.ui-dialog-content
+{
+  padding: 10px;
+}
+
+#body .view-emails-dialog ul {
+  list-style: disc outside none;
+  margin: 10px 0;                             
+}
+
+#body .view-emails-dialog li {
+  margin: 5px 0 5px 25px;
+}
+
+#body .view-emails-dialog .open-email-button {
+  margin-top: 10px;
+}

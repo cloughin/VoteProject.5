@@ -1,0 +1,47 @@
+﻿.intro 
+{
+  float: left;
+  width: 693px;
+}
+
+.donatebox
+{
+  float: left;
+  padding: 12px 0 0 0;
+}
+
+.donatebox a
+{
+  display: block;
+  height: 162px;
+  width: 195px;
+  background: url(/images/donatebox.png);
+  overflow: hidden;
+	text-indent: -10000px;
+	font-size: 0px;
+	line-height: 0px;
+  cursor: pointer;
+}
+
+.donatebox a:hover
+{
+  background-position: 0 -162px;
+}
+
+.donatetoday a
+{
+  display: block;
+  height: 42px;
+  width: 142px;
+  background: url(/images/donatetoday.png);
+  overflow: hidden;
+	text-indent: -10000px;
+	font-size: 0px;
+	line-height: 0px;
+  cursor: pointer;
+}
+
+.donatetoday a:hover
+{
+  background-position: 0 -42px;
+}

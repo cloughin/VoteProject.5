@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<generateDbClasses>
+  <databases
+    supportMySql="true"
+    supportMsSql="true"
+    secondary="true"
+    >
+    <database
+      mappedName="VoteImagesLocal"
+      provider="MySql"
+      connectionString="Server=votesql.c3fj3t5d5d77.us-east-1.rds.amazonaws.com;Uid=ron;Pwd=p17134;Database=voteimageslocal"
+      connectionStringKey="CnVoteImagesLocal.MySql"
+      providerKey="VoteDbProvider"
+      >
+      <tables>
+        <table name="PoliticiansImagesBlobs">
+          <columns>
+            <column name="HeadshotOriginal" skip="true" />
+          </columns>
+          <indexes>
+            <index columns="PoliticianKey" default="true"/>
+          </indexes>
+        </table>
+        <table name="PoliticiansImagesData">
+          <indexes>
+            <index columns="PoliticianKey" default="true"/>
+          </indexes>
+        </table>
+      </tables>
+    </database>
+  </databases>
+</generateDbClasses>

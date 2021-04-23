@@ -1,0 +1,531 @@
+﻿using System;
+using System.Data;
+using System.Diagnostics;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using DB;
+using DB.Vote;
+using DB.VoteLog;
+using Vote.Reports;
+
+namespace Vote.Admin
+{
+  public partial class UpdateElectionsPage
+  {
+    #region Private
+
+    #region DataItem object
+
+    [PageInitializer]
+    private class AddCandidatesTabItem : ElectionsDataItem
+    {
+      // This class assumes CandidateList is the only column
+      private const string GroupName = "AddCandidates";
+
+      private AddCandidatesTabItem(UpdateElectionsPage page)
+        : base(page, GroupName) {}
+
+      private static AddCandidatesTabItem[] GetTabInfo(UpdateElectionsPage page)
+      {
+        var addCandidatesTabInfo = new[]
+        {
+          new AddCandidatesTabItem(page)
+          {
+            Column = "CandidateList",
+            Description = "Candidate List"
+          }
+        };
+
+        foreach (var item in addCandidatesTabInfo) item.InitializeItem(page);
+
+        InitializeGroup(page, GroupName);
+
+        return addCandidatesTabInfo;
+      }
+
+      protected override string GetCurrentValue()
+      {
+        return null;
+      }
+
+      // ReSharper disable UnusedMember.Local
+      // Invoked via Reflection
+      internal static void Initialize(UpdateElectionsPage page)
+        // ReSharper restore UnusedMember.Local
+      {
+        page._AddCandidatesTabInfo = GetTabInfo(page);
+        // Select office doesn't need the full-blown treatment since it doesn't
+        // update
+        InitializeGroup(page, "SelectOffice");
+        page.ShowAddCandidates = StateCache.IsValidStateCode(page.StateCode) ||
+          StateCache.IsPresidentialPrimary(page.StateCode);
+        if (!page.ShowAddCandidates)
+          page.TabAddCandidatesItem.Visible = false;
+
+        if (!page.IsPostBack)
+          StateCache.Populate(page.ControlAddNewCandidateStateCode,
+            "Select candidate home state", String.Empty);
+      }
+
+      public override void LoadControl()
+      {
+        var electionKey = Page.GetElectionKey();
+        var officeKey = Page.GetOfficeKey();
+        Page.HeadingAddCandidatesOffice.InnerHtml =
+          Offices.FormatOfficeName(officeKey);
+
+        var table = Elections.GetOneElectionOffice(electionKey, officeKey);
+        var candidates = table.Rows.Cast<DataRow>()
+          .Where(row => !row.IsRunningMate())
+          .OrderBy(row => row.OrderOnBallot())
+          .ThenBy(row => row.PoliticianKey(), StringComparer.OrdinalIgnoreCase)
+          .ToList();
+        Page.FeedbackAddCandidates.AddInfo(String.Format(
+          "{0} candidate{1} loaded.", candidates.Count, candidates.Count.Plural()));
+        if (candidates.Count == 0)
+        {
+          Page.AddCandidatesMessage.RemoveCssClass("hidden");
+          Page.AddCandidatesMessage.InnerHtml =
+            "No candidates were found for this office.";
+        }
+        else
+        {
+          Page.AddCandidatesMessage.AddCssClasses("hidden");
+          foreach (var candidate in candidates)
+          {
+            var li =
+              new HtmlGenericControl("li")
+              {
+                ID = "candidate-" + candidate.PoliticianKey()
+              }.AddTo(
+                Page.ControlAddCandidatesCandidateList);
+            var outerDiv = new HtmlGenericControl("div").AddTo(li, "outer shadow-2");
+            CreateCandidateEntry(candidate)
+              .AddTo(outerDiv);
+            var runningMateKey = candidate.RunningMateKey();
+            if (!candidate.IsRunningMateOffice()) continue;
+            DataRow runningMate = null;
+            if (!String.IsNullOrWhiteSpace(runningMateKey))
+              runningMate = table.Rows.Cast<DataRow>()
+                .FirstOrDefault(row => row.PoliticianKey()
+                  .IsEqIgnoreCase(runningMateKey));
+            if (runningMate == null)
+              CreateNoRunningMateEntry()
+                .AddTo(outerDiv);
+            else
+              CreateCandidateEntry(runningMate, candidate.PartyCode())
+                .AddTo(outerDiv);
+          }
+        }
+      }
+
+      protected override void Log(string oldValue, string newValue)
+      {
+        // Logging done in Update
+      }
+
+      protected override bool Update(object newValue)
+      {
+        var electionKey = Page.GetElectionKey();
+        var officeKey = Page.GetOfficeKey();
+
+        // parse the new value
+        // syntax:
+        //   candidate = prefix-<politicianKey>[+<runningMateKey]
+        //   candidates = <candidate>[|<candidate>]*
+        var value = newValue as string;
+        Debug.Assert(value != null, "value != null");
+        var newCandidates = value.Split(new[] {'|'},
+          StringSplitOptions.RemoveEmptyEntries)
+          .Select(candidate =>
+          {
+            var ids = candidate.Split('+');
+            return
+              new
+              {
+                PoliticianKey = ids[0].Substring(ids[0].LastIndexOf('-') + 1),
+                RunningMateKey = ids.Length == 2 ? ids[1] : String.Empty
+              };
+          });
+
+        // Get the current slate of candidate for this election/office
+        var currentCandidatesTable =
+          ElectionsPoliticians.GetDataByElectionKeyOfficeKey(electionKey, officeKey);
+
+        // Get the incumbent(s) for this office
+        var incumbents =
+          Enumerable.Select(OfficesOfficials.GetPoliticianKeysData(officeKey),
+            row => row.PoliticianKey)
+            .ToList();
+
+        // If we process a row, we delete it from this list. What's left needs
+        // to be deleted from the DB.
+        var rowsToDelete = Enumerable.Select(currentCandidatesTable, row => row)
+          .ToList();
+
+        var orderOnBallot = 0;
+        var federalCode = Offices.GetOfficeClass(officeKey)
+          .StateCodeProxy();
+        var stateCode = Elections.GetStateCodeFromKey(electionKey);
+        if (StateCache.IsValidFederalCode(stateCode, false)) stateCode = string.Empty;
+        var countyCode = Elections.GetCountyCodeFromKey(electionKey);
+        var localCode = Elections.GetLocalCodeFromKey(electionKey);
+        var electionKeyFederal = String.IsNullOrWhiteSpace(federalCode)
+          ? String.Empty
+          : Elections.GetFederalElectionKeyFromKey(electionKey, federalCode);
+        var electionKeyState = Elections.GetStateElectionKeyFromKey(electionKey);
+        var electionKeyCounty = Elections.GetCountyElectionKeyFromKey(electionKey);
+        var electionKeyLocal = Elections.GetLocalElectionKeyFromKey(electionKey);
+        foreach (var candidate in newCandidates)
+        {
+          orderOnBallot += 10;
+          var currentRow =
+            currentCandidatesTable.FirstOrDefault(
+              row => row.PoliticianKey.IsEqIgnoreCase(candidate.PoliticianKey));
+          if (currentRow == null)
+          {
+            // new candidate, add
+            LogDataChange.LogInsert(ElectionsPoliticians.TableName,
+              candidate.RunningMateKey, DateTime.UtcNow, electionKey, officeKey,
+              candidate.PoliticianKey);
+            currentCandidatesTable.AddRow(electionKey, officeKey,
+              candidate.PoliticianKey, candidate.RunningMateKey, electionKeyState,
+              electionKeyFederal, electionKeyCounty, electionKeyLocal, stateCode,
+              countyCode, localCode, String.Empty, orderOnBallot, false,
+              incumbents.Contains(candidate.PoliticianKey), false);
+          }
+          else
+          {
+            // existing candidate, update if necessary
+            if (currentRow.RunningMateKey.IsNeIgnoreCase(candidate.RunningMateKey))
+            {
+              LogDataChange.LogUpdate(ElectionsPoliticians.Column.RunningMateKey,
+                currentRow.RunningMateKey, candidate.RunningMateKey,
+                DateTime.UtcNow, electionKey, officeKey, candidate.PoliticianKey);
+              currentRow.RunningMateKey = candidate.RunningMateKey;
+            }
+            if (currentRow.OrderOnBallot != orderOnBallot)
+            {
+              LogDataChange.LogUpdate(ElectionsPoliticians.Column.OrderOnBallot,
+                currentRow.OrderOnBallot, orderOnBallot, DateTime.UtcNow,
+                electionKey, officeKey, candidate.PoliticianKey);
+              currentRow.OrderOnBallot = orderOnBallot;
+            }
+            rowsToDelete.Remove(currentRow);
+          }
+        }
+
+        foreach (var row in rowsToDelete)
+        {
+          LogDataChange.LogDelete(ElectionsPoliticians.TableName, DateTime.UtcNow,
+            electionKey, officeKey, row.PoliticianKey);
+          row.Delete();
+        }
+
+        // Update if any changes
+        var candidateListChanged =
+          currentCandidatesTable.FirstOrDefault(
+            row => row.RowState != DataRowState.Unchanged) != null;
+        if (candidateListChanged) ElectionsPoliticians.UpdateTable(currentCandidatesTable);
+
+        LoadControl();
+        return candidateListChanged;
+      }
+    }
+
+    private AddCandidatesTabItem[] _AddCandidatesTabInfo;
+
+    #endregion DataItem object
+
+    private static Control CreateCandidateEntry(DataRow candidate,
+      string partyCodeToSuppress = null)
+    {
+      var isRunningMate = candidate.IsRunningMate();
+      var innerDiv =
+        new HtmlGenericControl("div").AddCssClasses("candidate " +
+          (isRunningMate ? "running-mate mate" : "main"));
+      if (isRunningMate)
+        new HtmlInputHidden {Value = candidate.PoliticianKey()}.AddTo(innerDiv,
+          "mate-id");
+
+      var cellDiv = new HtmlGenericControl("div").AddTo(innerDiv, "cell pic");
+      Report.CreatePoliticianImageTag(candidate.PoliticianKey(), 35)
+        .AddTo(cellDiv);
+
+      cellDiv = new HtmlGenericControl("div").AddTo(innerDiv, "cell data data1");
+      if (isRunningMate)
+      {
+        var mateDiv = new HtmlGenericControl("div").AddTo(cellDiv, "mate-header");
+        new LiteralControl("Running Mate").AddTo(mateDiv);
+      }
+
+      var itemDiv = new HtmlGenericControl("div").AddTo(cellDiv, "name");
+      new LiteralControl(Politicians.FormatName(candidate, true)).AddTo(itemDiv);
+      var partyCode = candidate.PartyCode();
+      if (!String.IsNullOrWhiteSpace(partyCode) && partyCode != partyCodeToSuppress)
+      {
+        new LiteralControl(" (").AddTo(itemDiv);
+        var anchor = Report.CreatePartyAnchor(candidate, "view")
+          .AddTo(itemDiv);
+        if (anchor is HtmlAnchor) anchor.AddCssClasses("tiptip");
+        new LiteralControl(")").AddTo(itemDiv);
+      }
+      if (!isRunningMate && candidate.IsIncumbent())
+        new HtmlGenericControl("span") {InnerHtml = " •",}.AddTo(itemDiv, "tiptip")
+          .Attributes["title"] = "Candidate is incumbent for this election";
+
+      itemDiv = new HtmlGenericControl("div").AddTo(cellDiv, "header");
+      new LiteralControl("Address / City State Zip").AddTo(itemDiv);
+
+      var text = candidate.PublicAddress();
+      var className = String.Empty;
+      if (String.IsNullOrWhiteSpace(text))
+      {
+        text = "Address not available";
+        className = " na";
+      }
+      itemDiv = new HtmlGenericControl("div").AddTo(cellDiv,
+        "data-item address" + className);
+      new LiteralControl(text).AddTo(itemDiv);
+
+      text = candidate.PublicCityStateZip();
+      className = String.Empty;
+      if (String.IsNullOrWhiteSpace(text))
+      {
+        text = "City State Zip not available";
+        className = " na";
+      }
+      itemDiv = new HtmlGenericControl("div").AddTo(cellDiv,
+        "data-item city-state-zip" + className);
+      new LiteralControl(text).AddTo(itemDiv);
+
+      cellDiv = new HtmlGenericControl("div").AddTo(innerDiv, "cell data data2");
+
+      itemDiv = new HtmlGenericControl("div").AddTo(cellDiv, "header");
+      new LiteralControl("Phone / Email / Web Site").AddTo(itemDiv);
+
+      text = candidate.PublicPhone();
+      className = String.Empty;
+      if (String.IsNullOrWhiteSpace(text))
+      {
+        text = "Phone not available";
+        className = " na";
+      }
+      itemDiv = new HtmlGenericControl("div").AddTo(cellDiv,
+        "data-item phone" + className);
+      new LiteralControl(text).AddTo(itemDiv);
+
+      text = candidate.PublicEmail();
+      className = String.Empty;
+      Control control;
+      if (String.IsNullOrWhiteSpace(text))
+      {
+        className = " na";
+        control = new LiteralControl("Email not available");
+      }
+      else
+        control = new HtmlAnchor
+        {
+          HRef = NormalizeEmailHRef(text),
+          InnerHtml = text
+        };
+      itemDiv = new HtmlGenericControl("div").AddTo(cellDiv,
+        "data-item email" + className);
+      control.AddTo(itemDiv);
+
+      text = candidate.PublicWebAddress();
+      className = String.Empty;
+      if (String.IsNullOrWhiteSpace(text))
+      {
+        className = " na";
+        control = new LiteralControl("Web site not available");
+      }
+      else
+        control = new HtmlAnchor
+        {
+          HRef = NormalizeUrl(text),
+          InnerHtml = text,
+          Target = "view"
+        };
+      itemDiv = new HtmlGenericControl("div").AddTo(cellDiv,
+        "data-item web-site" + className);
+      control.AddTo(itemDiv);
+
+      cellDiv = new HtmlGenericControl("div").AddTo(innerDiv, "cell icons");
+
+      new HtmlGenericControl("div").AddTo(cellDiv, "icon-move tiptip")
+        .Attributes["title"] = "Drag to reorder the candidates";
+
+      var menu = new HtmlGenericControl("div").AddTo(cellDiv, "candidate-menu");
+      var ul1 = new HtmlGenericControl("ul").AddTo(menu, "candidate-menu");
+      var li1 = new HtmlGenericControl("li").AddTo(ul1);
+      var a1 = new HtmlAnchor().AddTo(li1);
+      new HtmlGenericControl("div").AddTo(a1, "icon icon-menu");
+      var ul2 = new HtmlGenericControl("ul").AddTo(li1);
+      var li2 = new HtmlGenericControl("li").AddTo(ul2, "rounded-border");
+      new HtmlAnchor {InnerHtml = "Edit candidate's information"}.AddTo(li2,
+        "edit-candidate-link")
+        .Attributes["pkey"] = candidate.PoliticianKey();
+      li2 = new HtmlGenericControl("li").AddTo(ul2, "rounded-border");
+      new HtmlAnchor
+      {
+        InnerHtml = "View candidate's public page",
+        HRef = UrlManager.GetIntroPageUri(candidate.PoliticianKey())
+          .ToString(),
+        Target = "view"
+      }.AddTo(li2);
+      if (IsMasterUser)
+      {
+        li2 = new HtmlGenericControl("li").AddTo(ul2, "rounded-border");
+        new HtmlAnchor
+        {
+          InnerHtml = "Edit candidate's public page",
+          HRef =
+            SecurePoliticianPage.GetUpdateIntroPageUrl(candidate.PoliticianKey()),
+          Target = "view"
+        }.AddTo(li2);
+        li2 = new HtmlGenericControl("li").AddTo(ul2, "rounded-border");
+        new HtmlAnchor { InnerHtml = "Get candidate's key" }.AddTo(li2,
+          "get-candidate-key-link")
+          .Attributes["pkey"] = candidate.PoliticianKey();
+      }
+      new HtmlGenericControl("div").AddTo(cellDiv, "clear-both");
+
+      new HtmlGenericControl("div").AddTo(cellDiv, "icon icon-remove tiptip")
+        .Attributes["title"] = isRunningMate
+          ? "Check to remove this running mate"
+          : "Check to remove this candidate";
+
+      new HtmlGenericControl("div").AddTo(innerDiv, "clear-both");
+
+      return innerDiv;
+    }
+
+    private static Control CreateNoRunningMateEntry()
+    {
+      var innerDiv =
+        new HtmlGenericControl("div").AddCssClasses(
+          "candidate running-mate no-mate");
+
+      new HtmlGenericControl("div").AddTo(innerDiv, "cell pic");
+
+      var cellDiv = new HtmlGenericControl("div").AddTo(innerDiv, "cell data data1");
+      var mateDiv = new HtmlGenericControl("div").AddTo(cellDiv, "mate-header");
+      new LiteralControl("No Running Mate").AddTo(mateDiv);
+
+      new HtmlGenericControl("div").AddTo(innerDiv, "cell data data2");
+
+      cellDiv = new HtmlGenericControl("div").AddTo(innerDiv, "cell icons");
+
+      new HtmlGenericControl("div").AddTo(cellDiv, "icon icon-add-mate tiptip")
+        .Attributes["title"] = "Add running mate";
+
+      new HtmlGenericControl("div").AddTo(innerDiv, "clear-both");
+
+      return innerDiv;
+    }
+
+    internal static string GetCandidateHtml(string electionKey,
+      string politicianKey, string officeKey)
+    {
+      var isRunningMateOffice = Offices.GetIsRunningMateOffice(officeKey, false);
+      var placeHolder = new PlaceHolder();
+      var candidate = Politicians.GetCandidateData(electionKey, politicianKey,
+        false);
+      var li =
+        new HtmlGenericControl("li")
+        {
+          ID = "candidate-" + candidate.PoliticianKey()
+        }.AddTo(placeHolder);
+      var outerDiv = new HtmlGenericControl("div").AddTo(li, "outer shadow-2");
+      CreateCandidateEntry(candidate)
+        .AddTo(outerDiv);
+      if (isRunningMateOffice)
+        CreateNoRunningMateEntry()
+          .AddTo(outerDiv);
+      return placeHolder.RenderToString();
+    }
+
+    internal static string GetRunningMateHtml(string electionKey,
+      string politicianKey, string mainCandidateKey)
+    {
+      var partyCodeToSuppress =
+        Parties.GetPartyCode(Politicians.GetPartyKey(mainCandidateKey));
+      var candidate = Politicians.GetCandidateData(electionKey, politicianKey, true);
+      return CreateCandidateEntry(candidate, partyCodeToSuppress)
+        .RenderToString();
+    }
+
+    #endregion Private
+
+    #region Event handlers and overrides
+
+    protected void ButtonAddCandidates_OnClick(object sender, EventArgs e)
+    {
+      switch (AddCandidatesReloading.Value)
+      {
+        case "reloading":
+        {
+          // This option just loads the office tree
+          AddCandidatesReloading.Value = String.Empty;
+          SelectedOfficeKey.Value = String.Empty;
+          SetElectionHeading(HeadingAddCandidates);
+          HeadingAddCandidatesOffice.InnerHtml = "No office selected";
+
+          var table = Elections.GetActiveElectionOfficeData(GetElectionKey(),
+            StateCode, CountyCode, LocalCode);
+          var officeCount = 0;
+          if (table.Rows.Count == 0)
+          {
+            AddCandidatesMessage.RemoveCssClass("hidden");
+            AddCandidatesMessage.InnerHtml =
+              "No offices were found for this election";
+          }
+          else
+          {
+            AddCandidatesMessage.AddCssClasses("hidden");
+            officeCount = PopulateOfficeTree(table, PlaceHolderSelectOfficeTree);
+            ShowSelectOfficePanel.Value = "true";
+            SelectOfficeExpandedNode.Value = String.Empty;
+            UpdatePanelSelectOffice.Update();
+          }
+          FeedbackAddCandidates.AddInfo(String.Format("{0} offices loaded.",
+            officeCount));
+        }
+          break;
+
+        case "loadoffice":
+        {
+          AddCandidatesReloading.Value = String.Empty;
+          ShowSelectOfficePanel.Value = "false";
+          _AddCandidatesTabInfo.LoadControls();
+          SetElectionHeading(HeadingAddCandidates);
+          _AddNewCandidateSubTabInfo.ClearValidationErrors();
+          ClearAddNewCandidate();
+        }
+          break;
+
+        case "":
+        {
+          // normal update
+          _AddCandidatesTabInfo.Update(FeedbackAddCandidates);
+          ClearAddNewCandidate();
+          // to update candidate counts...
+          var table = Elections.GetActiveElectionOfficeData(GetElectionKey(),
+            StateCode, CountyCode, LocalCode);
+          PopulateOfficeTree(table, PlaceHolderSelectOfficeTree);
+          ShowSelectOfficePanel.Value = "false";
+          UpdatePanelSelectOffice.Update();
+        }
+          break;
+
+        default:
+          throw new VoteException("Unknown reloading option");
+      }
+    }
+
+    #endregion Event handlers and overrides
+  }
+}

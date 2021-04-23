@@ -1,0 +1,33 @@
+﻿#emailForm .emailFormMessage 
+{
+  width: 800px;
+}
+#emailForm .emailFormCaptchaControls
+{
+  margin-left: 30px;
+}
+#emailForm p.emailFormLabel, 
+#emailForm emailFormMessage,
+#emailForm emailFormGoodLabel,
+#emailForm emailFormErrorLabel
+{
+  font-family: Arial;
+  font-size: 12px;
+  margin-bottom: 0;
+}
+#emailForm .emailFormErrorLabel
+{
+  color: Red;
+}
+#emailForm .emailFormGoodLabel
+{
+  color: Green;
+}
+#emailForm .emailFormFromEmailAddress
+{
+  width: 400px;
+}
+#emailForm .emailFormSubject
+{
+  width: 600px;
+}

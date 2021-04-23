@@ -1,0 +1,99 @@
+﻿using System;
+using DB.Vote;
+
+namespace Vote
+{
+  public partial class SubscribePage : PublicPage
+  {
+    protected SubscribePage()
+    {
+      NoUrlEdit = true;
+      NoIndex = true;
+    }
+
+    private const string TitleTagAllStatesDomain =
+      "Vote-USA.org Subscribe and Unsubscribe";
+
+    private const string TitleTagSingleStateDomain =
+      "Vote-[[StateCode]].org Subscribe and Unsubscribe";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/SecondaryCommon.css");
+
+// ReSharper disable InvertIf
+      if (!IsPostBack) // ReSharper restore InvertIf
+      {
+        if (DomainData.IsValidStateCode) // Single state
+        {
+          if (DomainDesign.IncludeTitleForSingleState) TitleTag.Text = TitleTagSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForSingleState) MetaDescriptionTag.Content = TitleTagSingleStateDomain.Substitute();
+        }
+        else
+        {
+          if (DomainDesign.IncludeTitleForAllStates) TitleTag.Text = TitleTagAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForAllStates) MetaDescriptionTag.Content = TitleTagAllStatesDomain.Substitute();
+        }
+
+        var email = GetQueryString("email");
+        var code = GetQueryString("code");
+        var op = GetQueryString("op");
+
+        int id;
+        int.TryParse(code, out id);
+
+        // first find the EmailQueue entry
+        var queueTable = EmailQueue.GetDataById(id);
+        var handled = true;
+        if (queueTable.Count == 1 && queueTable[0].ToAddress.IsEqIgnoreCase(email)) UpdateAddresses(email, op);
+        else if (Addresses.GetEmailById(id)
+          .SafeString()
+          .IsEqIgnoreCase(email)) UpdateAddresses(email, op);
+        else handled = false;
+        if (!handled) return;
+        switch (op)
+        {
+          case "unsubscribe":
+            Message.InnerText =
+              string.Format(
+                "Email {0} has been unsubscribed from all future email.", email);
+            break;
+
+          case "ballots":
+            Message.InnerText =
+              string.Format(
+                "We will send future sample ballots to {0} as soon as they become available.",
+                email);
+            break;
+        }
+      }
+    }
+
+    internal static int UpdateAddresses(string email, string op)
+    { // get all matching email entries from Addresses
+      var addressesTable = Addresses.GetDataByEmail(email);
+      if (addressesTable.Count > 0)
+        switch (op)
+        {
+          case "unsubscribe":
+            foreach (var row in addressesTable)
+            {
+              row.SendSampleBallots = false;
+              row.OptOut = true;
+            }
+            break;
+
+          case "ballots":
+            foreach (var row in addressesTable)
+            {
+              row.SendSampleBallots = true;
+              row.OptOut = false;
+            }
+            break;
+        }
+      Addresses.UpdateTable(addressesTable);
+      return addressesTable.Count;
+    }
+  }
+}

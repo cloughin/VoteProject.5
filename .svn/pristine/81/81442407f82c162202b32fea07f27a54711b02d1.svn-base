@@ -1,0 +1,22 @@
+﻿namespace DB.VoteZipNewLocal
+{
+  public partial class ZipSingleUszdRow {}
+
+  public partial class ZipSingleUszd
+  {
+    public static ZipSingleUszdTable GetDataByZipCodes(string[] zipCodes)
+    {
+      return GetDataByZipCodes(zipCodes, -1);
+    }
+
+    public static ZipSingleUszdTable GetDataByZipCodes(
+      string[] zipCodes, int commandTimeout)
+    {
+      var cmdText = string.Format(
+        "{0} WHERE ZipCode IN ('{1}')", SelectAllCommandText,
+        string.Join("','", zipCodes));
+      var cmd = VoteZipNewLocalDb.GetCommand(cmdText, commandTimeout);
+      return FillTable(cmd, ZipSingleUszdTable.ColumnSet.All);
+    }
+  }
+}

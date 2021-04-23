@@ -1,0 +1,437 @@
+﻿.pointer:not(.disabled)
+{
+  cursor: pointer;
+}
+
+.step-title
+{
+  font-size: 24pt;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+  line-height: 100%;
+}
+
+.step-images
+{
+  margin-top: 10px;
+  text-align: center;
+}
+
+.step-images > div
+{
+  display: inline-block;
+  vertical-align: top;
+}
+
+.step-image
+{
+  height: 100px;
+  width: 100px;
+  background-image: url(/images/big-number-sprite.png);
+}
+
+.step-image-1
+{
+  background-position: 0 -200px;
+}
+
+.step-image-1.active
+{
+  background-position: 0 -400px;
+}
+
+.step-image-2
+{
+  background-position: -100px -200px;
+}
+
+.step-image-2.active
+{
+  background-position: -100px -400px;
+}
+
+.step-image-3
+{
+  background-position: -200px -200px;
+}
+
+.step-image-3.active
+{
+  background-position: -200px -400px;
+}
+
+.step-image-4
+{
+  background-position: -300px -200px;
+}
+
+.step-image-4.active
+{
+  background-position: -300px -400px;
+}
+
+.step-divider
+{
+  height: 5px;
+  width: 113px;
+  background-color: #acacac;
+  margin: 48px 10px 0 10px;
+}
+
+.sprite-button
+{
+  height: 20px;
+  width: 20px;
+  background-image: url(/images/button-sprite.png);
+  background-position: 0 -20px;
+  display: inline-block;
+}
+
+.checked .sprite-button
+{
+  background-position: 0 0;
+}
+
+.sprite-button-label
+{
+  font-size: 10pt;
+  margin: 4px 0 0 4px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.select-types
+{
+  margin-top: 10px;
+}
+
+.select-type
+{
+  display: inline-block;
+  font-size: 20pt;
+  line-height: 100%;
+  background-color: #acacac;
+  color: #ffffff;
+  padding: 5px 0;
+  width: 468px;
+  text-align: center;
+}
+
+.select-type.active
+{
+  background-color: #0000ff;
+}
+
+.step-1-scopes
+{
+  margin: 10px 0 0 0;
+}
+
+.step-1-scope
+{
+  display: inline-block;
+  margin: 0 20px;
+}
+
+.step-1-scopes .one-radio {
+  display: inline-block;
+}
+
+.step-1-scopes span {
+  margin-left: 20px;
+                    }
+
+.step-1-scopes span:first-child {
+  margin-right: 49px;
+                    }
+
+.spreadsheet-list
+{
+  width: 100%;
+  height: 200px;
+  border: 1px solid #acacac;
+  margin-top: 10px;
+  overflow-y: auto;
+}
+
+.spreadsheet-list > div
+{
+  padding: 2px 4px;
+  font-size: 10pt;
+}
+
+.spreadsheet-list > div.selected
+{
+  color: #ffffff;
+  background: #0000ff;
+}
+
+.step-1-upload-options
+{
+  margin-left: 20px;
+}
+
+.select-jurisdiction
+{
+  margin: 6px 0 0 24px;
+}
+
+.selected-jurisdiction b
+{
+  font-weight: normal;
+}
+
+.action-button
+{
+  background-color: #0000ff;
+  color: #ffffff;
+  display: inline-block;
+  padding: 5px;
+  margin-top: 5px;
+  font-size: 12pt;
+}
+
+.action-button.disabled
+{
+  background-color: #acacac;
+}
+
+.continue-buttons
+{
+  margin: 20px 0;
+  text-align: center;
+}
+
+.continue-buttons > div
+{
+  display: inline-block;
+  text-align: center;
+}
+
+.continue-button
+{
+  font-size: 16pt;
+  width: 120px;
+  padding: 10px 0;
+  background: #ff0000;
+  color: #ffffff;
+  margin: 0 10px;
+}
+
+.continue-button.disabled
+{
+  background: #acacac;
+}
+
+.file-input
+{
+  margin-top: 10px;
+  display: block;
+  width: 100%;
+}
+
+.field-label
+{
+  font-size: 10pt;
+}
+
+select
+{
+  min-width: 100px;
+}
+
+.step-1-upload .selection
+{
+  margin-top: 10px;
+}
+
+.spreadsheet-description
+{
+  font-size: 10pt;
+  text-align: center;
+  margin-top: 5px;
+}
+
+.mapping-list
+{
+  margin-top: 10px;
+}
+
+.one-mapping
+{
+  margin-top: 10px;
+}
+
+.mapping-list .column-name
+{
+  width: 500px;
+  display: inline-block;
+  text-align: right;
+  margin-right: 10px;
+  font-size: 10pt;
+}
+
+.row-navigation
+{
+  text-align: center;
+  font-size: 12pt;
+  margin-top: 10px;
+}
+
+.row-spinner
+{
+  width: 50px;
+}
+
+div.boxed-group
+{
+  margin-top: 10px;
+}
+
+div.boxed-group-label
+{
+  font-size: 14pt;
+}
+
+.data-raw
+{
+  font-size: 10pt;
+}
+
+.data-raw .label
+{
+  font-weight: bold;
+}
+
+.mc-group-addcandidates.mc-button
+{
+  position: absolute;
+  left: -10000px;
+}
+
+#tab-addpolitician
+{
+  float: right;
+}
+
+#body #tab-addpolitician .input-element.candidatelist
+{
+  display: none;
+}
+
+#body #tab-addpolitician .add-politician-panel
+{
+  border-left: none;
+  float: none;
+  padding-left: 0;
+}
+
+.search-districts-in-state
+{
+  z-index: 201 !important;
+}
+
+.search-districts-in-state .search-districts-text
+{
+  width: 510px;
+}
+
+.search-districts-in-state .instr
+{
+  margin-top: 10px;
+  font-style: italic;
+}
+
+.search-districts-in-state .search-districts-select
+{
+  width: 500px;
+  height: 500px;
+  border: 1px solid #666666;
+  padding: 0 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.search-districts-in-state .search-districts-select p
+{
+  text-align: left;
+  margin: 3px 0;
+  padding: 2px;
+}
+
+.step-1-types span {
+  position: relative;
+  left: 0;
+  display: block;
+  font-size: 20pt;
+  line-height: 100%;
+  background-color: #acacac;
+  color: #ffffff;
+  padding: 5px 0;
+  width: 468px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+  .step-1-types span::before,
+  .step-1-types span::after {
+    display: none;
+  }
+
+  .step-1-types span:hover {
+    cursor: pointer;
+  }
+
+.step-1-types-container > div {
+  margin-top: 8px;
+}
+.step-1-types .one-radio {
+  display: inline-block;
+                         }
+
+
+.step-1-types input:checked + label span {
+  background-color: #0000ff;
+}
+.step-4-is-complete-container
+{
+  text-align: center;
+  margin-top: 20px;
+}
+  .step-4-is-complete-container.checked-box span {
+    left: 15px;
+    font-size: 14pt;
+  }
+
+body.admin-page select.styled-select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: .22em;
+  background-repeat: no-repeat;
+  background-size: 0.8em auto;
+  background-position: right 0.25em center;
+  padding: .3em 1.3em .3em .3em;
+  background-image: url("data:image/svg+xml;charset=utf-8, \
+    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 40'> \
+      <polygon points='0,0 60,0 30,40' style='fill:blue;'/> \
+    </svg>");
+}
+
+.file-input
+{
+  display: none;
+}
+.file-input-button {
+  margin-top: 15px;
+}
+.file-input-button label
+{
+  display: inline-block;
+}
+.file-input-button span
+ {
+  font-size: 10pt;
+  margin-left: 10px;
+ }

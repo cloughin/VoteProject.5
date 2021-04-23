@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace Vote.Controls
+{
+  public partial class VoteUsaAddress : System.Web.UI.UserControl
+  {
+    bool _NoBreak;
+
+    public bool NoBreak
+    {
+      get { return _NoBreak; }
+      set { _NoBreak = value; }
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (NoBreak)
+      {
+        var literalControl = Controls[0] as LiteralControl;
+        if (literalControl != null)
+          literalControl.Text = literalControl.Text.Replace("<br />", ", ");
+      }
+    }
+  }
+}

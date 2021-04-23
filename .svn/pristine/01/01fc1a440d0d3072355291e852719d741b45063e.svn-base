@@ -1,0 +1,56 @@
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB;
+using DB.Vote;
+
+namespace Vote.Reports
+{
+  internal sealed class IntroIssuesReport : ResponsiveIssuesReport
+  {
+    #region Private
+
+    private readonly DataManager _DataManager = new DataManager();
+
+    #region Private classes
+
+    private sealed class DataManager : ReportDataManager<DataRow>
+    {
+      public void GetData(string politicianKey, string officeKey)
+      {
+        DataTable = Answers.GetAnswers(politicianKey, officeKey);
+      }
+    }
+
+    #endregion Private classes
+
+    private Control GenerateReport(DataRow politician)
+    {
+      _DataManager.GetData(politician.PoliticianKey(), politician.LiveOfficeKey());
+      var issues = _DataManager.GetDataSubset().GroupBy(r => r.IssueKey()).ToList();
+
+      var issueListLink = new HtmlGenericControl("div").AddTo(ReportContainer, "issue-list-link");
+      new HtmlAnchor
+      {
+        HRef = UrlManager.GetIssueListPageUri(Offices.GetStateCodeFromKey(politician.LiveOfficeKey())).ToString(),
+        InnerText = "View a list of all questions available to the candidate"
+      }.AddTo(issueListLink);
+      new LiteralControl(". Questions are included below only if the candidate responded.").AddTo(
+        issueListLink);
+
+      ReportIssues(new List<DataRow>{ politician }, issues, false, 1, true);
+
+      return ReportContainer.AddCssClasses("intro-issues-report");
+    }
+
+    #endregion
+
+    public static Control GetReport(DataRow politician)
+    {
+      var reportObject = new IntroIssuesReport();
+      return reportObject.GenerateReport(politician);
+    }
+  }
+}

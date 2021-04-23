@@ -1,0 +1,89 @@
+using System;
+
+namespace Vote
+{
+  public partial class ContactUsPageX : CacheablePage
+  {
+    protected ContactUsPageX()
+    {
+      NoUrlEdit = true; /* bacause disabled */
+      NoIndex = true; /* bacause disabled */
+    }
+
+   #region Caching support
+
+    protected override bool SuppressCaching
+    {
+      get { return true; }
+    }
+
+    protected override string GetCacheKey()
+    {
+      var key = UrlManager.GetStateCodeFromHostName();
+      var siteId = UrlManager.CurrentQuerySiteId;
+      if (!string.IsNullOrEmpty(siteId))
+        key += "." + siteId;
+
+      return key;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "ContactUs";
+    }
+
+    #endregion Caching support
+
+    private const string TitleTagAllStatesDomain =
+      "Contacting Vote-USA.org by Email or Slow Mail";
+
+    private const string MetaDescriptionAllStatesDomain =
+      "Send Vote-USA.org an email or postal mail";
+
+    private const string MetaKeywordsAllStatesDomain =
+      "sample ballot, sample ballots, ballot, ballots, vote, voting, election, primary, elections, candidates";
+
+    private const string TitleTagSingleStateDomain =
+      "Contacting Vote-[[StateCode]].org by Email or Slow Mail";
+
+    private const string MetaDescriptionSingleStateDomain =
+      "Send Vote-[[StateCode]].org an email or postal mail";
+
+    private const string MetaKeywordsSingleStateDomain =
+      "[[state]] sample ballot, [[state]] sample ballots, [[state]] ballot, ballots, [[state]] vote, [[state]] voting, [[state]] election, [[state]] primary, [[state]] elections, [[state]] candidates";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/SecondaryCommon.css");
+
+      if (!IsPostBack)
+        if (DomainData.IsValidStateCode) // Single state
+        {
+          if (DomainDesign.IncludeTitleForSingleState)
+            TitleTag.Text = TitleTagSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForSingleState)
+            MetaDescriptionTag.Content = MetaDescriptionSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForSingleState)
+            MetaKeywordsTag.Content = MetaKeywordsSingleStateDomain.Substitute();
+        }
+        else
+        {
+          if (DomainDesign.IncludeTitleForAllStates)
+            TitleTag.Text = TitleTagAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForAllStates)
+            MetaDescriptionTag.Content = MetaDescriptionAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForAllStates)
+            MetaKeywordsTag.Content = MetaKeywordsAllStatesDomain.Substitute();
+        }
+
+      //EmailForm.ToEmailAddress = "info@Vote-USA.org";
+      //EmailForm.ToEmailAddress = "curt.loughin@businessol.com";
+      EmailForm.ToEmailAddress = "mgr@Vote-USA.org";
+
+      EmailForm.SetItems(
+        "Privacy issues", "Donation issues", "Volunteer My Help",
+        "I’m a Candidate and Need My Login Credentials");
+    }
+  }
+}

@@ -1,0 +1,157 @@
+<%@ Page Language="C#" EnableSessionState="ReadOnly" AutoEventWireup="true" 
+CodeBehind="xIntro.aspx.cs" Inherits="Vote.IntroPageX" %>
+
+<%@ Register Src="/Controls/SocialMediaButtons.ascx" TagName="SocialMediaButtons"
+  TagPrefix="user" %>
+<%@ Register Src="/Controls/DonateBanner.ascx" TagName="DonateBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainBanner.ascx" TagName="MainBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainNavigation.ascx" TagName="MainNavigation" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeading.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainFooter.ascx" TagName="MainFooter" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntry.ascx" TagName="AddressEntry" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonationRequest.ascx" TagName="DonationRequest" TagPrefix="user" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+  <title runat="server" id="TitleTag"></title>
+  <meta id="MetaDescriptionTag" content="" name="description" runat="server" enableviewstate="False" />
+  <meta id="MetaKeywordsTag" content="" name="keywords" runat="server" enableviewstate="False" />
+</head>
+<body class="intro-page">
+  <form id="form1" runat="server">
+  <div id="outer">
+    <div id="container">
+      <user:SocialMediaButtons ID="SocialMediaButtons1" runat="server" />
+      <user:DonateBanner ID="DonateBanner1" runat="server" />
+      <user:MainBanner ID="MainBanner1" runat="server" />
+      <user:MainNavigation ID="MainNavigation1" runat="server" />
+      <div id="mainContent" runat="server">
+        <div id="InnerContent" runat="server">
+        <user:PageHeading ID="PageHeading" runat="server" 
+          MainHeadingText="Biographical Profile for {0}" />
+          
+        <asp:PlaceHolder ID="InfoPlaceHolder" runat="server"></asp:PlaceHolder>
+
+        <table class="tablePage" cellspacing="0" cellpadding="0">
+          <tr class="trIntroIssueLinksHeading">
+            <td class="tdIntroIssueLinksHeading">
+              <asp:Label ID="ProfileHeading" runat="server" EnableViewState="False"></asp:Label><br />
+              <span class="subheading">Links are only provided where we have information. The first
+                link is a report of all issues and questions made available to the candidates.</span>
+            </td>
+          </tr>
+          <tr class="trIntroIssueLinks">
+            <td class="tdIntroIssueLinks">
+              <asp:PlaceHolder ID="LinksPlaceHolder" runat="server"></asp:PlaceHolder>
+            </td>
+          </tr>
+        </table>
+        <table class="tablePage" cellspacing="0" cellpadding="0">
+          <tr class="trIntroProfileHeading">
+            <td class="tdIntroProfileHeading">
+              General: (political statement of goals, objectives, views, philosophies)
+            </td>
+          </tr>
+          <tr class="trIntroProfileDetail"> 
+            <td class="tdIntroProfileDetail">
+              <asp:Label ID="GeneralStatement" runat="server" EnableViewState="False"></asp:Label>
+            </td>
+          </tr>
+          <tr class="trIntroProfileHeading">
+            <td class="tdIntroProfileHeading">
+              Personal: (gender, age, marital status, spouse's name and age,
+               children's name and ages, home town, current residence)
+            </td>
+          </tr>
+          <tr class="trIntroProfileDetail">
+            <td class="tdIntroProfileDetail">
+              <asp:Label ID="Personal" runat="server" EnableViewState="False"></asp:Label>
+            </td>
+          </tr>
+          <tr class="trIntroProfileHeading">
+            <td class="tdIntroProfileHeading">
+              Education: (times and places of schools, colleges, major, degrees, activities, sports)
+            </td>
+          </tr>
+          <tr class="trIntroProfileDetail">
+            <td class="tdIntroProfileDetail">
+              <asp:Label ID="Education" runat="server" EnableViewState="False"></asp:Label>
+            </td>
+          </tr>
+          <tr class="trIntroProfileHeading">
+            <td class="tdIntroProfileHeading">
+              Profession: (profession and work experience outside politics)
+            </td>
+          </tr>
+          <tr class="trIntroProfileDetail">
+            <td class="tdIntroProfileDetail">
+              <asp:Label ID="Profession" runat="server" EnableViewState="False"></asp:Label>
+              <br />
+            </td>
+          </tr>
+          <tr class="trIntroProfileHeading">
+            <td class="tdIntroProfileHeading">
+              Military: (branch, years of service, active duty experience, highest rank, medals, honors, discharge date and type)
+            </td>
+          </tr>
+          <tr class="trIntroProfileDetail">
+            <td class="tdIntroProfileDetail">
+              <asp:Label ID="Military" runat="server" EnableViewState="False"></asp:Label>
+            </td>
+          </tr>
+          <tr class="trIntroProfileHeading">
+            <td class="tdIntroProfileHeading">
+              Civic: (past and present organizations, charities involvement)
+            </td>
+          </tr>
+          <tr class="trIntroProfileDetail">
+            <td class="tdIntroProfileDetail">
+              <asp:Label ID="Civic" runat="server" EnableViewState="False"></asp:Label>
+            </td>
+          </tr>
+          <tr class="trIntroProfileHeading">
+            <td class="tdIntroProfileHeading">
+              Political: (dates and titles of previously held political offices)
+            </td>
+          </tr>
+          <tr class="trIntroProfileDetail">
+            <td class="tdIntroProfileDetail">
+              <asp:Label ID="Political" runat="server" EnableViewState="False"></asp:Label>
+            </td>
+          </tr>
+          <tr class="trIntroProfileHeading">
+            <td class="tdIntroProfileHeading">
+              Religion: (current and past religious affiliations, beliefs)
+            </td>
+          </tr>
+          <tr class="trIntroProfileDetail">
+            <td class="tdIntroProfileDetail">
+              <asp:Label ID="Religion" runat="server" EnableViewState="False"></asp:Label>
+            </td>
+          </tr>
+          <tr class="trIntroProfileHeading">
+            <td class="tdIntroProfileHeading">
+              Accomplishments: (significant accomplishments, awards, achievements)
+            </td>
+          </tr>
+          <tr class="trIntroProfileDetail">
+            <td class="tdIntroProfileDetail" style="height: 37px">
+              <asp:Label ID="Accomplishments" runat="server" EnableViewState="False"></asp:Label>
+            </td>
+          </tr>
+        </table>
+        </div>
+        <user:MainFooter ID="MainFooter1" runat="server" />
+      </div>
+      <!-- id="mainContent" -->
+    </div>
+    <!-- id="container" -->
+  </div>
+  <!-- id="outer" -->
+  <user:AddressEntry ID="AddressEntry" runat="server" />
+  <user:DonationRequest ID="DonationRequest1" runat="server" />
+
+  </form>
+</body>
+</html>

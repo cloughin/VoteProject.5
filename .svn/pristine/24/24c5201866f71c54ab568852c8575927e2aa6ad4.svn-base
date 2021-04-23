@@ -1,0 +1,155 @@
+<%@ Page ValidateRequest="false" Language="C#" AutoEventWireup="true" 
+ MasterPageFile="~/Master/Admin.Master"
+Codebehind="Officials.aspx.cs" Inherits="Vote.Admin.Officials" %>
+
+<asp:Content ID="HeadContent" ContentPlaceHolderID="MasterHeadContent" runat="server">
+  <link href="/css/AllAdmin.css" type="text/css" rel="stylesheet">
+  <link href="/css/Officials.css" type="text/css" rel="stylesheet" />
+  <meta content="Microsoft Visual Studio .NET 7.1" name="GENERATOR">
+  <meta content="C#" name="CODE_LANGUAGE">
+  <meta content="JavaScript" name="vs_defaultClientScript">
+  <meta content="http://schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema">
+  <style type="text/css">
+    .style1
+    {
+      text-decoration: underline;
+    }
+  </style>
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+
+  <asp:UpdatePanel ID="UpdatePanel" runat="server">
+    <ContentTemplate>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table1" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left" class="HLarge">
+          <asp:Label ID="PageTitle" runat="server"></asp:Label></td>
+      </tr>
+      </table>
+    <!-- Table -->
+    <table id="TableIncumbentStatusRadioButtons" border="0" cellpadding="0" cellspacing="0" class="tableAdmin" runat="server">
+      <tr>
+        <td valign="middle" align="left" class="T">
+          <asp:Label ID="Msg" runat="server"></asp:Label></td>
+      </tr>
+      <tr>
+        <td class="HSmall">
+          Winners Identified (New Incumbents) in Last General Election and Subsequent 
+          Elections </td>
+      </tr>
+      <tr>
+        <td align="left" class="T">
+          These are the elections where winners have and have not been identified.</td>
+      </tr>
+      <tr>
+        <td align="left" class="TBold">
+          <asp:Label ID="Label_Report_Elections_Winners_Identified"
+            runat="server"></asp:Label>
+          <br />
+&nbsp; </td>
+      </tr>
+      </table>
+<%-- 
+    <table class="tableAdmin" id="UpdateReportTable" cellspacing="0" cellpadding="0"
+      runat="server">
+      <tr>
+        <td align="left" class="H" colspan="2">
+          Update Report</td>
+      </tr>
+      <tr>
+        <td align="left" class="T" colspan="2">
+          <asp:Label ID="LabelUpdateButtonMsg" runat="server" CssClass="TSmallColor" Text="Unrestricted Master User in test mode makes button always visible even if report is current"></asp:Label></td>
+      </tr>
+      <tr>
+        <td align="left">
+          <asp:Button ID="ButtonUpdateReport" runat="server" CssClass="Buttons" Text="Update Elected Officials Report"
+            Font-Bold="True" OnClick="ButtonUpdateReport_Click1" Width="200px"></asp:Button></td>
+          <td align="left" class="T">
+            The report below 
+            may not reflect any data changes made since it was last updated.
+            Click this button if the report is empty or to insure this report is current. 
+            State updates will update all county and local reports. County updates will 
+            update all local reports.
+            <br />
+            CAUTION!
+            This operation may take considerable time to complete. So ONLY do this after all 
+            desired changes have been made for the offices.</td>
+      </tr>
+      <tr>
+        <td align="left" class="TSmallColor" colspan="2">
+          NOTE: Updating the report may take some time to complete because all the reports and
+          links are recreated. You will be informed when this operation has completed.</td>
+      </tr>
+    </table>
+
+    <table id="RefreshReportTable" runat="server" cellpadding="0" cellspacing="0" class="tableAdmin">
+      <tr>
+        <td align="left">
+          <asp:Button ID="ButtonRefreshReport" runat="server" CssClass="Buttons" OnClick="ButtonRefreshReport_Click"
+            Text="Refresh Elected Officials Report" Width="200px" /></td>
+        <td align="left" class="T">
+          The Elected Officials Report below may not reflect the current election data. Click this
+          button to obtain the most recent report.&nbsp;</td>
+      </tr>
+    </table>
+--%>
+    <table id="TableLastUpdated" cellpadding="0" cellspacing="0" class="tableAdmin">
+      <%--
+      <tr>
+        <td align="left" class="T">
+          This report was last updated:
+          <asp:Label ID="LabelOfficialsReportLastUpdated" runat="server" CssClass="TSmallColor"></asp:Label></td>
+      </tr>
+      --%>
+      <tr>
+        <td align="left" class="T">
+          Use this link to view the report provided to public.</td>
+      </tr>
+      <tr>
+        <td align="left" class="T">
+          <asp:HyperLink ID="HyperLink_View_Public_Report" runat="server" CssClass="HyperLink"
+            Target="view">View Public Report</asp:HyperLink>
+          <br />
+&nbsp; </td>
+      </tr>
+    </table>
+
+    <table class="tableAdmin" id="TableInstructions" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="H">
+          Edit Currently Elected Officials (Incumbents)</td>
+      </tr>
+      <tr>
+        <td align="left" class="T">
+          Normally newly elected officials are identified using the Election form for the 
+          election.<br />
+          However, clicking on an <span class="style1">Office</span> link in the report below 
+          can also be used to identify the current incumbents for that office. It can also 
+          be used to change information about the 
+          office. 
+          <br />
+          Click a <u>Name</u>
+          link to change information about that person.</td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="TablePoliticianData" cellspacing="0" cellpadding="0"
+      runat="server">
+      <tr>
+        <td align="left" class="T">
+          Click on a <span class="style1">picture</span> link to edit biographical information, picture or issue responses on politician's
+          Introduction and Issue Pages.
+        </td>
+      </tr>
+    </table>
+      <!-- Table -->
+      <%-- 
+    <asp:Label ID="LableOfficialsReport" runat="server" EnableViewState="False"></asp:Label>
+    --%>
+    <asp:PlaceHolder ID="ReportPlaceHolder" EnableViewState="False" runat="server"></asp:PlaceHolder>
+    <!-- Table -->
+    </ContentTemplate>
+  </asp:UpdatePanel>
+</asp:Content>

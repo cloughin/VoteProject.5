@@ -1,0 +1,12 @@
+﻿                  
+    <div id="PartiesPicker" runat="server" class="rounded-border category parties hidden">
+      <p class="main-label">Parties:</p>
+      <p id="PartiesPickerAll" runat="server" class="sub-label"><input id="PartiesPickerAllCheckbox" class="all" runat="server" type="checkbox" /><span>All Parties</span></p>
+      <p id="PartiesPickerListButtonContainer" runat="server" class="get-list hidden">
+        <input id="PartiesPickerListButton" runat="server" type="button" value="Get Parties List"
+          class="get-list-button button-2 button-smallest"/>
+      </p>
+      <div id="PartiesPickerList" runat="server" class="checkbox-list hidden">
+      </div>
+      <div class="info">To enable party selection, select a single state.</div>
+    </div>

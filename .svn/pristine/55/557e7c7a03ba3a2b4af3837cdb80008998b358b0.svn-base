@@ -1,0 +1,73 @@
+using System;
+using DB.Vote;
+
+namespace Vote
+{
+  public partial class DefaultPage : CacheablePage
+  {
+    #region Caching support
+
+    protected override string GetCacheKey()
+    {
+      var key = UrlManager.GetStateCodeFromHostName();
+      var siteId = UrlManager.CurrentQuerySiteId;
+      if (!string.IsNullOrEmpty(siteId))
+        key += "." + siteId;
+
+      return key;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "Home";
+    }
+
+    #endregion Caching support
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/DefaultNew.css");
+
+      if (!IsPostBack)
+      {
+        //AddressEntry.SetHeaderImage("/images/getstartedtitle.png");
+        if (DomainData.IsValidStateCode) // Single state
+        {
+          string stateCode = db.Domain_DataCode_This();
+          string stateName = StateCache.GetStateName(stateCode);
+          if (DomainDesign.IncludeTitleForSingleState)
+            TitleTag.Text =
+              DomainDesign.GetSubstitutionText(PageCache, "TitleTagDefaultPageSingleStateDomain");
+          if (DomainDesign.IncludeMetaDescriptionForSingleState)
+            MetaDescriptionTag.Content =
+              DomainDesign.GetSubstitutionText(PageCache, "MetaDescriptionTagDefaultPageSingleStateDomain");
+          if (DomainDesign.IncludeMetaKeywordsForSingleState)
+            MetaKeywordsTag.Content =
+              DomainDesign.GetSubstitutionText(PageCache, "MetaKeywordsTagDefaultPageSingleStateDomain");
+          GetStartedButton.HRef = UrlManager.GetForVotersPageUri(stateCode).ToString();
+          //OurMissionText.InnerText = stateName + " Voters";
+          //MissionText.InnerHtml = db.Subsitutions_All(
+          //  db.Main_Content_Default_Or_Custom(db.Domain_DataCode_This(), 
+          //  db.DomainDesigns_Str_This("DomainDesignCode")));
+        }
+        else // use the All states domain
+        {
+          if (DomainDesign.IncludeTitleForAllStates)
+            TitleTag.Text =
+              DomainDesign.GetSubstitutionText(PageCache, "TitleTagDefaultPageAllStatesDomain");
+          if (DomainDesign.IncludeMetaDescriptionForAllStates)
+            MetaDescriptionTag.Content =
+              DomainDesign.GetSubstitutionText(PageCache, "MetaDescriptionTagDefaultPageAllStatesDomain");
+          if (DomainDesign.IncludeMetaKeywordsForAllStates)
+            MetaKeywordsTag.Content =
+              DomainDesign.GetSubstitutionText(PageCache, "MetaKeywordsTagDefaultPageAllStatesDomain");
+          GetStartedButton.Attributes["onclick"] = "openAddressEntryDialog(this);";
+          //OurMissionText.InnerText = "Our Mission";
+          //MissionText.InnerHtml = db.Design_This_Substitutions_Html(
+          //  "MainContentDefaultPageAllStatesDomainBeforeSelection");
+        }
+      }
+    }
+  }
+}

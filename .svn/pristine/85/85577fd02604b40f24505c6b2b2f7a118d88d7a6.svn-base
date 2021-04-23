@@ -1,0 +1,101 @@
+﻿using System;
+using System.Data;
+using System.Linq;
+using DB.Vote;
+
+namespace Vote.Admin
+{
+  public partial class UpdateElectionsPage
+  {
+    #region Private
+
+    #region DataItem object
+
+    [PageInitializer]
+    // ReSharper disable once UnusedMember.Local
+    // Invoked via Reflection
+    private class AddCandidatesTabItem : DataItemBase
+    {
+      // The rest of this is in the ManagePoliticiansPanel control
+      // ReSharper disable once UnusedMember.Local
+      internal static void Initialize(UpdateElectionsPage page)
+      {
+        InitializeGroup(page, "SelectOffice");
+        InitializeGroup(page, "AddCandidates");
+      }
+    }
+
+    #endregion DataItem object
+
+    #endregion Private
+
+    #region Event handlers and overrides
+
+    protected void ButtonAddCandidates_OnClick(object sender, EventArgs e)
+    {
+      switch (AddCandidatesReloading.Value)
+      {
+        case "reloading":
+        {
+          // This option just loads the office tree
+          AddCandidatesReloading.Value = String.Empty;
+          OfficeControl.OfficeKey = string.Empty;
+          SetElectionHeading(HeadingAddCandidates);
+          HeadingAddCandidatesOffice.InnerHtml = "No office selected";
+
+          var table = Elections.GetActiveElectionOfficeData(GetElectionKey(),
+            StateCode, CountyCode, LocalCode).Rows.Cast<DataRow>().ToList();
+          var officeCount = 0;
+          if (table.Count == 0)
+          {
+            _ManagePoliticialsPanel.Message.RemoveCssClass("hidden");
+            _ManagePoliticialsPanel.Message.InnerText =
+              "No offices were found for this election";
+          }
+          else
+          {
+            _ManagePoliticialsPanel.Message.AddCssClasses("hidden");
+            officeCount = Vote.Controls.OfficeControl.PopulateOfficeTree(table, OfficeControl.OfficeTree, StateCode);
+            OfficeControl.ShowSelectOfficePanel = true;
+            OfficeControl.ExpandedNode = String.Empty;
+            OfficeControl.Update();
+          }
+          FeedbackAddCandidates.AddInfo(String.Format("{0} offices loaded.",
+            officeCount));
+        }
+        break;
+
+        case "loadoffice":
+        {
+          AddCandidatesReloading.Value = String.Empty;
+          OfficeControl.ShowSelectOfficePanel = false;
+          _ManagePoliticialsPanel.LoadControls();
+          SetElectionHeading(HeadingAddCandidates);
+          HeadingAddCandidatesOffice.InnerText = Offices.FormatOfficeName(OfficeControl.OfficeKey);
+          _ManagePoliticialsPanel.ClearAddNewCandidate(true);
+        }
+          break;
+
+        case "":
+        {
+          // normal update
+          _ManagePoliticialsPanel.Update();
+          _ManagePoliticialsPanel.ClearAddNewCandidate();
+          // to update candidate counts...
+          var table = Elections.GetActiveElectionOfficeData(GetElectionKey(),
+            StateCode, CountyCode, LocalCode).Rows.Cast<DataRow>().ToList();
+          // In case counts changed
+          Vote.Controls.OfficeControl.PopulateOfficeTree(table, OfficeControl.OfficeTree, StateCode);
+          OfficeControl.ShowSelectOfficePanel = false;
+          OfficeControl.Update();
+        }
+          break;
+
+        default:
+          throw new VoteException("Unknown reloading option");
+      }
+    }
+
+    #endregion Event handlers and overrides
+  }
+}

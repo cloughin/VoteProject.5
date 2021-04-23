@@ -1,0 +1,63 @@
+﻿using System.Data;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB;
+using DB.Vote;
+
+namespace Vote.Reports
+{
+  internal sealed class PoliticianInfoResponsive : ResponsiveReport
+  {
+    private Control GenerateReport(DataRow politician)
+    {
+      var infoContainer = new HtmlGenericControl("div").AddTo(ReportContainer, "candidate-info");
+
+      new HtmlGenericControl("div") { InnerText = Politicians.FormatOfficeAndStatus(politician) }
+        .AddTo(infoContainer, "candidate-status");
+
+      if (politician.LiveOfficeStatus() == "InFutureViewableElection")
+      {
+        new HtmlGenericControl("div") { InnerText = politician.ElectionDescription() }
+         .AddTo(infoContainer, "candidate-election");
+        CreateCompareTheCandidatesAnchor(politician.LiveElectionKey(), politician.LiveOfficeKey())
+          .AddTo(infoContainer);
+      }
+
+      Control party;
+      if (politician.PartyKey() != null)
+      {
+        if (string.IsNullOrWhiteSpace(politician.PartyUrl()))
+          party = new LiteralControl(politician.PartyName());
+        else
+          party = new HtmlAnchor
+          {
+            HRef = VotePage.NormalizeUrl(politician.PartyUrl()),
+            Title = politician.PartyName() + " Website",
+            Target = "_blank",
+            InnerHtml = politician.PartyName()
+          };
+      }
+      else
+        party = new LiteralControl("no party affiliation");
+      party.AddTo(infoContainer, "candidate-party");
+
+      FormatWebAddress(infoContainer, politician);
+      FormatSocialMedia(infoContainer, politician);
+      FormatPostalAddress(infoContainer, politician);
+      FormatPhone(infoContainer, politician);
+      FormatAge(infoContainer, politician);
+
+      var imageContainer = new HtmlGenericControl("div").AddTo(ReportContainer, "candidate-image");
+      CreatePoliticianImageTag(politician.PoliticianKey(), ImageSize300, string.Empty)
+        .AddTo(imageContainer);
+
+      return ReportContainer.AddCssClasses("intro-report");
+    }
+
+    public static Control GetReport(DataRow politicianInfo)
+    {
+      var reportObject = new PoliticianInfoResponsive();
+      return reportObject.GenerateReport(politicianInfo);
+    }
+  }
+}

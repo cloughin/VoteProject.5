@@ -1,0 +1,189 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Mail;
+using System.Web.UI;
+
+namespace Vote.Controls
+{
+  public partial class EmailFormResponsive : UserControl
+  {
+    public class OptionalItem
+    {
+      public UserControl UserControl;
+      public string Id;
+      public string Label;
+      public string EmailLabel;
+      public Func<OptionalItem, string> Validator;
+
+      public static string Required(OptionalItem item)
+      {
+        var control = item.UserControl.FindControl(item.Id);
+        if (string.IsNullOrWhiteSpace(control.GetValue()))
+          return item.Label + " is required";
+        return null;
+      }
+
+      public static void ValidateAll(List<OptionalItem> items)
+      {
+        foreach (var item in items)
+        {
+          if (item.Validator != null)
+          {
+            var message = item.Validator(item);
+            if (!string.IsNullOrWhiteSpace(message))
+              throw new VoteException(message);
+          }
+        }
+      }
+
+      public static string FormatAll(List<OptionalItem> items)
+      {
+        var results = new List<string>();
+        foreach (var item in items)
+        {
+          var label = item.EmailLabel;
+          if (!label.EndsWith(":")) label += ":";
+          var value = item.UserControl.FindControl(item.Id).GetValue();
+          results.Add(label + " " + value);
+        }
+        var result = string.Join("\n", results);
+        if (!string.IsNullOrWhiteSpace(result))
+          result += "\n\n";
+        return result;
+      }
+    }
+
+    private bool? _IsHuman;
+    private string[] _Texts;
+    private readonly List<OptionalItem> _OptionalItems = new List<OptionalItem>(); 
+    public string ToEmailAddress { get; set; }
+    public string CcEmailAddress { get; set; }
+    public bool MessageOptional { get; set; }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      Page.IncludeJs("~/js/EmailFormResponsive.js");
+
+      EmailFormErrorLabel.Visible = false;
+      EmailFormGoodLabel.Visible = false;
+
+      // setup client-side input processing
+      EmailFormCaptcha.UserInputClientID = EmailFormCaptchaCodeTextBox.ClientID;
+
+      if (!IsPostBack)
+      {
+        AddSubjectItems();
+        if (MessageOptional) EmailFormMessageLabel.InnerText = "Message (optional):";
+      }
+
+    }
+
+    private void AddItem(string text, string value)
+    {
+      EmailFormSubject.AddItem(text, value);
+    }
+
+    public void AddOptionalItem(Control control, string id, string label, string emailLabel = null,
+      Func<OptionalItem, string> validator = null)
+    {
+      var wrapper = new HtmlDiv().AddTo(EmailFormFieldPlaceHolder, id.ToLowerInvariant() + "-wrapper");
+      if (string.IsNullOrWhiteSpace(label)) label = id;
+      if (string.IsNullOrWhiteSpace(emailLabel)) emailLabel = label;
+      _OptionalItems.Add(new OptionalItem
+      {
+        UserControl = this,
+        Id = id,
+        Label = label,
+        EmailLabel = emailLabel,
+        Validator = validator
+      });
+      if (!label.EndsWith(":")) label += ":";
+      control.ID = id;
+      new HtmlP { InnerText = label }.AddTo(wrapper, "email-form-label");
+      control.AddTo(wrapper);
+    }
+
+    public void AddOptionalItem(Control control, bool required, string name, string label = null, 
+      string emailLabel = null)
+    {
+      if (string.IsNullOrWhiteSpace(label)) label = name;
+      var validator = required ? OptionalItem.Required : (Func<OptionalItem, string>) null;
+      AddOptionalItem(control, name, label, emailLabel, validator);
+    }
+
+    public void SetItems(params string[] texts)
+    {
+      _Texts = texts;
+    }
+
+    private void AddSubjectItems()
+    {
+      EmailFormSubject.Items.Clear();
+      AddItem("Select a subject", "");
+      if (_Texts != null)
+        foreach (var text in _Texts)
+          AddItem(text, text);
+      AddItem("Other, please specify", "Other");
+    }
+
+    private bool IsHuman
+    {
+      get
+      {
+        if (_IsHuman == null)
+          _IsHuman = EmailFormCaptcha.Validate(EmailFormCaptchaCodeTextBox.Text);
+        return _IsHuman.Value;
+      }
+    }
+
+    protected void SubmitForm(object sender, EventArgs e)
+    {
+      //var subject = Request.Form["ctl00$MasterMainContent$EmailForm$EmailFormSubject"];
+      var subject = EmailFormSubject.Value;
+      if (subject == "Other")
+        subject = EmailFormOtherSubject.Text;
+      // validate the Captcha to check we're not dealing with a bot
+      if (IsHuman)
+        try
+        {
+          if (!Validation.IsValidEmailAddress(EmailFormFromEmailAddress.Text))
+            throw new VoteException("The email address you entered is not valid");
+          if (string.IsNullOrWhiteSpace(subject))
+            throw new VoteException(
+              "Please select a subject for the email");
+          if (!MessageOptional && string.IsNullOrWhiteSpace(EmailFormMessage.Text))
+            throw new VoteException("The email message body is missing");
+
+          OptionalItem.ValidateAll(_OptionalItems);
+
+          var email = new MailMessage
+          {
+            IsBodyHtml = false,
+            From = new MailAddress(EmailFormFromEmailAddress.Text)
+          };
+          email.To.Add(ToEmailAddress);
+          if (!string.IsNullOrWhiteSpace(CcEmailAddress))
+            email.CC.Add(CcEmailAddress);
+          email.Subject = subject;
+          email.Body = "Email: " + EmailFormFromEmailAddress.Text + "\n\n" + OptionalItem.FormatAll(_OptionalItems) + EmailFormMessage.Text;
+
+#if !NoEmail
+          EmailUtility.GetConfiguredSmtpClient().Send(email);
+#endif
+          EmailFormGoodLabel.Text = "Email has been sent";
+          EmailFormGoodLabel.Visible = true;
+        }
+        catch (Exception ex)
+        {
+          EmailFormErrorLabel.Text = ex.Message;
+          EmailFormErrorLabel.Visible = true;
+        }
+      else
+      {
+        EmailFormErrorLabel.Text = "The typed characters did not match the picture";
+        EmailFormErrorLabel.Visible = true;
+      }
+      EmailFormCaptchaCodeTextBox.Text = null; // clear previous user input
+    }
+  }
+}

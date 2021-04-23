@@ -1,0 +1,242 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using DB.Vote;
+using Vote.Controls;
+
+namespace Vote.Politician
+{
+  public partial class UpdateIntroPage
+  {
+    #region Private
+
+    #region DataItem object
+
+    // ReSharper disable UnusedMember.Local
+    // No updating here, only to provide initialization services
+    [PageInitializer]
+    private class ReasonsTabItem : PoliticianDataItem
+      // ReSharper restore UnusedMember.Local
+    {
+      private const string GroupName = "Reasons";
+
+      public ReasonsTabItem(UpdateIntroPage page, string groupName)
+        : base(page, groupName) {}
+
+      // ReSharper disable UnusedMember.Local
+      // Invoked via Reflection
+      internal static void Initialize(UpdateIntroPage page)
+        // ReSharper restore UnusedMember.Local
+      {
+        page.BuildReasonsAndObjectivesTab();
+        page.RegisterUpdateAll(page.UpdateAllReasons);
+        if (!page.IsPostBack)
+        {
+          new MainTabItem { TabName = GroupName }.Initialize(page);
+          page.LoadReasonsTabData();
+        }
+      }
+    }
+
+    #endregion DataItem object
+
+    #region Private Members to Build the Reasons and Objectives tab
+
+    private Font _QuestionTabFont;
+    private AnswersViewTable _ReasonsAndObjectivesTable;
+
+    private AnswersViewTable GetReasonsAndObjectivesTable()
+    {
+      return _ReasonsAndObjectivesTable ??
+        (_ReasonsAndObjectivesTable =
+          AnswersView.GetAllDataByIssueLevelStateCodePoliticianKey("A", "LL",
+            PoliticianKey));
+    }
+
+    // specs for breaking the vertical tabs
+    private const string QuestionTabFontFamily = "Arial";
+    private const float QuestionTabFontSize = 8.0F; // 8pt
+    private const int QuestionTabMaxWidth = 120; // 120px
+
+    private void BuildReasonsAndObjectivesTab()
+    {
+      var table = GetReasonsAndObjectivesTable();
+
+      var questions = table.Rows.OfType<AnswersViewRow>()
+        .OrderBy(row => row.QuestionOrder);
+
+      ProcessQuestions(questions);
+    }
+
+    private void CreateQuestion(AnswersViewRow row, Control tabs)
+    {
+      if (_QuestionTabFont == null)
+        // We use bold as worst-case
+        _QuestionTabFont = new Font(QuestionTabFontFamily, QuestionTabFontSize,
+          FontStyle.Bold);
+
+      var monitor = MonitorFactory.GetMonitorInstance(row.QuestionKey);
+
+      var panel = AddContainer(PlaceHolderReasons, "tab-reasons-" + row.QuestionKey,
+        "content-panel tab-panel vtab-panel");
+
+      // create vertical tab
+      var verticalTab = AddVertTab(tabs, "#" + panel.ClientID,
+        BreakForTab(row.Question, _QuestionTabFont, QuestionTabMaxWidth), " vcentered-tab");
+
+      // center the a tag -- the first child of the tab always
+      Center(verticalTab.Controls[0], false, true);
+
+      AddAsteriskIndicator(verticalTab, "Ast" + row.QuestionKey,
+        monitor.GetAsteriskClass(null),
+        string.Format("There are unsaved changes to \"{0}\"", row.Question));
+
+      AddStarIndicator(verticalTab, "Star" + row.QuestionKey,
+        monitor.GetStarClass(null, "answer"),
+        string.Format("We have a response from you for \"{0}\"", row.Question));
+
+      // The panel title -- use Question for now, but should actually expand on the
+      // Question with more detail...
+      var heading = AddContainer(panel, null, null);
+      AddHeading(heading, 4, null, null, row.Question);
+      AddHeading(heading, 6, null, null,
+        "(note: this information will appear on your Issues page, not your Intro page)");
+
+      // Center it
+      Center(heading, true, true);
+
+      // Add undo button as next sibling to heading
+      var undo = CreateUndoButton("Undo" + row.QuestionKey,
+        monitor.GetUndoClass(null),
+        string.Format("Revert \"{0}\" to the latest saved version", row.Question));
+      heading.AddAfter(undo);
+
+      // Same for clear button
+      var clear = CreateClearButton("Clear" + row.QuestionKey,
+        monitor.GetClearClass(null, "answer"),
+        string.Format("Clear \"{0}\"", row.Question));
+      heading.AddAfter(clear);
+
+      var updatePanel = AddAjaxUpdatePanel(panel, "UpdatePanel" + row.QuestionKey);
+
+      var container = AddContainer(updatePanel.ContentTemplateContainer,
+        "Container" + row.QuestionKey,
+        monitor.GetContainerClass("update-all updated"));
+
+      AddHiddenField(container, "Description" + row.QuestionKey,
+        monitor.GetDescriptionClass(null, "answer"), row.Question);
+
+      // the data field
+      AddTextArea(container, "TextBox" + row.QuestionKey,
+        monitor.GetDataClass("shadow reasons-textbox mc-mt-reasons", "answer"),
+        row.Answer, "Type or paste your response into this box", true);
+
+      // the remove-line-breaks button
+      AddButtonInputElement(container, null,
+        "remove-line-breaks button-2 button-smallest", "Remove Line Breaks", "remove-line-breaks");
+
+      if (!IsPoliticianUser) // add source and date boxes
+      {
+        AddTextInputElement(container, "Source" + row.QuestionKey,
+          monitor.GetDataClass("shadow-2 source-textbox mc-mt-reasons", "source"),
+          row.Source,
+          "Copy and paste the url of the web page (with or without http://) where" +
+            " you obtained the answer or a description of the source in the textbox" +
+            " below, i.e. a news article.", true, "Source", "source", null, null,
+          null);
+        AddTextInputElement(container, "Date" + row.QuestionKey,
+          monitor.GetDataClass("shadow-2 date-textbox date-picker mc-mt-reasons", "date"),
+          row.DateStamp.DbDateToShortDate(),
+          "Enter the date of the answer if today is not an appropriate date. For" +
+            " example if you obtained the answer from the candidate's campaign website," +
+            " and the election is over, enter some date a couple days prior to the" +
+            " election.", false, "Date", "date", null, null, null);
+        AddButtonInputElement(container, null,
+          "today-button button-1 button-smallest", "Today", "today");
+        AddClearBoth(container)
+          .AddCssClasses("spacer");
+      }
+
+      // feedback
+      AddFeedbackWithIE7Floater(container, "Feedback" + row.QuestionKey,
+        monitor.GetFeedbackClass(null));
+
+      // update button
+      AddUpdateButtonInContainer(container, "Button" + row.QuestionKey,
+        "update-button", monitor.GetButtonClass("update-button button-1"),
+        string.Format("Update \"{0}\"", row.Question), ButtonReasons_OnClick);
+
+      AddClearBoth(container);
+    }
+
+    private void ProcessQuestions(IEnumerable<AnswersViewRow> questions)
+    {
+      var tabs = AddTabContainer(PlaceHolderReasons, null, "tabs vtabs unselectable");
+
+      foreach (var question in questions)
+        CreateQuestion(question, tabs);
+    }
+
+    #endregion Private Members to Build the Reasons and Objectives tab
+
+    private UpdateStatus DoReasonsUpdate(string questionKey, bool reportUnchanged)
+    {
+      return DoAnswerUpdate(GetReasonsAndObjectivesTable(), questionKey,
+        reportUnchanged, ref _UpdateCount);
+    }
+
+    private void LoadReasonsTabData()
+    {
+      var table = GetReasonsAndObjectivesTable();
+      foreach (var row in table)
+        if (!string.IsNullOrWhiteSpace(row.Answer))
+        {
+          var textbox =
+            Master.FindMainContentControl("TextBox" + row.QuestionKey) as TextBox;
+          if (textbox != null)
+            textbox.Text = row.Answer.Trim();
+        }
+    }
+
+    private int UpdateAllReasons(bool showSummary)
+    {
+      var errorCount = 0;
+      var table = GetReasonsAndObjectivesTable();
+      foreach (var row in table)
+        if (DoReasonsUpdate(row.QuestionKey, showSummary) == UpdateStatus.Failure)
+          errorCount++;
+      return errorCount;
+    }
+
+    #endregion Private
+
+    #region Event handlers and overrides
+
+    private void ButtonReasons_OnClick(object sender, EventArgs e)
+    {
+      var button = sender as Button;
+      if (button == null ||
+        !button.ID.StartsWith("Button", StringComparison.Ordinal)) return;
+      var questionKey = button.ID.Substring(6);
+      var feedback =
+        Master.FindMainContentControl("Feedback" + questionKey) as
+          FeedbackContainerControl;
+
+      try
+      {
+        DoReasonsUpdate(questionKey, true);
+        InvalidatePageCache();
+      }
+      catch (Exception ex)
+      {
+        if (feedback != null)
+          feedback.HandleException(ex);
+      }
+    }
+
+    #endregion Event handlers and overrides
+  }
+}

@@ -1,0 +1,64 @@
+﻿using System;
+
+namespace Vote
+{
+  public partial class DefaultPage : CacheablePage
+  {
+    #region Caching support
+
+    protected override string GetCacheKey()
+    {
+      return UrlManager.GetStateCodeFromHostName();
+    }
+
+    protected override string GetCacheType()
+    {
+      return "Home";
+    }
+
+    #endregion Caching support
+
+    private const string TitleTag = "{1} | Candidate Comparisons for {0} Elections, Custom Sample Ballots, Voter Information";
+    private const string MetaDescriptionTag = "Compare the candidates for {0} elections, get customized enhanced sample ballots, and learn about your elected representatives.";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      Master.MenuPage = "/";
+      if (!IsPostBack)
+      {
+        var stateName = Master.StateName;
+        Title = string.Format(TitleTag, stateName, Master.SiteName);
+        MetaDescription = string.Format(MetaDescriptionTag, stateName);
+        //if (DomainData.IsValidStateCode) // Single state
+        //{
+        //  if (DomainDesign.IncludeTitleForSingleState)
+        //    Title =
+        //      DomainDesign.GetSubstitutionText(PageCache, "TitleTagDefaultPageSingleStateDomain");
+        //  if (DomainDesign.IncludeMetaDescriptionForSingleState)
+        //    MetaDescription =
+        //      DomainDesign.GetSubstitutionText(PageCache, "MetaDescriptionTagDefaultPageSingleStateDomain");
+        //  if (DomainDesign.IncludeMetaKeywordsForSingleState)
+        //    MetaKeywords =
+        //      DomainDesign.GetSubstitutionText(PageCache, "MetaKeywordsTagDefaultPageSingleStateDomain");
+        //}
+        //else // use the All states domain
+        //{
+        //  if (DomainDesign.IncludeTitleForAllStates)
+        //    Title =
+        //      DomainDesign.GetSubstitutionText(PageCache, "TitleTagDefaultPageAllStatesDomain");
+        //  if (DomainDesign.IncludeMetaDescriptionForAllStates)
+        //    MetaDescription =
+        //      DomainDesign.GetSubstitutionText(PageCache, "MetaDescriptionTagDefaultPageAllStatesDomain");
+        //  if (DomainDesign.IncludeMetaKeywordsForAllStates)
+        //    MetaKeywords =
+        //      DomainDesign.GetSubstitutionText(PageCache, "MetaKeywordsTagDefaultPageAllStatesDomain");
+        //}
+      }
+      else
+      {
+        // address submission by non-js user
+        AddressEntryInline.Submit();
+      }
+    }
+  }
+}

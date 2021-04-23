@@ -1,0 +1,269 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB.Vote;
+
+namespace Vote
+{
+  public class LinkInfo
+  {
+    public string Description;
+    public Uri HRef;
+    //private readonly DateTime _ElectionDate;
+    //private readonly string _StateCode;
+    //private readonly string _PartyCode;
+
+    public LinkInfo() {}
+
+    public LinkInfo(ElectionsRow electionsRow)
+    {
+      Description = electionsRow.ElectionDesc;
+      //_ElectionDate = electionsRow.ElectionDate;
+      //_StateCode = electionsRow.StateCode;
+      //_PartyCode = electionsRow.PartyCode;
+    }
+
+    //private static int Compare(LinkInfo li1, LinkInfo li2)
+    //{
+    //  // Sort: ElectionDate DESC, StateCode (so U1, U2 etc order properly), PartyCode
+    //  var result = DateTime.Compare(li2._ElectionDate, li1._ElectionDate);
+    //  if (result != 0) return result;
+    //  result = string.Compare(
+    //    li2._StateCode, li1._StateCode, StringComparison.OrdinalIgnoreCase);
+    //  if (result != 0) return result;
+    //  return string.Compare(
+    //    li2._PartyCode, li1._PartyCode, StringComparison.OrdinalIgnoreCase);
+    //}
+
+    //public static void SortList(List<LinkInfo> list)
+    //{
+    //  list.Sort(Compare);
+    //}
+  }
+
+  public partial class ForResearchPageX : CacheablePage
+  {
+    public ForResearchPageX()
+    {
+      NoUrlEdit = true;
+    }
+
+    #region Caching support
+
+    protected override bool SuppressCaching
+    {
+      get { return true; }
+    }
+
+    protected override string GetCacheKey()
+    {
+      var key = UrlManager.GetStateCodeFromHostName();
+      var siteId = UrlManager.CurrentQuerySiteId;
+      if (!string.IsNullOrEmpty(siteId))
+        key += "." + siteId;
+
+      return key;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "forResearch";
+    }
+
+    #endregion Caching support
+
+    private const string TitleTagAllStatesDomain =
+      "Elections, Office Contests and Candidate Research Information";
+
+    private const string MetaDescriptionAllStatesDomain =
+      "Election and candidate research information of office contests and candidates’ pictures, bios, social links and candidates’ positions on issues back to 2004";
+
+    private const string MetaKeywordsAllStatesDomain =
+      "political parties, democratic party, republican party, green party, libertarian party";
+
+    private const string TitleTagSingleStateDomain =
+      "[[state]] Elections, Office Contests and Candidate Research Information";
+
+    private const string MetaDescriptionSingleStateDomain =
+      "[[state]] Election and candidate research information of office contests and candidates’ pictures, bios, social links and candidates’ positions on issues back to 2004";
+
+    private const string MetaKeywordsSingleStateDomain =
+      "[[state]] political parties, [[state]] democratic party, [[state]] republican party, [[state]] green party, [[state]] libertarian party";
+
+    private static IEnumerable<LinkInfo> GetStateLinks(string stateCode,
+      bool includeFutureElections)
+    {
+      var linkList = new List<LinkInfo>();
+
+      if (StateCache.IsValidStateCode(stateCode))
+      {
+        var table =
+          Elections.GetExtendedDisplayDataByStateCodeCountyCodeLocalCodeIsViewable(
+            stateCode, string.Empty, string.Empty, true);
+
+        var now = DateTime.UtcNow;
+        foreach (var row in table)
+          if (includeFutureElections || row.ElectionDate < now)
+          {
+            var linkInfo = new LinkInfo(row)
+              {
+                HRef = UrlManager.GetElectionPageUri(row.ElectionKey)
+              };
+            linkList.Add(linkInfo);
+          }
+      }
+
+      return linkList;
+    }
+
+    private static IEnumerable<LinkInfo> GetLinksByCode(string code,
+      string currentDescription)
+    {
+      var linkList = new List<LinkInfo>();
+
+      var linkInfo = new LinkInfo
+        {
+          Description = currentDescription,
+          HRef = UrlManager.GetOfficialsPageUri(code)
+        };
+      linkList.Add(linkInfo);
+
+      var table = Elections.GetDisplayDataByStateCodeElectionTypeIsViewable(code,
+        "G", true);
+
+      foreach (var row in table)
+      {
+        linkInfo = new LinkInfo(row)
+          {
+            HRef = UrlManager.GetElectionPageUri(row.ElectionKey)
+          };
+        linkList.Add(linkInfo);
+      }
+
+      return linkList;
+    }
+
+    public static IEnumerable<LinkInfo> GetPresidentLinks()
+    {
+      return GetLinksByCode("U1", "Current President and Vice President");
+    }
+
+    public static IEnumerable<LinkInfo> GetSenateLinks()
+    {
+      return GetLinksByCode("U2", "Current US Senators");
+    }
+
+    public static IEnumerable<LinkInfo> GetHouseLinks()
+    {
+      return GetLinksByCode("U3", "Current US House of Representatives");
+    }
+
+    public static IEnumerable<LinkInfo> GetGovernorLinks()
+    {
+      return GetLinksByCode("U4",
+        "Current State Governors and Lieutenant Governors");
+    }
+
+    public static void AddLinksToLinkBox(Control div, IEnumerable<LinkInfo> links,
+      string target = null)
+    {
+      foreach (var link in links)
+        AddLinkToLinkBox(div, link, target);
+    }
+
+    private static void AddLinkToLinkBox(Control div, LinkInfo link, string target)
+    {
+      var p = new HtmlGenericControl("p").AddTo(div);
+      new HtmlAnchor
+        {
+          HRef = link.HRef.ToString(),
+          InnerText = link.Description,
+          Title = link.Description,
+          Target = target
+        }.AddTo(p);
+    }
+
+    public static void AddStateLinksToDiv(HtmlGenericControl div, string stateCode,
+      bool includeCurrentOfficials, bool includeFutureElections)
+    {
+      if (includeCurrentOfficials)
+      {
+        var linkInfo = new LinkInfo
+          {
+            Description =
+              StateCache.GetStateName(stateCode) + " Current Elected Officials",
+            HRef = UrlManager.GetOfficialsPageUri(stateCode)
+          };
+        AddLinksToLinkBox(div, new List<LinkInfo> {linkInfo});
+      }
+
+      AddLinksToLinkBox(div, GetStateLinks(stateCode, includeFutureElections));
+    }
+
+    public static void GetLinkBox(HtmlGenericControl linkBox, string title,
+      IEnumerable<LinkInfo> links)
+    {
+      new HtmlGenericControl("div") {InnerText = title}.AddTo(linkBox, "linkHeader");
+      var div = new HtmlGenericControl("div").AddTo(linkBox, "links");
+
+      AddLinksToLinkBox(div, links);
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      this.IncludeJs(
+        "http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js");
+      this.IncludeJs(
+        "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js");
+      //this.IncludeJs("~/js/vote.js"); -> included in AddressEntry
+      this.IncludeJs("~/js/forResearch.js");
+      this.IncludeCss("~/js/jq/jquery-ui.css");
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/SecondaryCommon.css");
+      this.IncludeCss("~/css/forResearch.css");
+
+      if (!IsPostBack)
+        if (DomainData.IsValidStateCode) // Single state
+        {
+          if (DomainDesign.IncludeTitleForSingleState)
+            TitleTag.Text = TitleTagSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForSingleState)
+            MetaDescriptionTag.Content =
+              MetaDescriptionSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForSingleState)
+            MetaKeywordsTag.Content = MetaKeywordsSingleStateDomain.Substitute();
+        }
+        else
+        {
+          if (DomainDesign.IncludeTitleForAllStates)
+            TitleTag.Text = TitleTagAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForAllStates)
+            MetaDescriptionTag.Content =
+              MetaDescriptionAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForAllStates)
+            MetaKeywordsTag.Content = MetaKeywordsAllStatesDomain.Substitute();
+        }
+
+      string selectedState = null;
+      string firstEntry = null;
+
+      if (DomainData.IsValidStateCode) // Single state
+      {
+        selectedState = DomainData.FromQueryStringOrDomain;
+        AddStateLinksToDiv(StateLinks, selectedState, true, true);
+      }
+      else
+        firstEntry = "<select state>";
+
+      StateCache.Populate(StateElectionDropDown, firstEntry, "XX", selectedState);
+
+      GetLinkBox(PresidentLinks, "US President and Vice-President",
+        GetPresidentLinks());
+      GetLinkBox(SenateLinks, "US Senate", GetSenateLinks());
+      GetLinkBox(HouseLinks, "US House of Representatives", GetHouseLinks());
+      GetLinkBox(GovernorLinks, "State Governors and Lieutenant Governors",
+        GetGovernorLinks());
+    }
+  }
+}

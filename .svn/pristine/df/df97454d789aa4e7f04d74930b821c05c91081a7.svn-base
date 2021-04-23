@@ -1,0 +1,26 @@
+﻿using System;
+using System.Web.UI;
+
+namespace Vote.Controls
+{
+  public partial class PageHeadingResponsive : UserControl
+  {
+    public string MainHeadingText;
+    public string SubHeadingText;
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+// ReSharper disable InvertIf
+      if (!IsPostBack)
+// ReSharper restore InvertIf
+      {
+        if (!string.IsNullOrEmpty(MainHeadingText))
+          MainHeadingLiteral.Text = MainHeadingText;
+        if (!string.IsNullOrEmpty(SubHeadingText))
+          SubHeadingLiteral.Text = SubHeadingText;
+        else
+          SubHeading.Visible = false;
+      }
+    }
+  }
+}

@@ -1,0 +1,57 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Public.Master" AutoEventWireup="true" CodeBehind="forCandidates.aspx.cs" Inherits="Vote.ForCandidatesPage" %>
+
+<%@ Register Src="/Controls/VoteUsaAddressResponsive.ascx" TagName="VoteUsaAddress" TagPrefix="user" %>
+<%@ Register Src="/Controls/EmailFormResponsive.ascx" TagName="EmailForm" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeadingResponsive.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddSampleBallotButtons.ascx" TagName="AddSampleBallotButtons" TagPrefix="user" %>
+
+<asp:Content ID="HeadTopContent" ContentPlaceHolderID="MasterHeadTopContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="HeadBottomContent" ContentPlaceHolderID="MasterHeadBottomContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+  <user:PageHeading ID="PageHeading" runat="server" MainHeadingText="For Candidates" />
+  <div class="intro-copy">
+    <h2>Enter Information About Your Candidacy</h2>
+
+    <p>Prior to each election, Vote-USA requests the election roster and 
+    candidate email addresses from each state election authority.  If we 
+    have a candidate’s email address, we send them login credentials and 
+    instructions to upload a picture and to enter biographical information 
+    and their views on the issues. </p>
+
+    <p>If you have your candidate username and password, you can 
+    <a href="/politician/default.aspx" title="Login as a candidate">login</a>
+    to enter information about your candidacy. If you do not have your login 
+    credentials, we would be happy to email them to you. We will need 
+    the following:</p>
+
+    <ul>
+      <li>Your complete name, state, and the office you are running for.</li>
+      <li>Some proof of your identity.</li>
+    </ul>
+          
+    <p>You can use either of these ways to prove your identity:</p>
+          
+    <ul>
+      <li>Send us an e-mail using an email address associated with your candidacy 
+      or that matches the URL of your campaign website.</li>
+      <li>Mail us with some other proof of identity like a scanned copy of your 
+      driver’s license or some other official document. Send to 
+      <user:VoteUsaAddress ID="VoteUsaAddress" runat="server" />.</li>
+    </ul>
+
+    <user:AddSampleBallotButtons ID="AddSampleBallotButtons" runat="server" />
+
+    <h2 class="email-form-heading">Email Us</h2>
+
+    <p class="email-form-heading">Use the form below to email us with any questions or requests:</p>
+
+    <user:EmailForm id="EmailForm" runat="server" />
+  </div>
+</asp:Content>
+
+<asp:Content ID="BottomContent" ContentPlaceHolderID="MasterBottomContent" runat="server">
+</asp:Content>

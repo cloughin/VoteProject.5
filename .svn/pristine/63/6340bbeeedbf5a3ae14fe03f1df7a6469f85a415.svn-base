@@ -1,0 +1,33 @@
+﻿namespace DB.Vote
+{
+  public partial class AnswersViewRow {}
+
+  public partial class AnswersView
+  {
+    public static AnswersViewTable GetAllDataByIssueLevelStateCodePoliticianKey(
+      string issueLevel, string stateCode, string politicianKey, int commandTimeout= -1)
+    {
+      const string cmdText = "SELECT" + " IssueGroups.IssueGroupKey," +
+        " IssueGroups.IssueGroupOrder," +
+        " IssueGroups.Heading AS IssueGroupHeading," +
+        " IssueGroups.SubHeading AS IssueGroupSubHeading," + " Issues.IssueKey," +
+        " Issues.IssueOrder," + " Issues.IssueLevel," + " Issues.Issue," +
+        " Issues.StateCode AS StateCode," + " Questions.QuestionKey," +
+        " Questions.QuestionOrder," + " Questions.Question," +
+        " Answers.PoliticianKey," + " Answers.Source," + " Answers.DateStamp," +
+        " Answers.Answer" + " FROM Issues" +
+        " INNER JOIN IssueGroupsIssues ON IssueGroupsIssues.IssueKey = Issues.IssueKey" +
+        " INNER JOIN IssueGroups ON IssueGroups.IssueGroupKey = IssueGroupsIssues.IssueGroupKey" +
+        " INNER JOIN Questions ON Questions.IssueKey = Issues.IssueKey" +
+        " LEFT JOIN Answers on Answers.QuestionKey = Questions.QuestionKey AND Answers.PoliticianKey=@PoliticianKey" +
+        " WHERE Issues.StateCode=@StateCode AND Issues.IssueLevel=@IssueLevel" +
+        "  AND Issues.IsIssueOmit=0 AND Questions.IsQuestionOmit=0" +
+        " ORDER BY IssueGroups.IssueGroupOrder, Issues.IssueOrder, Questions.QuestionOrder";
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      VoteDb.AddCommandParameter(cmd, "IssueLevel", issueLevel);
+      VoteDb.AddCommandParameter(cmd, "StateCode", stateCode);
+      VoteDb.AddCommandParameter(cmd, "PoliticianKey", politicianKey);
+      return FillTable(cmd, AnswersViewTable.ColumnSet.All);
+    }
+  }
+}

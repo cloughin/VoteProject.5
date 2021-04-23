@@ -1,0 +1,281 @@
+using System;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB.VoteZipNew;
+using Vote.Reports;
+
+namespace Vote
+{
+  public partial class ElectedPageX : CacheablePage
+  {
+    public ElectedPageX()
+    {
+      NoUrlEdit = true;
+    }
+
+    #region Caching support
+
+    protected override bool SuppressCaching
+    {
+      get { return true; }
+    }
+
+    protected override string GetCacheKey()
+    {
+      var key = UrlManager.GetStateCodeFromHostName() + "." + QueryState + "." +
+        QueryCongress + "." + QueryStateSenate + "." + QueryStateHouse + "." +
+        QueryCounty;
+      var siteId = UrlManager.CurrentQuerySiteId;
+      if (!string.IsNullOrEmpty(siteId)) key += "." + siteId;
+
+      return key;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "Elected";
+    }
+
+    #endregion Caching support
+
+    #region Private
+
+    private string _ZipQueryError;
+
+    private static string GetMetaTagContent()
+    {
+      return "Elected Representatives for " +
+        FormatLegislativeDistrictsFromQueryString(", ");
+    }
+
+    private void FillInHeading()
+    {
+      var tr = new HtmlTableRow().AddTo(ElectedOfficialsTable, "trElectedTitle");
+      new HtmlTableCell
+      {
+        Align = "left",
+        InnerHtml = FormatLegislativeDistrictsFromQueryStringForHeading()
+      }.AddTo(
+        tr, "tdElectedSubTitle");
+
+      const string headingMsg =
+        "These are your elected representatives. Use the" +
+          " picture or name links to obtain additional information about your" +
+          " representatives, including biographical information and their views" +
+          " and positions on current issues.";
+
+      tr = new HtmlTableRow().AddTo(ElectedOfficialsTable, "trElectedInstruction");
+      new HtmlTableCell {Align = "left", ColSpan = 2, InnerHtml = headingMsg}.AddTo
+        (tr, "tdElectedInstruction");
+    }
+
+    #endregion Private
+
+    #region Event handlers and overrides
+
+    protected override void OnPreInit(EventArgs e)
+    {
+      var zip = Request.QueryString["zip"];
+      if (!string.IsNullOrEmpty(zip))
+        try
+        {
+          // handle zip based queries
+          zip = zip.Replace("-", "");
+          if (zip.Length != 9) throw new VoteException("The zip must be nine digits");
+          var zip5 = zip.Substring(0, 5);
+          var zip4 = zip.Substring(5, 4);
+          var table = Uszd.GetDataByZip5Zip4(zip5, zip4);
+          if (table.Count == 0) throw new VoteException("Could not find this zip code");
+          var row = table[0];
+          var redirect =
+            string.Format(
+              "/elected.aspx?State={0}&" +
+                "Congress={1}&StateSenate={2}&StateHouse={3}&County={4}",
+              StateCache.StateCodeFromLdsStateCode(row.LdsStateCode),
+              row.Congress.ZeroPad(3), row.StateSenate.ZeroPad(3),
+              row.StateHouse.ZeroPad(3), row.County.ZeroPad(3));
+          redirect = UrlManager.ApplySiteIdToUrl(redirect);
+          Response.Redirect(redirect);
+        }
+        catch (VoteException ex)
+        {
+          _ZipQueryError = ex.Message;
+        }
+      else // classic mode
+        base.OnPreInit(e);
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      // The OnPreInit method of the parent class handles serving from cache, 
+      // in which case this method is never called.
+
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/SecondaryCommon.css");
+      this.IncludeCss("~/css/All.css");
+      this.IncludeCss("~/css/Elected.css");
+
+      MetaDescriptionTag.Content = GetMetaTagContent();
+      MetaKeywordsTag.Content = GetMetaTagContent();
+
+      if (_ZipQueryError != null)
+      {
+        InnerContent.Controls.Clear();
+        var p = new HtmlGenericControl("p").AddTo(InnerContent, "not-found-error");
+        new LiteralControl(_ZipQueryError).AddTo(p);
+        return;
+      }
+
+      FillInHeading();
+      ElectedReport.GetReport(QueryState, QueryCounty, QueryCongress,
+        QueryStateSenate, QueryStateHouse, true)
+        .AddTo(ReportPlaceHolder);
+    }
+
+    #endregion Event handlers and overrides
+
+    #region Dead code
+
+    //public static void CreateReport(PageCache cache, HtmlTable electedOfficialsTable,
+    //  Label officialsReportLabel, bool isOriginalPage)
+    //{
+    //  #region Title - Currently Elected Representatives | for Address Row
+
+    //  var TitleRow = db.Add_Tr_To_Table_Return_Tr(electedOfficialsTable,
+    //    "trElectedTitle");
+    //  if (isOriginalPage)
+    //  {
+    //    var Title = "Currently Elected Representatives";
+    //    if (!isOriginalPage) Title = "&nbsp;";
+    //    //<tr Class="trElectedTitle">
+    //    //<td Class="tdElectedTitle" align="center">
+    //    db.Add_Td_To_Tr(TitleRow, Title, "tdElectedTitle", "left");
+    //  }
+
+    //  var Address = string.Empty;
+
+    //  #region Use Legislative District names
+
+    //  Address = db.LegislativeDistricts();
+
+    //  #endregion
+
+    //  db.Add_Td_To_Tr(TitleRow, Address, "tdElectedSubTitle", "left", 1);
+
+    //  #endregion
+
+    //  #region These are the elected Representatives
+
+    //  {
+    //    var HeadingMsg = db.Design_Substitutions_This(cache,
+    //      "IsTextInstructionsElectedPage", "InstructionsElectedPage");
+    //    //In Page HTML <table id="HeadingTable">
+    //    if (HeadingMsg != string.Empty)
+    //    {
+    //      //<tr class="trElectedInstruction">
+    //      var PreTitleRow = db.Add_Tr_To_Table_Return_Tr(electedOfficialsTable,
+    //        "trElectedInstruction");
+    //      //<td class="tdElectedInstruction" align="center">
+    //      db.Add_Td_To_Tr(PreTitleRow, HeadingMsg, "tdElectedInstruction", "left", 2);
+    //    }
+    //  }
+
+    //  #endregion
+
+    //  #region ELECTED Representatives REPORT
+
+    //  #region Note:
+
+    //  //The report is in a Label named tableOfficialsReport
+
+    //  #endregion Note:
+
+    //  #region Inits
+
+    //  var Report_Officials_Public = string.Empty;
+    //  var Html_Table_Officials_Public = new HtmlTable();
+    //  db.Html_Table_Attributes_Report(ref Html_Table_Officials_Public,
+    //    db.ReportUser.Public);
+    //  //Office Titles
+    //  var Html_Tr_Office_Titles_Public = new HtmlTableRow();
+    //  //Elected Officials
+    //  var Html_Tr_Politicians_Public = new HtmlTableRow();
+
+    //  #endregion Inits
+
+    //  #region US President & VP
+
+    //  db.Report_Officials_US_President(cache, ref Html_Table_Officials_Public,
+    //    ref Html_Tr_Office_Titles_Public, ref Html_Tr_Politicians_Public,
+    //    ref Report_Officials_Public);
+
+    //  #endregion US President & VP
+
+    //  #region US Senators
+
+    //  db.Report_Officials_US_Senate_One_State(cache, db.QueryString("State"),
+    //    ref Html_Table_Officials_Public, ref Html_Tr_Office_Titles_Public,
+    //    ref Html_Tr_Politicians_Public, ref Report_Officials_Public);
+
+    //  #endregion US Senators
+
+    //  #region US House Member
+
+    //  db.Report_Officials_US_House_One_State(cache, db.QueryString("State"),
+    //    db.QueryString("Congress"), ref Html_Table_Officials_Public,
+    //    ref Html_Tr_Office_Titles_Public, ref Html_Tr_Politicians_Public,
+    //    ref Report_Officials_Public);
+
+    //  #endregion US House Member
+
+    //  #region Governor & Lt Governor
+
+    //  db.Report_Official_Governor_One_State(cache, db.QueryString("State"),
+    //    ref Html_Table_Officials_Public, ref Html_Tr_Office_Titles_Public,
+    //    ref Html_Tr_Politicians_Public, ref Report_Officials_Public);
+
+    //  #endregion Governor & Lt Governor
+
+    //  #region Statewide Offices
+
+    //  db.Report_Officials_Statewide_One_State(cache, db.QueryString("State"),
+    //    ref Html_Table_Officials_Public, ref Html_Tr_Office_Titles_Public,
+    //    ref Html_Tr_Politicians_Public, ref Report_Officials_Public);
+
+    //  #endregion Statewide Offices
+
+    //  #region State Senate
+
+    //  db.Report_Officials_State_Senate_One_State(cache, db.QueryString("State"),
+    //    db.QueryString("StateSenate"), ref Html_Table_Officials_Public,
+    //    ref Html_Tr_Office_Titles_Public, ref Html_Tr_Politicians_Public,
+    //    ref Report_Officials_Public);
+
+    //  #endregion State Senate
+
+    //  #region State House
+
+    //  db.Report_Officials_State_House_One_State(cache, db.QueryString("State"),
+    //    db.QueryString("StateHouse"), ref Html_Table_Officials_Public,
+    //    ref Html_Tr_Office_Titles_Public, ref Html_Tr_Politicians_Public,
+    //    ref Report_Officials_Public);
+
+    //  #endregion State House
+
+    //  #region County Offices
+
+    //  db.Report_Officials_One_County(cache, db.QueryString("State"),
+    //    db.QueryString("County"), ref Html_Table_Officials_Public,
+    //    ref Html_Tr_Office_Titles_Public, ref Html_Tr_Politicians_Public,
+    //    ref Report_Officials_Public);
+
+    //  #endregion County Offices
+
+    //  officialsReportLabel.Text = Report_Officials_Public;
+
+    //  #endregion ELECTED Representatives REPORT
+    //}
+
+    #endregion Dead code
+  }
+}

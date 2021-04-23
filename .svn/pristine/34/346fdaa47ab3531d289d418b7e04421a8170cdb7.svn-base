@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB.Vote;
+using Vote.Reports;
+
+namespace Vote.Sandbox
+{
+  public partial class Elected : Page
+  {
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      var start0 = DateTime.UtcNow;
+      GetElectedReportHeading(ElectedOfficialsTable);
+      var elapsed0 = DateTime.UtcNow - start0;
+      var start = DateTime.UtcNow;
+      //var control = StaticElectedReport.CreateReport(VotePage.GetQueryString("state"),
+      //  VotePage.GetQueryString("county"), VotePage.GetQueryString("congress"),
+      //  VotePage.GetQueryString("statesenate"), VotePage.GetQueryString("statehouse"));
+      var control = ElectedReport.GetReport(VotePage.GetQueryString("state"),
+        VotePage.GetQueryString("county"), VotePage.GetQueryString("congress"),
+        VotePage.GetQueryString("statesenate"), VotePage.GetQueryString("statehouse"), true);
+      var elapsed = DateTime.UtcNow - start;
+      ReportPlaceHolder.Controls.Add(control);
+    }
+
+    private static void GetElectedReportHeading(HtmlTable electedOfficialsTable)
+    {
+      var titleRow = db.Add_Tr_To_Table_Return_Tr(electedOfficialsTable,
+        "trElectedTitle");
+
+      var address = db.LegislativeDistricts();
+
+      db.Add_Td_To_Tr(titleRow, address, "tdElectedSubTitle", "left", 1);
+
+      var headingMsg =
+        DomainDesigns.GetDesignStringWithSubstitutions(
+          DomainDesigns.Column.InstructionsElectedPage,
+          DomainDesigns.Column.IsTextInstructionsElectedPage);
+      if (headingMsg == string.Empty) return;
+
+      var preTitleRow = db.Add_Tr_To_Table_Return_Tr(electedOfficialsTable,
+        "trElectedInstruction");
+      db.Add_Td_To_Tr(preTitleRow, headingMsg, "tdElectedInstruction", "left", 2);
+    }
+  }
+
+}

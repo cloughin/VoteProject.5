@@ -1,0 +1,17 @@
+﻿using System;
+
+namespace Vote.Admin
+{
+  public partial class UpdateOfficesPage
+  {
+    #region Event handlers and overrides
+
+    protected void UpdateOfficeControl_Load(object sender, EventArgs e)
+    {
+      // To force an office tree reload client side
+      LoadOfficeControl();
+    }
+
+    #endregion Event handlers and overrides
+  }
+}

@@ -1,0 +1,620 @@
+using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using DB.Vote;
+
+namespace Vote.Party
+{
+  public partial class Default : SecurePartyPage
+  {
+    protected string ElectionKeyOfCandidates()
+    {
+      string electionKey = string.Empty;
+
+      #region note
+      //NationalPartyCode = 'X' was added
+      //for No Party Preference Primaries like CA
+      #endregion note
+      string nationalPartyCode = db.Parties_Str(
+        ViewState["PartyKey"].ToString()
+        , "PartyCode"
+        );
+      string SQL = string.Empty;
+      SQL += " SELECT ";
+      SQL += " ElectionKey";
+      SQL += " FROM Elections ";
+      SQL += " WHERE Elections.StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+      //SQL += " AND NationalPartyCode = " + db.SQLLit(nationalPartyCode);
+      //SQL += " AND (";
+      //SQL += " (NationalPartyCode = " + db.SQLLit(nationalPartyCode) + ")";
+      //SQL += " OR (NationalPartyCode = 'X')";
+      //SQL += ")";
+      SQL += " AND ElectionType != 'A'";
+      SQL += " AND ElectionType != 'B'";
+      SQL += " AND CountyCode = '' ";
+      SQL += " AND IsViewable = 1";
+      SQL += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+      SQL += " ORDER BY ElectionDate DESC";
+      DataRow ElectionRow = db.Row_First_Optional(SQL);
+      if (ElectionRow != null)
+        electionKey = ElectionRow["ElectionKey"].ToString();
+
+      return electionKey;
+    }
+
+    // I made a second version of this because it is called in two places and
+    // maybe the way it was was correct for the other call, but definitely not for this one
+    protected string ElectionKeyOfCandidates2()
+    {
+      string electionKey = string.Empty;
+
+      #region note
+      //NationalPartyCode = 'X' was added
+      //for No Party Preference Primaries like CA
+      #endregion note
+      string nationalPartyCode = db.Parties_Str(
+        ViewState["PartyKey"].ToString()
+        , "PartyCode"
+        );
+      string SQL = string.Empty;
+      SQL += " SELECT ";
+      SQL += " ElectionKey";
+      SQL += " FROM Elections ";
+      SQL += " WHERE Elections.StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+      SQL += " AND (ElectionType != 'P' OR  NationalPartyCode IN (" + db.SQLLit(nationalPartyCode) + ",'X'))";
+      SQL += " AND ElectionType != 'A'";
+      SQL += " AND ElectionType != 'B'";
+      SQL += " AND CountyCode = '' ";
+      SQL += " AND IsViewable = 1";
+      SQL += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+      SQL += " ORDER BY ElectionDate DESC";
+      DataRow ElectionRow = db.Row_First_Optional(SQL);
+      if (ElectionRow != null)
+        electionKey = ElectionRow["ElectionKey"].ToString();
+
+      return electionKey;
+    }
+    protected void Heading_Row(HtmlTable HtmlTable_Politicians)
+    {
+      HtmlTableRow Tr_Elected_Representatives_Header = null;
+      Tr_Elected_Representatives_Header =
+        db.Add_Tr_To_Table_Return_Tr(
+        HtmlTable_Politicians
+         , "trReportGroupHeading"
+        );
+
+      //Picture 
+      db.Add_Td_To_Tr(
+        Tr_Elected_Representatives_Header
+        , "Picture"
+         , "tdReportGroupHeading"
+        );
+
+      //Current Information Obtained
+      db.Add_Td_To_Tr(
+        Tr_Elected_Representatives_Header
+        , "Current Information Obtained"
+         , "tdReportGroupHeading"
+        //, "left"
+        //, "100%"
+        //, 1
+        );
+
+      //Links to Provide Bio, Picture, Social Media Links and Positions and Views on the Issues
+      db.Add_Td_To_Tr(
+        Tr_Elected_Representatives_Header
+        , "Links to Provide Biographical, Picture, Social Media and Positions on the Issues"
+         , "tdReportGroupHeading"
+         , "left"
+         , "100%"
+         , 1
+        );
+
+      ////Office
+      //db.Add_Td_To_Tr(
+      //  Tr_Elected_Representatives_Header
+      //  , "Office"
+      //   , "tdReportGroupHeading"
+      //  );
+    }
+    protected void Politician_Row(ref HtmlTable htmlTablePoliticians, DataRow rowPolitician)
+    {
+      #region Politician
+      HtmlTableRow Html_Tr_Politician =
+        db.Add_Tr_To_Table_Return_Tr(
+          htmlTablePoliticians
+          , "trReportDetail"
+          );
+      #endregion Politician
+
+      string politicianKey = rowPolitician["PoliticianKey"].ToString();
+
+      #region Picture Column
+
+      db.Add_Td_To_Tr(
+        Html_Tr_Politician
+        , db.Image_Politician_Tag(politicianKey)
+        , "tdReportDetailLargeBold"
+        );
+      #endregion Picture Column
+
+      #region Information Obtained column
+
+      #region Age, Phone, Address, Social Media
+      string politicianAge = db.Age(politicianKey);
+      if (string.IsNullOrEmpty(politicianAge))
+        politicianAge = "<strong>No DOB to compute Age</strong>";
+
+      string politicianPhone = db.Politician_Phone_Any_For_Label(politicianKey);
+      if (
+        (string.IsNullOrEmpty(politicianPhone))
+        || (politicianPhone == db.No_Phone)
+        )
+        politicianPhone = "<strong>No Phone</strong>";
+
+      string politicianAddress = db.Politician_Address_Any_For_Label(politicianKey) +
+        db.Politician_CityStateZip_Any_For_Label(politicianKey);
+      if (
+        (string.IsNullOrEmpty(politicianAddress))
+        || (politicianAddress == db.No_Address)
+        )
+        politicianAddress = "<strong>No Address</strong>";
+
+      string socialMedia = db.Social_Media_Anchors(politicianKey);
+
+      string informationObtained = string.Empty;
+      informationObtained += "<nobr>" + politicianAge + "</nobr>";
+      informationObtained += "<br><nobr>" + politicianPhone + "</nobr>";
+      informationObtained += "<br><nobr>" + politicianAddress + "</nobr>";
+      informationObtained += "<br><nobr>" + socialMedia + "</nobr>";
+      #endregion Age, Phone, Address, Social Media
+
+      #region Bio
+      string SQL = "SELECT ";
+      SQL += "GeneralStatement,";
+      SQL += "Personal,";
+      SQL += "Education,";
+      SQL += "Profession,";
+      SQL += "Military,";
+      SQL += "Civic,";
+      SQL += "Political,";
+      SQL += "Religion,";
+      SQL += "Accomplishments";
+      SQL += " FROM Politicians";
+      SQL += " WHERE PoliticianKey = " + db.SQLLit(politicianKey);
+      DataRow Row_Poitician = db.Row(SQL);
+
+      string GeneralStatement = (Row_Poitician["GeneralStatement"].ToString());
+      if (string.IsNullOrEmpty(GeneralStatement))
+        GeneralStatement = "<strong>NO General Statement</strong>";
+      else
+        GeneralStatement = "GeneralStatement Obtained";
+
+      string Personal = (Row_Poitician["Personal"].ToString());
+      if (string.IsNullOrEmpty(Personal))
+        Personal = "<strong>NO Personal</strong>";
+      else
+        Personal = "Personal Obtained";
+
+      string Education = (Row_Poitician["Education"].ToString());
+      if (string.IsNullOrEmpty(Education))
+        Education = "<strong>NO Education</strong>";
+      else
+        Education = "Education Obtained";
+
+      string Profession = (Row_Poitician["Profession"].ToString());
+      if (string.IsNullOrEmpty(Profession))
+        Profession = "<strong>NO Profession</strong>";
+      else
+        Profession = "Profession Obtained";
+
+      string Military = (Row_Poitician["Military"].ToString());
+      if (string.IsNullOrEmpty(Military))
+        Military = "<strong>NO Military</strong>";
+      else
+        Military = "Military Obtained";
+
+      string Civic = (Row_Poitician["Civic"].ToString());
+      if (string.IsNullOrEmpty(Civic))
+        Civic = "<strong>NO Civic</strong>";
+      else
+        Civic = "Civic Obtained";
+
+      string Political = (Row_Poitician["Political"].ToString());
+      if (string.IsNullOrEmpty(Political))
+        Political = "<strong>NO Political</strong>";
+      else
+        Political = "Political Obtained";
+
+      string Religion = (Row_Poitician["Religion"].ToString());
+      if (string.IsNullOrEmpty(Religion))
+        Religion = "<strong>NO Religion</strong>";
+      else
+        Religion = "Religion Obtained";
+
+      string Accomplishments = (Row_Poitician["Accomplishments"].ToString());
+      if (string.IsNullOrEmpty(Accomplishments))
+        Accomplishments = "<strong>NO Accomplishments</strong>";
+      else
+        Accomplishments = "Accomplishments Obtained";
+
+      informationObtained += "<br>" + GeneralStatement;
+      informationObtained += "<br>" + Personal;
+      informationObtained += "<br>" + Education;
+      informationObtained += "<br>" + Profession;
+      informationObtained += "<br>" + Military;
+      informationObtained += "<br>" + Civic;
+      informationObtained += "<br>" + Political;
+      informationObtained += "<br>" + Religion;
+      informationObtained += "<br>" + Accomplishments;
+      #endregion Bio
+
+      #region Issue Answers
+      SQL = "Answers WHERE PoliticianKey = " + db.SQLLit(politicianKey);
+      int rows = db.Rows_Count_From(SQL);
+
+      if (rows > 0)
+        informationObtained += "<br><br>" + rows.ToString() + " Responses to Issue Questions Obtained";
+      else
+        informationObtained += "<br><br><font color = red><strong>No Responses to Issue Questions Obtained</font></strong>";
+      #endregion Issue Answers
+
+      db.Add_Td_To_Tr(
+        Html_Tr_Politician
+        , informationObtained
+        , "tdReportDetailSmall"
+        );
+      #endregion Information Obtained column
+
+      #region Anchors Column
+      string Anchors = string.Empty;
+      #region Name
+      string Politician_Name = Politicians.GetFormattedName(politicianKey, true, 30);
+      Anchors += "<strong>" + Politician_Name + "</strong>";
+      #endregion Name
+
+      #region Office
+      string office = Offices.FormatOfficeName(rowPolitician["OfficeKey"].ToString());
+      Anchors += "<br><strong>" + office + "</strong>";
+
+      //Jurisdiction
+      string Jurisdiction = Offices.GetElectoralClassDescription(
+        rowPolitician["StateCode"].ToString()
+        , rowPolitician["CountyCode"].ToString()
+        , rowPolitician["LocalCode"].ToString()
+        );
+      Anchors += "<br><strong>" + Jurisdiction + "</strong>";
+      #endregion Office
+
+      #region Website
+      string website = db.Politician_WebAddress_Public_Anchor(
+        politicianKey, "View Website", "Politician's WebSite", "_website");
+      if (
+        (website != db.No_Website)
+        && (!string.IsNullOrEmpty(website))
+        )
+        Anchors += "<br><br>" + website;
+      else
+        Anchors += "<br><br>No Website";
+      #endregion Website
+
+      #region Form for Intro Page
+      Anchors += "<br><br>" + db.Anchor(
+        db.Url_Politician_Intro(politicianKey)
+        , "Provide Biographical Information, a Picture, and Social Media Links for " + Politician_Name
+        , "Provide Biographical Information, a Picture, and Social Media Links for " + Politician_Name
+        , "_politician"
+        );
+      #endregion Form for Intro Page
+
+      #region Form for Issue Answers
+      Anchors += "<br><br>" + db.Anchor(
+        db.Url_Politician_IssueQuestions(
+            "ALLPersonal"
+            , politicianKey
+            )
+        , "Provide Positions and Views on Issues for " + Politician_Name
+        , "Provide Positions and Views on Issues for " + Politician_Name
+        , "_politician"
+        );
+      #endregion Form for Issue Answers
+
+      #region Introduction Page
+      Anchors += "<br><br>" + db.Anchor(
+        UrlManager.GetIntroPageUri(politicianKey).ToString()
+        , "View the Inroduction Page we show voters for " + Politician_Name
+        , "View the Inroduction Page we show voters for " + Politician_Name
+        , "view"
+        );
+      #endregion Introduction Page
+
+      db.Add_Td_To_Tr(
+        Html_Tr_Politician
+        , Anchors
+        , "tdReportDetailLarge"
+        );
+      #endregion Anchors Column
+    }
+
+    protected void Officials_Report()
+    {
+      int politiciansInElection = 0;
+
+      HtmlTable HtmlTable_Politicians = new System.Web.UI.HtmlControls.HtmlTable();
+      HtmlTable_Politicians.Attributes["class"] = "tableAdmin";
+
+      #region SQL for Offices in report
+      string SQL = string.Empty;
+      SQL += " SELECT Offices.OfficeKey,OfficesOfficials.PoliticianKey";
+      SQL += ",Offices.StateCode,Offices.CountyCode,Offices.LocalCode";
+      SQL += " FROM OfficesOfficials,Offices,Politicians";
+      SQL += " WHERE OfficesOfficials.OfficeKey = Offices.OfficeKey";
+      SQL += " AND OfficesOfficials.PoliticianKey = Politicians.PoliticianKey";
+      SQL += " AND OfficesOfficials.StateCode = "
+            + db.SQLLit(ViewState["StateCode"].ToString());
+      SQL += " AND Politicians.PartyKey = "
+            + db.SQLLit(ViewState["PartyKey"].ToString());
+      SQL += " AND Offices.IsOfficeTagForDeletion = 0";
+      SQL += " ORDER BY Offices.OfficeLevel,Offices.DistrictCode";
+      #endregion SQL for Offices in report
+
+      DataTable Table_Politicians = db.Table(SQL);
+      politiciansInElection = Table_Politicians.Rows.Count;
+      LabelRepresentatives.Text = politiciansInElection.ToString();
+
+      if (Table_Politicians.Rows.Count > 0)
+      {
+        Heading_Row(HtmlTable_Politicians);
+
+        #region Report
+        foreach (DataRow Row_Politician in Table_Politicians.Rows)
+        {
+          Politician_Row(ref HtmlTable_Politicians, Row_Politician);
+        }
+        #endregion Report
+      }
+      else
+      {
+        #region No Elected Party Members
+        HtmlTableRow HTMLTr = db.Add_Tr_To_Table_Return_Tr(
+          HtmlTable_Politicians
+          , "trReportGroupHeading");
+        db.Add_Td_To_Tr(
+          HTMLTr
+          , "No Elected Party Members"
+          , "tdReportGroupHeading"
+          , "center"
+          );
+        #endregion No Elected Party Members
+      }
+
+      Label_Elected_Representatives_Report.Text =
+        db.RenderToString(HtmlTable_Politicians);
+    }
+    protected void Election_Report(string partyKey)
+    {
+      HtmlTable HtmlTable_Politicians = new System.Web.UI.HtmlControls.HtmlTable();
+      HtmlTable_Politicians.Attributes["class"] = "tableAdmin";
+
+      int politiciansInElection = 0;
+      DataTable Table_Politicians = null;
+
+      string electionKey = ElectionKeyOfCandidates2();
+      if (!string.IsNullOrEmpty(electionKey))
+      {
+        #region SQL for Offices in report
+        string SQL = string.Empty;
+        SQL += " SELECT";
+        SQL += " ElectionsPoliticians.OfficeKey";
+        SQL += ",ElectionsPoliticians.PoliticianKey";
+        SQL += ",ElectionsPoliticians.StateCode";
+        SQL += ",ElectionsPoliticians.CountyCode";
+        SQL += ",ElectionsPoliticians.LocalCode";
+        SQL += " FROM ElectionsPoliticians,Politicians,Offices";
+        SQL += " WHERE ElectionsPoliticians.ElectionKeyState = "
+              + db.SQLLit(electionKey);
+        SQL += " AND Offices.OfficeKey != 'USPresident'";
+        SQL += " AND Politicians.PartyKey = " + db.SQLLit(partyKey);
+        SQL += " AND ElectionsPoliticians.PoliticianKey = Politicians.PoliticianKey";
+        SQL += " AND ElectionsPoliticians.OfficeKey = Offices.OfficeKey";
+        SQL += " ORDER BY Offices.OfficeLevel,Offices.DistrictCode ";
+        #endregion SQL for Offices in report
+
+        Table_Politicians = db.Table(SQL);
+        politiciansInElection = Table_Politicians.Rows.Count;
+        LabelCandidates.Text = politiciansInElection.ToString();
+      }
+
+      if (
+        (!string.IsNullOrEmpty(electionKey))
+        && (politiciansInElection > 0)
+        )
+      {
+        Heading_Row(HtmlTable_Politicians);
+
+        #region Report
+        foreach (DataRow Row_Politician in Table_Politicians.Rows)
+        {
+          Politician_Row(ref HtmlTable_Politicians, Row_Politician);
+        }
+        #endregion Report
+      }
+      else
+      {
+        #region No Party Candidates in the Election
+        HtmlTableRow HTMLTr = db.Add_Tr_To_Table_Return_Tr(
+          HtmlTable_Politicians
+          , "trReportGroupHeading");
+        db.Add_Td_To_Tr(
+          HTMLTr
+          , "No Party Candidates in the Election"
+          , "tdReportGroupHeading"
+          , "center"
+          );
+        #endregion No Party Candidates in the Election
+      }
+
+      Label_Election_Candidates_Report.Text =
+        db.RenderToString(HtmlTable_Politicians);
+    }
+
+    protected void Controls_Visible_Reports_None()
+    {
+      Table_Elected_Representatives_Report.Visible = false;
+      Label_Elected_Representatives_Report.Visible = false;
+      Table_Election_Candidates_Report.Visible = false;
+      Label_Election_Candidates_Report.Visible = false;
+    }
+
+    protected void Button_Elected_Representatives_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Table_Elected_Representatives_Report.Visible = true;
+        Label_Elected_Representatives_Report.Visible = true;
+
+        Table_Election_Candidates_Report.Visible = false;
+        Label_Election_Candidates_Report.Visible = false;
+
+        Officials_Report();
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Button_Election_Candidates_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Table_Elected_Representatives_Report.Visible = false;
+        Label_Elected_Representatives_Report.Visible = false;
+
+        Table_Election_Candidates_Report.Visible = true;
+        Label_Election_Candidates_Report.Visible = true;
+
+        Election_Report(ViewState["PartyKey"].ToString());
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        Page.Title = "Party Politicians";
+        //Navbar
+        #region DEBUG Session["UserSecurity"] Session["UserName"]
+#if DEBUG && DebugVariablesOn
+        //if(Session["UserSecurity"] == string.Empty)
+        //Session["UserSecurity"] = "PARTY";
+        //Session["UserSecurity"] = "MASTER";
+        //Session["UserName"] = "Ron";
+#endif
+        #endregion
+
+        #region ViewState["PartyKey"]
+#if DEBUG && DebugVariablesOn
+        //ViewState["PartyKey"] = "DED";
+        //ViewState["PartyKey"] = "DER";
+        //ViewState["StateCode"] = "DE";
+
+        ViewState["PartyKey"] = db.PartyKey_ViewState();
+        ViewState["StateCode"] = db.Parties_Str(
+            ViewState["PartyKey"].ToString()
+            , "StateCode");
+#else
+        ViewState["PartyKey"] = db.PartyKey_ViewState();
+        ViewState["StateCode"] = db.Parties_Str(
+            ViewState["PartyKey"].ToString()
+            , "StateCode");
+#endif
+        #endregion ViewState["PartyKey"]
+
+        #region Security Check and Values for ViewState["PartyKey"]
+
+        #region Redirect if Bad Entry
+        if (ViewState["PartyKey"].ToString() == string.Empty)
+          //Response.Redirect(db.Url_Vote_XX_org(ViewState["StateCode"].ToString()));
+          Response.Redirect(db.Url_Vote_XX_org_Default());
+
+        //Party must be in the State
+        if (ViewState["StateCode"].ToString() !=
+          db.Parties_StateCode(ViewState["PartyKey"].ToString()))
+          //Response.Redirect(db.Url_Vote_XX_org(ViewState["StateCode"].ToString()));
+          Response.Redirect(db.Url_Vote_XX_org_Default());
+
+        #endregion
+
+        #endregion Security Check and Values for ViewState["StateCode"]
+        try
+        {
+          //if (SecurePage.IsMasterUser)
+          //  Navbar.Visible = true;
+          //else
+          //  Navbar.Visible = false;
+
+          PageTitle.Text = db.Parties_Str(
+            ViewState["PartyKey"].ToString()
+          , "PartyName"
+          );
+
+          //Controls_Visible();
+          Controls_Visible_Reports_None();
+
+
+          //HyperLink_Elected_Representatives.NavigateUrl =
+          //  db.Url_Party_Default_Officials(State_Code);
+
+          string election_Key = ElectionKeyOfCandidates();
+          //db.ElectionKey_Viewable_Latest_Any_Upcoming(
+          //    ViewState["StateCode"].ToString());
+
+          if (!string.IsNullOrEmpty(election_Key))
+          {
+            Table_Election_Candidates.Visible = true;
+            //HyperLink_Election_Candidates.NavigateUrl =
+            //  db.Url_Party_Default_Election(election_Key);
+            //HyperLink_Election_Candidates.Text =
+            //  db.Elections_ElectionDesc(election_Key);
+
+            Label_Election_Candidates.Text =
+              db.Elections_ElectionDesc(election_Key);
+          }
+          else
+          {
+            #region No upcoming viewable election
+            Table_Election_Candidates.Visible = false;
+            //Table_Election_Candidates_Report.Visible = false;
+            #endregion No upcoming viewable election
+          }
+
+
+        }
+        catch (Exception ex)
+        {
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+        }
+      }
+    }
+
+  }
+}

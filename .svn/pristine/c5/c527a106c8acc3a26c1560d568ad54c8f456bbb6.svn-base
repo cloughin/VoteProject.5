@@ -1,0 +1,24 @@
+﻿body
+{
+  border-top: 5px solid #85a6d1;
+  text-align: center;
+}
+em
+{
+  font-style:italic;
+}
+strong
+{
+  font-weight:bold;
+}
+#outer
+{
+  width: 100%;
+  background: #cbdbdb url(/images/secondarybg.gif) repeat-x;
+}
+#container
+{
+  margin: 0 auto;
+  width: 940px;
+  text-align: left;
+}

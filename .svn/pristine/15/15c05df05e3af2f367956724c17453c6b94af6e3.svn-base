@@ -1,0 +1,29 @@
+<%@ Control Language="C#" AutoEventWireup="true" Codebehind="SupportUs.ascx.cs" Inherits="Vote.SupportUs" %>
+
+<table id="All" cellspacing="0" cellpadding="0" border="0" runat="server" EnableViewState="False">
+  <tr class="trSupportUs">
+    <td class="tdLeftSupportUs">
+      <a href="https://co.clickandpledge.com/Default.aspx?WID=37518" target="_blank">
+        <img src="/images/Donate-Now.jpg"
+          border="0" alt="Online donation system by ClickandPledge"
+          title="Your donations are our only support. Click to make a donation.">
+      </a>
+    </td>
+    <td class="tdCenterSupportUs">
+      <a href="https://co.clickandpledge.com/Default.aspx?WID=37518" target="_blank"
+      title="Your donations are our only support. Click to make a donation.">
+      Your tax deductible donations are our sole support
+      <br />and permits us to get this information to you!
+      <br />Donations DO NOT support any particular candidate.
+      </a>
+      <br />
+    </td>
+    <td class="tdRightSupportUs">
+      <a href="https://co.clickandpledge.com/Default.aspx?WID=37518" target="_blank">
+        <img src="/images/Donate-Now.jpg"
+         border="0" alt="Online donation system by ClickandPledge"
+          title="Your donations are our only support. Click to make a donation.">
+      </a>
+    </td>
+  </tr>
+</table>

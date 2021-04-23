@@ -1,0 +1,152 @@
+﻿#main-tabs div.htab-panel div.inner-panel {
+  min-height: 483px;
+}
+
+#tab-addvolunteer .input-element.email {
+  margin-bottom: 10px;
+}
+
+#tab-addvolunteer .input-element.email input {
+  width: 384px;
+}
+
+#tab-addvolunteer .input-element.statecode,
+#tab-addvolunteer .input-element.partykey {
+  float: left;
+}
+
+#tab-addvolunteer .update-button {
+  float: none;
+  margin-top: 20px;
+}
+
+#tab-report .input-element.state,
+#tab-report .input-element.party
+{ 
+  float: left;
+  margin-right: 30px;
+}
+
+#tab-report .input-element.state
+{ 
+  width: 170px;
+}
+
+#tab-report .input-element.party select
+{ 
+  min-width: 100px;
+}
+
+#tab-report .volunteer-scroller
+{
+  margin-top: 15px;
+  max-height: 420px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+}
+
+#tab-report .volunteer-scroller table
+{
+  width: 100%;
+  font-size: 90%;
+}
+
+#tab-report .volunteer-scroller thead {
+  background-color: #000;
+  color: #fff;
+}
+
+#tab-report .volunteer-scroller th,
+#tab-report .volunteer-scroller td {
+  padding: 2px;
+}
+
+#tab-report .volunteer-scroller tr.even {
+  background-color: #d8d8d8;
+}
+
+#tab-report .volunteer-scroller td.link {
+  text-decoration: underline;
+  color:blue;
+}
+
+#tab-report .volunteer-scroller td.link:hover {
+  color: red;
+}
+
+#edit-volunteer-dialog .input-element
+{ 
+  float: left;
+}
+
+#edit-volunteer-dialog .input-element.email input
+{ 
+  width: 384px;
+}
+
+#edit-volunteer-dialog div.tab-panel .feedback
+{ 
+  width: 600px;
+}
+
+/*
+#tab-adduser .input-element {
+  float: left;
+  margin: 15px 20px 0 0;
+}
+
+#tab-adduser .update-button {
+  float: left;
+  margin-top: 25px;
+}
+
+#tab-adduser select {
+  min-width: 150px;
+}
+
+#tab-changeuser .user-scroller {
+  max-height: 448px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+}
+
+#tab-changeuser .user-scroller table {
+  width: 100%;
+}
+
+#tab-changeuser .user-scroller thead {
+  background-color: #000;
+  color: #fff;
+}
+
+#tab-changeuser .user-scroller th,
+#tab-changeuser .user-scroller td {
+  padding: 2px;
+}
+
+#tab-changeuser .user-scroller tr.even {
+  background-color: #d8d8d8;
+}
+
+#tab-changeuser .user-scroller td.link {
+  text-decoration: underline;
+  font-size: 85%
+}
+
+#tab-changeuser .user-scroller td.link:hover {
+  color: red;
+}
+
+#change-password-dialog {
+   text-align: left;
+}
+
+#change-password-dialog .input-element.new-password {
+   margin-top: 10px;
+}
+
+#change-password-dialog .update-button {
+  margin-top: 20px;
+  float: none;
+}
+*/

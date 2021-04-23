@@ -1,0 +1,91 @@
+﻿define(["jquery", "vote/adminMaster", "vote/util", "monitor",
+  "vote/controls/navigateJurisdiction", "jqueryui", "slimscroll", "dynatree"],
+  function ($, master, util, monitor, navigateJurisdiction) {
+
+    var $$ = util.$$;
+
+    //
+    // Monitor callbacks
+    //
+
+    var afterUpdateContainer = function(group, args) {
+      if (!group) return;
+
+      switch (group.group) {
+      case "mc-group-masteronly":
+        afterUpdateContainerMasterOnly(group, args);
+        break;
+      }
+    };
+
+    //
+    // Master only
+    //
+
+    var afterUpdateContainerMasterOnly = function() {
+      var active = $("#tab-masteronly .sub-tab-index").val() || 0;
+      $("#master-only-tabs").tabs(
+      {
+        show: 400,
+        active: active,
+        beforeActivate: onTabsBeforeActivateMasterOnlySubTab,
+        activate: function(event, ui) {
+          // save the current tab index to restore after update
+          $("#tab-masteronly .sub-tab-index")
+            .val($("#master-only-tabs").tabs("option", "active"));
+        }
+      });
+    };
+
+    var onTabsBeforeActivateMasterOnlySubTab = function() {
+      return monitor.tabsBeforeActivate(event, ui, "master-only-tabs",
+       "#tab-masteronly .mc-container");
+    };
+
+    //
+    // Misc
+    //
+
+    var initPage = function () {
+      monitor.registerCallback("afterUpdateContainer", afterUpdateContainer);
+      monitor.init();
+
+      util.safeBind($(".jurisdiction-change-button"), "click",
+        navigateJurisdiction.changeJurisdictionButtonClicked);
+
+      window.onbeforeunload = function () {
+        var changedGroups = monitor.getChangedGroupNames(true);
+        if (changedGroups.length > 0)
+          return "There are entries on your form that have not been submitted";
+      };
+
+      $$('main-tabs')
+        .safeBind("tabsbeforeactivate", onTabsBeforeActivate)
+        .safeBind("tabsactivate", onTabsActivate);
+    };
+
+    var onTabsActivate = function(event, ui) {
+      var newPanelId = ui.newPanel[0].id;
+      reloadPanel(newPanelId);
+    };
+
+    var onTabsBeforeActivate = function(event, ui) {
+      return monitor.tabsBeforeActivate(event, ui, "main-tabs");
+    };
+
+    var reloadPanel = function(id, option) {
+      if (!option) option = "reloading";
+      switch (id) {
+      case "tab-masteronly":
+        $$(id + ' .reloading').val(option);
+        $$(id + ' input.update-button').addClass("reloading").click();
+        break;
+      }
+    };
+
+    // I N I T I A L I Z E
+
+    master.inititializePage({
+      callback: initPage
+    });
+});

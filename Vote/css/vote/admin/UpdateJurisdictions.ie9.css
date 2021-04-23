@@ -1,0 +1,11 @@
+﻿#main-tabs #tab-upload .upload-file
+{
+  left: -149px;
+  top: 4px;
+}
+
+#main-tabs #tab-upload .browse-button
+{
+  padding: 1px 15px;
+  top: 5px;
+}

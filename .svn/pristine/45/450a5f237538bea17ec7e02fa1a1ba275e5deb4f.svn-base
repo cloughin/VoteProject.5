@@ -1,0 +1,514 @@
+using System;
+using System.Data;
+using DB.Vote;
+using Vote.Reports;
+
+namespace Vote.Admin
+{
+  public partial class Districts : VotePage
+  {
+    protected void Local_Links()
+    {
+      #region Report of Local Districts
+      //if (RadioButtonListSort.SelectedValue == "Name")
+      //  LabelLocalDistricts.Text = db.Local_Links(
+      //      db.Sort_Order.Name
+      //      , db.Anchor_For.Admin_LocalDistricts
+      //      , ViewState["StateCode"].ToString()
+      //      , ViewState["CountyCode"].ToString()
+      //      );
+      //else
+      //  LabelLocalDistricts.Text = db.Local_Links(
+      //      db.Sort_Order.Code
+      //      , db.Anchor_For.Admin_LocalDistricts
+      //      , ViewState["StateCode"].ToString()
+      //      , ViewState["CountyCode"].ToString()
+      //      );
+      LabelLocalDistricts.Text = 
+        LocalLinks.GetDistrictsLocalLinks(ViewState["StateCode"].ToString(),
+          ViewState["CountyCode"].ToString(),
+          RadioButtonListSort.SelectedValue != "Name").RenderToString();
+
+      #endregion Report of Local Districts
+    }
+
+    protected DataTable DataTable_Offices()
+    {
+      string SQL = string.Empty;
+      SQL += " SELECT OfficeKey";
+      SQL += " FROM Offices";
+      SQL += " WHERE StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+      SQL += " AND CountyCode = " + db.SQLLit(ViewState["CountyCode"].ToString());
+      SQL += " AND LocalCode = " + db.SQLLit(ViewState["LocalCode"].ToString());
+      return db.Table(SQL);
+    }
+
+    protected void ButtonLocalDistrictUpdate_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        db.LocalDistrictsUpdate(
+                ViewState["StateCode"].ToString()
+              , ViewState["CountyCode"].ToString()
+              , ViewState["LocalCode"].ToString()
+              , "LocalDistrict"
+              , TextBoxLocalDistrictUpdate.Text.Trim()
+              );
+
+        Local_Links();
+
+        #region remove Change Controls
+        TextBoxLocalDistrictUpdate.Text = string.Empty;
+        TableLocalDistrictUpdate.Visible = false;
+        #endregion remove Change Controls
+
+        Msg.Text = db.Ok("The local district or town name has been changed and should appear in the list below.");
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected string Strip_Name(string Name_To_Strip)
+    {
+      Name_To_Strip = Name_To_Strip.ToUpper();
+      Name_To_Strip = Name_To_Strip.Replace("DISTRICT", string.Empty);
+      Name_To_Strip = Name_To_Strip.Replace("TOWN", string.Empty);
+      Name_To_Strip = Name_To_Strip.Replace("CITY", string.Empty);
+      Name_To_Strip = Name_To_Strip.Replace("WARD", string.Empty);
+      Name_To_Strip = Name_To_Strip.Replace("OF", string.Empty);
+      Name_To_Strip = Name_To_Strip.Replace("THE", string.Empty);
+      Name_To_Strip = Name_To_Strip.Replace("AND", string.Empty);
+      Name_To_Strip = Name_To_Strip.Trim();
+      Name_To_Strip = Name_To_Strip.Replace(" ", string.Empty);
+      return Name_To_Strip;
+    }
+
+    protected void ButtonLocalDistrictAdd_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region Name Checks
+        #region check if already exists
+        //string Name_Stripped = TextBoxLocalDistrictAdd.Text.Trim().ToUpper();
+        //Name_Stripped = Name_Stripped.Replace("DISTRICT", string.Empty);
+        //Name_Stripped = Name_Stripped.Replace("TOWN", string.Empty);
+        //Name_Stripped = Name_Stripped.Replace("CITY", string.Empty);
+        //Name_Stripped = Name_Stripped.Replace("WARD", string.Empty);
+        //Name_Stripped = Name_Stripped.Replace("OF", string.Empty);
+        //Name_Stripped = Name_Stripped.Replace("THE", string.Empty);
+        //Name_Stripped = Name_Stripped.Replace("AND", string.Empty);
+        //Name_Stripped = Name_Stripped.Trim();
+        string Name_Stripped = Strip_Name(TextBoxLocalDistrictAdd.Text.Trim());
+
+        int Tokens = db.Tokens(Name_Stripped);
+        if (Tokens == 0)
+          throw new ApplicationException("The name of the local district or town is missing.");
+        //if (Tokens > 1)
+        //throw new ApplicationException("Because there are too many words in the name, insuring that"
+        //  + " there are no duplicates could not be done."
+        //  + " Please enter only a SINGLE word for the name."
+        //  + " Then change the local district or town name as it will appear on ballots.");
+
+        bool Is_Has_Digits = false;
+        if (db.Is_Has_Digits(Name_Stripped))
+        {
+          Is_Has_Digits = true;
+          Name_Stripped = db.Str_Remove_Non_Digits(Name_Stripped);
+        }
+
+        string SQL = string.Empty;
+        SQL += " SELECT ";
+        SQL += " LocalDistrict";
+        SQL += ",LocalCode";
+        SQL += " FROM LocalDistricts";
+        SQL += " WHERE StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+        SQL += " AND CountyCode = " + db.SQLLit(ViewState["CountyCode"].ToString());
+        SQL += " AND LocalCode != '00'";
+        SQL += " ORDER BY LocalDistrict ";
+
+        bool Is_Duplicate_Name = false;
+        string Duplicate_Name = string.Empty;
+        DataTable LocalDistrictsTable = db.Table(SQL);
+        foreach (DataRow LocalDistrictsRow in LocalDistrictsTable.Rows)
+        {
+          if (!Is_Duplicate_Name)
+          {
+            if (Is_Has_Digits)
+            {
+              string LocalDistrict_Num = db.Str_Remove_Non_Digits(LocalDistrictsRow["LocalDistrict"].ToString());
+              if (LocalDistrict_Num == Name_Stripped)
+              {
+                Is_Duplicate_Name = true;
+                Duplicate_Name = LocalDistrictsRow["LocalDistrict"].ToString();
+              }
+            }
+            else
+            {
+              //Can't be a single character like A for District A
+              if (Name_Stripped.Length != 1)
+              {
+                string LocalDistrict_Stripped = Strip_Name(LocalDistrictsRow["LocalDistrict"].ToString());
+                int index = LocalDistrict_Stripped.IndexOf(Name_Stripped);
+                if (index != -1)
+                {
+                  Is_Duplicate_Name = true;
+                  Duplicate_Name = LocalDistrictsRow["LocalDistrict"].ToString();
+                }
+              }
+            }
+          }
+        }
+        if (Is_Duplicate_Name)
+          throw new ApplicationException(Duplicate_Name + " appears to be a duplicate local district or town."
+            + " If it is definitely NOT a duplicate (like: Herndon District and Herndon Town)"
+            + " then misspell the name. And then edit the name as it should appear on ballots."
+            + " The name is NOT part of the LocalCode so this procedure is harmless.");
+
+        #endregion check if already exists
+        #endregion Name Checks
+
+        string Code_Next = string.Empty;
+        if (TextBoxCode.Text.Trim() != string.Empty)
+        {
+          #region Code Checks
+          if (TextBoxCode.Text.Trim().Length != 2)
+            throw new ApplicationException("The code is not 2 digits.");
+          if (!db.Is_Digits(TextBoxCode.Text.Trim()))
+            throw new ApplicationException("The code is not  digits.");
+          if (LocalDistricts.IsValid(
+                ViewState["StateCode"].ToString()
+              , ViewState["CountyCode"].ToString()
+              , TextBoxCode.Text.Trim()
+              ))
+            throw new ApplicationException("This code already exists.");
+          #endregion Code Checks
+        }
+        else
+        {
+          #region Next Sequential Code
+          SQL = string.Empty;
+          SQL += " SELECT ";
+          SQL += " LocalCode";
+          SQL += " FROM LocalDistricts ";
+          SQL += " WHERE StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+          SQL += " AND CountyCode = " + db.SQLLit(ViewState["CountyCode"].ToString());
+          SQL += " AND LocalCode != '00'";
+          SQL += " ORDER BY LocalCode ASC";
+          DataRow LocalDistrict_Row = db.Row_Last_Optional(SQL);
+          if (LocalDistrict_Row != null)
+          {
+            int CodeInt = Convert.ToInt16(LocalDistrict_Row["LocalCode"]);
+            if (CodeInt < 10)
+              CodeInt = 10;
+            CodeInt++;
+            Code_Next = CodeInt.ToString();
+          }
+          else
+          {
+            Code_Next = "11";//leave 01-10 open just in case
+          }
+
+          #endregion Next Sequential Code
+        }
+
+        #region Insert Local District
+        string InsertSQL = "INSERT INTO LocalDistricts ";
+        InsertSQL += "(";
+        InsertSQL += "StateCode";
+        InsertSQL += ",CountyCode";
+        InsertSQL += ",LocalCode";
+        InsertSQL += ",LocalDistrict";
+        InsertSQL += ",StateLocalDistrictCode";
+        InsertSQL += ",Contact";
+        InsertSQL += ",ContactTitle";
+        InsertSQL += ",ContactEmail";
+        InsertSQL += ",Phone";
+        InsertSQL += ",AltContact";
+        InsertSQL += ",AltContactTitle";
+        InsertSQL += ",AltEMail";
+        InsertSQL += ",AltPhone";
+        InsertSQL += ",EMail";
+        InsertSQL += ",URL";
+        InsertSQL += ",BallotName";
+        InsertSQL += ",ElectionsAuthority";
+        InsertSQL += ",AddressLine1";
+        InsertSQL += ",AddressLine2";
+        InsertSQL += ",CityStateZip";
+        InsertSQL += ",Notes";
+        InsertSQL += ",EmailPage";
+        InsertSQL += ",URLDataPage";
+        InsertSQL += ",IsLocalDistrictTagForDeletion";
+        InsertSQL += ",ElectionKeyOfficialsReportStatus";
+        InsertSQL += ")";
+        InsertSQL += " VALUES(";
+        InsertSQL += db.SQLLit(ViewState["StateCode"].ToString());
+        InsertSQL += "," + db.SQLLit(ViewState["CountyCode"].ToString());
+
+        if (TextBoxCode.Text.Trim() != string.Empty)
+          InsertSQL += "," + db.SQLLit(TextBoxCode.Text.Trim());
+        else
+          InsertSQL += "," + db.SQLLit(Code_Next);
+
+        InsertSQL += "," + db.SQLLit(TextBoxLocalDistrictAdd.Text.Trim());
+
+        InsertSQL += ",''";
+        InsertSQL += ",''";
+        InsertSQL += ",''";
+        InsertSQL += ",''";
+        InsertSQL += ",''";
+        InsertSQL += ",''";
+        InsertSQL += ",''";
+        InsertSQL += ",''";
+        InsertSQL += ",''";
+        InsertSQL += ",''";
+
+        InsertSQL += ",''";
+        InsertSQL += ",''";
+        InsertSQL += ",''";
+        InsertSQL += ",''";
+        InsertSQL += ",''";
+        InsertSQL += ",''";
+        InsertSQL += ",''";
+        InsertSQL += ",''";
+        InsertSQL += ",''";
+        InsertSQL += ",0";
+        InsertSQL += ",''";
+        InsertSQL += ")";
+        db.ExecuteSQL(InsertSQL);
+        #endregion Insert Local District
+
+        #region clear textboxes
+        TextBoxLocalDistrictAdd.Text = string.Empty;
+        TextBoxCode.Text = string.Empty;
+        #endregion clear textboxes
+
+        Local_Links();
+
+        Msg.Text = db.Ok("The local district or town name has been added and should appear in the list below.");
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void RadioButtonListSort_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        ViewState["SortSelected"] = RadioButtonListSort.SelectedValue;
+
+        Local_Links();
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void ButtonAppendDistrict_Click(object sender, EventArgs e)
+    {
+      TextBoxLocalDistrictAdd.Text = TextBoxLocalDistrictAdd.Text.Trim()
+      + " District";
+    }
+
+    protected void ButtonAppendTown_Click(object sender, EventArgs e)
+    {
+      TextBoxLocalDistrictAdd.Text = TextBoxLocalDistrictAdd.Text.Trim()
+      + " Town";
+    }
+
+    protected void ButtonAppendCity_Click(object sender, EventArgs e)
+    {
+      TextBoxLocalDistrictAdd.Text = TextBoxLocalDistrictAdd.Text.Trim()
+      + " City";
+    }
+
+    protected void Button_Format_Name_Add_Click(object sender, EventArgs e)
+    {
+      if (TextBoxLocalDistrictAdd.Text.Trim() != string.Empty)
+      {
+        TextBoxLocalDistrictAdd.Text = TextBoxLocalDistrictAdd.Text.Trim();
+        TextBoxLocalDistrictAdd.Text = db.Str_Remove_SpecialChars_All_Except_Spaces(TextBoxLocalDistrictAdd.Text);
+        TextBoxLocalDistrictAdd.Text = db.FormatName(TextBoxLocalDistrictAdd.Text);
+        Msg.Text = db.Msg("Name has been re-cased.");
+      }
+
+    }
+
+    protected void Button_Format_Name_Update_Click(object sender, EventArgs e)
+    {
+      if (TextBoxLocalDistrictUpdate.Text.Trim() != string.Empty)
+      {
+        TextBoxLocalDistrictUpdate.Text = TextBoxLocalDistrictUpdate.Text.Trim();
+        TextBoxLocalDistrictUpdate.Text = db.Str_Remove_SpecialChars_All_Except_Spaces(TextBoxLocalDistrictUpdate.Text);
+        TextBoxLocalDistrictUpdate.Text = db.FormatName(TextBoxLocalDistrictUpdate.Text);
+        Msg.Text = db.Msg("Name has been re-cased.");
+      }
+
+    }
+
+    protected void Button_View_Offices_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Label_Offices.Text = string.Empty;
+        Label_Offices.Text += "<strong>Offices in this Local District or Town</strong>";
+
+        if (db.Rows(
+          "Offices"
+        , "StateCode", ViewState["StateCode"].ToString()
+        , "CountyCode", ViewState["CountyCode"].ToString()
+        , "LocalCode", ViewState["LocalCode"].ToString()
+        ) > 0)
+        {
+          //string SQL = string.Empty;
+          //SQL += " SELECT OfficeKey";
+          //SQL += " FROM Offices";
+          //SQL += " WHERE StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+          //SQL += " AND CountyCode = " + db.SQLLit(ViewState["CountyCode"].ToString());
+          //SQL += " AND LocalCode = " + db.SQLLit(ViewState["LocalCode"].ToString());
+          //DataTable Offices_Table = db.Table(SQL);
+          DataTable Offices_Table = DataTable_Offices();
+          foreach (DataRow Office_Row in Offices_Table.Rows)
+          {
+            Label_Offices.Text += "<br>----------------";
+            Label_Offices.Text += "<br>";
+            Label_Offices.Text += db.Office_Data(Office_Row["OfficeKey"].ToString());
+          }
+        }
+        else
+        {
+          Label_Offices.Text = "No Offices in this Local District or Town";
+        }
+        Msg.Text = db.Ok("Any office(s) for this local district or town is shown above.");
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Button_Delete_Local_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        if (TextBoxLocalDistrictUpdate.Text != string.Empty)
+        {
+          string SQL = string.Empty;
+          SQL += " DELETE FROM LocalDistricts";
+          SQL += " WHERE StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+          SQL += " AND CountyCode = " + db.SQLLit(ViewState["CountyCode"].ToString());
+          SQL += " AND LocalCode = " + db.SQLLit(ViewState["LocalCode"].ToString());
+          db.ExecuteSQL(SQL);
+
+          DataTable Offices_Table = DataTable_Offices();
+          foreach (DataRow Office_Row in Offices_Table.Rows)
+          {
+            db.Office_Delete_All_Tables_All_Rows(Office_Row["OfficeKey"].ToString());
+          }
+
+          Msg.Text = db.Ok(TextBoxLocalDistrictUpdate.Text + " has been deleted.");
+          TextBoxLocalDistrictUpdate.Text = string.Empty;
+
+          Local_Links();
+        }
+        else
+        {
+          Msg.Text = db.Fail("No local district or town was identified.");
+        }
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        ViewState["StateCode"] = db.State_Code();
+        ViewState["CountyCode"] = db.County_Code();
+        ViewState["LocalCode"] = db.Local_Code();
+
+        ViewState["OfficeLevel"] = OfficeClass.Undefined.ToInt();
+        if (!string.IsNullOrEmpty(GetQueryString("Level")))
+          ViewState["OfficeLevel"] = Convert.ToInt16(GetQueryString("Level"));
+
+        if (!db.Is_User_Security_Ok())
+          SecurePage.HandleSecurityException();
+
+        try
+        {
+          #region Page Title
+          PageTitle.Text = Offices.GetElectoralClassDescription(
+              ViewState["StateCode"].ToString()
+            , ViewState["CountyCode"].ToString()
+            //, ViewState["LocalCode"].ToString()
+            );
+          PageTitle.Text += "<br>";
+
+
+          PageTitle.Text += "ADD & EDIT LOCAL DISTRICTS OR TOWNS";
+          #endregion Page Title
+
+          if (string.IsNullOrEmpty(ViewState["LocalCode"].ToString()))
+          {
+            #region Setup to Add a Local District
+            TableLocalDistrictAdd.Visible = true;
+            TableLocalDistrictUpdate.Visible = false;
+            #endregion Setup to Add a Local District
+
+            Msg.Text = db.Msg("Use the section below to add a local district or town in this county."
+              + " Or click one of the links in the Local Districts and Towns Report"
+              + " to edit a district or town name.");
+          }
+          else
+          {
+            #region Update a Local District
+            TableLocalDistrictAdd.Visible = true;
+            TableLocalDistrictUpdate.Visible = true;
+
+            #region Load Name in Textbox
+            TextBoxLocalDistrictUpdate.Text =
+              VotePage.GetPageCache().LocalDistricts.GetLocalDistrict(
+                  ViewState["StateCode"].ToString()
+                , ViewState["CountyCode"].ToString()
+                , ViewState["LocalCode"].ToString());
+            #endregion Load Name in Textbox
+
+            Msg.Text = db.Msg("Use the section below to add a local district or town in this county."
+              + " Use the next section to edit the district or town shown in the textbox."
+              + " Or click one of the links in the Local Districts and Towns Report"
+              + " to edit a different district or town name.");
+            #endregion Update a Local District
+          }
+
+          ViewState["SortSelected"] = RadioButtonListSort.SelectedValue;
+
+          Local_Links();
+
+        }
+        catch (Exception ex)
+        {
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+        }
+      }
+    }
+  }
+}

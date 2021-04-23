@@ -1,0 +1,84 @@
+﻿<%@ Page Language="C#" ValidateRequest="false" AutoEventWireup="true" 
+CodeBehind="xforCandidates.aspx.cs" Inherits="Vote.ForCandidatesPageX" %>
+
+<%@ Register Src="/Controls/SocialMediaButtons.ascx" TagName="SocialMediaButtons" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonateBanner.ascx" TagName="DonateBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainBanner.ascx" TagName="MainBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainNavigation.ascx" TagName="MainNavigation" TagPrefix="user" %>
+<%@ Register Src="/Controls/VoteUsaAddress.ascx" TagName="VoteUsaAddress" TagPrefix="user" %>
+<%@ Register Src="/Controls/EmailForm.ascx" TagName="EmailForm" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainFooter.ascx" TagName="MainFooter" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeading.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntry.ascx" TagName="AddressEntry" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddSampleBallotButtons.ascx" TagName="AddSampleBallotButtons" TagPrefix="user" %>
+<%@ Register Assembly="BotDetect" Namespace="BotDetect.Web.UI"  TagPrefix="BotDetect" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+  <title runat="server" id="TitleTag" >For Candidates</title>
+  <meta runat="server" id="MetaDescriptionTag" content="" name="description" />
+  <meta runat="server" id="MetaKeywordsTag" content="" name="keywords" />
+</head>
+<body class="candidates-page">
+    <form id="form1" runat="server" enableviewstate="True">
+    <div id="outer">
+    <div id="container">
+      <user:SocialMediaButtons runat="server" />
+      <user:DonateBanner runat="server" />
+      <user:MainBanner runat="server" />
+      <user:MainNavigation runat="server" />
+      <div id="mainContent">
+        <user:PageHeading ID="PageHeading" runat="server" 
+          MainHeadingText="For Candidates" />
+
+        <div class="intro">
+
+          <h2>Enter Information About Your Candidacy</h2>
+
+          <p>Prior to each election, Vote-USA requests the election roster and 
+          candidate email addresses from each state election authority.  If we 
+          have a candidate’s email address, we send them login credentials and 
+          instructions to upload a picture and to enter biographical information 
+          and their views on the issues. </p>
+
+          <p>If you have your candidate username and password, you can 
+          <a href="/politician/default.aspx" title="Login as a candidate">login</a>
+          to enter information about your candidacy. If you do not have your login 
+          credentials, we would be happy to email them to you. We will need 
+          the following:</p>
+
+          <ul>
+            <li>Your complete name, state, and the office you are running for.</li>
+            <li>Some proof of your identity.</li>
+          </ul>
+          
+          <p>You can use either of these ways to prove your identity:</p>
+          
+          <ul>
+            <li>Send us an e-mail using an email address associated with your candidacy 
+            or that matches the URL of your campaign website.</li>
+            <li>Mail us with some other proof of identity like a scanned copy of your 
+            driver’s license or some other official document. Send to 
+            <user:VoteUsaAddress ID="VoteUsaAddress" runat="server" />.</li>
+          </ul>
+
+          <user:AddSampleBallotButtons ID="AddSampleBallotButtons" runat="server" />
+
+          <h2>Email Us</h2>
+
+          <p>Use the form below to email us with any questions or requests:</p>
+
+          <user:EmailForm id="EmailForm" runat="server" />
+          </div>
+        <user:MainFooter runat="server" />
+      </div> <!-- id="mainContent" -->
+    </div> <!-- id="container" -->
+    </div> <!-- id="outer" -->
+
+    <user:AddressEntry runat="server" />
+
+    </form>
+</body>
+</html>

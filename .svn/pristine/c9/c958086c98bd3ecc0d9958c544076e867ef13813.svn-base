@@ -1,0 +1,86 @@
+﻿using System;
+using System.Web.UI;
+
+namespace Vote.Controls
+{
+  public partial class SubHeadingWithHelpControl : UserControl
+  {
+    #region Private
+
+    private string _CssClass;
+    private string _Transition;
+    private SubHeadingWithHelpContainer _Container;
+
+    #endregion Private
+
+    #region Public
+
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable MemberCanBeProtected.Global
+    // ReSharper disable UnusedMember.Global
+    // ReSharper disable UnusedMethodReturnValue.Global
+    // ReSharper disable UnusedAutoPropertyAccessor.Global
+
+    public class SubHeadingWithHelpContainer : Control, INamingContainer { }
+
+    public string CssClass { get { return _CssClass; } set { _CssClass = value; } }
+
+    public Control FindTemplateControl(string id)
+    {
+      return _Container != null ? _Container.FindControl(id) : null;
+    }
+
+    public string Title { get; set; }
+
+    public string Tooltip { get; set; }
+
+    public string Transition { get { return _Transition; } set { _Transition = value; } }
+
+    [PersistenceMode(PersistenceMode.InnerProperty)]
+    [TemplateContainer(typeof (SubHeadingWithHelpContainer))]
+    public ITemplate ContentTemplate { get; set; }
+
+
+    // ReSharper restore UnusedAutoPropertyAccessor.Global
+    // ReSharper restore UnusedMethodReturnValue.Global
+    // ReSharper restore UnusedMember.Global
+    // ReSharper restore MemberCanBeProtected.Global
+    // ReSharper restore MemberCanBePrivate.Global
+
+    #endregion Public
+
+    #region Event handlers and overrides
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      PlaceHolder.Controls.Clear();
+      if (!string.IsNullOrWhiteSpace(Title))
+        SubHeading.InnerHtml = Title;
+      if (string.IsNullOrWhiteSpace(Tooltip))
+      {
+        if (!string.IsNullOrWhiteSpace(Title))
+          HelpButton.Title += " for " + Title;
+      }
+      else
+        HelpButton.Title = Tooltip;
+      if (ContentTemplate == null)
+        HelpButton.Style.Add(HtmlTextWriterStyle.Display, "none");
+      else
+      {
+        _Container = new SubHeadingWithHelpContainer();
+        ContentTemplate.InstantiateIn(_Container);
+        PlaceHolder.Controls.Add(_Container);
+        if (string.IsNullOrWhiteSpace(_Transition))
+          _Transition = "blind";
+        var onClick = string.Format(
+          "$('#{0} div.help').toggle('{1}',400);", FindControl("SubHeadingOuter")
+            .ClientID, _Transition);
+        HelpButton.Attributes["onclick"] = onClick;
+        if (!string.IsNullOrWhiteSpace(_CssClass))
+          HelpButton.AddCssClasses(_CssClass);
+      }
+    }
+
+    #endregion Event handlers and overrides
+  }
+}

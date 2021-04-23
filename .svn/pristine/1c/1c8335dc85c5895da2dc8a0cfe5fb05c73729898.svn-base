@@ -1,0 +1,33 @@
+﻿using System;
+
+namespace Vote
+{
+  public partial class AboutUsPage : CacheablePage
+  {
+    #region Caching support
+
+    protected override string GetCacheKey()
+    {
+      return UrlManager.GetStateCodeFromHostName();
+    }
+
+    protected override string GetCacheType()
+    {
+      return "AboutUs";
+    }
+
+    #endregion Caching support
+
+    private const string TitleTag = "About Us | {0}";
+    private const string MetaDescriptionTag = "About {0}.org and its current operations, mission, funding and history.";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        Title = string.Format(TitleTag, Master.SiteName);
+        MetaDescription = string.Format(MetaDescriptionTag, Master.SiteName);
+      }
+    }
+  }
+}

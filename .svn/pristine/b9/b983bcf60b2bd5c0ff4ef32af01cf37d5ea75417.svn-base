@@ -1,0 +1,23 @@
+﻿using System;
+
+namespace Vote
+{
+  public partial class SampleBallotButtonsPage : PublicPage
+  {
+    protected SampleBallotButtonsPage()
+    {
+      NoUrlEdit = true;
+      NoIndex = true;
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      this.IncludeJs("http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js");
+      this.IncludeJs(
+        "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js");
+      this.IncludeJs("/js/SampleBallotButtons.js");
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/SecondaryCommon.css");
+    }
+  }
+}

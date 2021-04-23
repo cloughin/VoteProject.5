@@ -1,0 +1,329 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Web.Script.Services;
+using System.Web.Services;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB.Vote;
+using DB.VoteLog;
+using Vote.Reports;
+using DonationNagsRow = DB.VoteCacheLocal.DonationNagsRow;
+
+namespace Vote
+{
+  [WebService(Namespace = "http://tempuri.org/")]
+  [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+  [ToolboxItem(false)]
+  [ScriptService]
+  public class WebService : System.Web.Services.WebService
+  {
+    // ReSharper disable NotAccessedField.Global
+    public class DonationNag
+    {
+      public string MessageHeading;
+      public string MessageText;
+      public int NextMessageNumber;
+    }
+
+    public class UpcomingElection
+    {
+      public string Description;
+      public string Href;
+    }
+
+    public class ExplorerInfo
+    {
+      public string Title = string.Empty;
+      public string Html = string.Empty;
+    }
+
+    // ReSharper restore NotAccessedField.Global
+
+    [WebMethod]
+    public AddressFinderResult FindAddress(string input, bool remember, string email, string siteId)
+    {
+      var result = AddressFinder.Find(input, true, email, remember);
+      result.DomainCode = UrlManager.CurrentDomainDataCode;
+
+      if (!string.IsNullOrEmpty(siteId) &&
+        !string.IsNullOrEmpty(result.SuccessMessage))
+        result.RedirectUrl += "&Site=" + siteId;
+
+      return result;
+    }
+
+    [WebMethod]
+    public AddressFinderResult FindState(string input, string email, string siteId)
+    {
+      var redirectUri = UrlManager.GetForVotersPageUri(input);
+      //Uri redirectUri = UrlManager.GetOfficialsPageUri(input);
+
+      var result = new AddressFinderResult
+        {
+          State = input.ToUpper(),
+          RedirectUrl = redirectUri.ToString(),
+          SuccessMessage =
+            "Redirecting to the " + StateCache.GetStateName(input) +
+              " 'for Voters' page"
+        };
+
+      result.FillHostAndState();
+
+      if (!string.IsNullOrWhiteSpace(email))
+        result.Log(email);
+
+      if (!string.IsNullOrEmpty(siteId) &&
+        !string.IsNullOrEmpty(result.SuccessMessage))
+        result.RedirectUrl += "&Site=" + siteId;
+
+      return result;
+    }
+
+    [WebMethod]
+    public SimpleListItem[] GetCongressionalDistricts(string stateCode)
+    {
+      try
+      { // reduce CongressionalDistrict codes from 3 to 2 characters
+        return Offices.GetDistrictItems(stateCode, OfficeClass.USHouse)
+          .Select(i =>
+          {
+            i.Value = i.Value.Substring(1);
+            return i;
+          })
+          .ToArray();
+      }
+      catch (Exception e)
+      {
+        VotePage.LogException("WebService/GetCongressionalDistricts", e);
+        throw;
+      }
+    }
+
+    [WebMethod]
+    public SimpleListItem[] GetCounties(string stateCode)
+    {
+      try
+      {
+        return CountyCache.GetCountiesByState(stateCode)
+          .Select(
+            countyCode =>
+              new SimpleListItem
+              {
+                Text = Counties.GetName(stateCode, countyCode),
+                Value = countyCode
+              })
+          .ToArray();
+      }
+      catch (Exception e)
+      {
+        VotePage.LogException("WebService/GetCounties", e);
+        throw;
+      }
+    }
+
+    [WebMethod]
+    public DonationNag GetDonationNag(int cookieIndex)
+    {
+      var result = new DonationNag();
+      if (MemCache.IsNaggingEnabled)
+      {
+        var donationNagsTable = MemCache.CachedDonationNagsTable;
+        var donationNagsRow = donationNagsTable.Cast<DonationNagsRow>()
+          .FirstOrDefault(row => row.MessageNumber == cookieIndex);
+        var maxIndex = donationNagsTable.Cast<DonationNagsRow>()
+          .Select(row => row.MessageNumber)
+          .Max();
+        result.NextMessageNumber = Math.Min(cookieIndex + 1, maxIndex);
+        if (donationNagsRow != null) // no dialog if null
+        {
+          result.MessageHeading = donationNagsRow.MessageHeading;
+          result.MessageText = donationNagsRow.MessageText;
+          if (donationNagsRow.NextMessageNumber != null)
+            result.NextMessageNumber = donationNagsRow.NextMessageNumber.Value;
+        }
+      }
+      else
+      {
+        result.MessageHeading = string.Empty;
+        result.MessageText = string.Empty;
+        result.NextMessageNumber = cookieIndex;
+      }
+      return result;
+    }
+
+    [WebMethod]
+    public SimpleListItem[] GetElections(string stateCode)
+    {
+      try
+      {
+        return
+         new List<SimpleListItem>
+          {
+            new SimpleListItem(string.Empty, "<select an election>")
+          }.Union(
+           Elections.GetViewableControlDataByStateCodeCountyCodeLocalCode(
+            stateCode, string.Empty, string.Empty)
+             .OrderByDescending(row => row.ElectionDate)
+             .ThenBy(row => row.ElectionOrder)
+             .ThenBy(row => row.ElectionDesc).Select(row =>
+               new SimpleListItem(row.ElectionKey,
+                 row.ElectionDesc)))
+           .ToArray();
+      }
+      catch (Exception e)
+      {
+        VotePage.LogException("WebService/GetElections", e);
+        throw;
+      }
+    }
+
+    [WebMethod]
+    public ExplorerInfo GetElectionExplorer(string electionKey, string congress,
+      string stateSenate, string stateHouse, string countyCode)
+    {
+      int totalContests;
+      int ballotMeasures;
+      var ei = new ExplorerInfo();
+      var report = BallotReport2Tabbed.GetReport(electionKey, congress, stateSenate,
+        stateHouse, countyCode, out totalContests, out ballotMeasures);
+      if (totalContests > 0 || ballotMeasures > 0)
+      {
+        ei.Title = Elections.GetElectionDesc(electionKey);
+        // render to string mucks up the hrefs in the tabs, so fix them
+        ei.Html = report.RenderToString().Replace("href=\"../#", "href=\"#");
+      }
+      return ei;
+    }
+
+    [WebMethod]
+    public SimpleListItem[] GetStateHouseDistricts(string stateCode)
+    {
+      try
+      {
+        return Offices.GetDistrictItems(stateCode, OfficeClass.StateHouse)
+          .ToArray();
+      }
+      catch (Exception e)
+      {
+        VotePage.LogException("WebService/GetStateHouseDistricts", e);
+        throw;
+      }
+    }
+
+    [WebMethod]
+    public string GetStateLinks(string input)
+    {
+      var div = new HtmlGenericControl("div");
+      ForResearchPage.AddStateLinksToDiv(div, input, true, true);
+
+      var htmlArray = div.Controls.OfType<Control>()
+        .Select(db.RenderToString)
+        .ToArray();
+
+      return string.Join("", htmlArray);
+    }
+
+    [WebMethod]
+    public SimpleListItem[] GetStateSenateDistricts(string stateCode)
+    {
+      try
+      {
+        return Offices.GetDistrictItems(stateCode, OfficeClass.StateSenate)
+          .ToArray();
+      }
+      catch (Exception e)
+      {
+        VotePage.LogException("WebService/GetStateSenateDistricts", e);
+        throw;
+      }
+    }
+
+    [WebMethod]
+    public UpcomingElection[] GetUpcomingElections(
+      string stateCode, string congress, string stateSenate, string stateHouse,
+      string county)
+    {
+      var list = new List<UpcomingElection>();
+
+      var futureElectionsTable =
+        Elections.GetFutureViewableDisplayDataByStateCode(stateCode);
+
+      foreach (var row in futureElectionsTable)
+      {
+        list.Add(
+          new UpcomingElection
+            {
+              Description = row.ElectionDesc,
+              Href =
+                UrlManager.GetBallotPageUri(
+                  row.ElectionKey, congress, stateSenate, stateHouse, county)
+                  .ToString()
+            });
+      }
+
+      // mod 1/24/2013
+      // if there are no future elections, return the most recent past election(s)
+      if (list.Count == 0)
+      {
+        var pastElectionsTable =
+          Elections.GetPastViewableDisplayDataByStateCode(stateCode);
+
+        if (pastElectionsTable.Count != 0)
+        {
+          var date = pastElectionsTable[0].ElectionDate;
+          foreach (var row in pastElectionsTable)
+          {
+            if (row.ElectionDate != date) break;
+            list.Add(
+              new UpcomingElection
+                {
+                  Description = row.ElectionDesc,
+                  Href =
+                    UrlManager.GetBallotPageUri(
+                      row.ElectionKey, congress, stateSenate, stateHouse, county)
+                      .ToString()
+                });
+          }
+        }
+      }
+
+      return list.ToArray();
+    }
+
+    [WebMethod]
+    public void SubmitSampleBallotEmail(
+      string email, string siteId, string script, string stateCode,
+      string electionKey, string congressionalDistrict, string stateSenateDistrict,
+      string stateHouseDistrict, string county)
+    {
+      try
+      {
+        var table = LogSampleBallotRequests.GetDataByEmail(email);
+        LogSampleBallotRequestsRow row;
+        if (table.Count == 0)
+        {
+          row = table.NewRow();
+          row.Email = email;
+          table.AddRow(row);
+        }
+        else
+          row = table[0];
+        row.LastUpdateDate = DateTime.UtcNow;
+        row.SiteId = siteId;
+        row.Script = script;
+        row.ExplicitOptIn = true;
+        row.StateCode = stateCode;
+        row.ElectionKey = electionKey;
+        row.CongressionalDistrict = congressionalDistrict;
+        row.StateSenateDistrict = stateSenateDistrict;
+        row.StateHouseDistrict = stateHouseDistrict;
+        row.County = county;
+        LogSampleBallotRequests.UpdateTable(table);
+      }
+      // ReSharper disable once EmptyGeneralCatchClause
+      catch {} // tolerate errors
+    }
+  }
+}

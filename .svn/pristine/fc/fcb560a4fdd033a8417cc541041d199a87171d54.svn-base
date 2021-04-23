@@ -1,0 +1,29 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Admin.Master" 
+AutoEventWireup="true" CodeBehind="LogDonations.aspx.cs" 
+Inherits="Vote.Master.LogDonationsPage" %>
+
+<asp:Content ID="HeadContent" ContentPlaceHolderID="MasterHeadContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+  <div id="outer">
+    <h1 id="H1" runat="server"></h1>
+
+    <div class="rounded-border boxed-group file-upload-container">
+      <div class="boxed-group-label">Select one or more donation receipt email msg files</div>
+      <input name="FileUpload" id="FileUpload" type="file" multiple="multiple" />
+    </div>
+
+    <div class="rounded-border boxed-group summary-container hidden" runat="Server" id="SummaryContainer">
+      <div class="boxed-group-label">Processing summary</div>
+      <div class="summary">
+        <asp:PlaceHolder ID="SummaryPlaceHolder" runat="server"></asp:PlaceHolder>       
+      </div>
+    </div>
+
+    <div class="submit-container">
+      <input type="button" class="button-1 submit-form button-smaller" value="Submit" /> 
+    </div>
+
+  </div>
+</asp:Content>

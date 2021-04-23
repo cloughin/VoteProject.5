@@ -1,0 +1,16 @@
+using System;
+using Vote;
+
+namespace CreateSitemaps
+{
+  static class Program
+  {
+    // ReSharper disable once UnusedParameter.Local
+    static void Main(string[] args)
+    {
+      Console.WriteLine("Begin CreateSitemaps");
+      SitemapManager.UpdateAllSitemapVirtualPages();
+      Console.WriteLine("End CreateSitemaps");
+    }
+  }
+}

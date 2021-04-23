@@ -1,0 +1,502 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using DB;
+using DB.Vote;
+using Jayrock.Json.Conversion;
+using Vote.Controls;
+
+namespace Vote
+{
+  public class UpdateAnswer
+  {
+    private IList<IGrouping<string, AnswersViewRow>> _DataTable;
+    private readonly bool _ForIntro;
+
+    private const string MonitorPrefix = "mc";
+    private const string MonitorTabPrefix = "mt";
+    private const string MonitorSuperTabPrefix = "ms";
+
+    // must be public for JSON conversion
+    // ReSharper disable once MemberCanBePrivate.Global
+    public class Responses
+    {
+      // ReSharper disable NotAccessedField.Global
+      public string Answer;
+      public string Source;
+      public string Date;
+      public string YouTubeUrl;
+      public string YouTubeDescription;
+      public string YouTubeDate;
+      public string Sequence;
+      // ReSharper restore NotAccessedField.Global
+    }
+
+    public UpdateAnswer(bool forIntro)
+    {
+      _ForIntro = forIntro;
+    }
+
+    private void CreateActionMenu(HtmlContainerControl menuContainer, IList<DataRow> responses,
+      bool isNew)
+    {
+      menuContainer.Controls.Clear();
+      new HtmlSpan { InnerText = "Select action:" }.AddTo(menuContainer);
+      var dropdown = new HtmlSelect().AddTo(menuContainer);
+      var edit = dropdown.AddItem("Edit this response", "edit");
+      var add =  dropdown.AddItem("Add another response to this question", "add");
+      var view = dropdown.AddItem("View or edit other responses to this question", "view");
+      if (responses.Count == 0)
+        menuContainer.AddCssClasses("hidden");
+      else
+        menuContainer.RemoveCssClass("hidden");
+      if (isNew && responses.Count > 0)
+      {
+        edit.Attributes.Add("disabled", "disabled");
+        add.Attributes.Add("selected", "selected");
+      }
+      else
+      {
+        edit.Attributes.Add("selected", "selected");
+        if (responses.Count < 2)
+          view.Attributes.Add("disabled", "disabled");
+      }
+    }
+
+    public void CreateControls(HtmlContainerControl parent, IList<AnswersViewRow> responses, 
+      MonitorInstance monitor)
+    {
+      var row = responses.First();
+      var responsesAsDataRow = responses.Where(r => r.Sequence != null).Cast<DataRow>().ToList();
+      parent.AddCssClasses("answer-panel " + (_ForIntro ? "intro-answer-panel" : "issues-answer-panel"));
+
+      // The panel title
+      var heading = SecurePage.AddContainer(parent, null, null);
+      SecurePage.AddHeading(heading, 4, null, null, row.Question);
+      SecurePage.Center(heading, true, true, "heading");
+      if (!_ForIntro) heading.Visible = false;
+
+      // Add undo button as next sibling to heading
+      var undo = SecurePage.CreateUndoButton("Undo" + row.QuestionKey,
+        monitor.GetUndoClass(null),
+        string.Format("Revert \"{0}\" to the latest saved version", row.Question));
+      heading.AddAfter(undo);
+
+      // Same for clear button
+      var clear = SecurePage.CreateClearButton("Clear" + row.QuestionKey,
+        monitor.GetClearClass(null, "answer"),
+        string.Format("Clear \"{0}\"", row.Question));
+      heading.AddAfter(clear);
+
+      var updatePanel = SecurePage.AddAjaxUpdatePanel(parent, "UpdatePanel" + row.QuestionKey);
+
+      var container = SecurePage.AddContainer(updatePanel.ContentTemplateContainer,
+        "Container" + row.QuestionKey, monitor.GetContainerClass("update-all updated answer-container"));
+
+      SecurePage.AddHiddenField(container, "Description" + row.QuestionKey,
+        monitor.GetDescriptionClass(null, "answer"), row.Question);
+
+      var hasNoResponses = row.Sequence == null;
+
+      var sequenceItem = SecurePage.AddHiddenField(container, "Sequence" + row.QuestionKey, "answer-sequence",
+        hasNoResponses ? "?" : row.Sequence.Value.ToString(CultureInfo.InvariantCulture));
+
+      SetResponseData(responsesAsDataRow, row, sequenceItem);
+  
+      // the data field
+      string moreClasses;
+      if (_ForIntro)
+        moreClasses = "mc-mt-reasons";
+      else
+      {
+        var tabPrefix = MonitorPrefix + "-" + MonitorTabPrefix + "-issue" +
+          row.IssueKey;
+        var superTabPrefix = MonitorPrefix + "-" + MonitorSuperTabPrefix + "-igroup" +
+          row.IssueGroupKey;
+        moreClasses = tabPrefix + " " + superTabPrefix;
+      }
+      SecurePage.AddTextArea(container, "TextBox" + row.QuestionKey,
+        monitor.GetDataClass("shadow answer-textbox " + moreClasses, "answer"),
+        row.Answer, "Type or paste your response into this box", true);
+
+      new HtmlP
+      {
+        InnerHtml = "To delete a response, use the Clear button (red <span>X</span> upper right) then Update."
+      }.AddTo(container, "delete-message");
+
+      // the action menu
+      var menuContainer = SecurePage.AddContainer(container, "Action" + row.QuestionKey,
+        "action-menu");
+      CreateActionMenu(menuContainer, responsesAsDataRow, row.Sequence == null);
+
+      // the remove-line-breaks button
+      SecurePage.AddButtonInputElement(container, null,
+        "remove-line-breaks button-2 button-smallest", "Remove Line Breaks", "remove-line-breaks");
+
+      if (!SecurePage.IsPoliticianUser) // add source and date boxes
+      {
+        SecurePage.AddTextAreaInputElement(container, "Source" + row.QuestionKey,
+         monitor.GetDataClass("shadow source-textbox " + moreClasses, "source"),
+         row.Source, "Copy and paste the url of the web page (with or without http://) where" +
+           " you obtained the answer or a description of the source into this box.", false,
+           "Copy and paste the url of the web page (with or without http://) where" +
+           " you obtained the answer or a description of the source into this box.",
+           true, "Source", "source", null, null, null);
+        SecurePage.AddTextInputElement(container, "Date" + row.QuestionKey,
+          monitor.GetDataClass("shadow-2 date-textbox date-picker " + moreClasses, "date"),
+          row.DateStamp.DbDateToShortDate(),
+          "Enter the date of the answer if today is not an appropriate date. For" +
+            " example if you obtained the answer from the candidate's campaign website," +
+            " and the election is over, enter some date a couple days prior to the" +
+            " election.", false, "Date", "date", null, null, null);
+        SecurePage.AddButtonInputElement(container, null,
+          "today-button for-date button-1 button-smallest", "Today", "today for-date");
+
+        SecurePage.AddTextInputElement(container, "YouTubeUrl" + row.QuestionKey,
+          monitor.GetDataClass("shadow-2 youtubeurl-textbox " + moreClasses, "youtubeurl"),
+          row.YouTubeUrl,
+          "Enter a YouTube url (with or without http://) that addresses the question.", false, 
+          "YouTube Url", "youtubeurl", null, null, null);
+        SecurePage.AddTextInputElement(container, "YouTubeDate" + row.QuestionKey,
+          monitor.GetDataClass("shadow-2 youtubedate-textbox date-picker " + moreClasses, "youtubedate"),
+          row.YouTubeDate.DbDateToShortDate(),
+          "Enter the date of the YouTube video if today is not an appropriate date.", false,
+          "YouTube Date", "youtubedate", null, null, null);
+        SecurePage.AddButtonInputElement(container, null,
+          "today-button for-youtubedate button-1 button-smallest", "Today", "today  for-youtubedate");
+
+        SecurePage.AddClearBoth(container)
+          .AddCssClasses("spacer");
+      }
+
+      // feedback
+      SecurePage.AddFeedbackWithIE7Floater(container, "Feedback" + row.QuestionKey,
+        monitor.GetFeedbackClass(null));
+
+      // update button
+      SecurePage.AddUpdateButtonInContainer(container, "Button" + row.QuestionKey,
+        "update-button", monitor.GetButtonClass("update-button button-1"),
+        string.Format("Update \"{0}\"", row.Question), ButtonUpdate_OnClick);
+
+      SecurePage.AddClearBoth(container);
+    }
+
+    private SecurePage.UpdateStatus DoAnswerUpdate(IList<IGrouping<string, AnswersViewRow>> table, 
+      string questionKey, bool reportUnchanged, ref int updateCount)
+    {
+      var page = VotePage.GetPage<SecurePoliticianPage>();
+      var updateStatus = SecurePage.UpdateStatus.Failure; // default
+      var description = string.Empty;
+
+      var feedback =
+        page.Master.FindMainContentControl("Feedback" + questionKey) as
+          FeedbackContainerControl;
+      var updatePanel =
+        page.Master.FindMainContentControl("UpdatePanel" + questionKey) as UpdatePanel;
+      var textBox =
+        page.Master.FindMainContentControl("TextBox" + questionKey) as TextBox;
+      var sourceBox =
+        page.Master.FindMainContentControl("Source" + questionKey) as TextBox;
+      var dateBox = page.Master.FindMainContentControl("Date" + questionKey) as TextBox;
+      var youTubeUrlBox =
+       page.Master.FindMainContentControl("YouTubeUrl" + questionKey) as TextBox;
+      var youTubeDateBox = page.Master.FindMainContentControl("YouTubeDate" + questionKey) as TextBox;
+      var sequenceHidden = page.Master.FindMainContentControl("Sequence" + questionKey) as HtmlInputHidden;
+
+      Debug.Assert(feedback != null, "feedback != null");
+      Debug.Assert(updatePanel != null, "updatePanel != null");
+      Debug.Assert(textBox != null, "textBox != null");
+      Debug.Assert(youTubeUrlBox != null, "youTubeUrlBox != null");
+      Debug.Assert(youTubeDateBox != null, "youTubeDateBox != null");
+      Debug.Assert(sequenceHidden != null, "sequenceHidden != null");
+
+      try
+      {
+        textBox.AddCssClasses("badupdate");
+
+        FeedbackContainerControl.ClearValidationErrors(textBox, sourceBox, dateBox, 
+          youTubeUrlBox, youTubeDateBox);
+
+        var sequence = sequenceHidden.Value == "?"
+          ? Answers.GetNextSequence(page.PoliticianKey, questionKey)
+          : int.Parse(sequenceHidden.Value);
+
+        var newValue = textBox.GetValue();
+        string newSource;
+        DateTime newDate;
+        DateTime newYouTubeDate;
+        bool success;
+        var dateWasEmpty = true;
+
+        newValue = feedback.StripHtml(newValue);
+        newValue = newValue.StripRedundantSpaces();
+        var oldResponses = table.Where(g => g.Key.IsEqIgnoreCase(questionKey))
+          .SelectMany(g => g);
+        var question = oldResponses.First();
+        var oldRow = table.Where(g => g.Key.IsEqIgnoreCase(questionKey))
+          .SelectMany(g => g)
+          .FirstOrDefault(r => r.Sequence == sequence);
+        description = '"' + question.Question + '"';
+
+        if (string.IsNullOrWhiteSpace(newValue))
+        {
+          newSource = string.Empty;
+          newDate = VotePage.DefaultDbDate;
+        }
+        else if (SecurePage.IsPoliticianUser)
+        {
+          newSource = page.PageCache.Politicians.GetLastName(page.PoliticianKey);
+          newDate = DateTime.UtcNow.Date;
+        }
+        else
+        {
+          Debug.Assert(sourceBox != null, "sourceBox != null");
+          Debug.Assert(dateBox != null, "dateBox != null");
+          newSource = sourceBox.Text;
+          newSource = feedback.StripHtml(newSource);
+          newSource = newSource.StripRedundantSpaces();
+          dateWasEmpty = string.IsNullOrWhiteSpace(dateBox.Text);
+          newDate =
+            feedback.ValidateDateOptional(dateBox, out success, "Date",
+              DateTime.UtcNow.Date)
+              .Date;
+        }
+
+        var newYouTubeUrl = youTubeUrlBox.GetValue();
+        newYouTubeUrl = feedback.StripHtml(newYouTubeUrl);
+        newYouTubeUrl = newYouTubeUrl.StripRedundantSpaces();
+
+        if (string.IsNullOrWhiteSpace(newYouTubeUrl))
+          newYouTubeDate = VotePage.DefaultDbDate;
+        else
+        {
+          if (!Regex.IsMatch(newYouTubeUrl, 
+            @"^(?:https?://)?(?:(?:www\.)?(?:youtube|googlevideo|ytimg)\.com|youtu\.be)/[^\s]",
+            RegexOptions.IgnoreCase))
+            feedback.PostValidationError(youTubeUrlBox, "Not a valid YouTube url");
+          newYouTubeDate =
+            feedback.ValidateDateOptional(youTubeDateBox, out success, "YouTube Date",
+              DateTime.UtcNow.Date)
+              .Date;
+        }
+
+        if (feedback.ValidationErrorCount == 0)
+        {
+          var oldValue = string.Empty;
+          var oldSource = string.Empty;
+          var oldDate = VotePage.DefaultDbDate;
+          var oldYouTubeUrl = string.Empty;
+          var oldYouTubeDate = VotePage.DefaultDbDate;
+
+          if (oldRow != null)
+          {
+            oldValue = oldRow.Answer.SafeString();
+            oldSource = oldRow.Source.SafeString();
+            oldDate = oldRow.DateStamp.SafeDbDate();
+            oldYouTubeUrl = oldRow.YouTubeUrl.SafeString();
+            oldYouTubeDate = oldRow.YouTubeDate.SafeDbDate()
+            .Date;
+          }
+
+          var unchanged = oldValue == newValue && oldYouTubeUrl == newYouTubeUrl && 
+            oldYouTubeDate == newYouTubeDate;
+          if (unchanged && !SecurePage.IsPoliticianUser)
+            unchanged = oldSource == newSource &&
+              (oldDate == newDate || dateWasEmpty);
+
+          if (unchanged)
+          {
+            if (reportUnchanged)
+            {
+              feedback.AddInfo("Your " + description + " entry was unchanged.");
+              updatePanel.Update();
+            }
+            updateStatus = SecurePage.UpdateStatus.Unchanged;
+          }
+          else
+          {
+            if (!SecurePage.IsPoliticianUser && !string.IsNullOrWhiteSpace(newValue))
+              feedback.ValidateLength(sourceBox, "Source", 1, 255, out success);
+            if (feedback.ValidationErrorCount == 0)
+            {
+              page.LogPoliticianAnswerChange(questionKey, sequence, oldValue, newValue, newSource);
+              page.UpdatePoliticianAnswer(questionKey, sequence, question.IssueKey, newValue,
+                newSource, newDate, newYouTubeUrl, newYouTubeDate);
+              UpdateQuestion(questionKey, sequence);
+              feedback.AddInfo("Your " + description + " entry was updated.");
+              updateStatus = SecurePage.UpdateStatus.Success;
+              updateCount++;
+            }
+            updatePanel.Update();
+          }
+        }
+
+        if (updateStatus != SecurePage.UpdateStatus.Failure)
+        {
+          if (newValue != textBox.Text)
+            updatePanel.Update();
+          textBox.SetValue(newValue);
+          if (!SecurePage.IsPoliticianUser)
+          {
+            if (string.IsNullOrWhiteSpace(newValue))
+            {
+              newSource = string.Empty;
+              newDate = VotePage.DefaultDbDate;
+            }
+            var newDateText = newDate.DbDateToShortDate();
+            var newYouTubeDateText = newYouTubeDate == VotePage.DefaultDbDate 
+              ? string.Empty 
+              : newYouTubeDate.DbDateToShortDate();
+            Debug.Assert(sourceBox != null, "sourceBox != null");
+            Debug.Assert(dateBox != null, "dateBox != null");
+            if (newSource != sourceBox.Text || newDateText != dateBox.Text || 
+             newYouTubeDateText != youTubeDateBox.Text)
+              updatePanel.Update();
+            sourceBox.SetValue(newSource);
+            dateBox.SetValue(newDateText);
+            youTubeDateBox.SetValue(newYouTubeDateText);
+          }
+        }
+
+        textBox.RemoveCssClass("badupdate");
+      }
+      catch (Exception ex)
+      {
+        if (description == string.Empty) description = "your response";
+        feedback.AddError("There was an unexpected error updating " + description);
+        feedback.HandleException(ex);
+        updatePanel.Update();
+      }
+
+      return updateStatus;
+    }
+
+    private void DoAnswersUpdate(string questionKey, bool reportUnchanged)
+    {
+      var updateCount = 0;
+      DoAnswerUpdate(GetDataTable(), questionKey, reportUnchanged, ref updateCount);
+    }
+
+    public IList<IGrouping<string, AnswersViewRow>> GetDataTable()
+    {
+      if (_DataTable == null)
+      {
+        AnswersViewTable table;
+        if (_ForIntro)
+          table =
+            AnswersView.GetAllDataByIssueLevelStateCodePoliticianKey("A", "LL",
+              VotePage.GetPage<SecurePoliticianPage>().PoliticianKey);
+        else
+        {
+          var page = VotePage.GetPage<SecurePoliticianPage>();
+          var officeKey = page.PageCache.Politicians.GetOfficeKey(page.PoliticianKey);
+          var officeClass = page.PageCache.Offices.GetOfficeClass(officeKey);
+          if (officeClass.IsFederal())
+            table =
+              AnswersView.GetAllDataByIssueLevelStateCodePoliticianKey("B", "US",
+                 page.PoliticianKey);
+          else
+            table =
+              AnswersView.GetAllDataByIssueLevelStateCodePoliticianKey("C",
+                Politicians.GetStateCodeFromKey(page.PoliticianKey), page.PoliticianKey);
+        }
+        _DataTable = table
+          .GroupBy(r => r.QuestionKey)
+          //.Select(g => g.First())
+          .ToList();
+      }
+      return _DataTable;
+    }
+
+    private static void SetResponseData(IList<DataRow> responses, DataRow row,
+      HtmlInputHidden sequenceItem)
+    {
+      // if there is more than one response, attach json for additional responses to sequence
+      // skip the one we are reporting
+      if (responses.Count() > 1)
+      {
+        var responseArray = responses.Where(r => r != row)
+          .Select(r => new Responses
+          {
+            // ReSharper disable PossibleInvalidOperationException
+            Answer = r.Answer(),
+            Source = r.Source(),
+            Date = r.DateStamp() == VotePage.DefaultDbDate ? string.Empty : r.DateStamp().ToString("d"),
+            YouTubeUrl = r.YouTubeUrl(),
+            YouTubeDate = r.YouTubeDate() == VotePage.DefaultDbDate ? string.Empty : r.YouTubeDate().ToString("d"),
+            Sequence = r.Sequence().ToString(CultureInfo.InvariantCulture)
+            // ReSharper restore PossibleInvalidOperationException
+          })
+          .ToArray();
+        sequenceItem.Attributes.Add("data-responses", JsonConvert.ExportToString(responseArray));
+      }
+    }
+
+    public int UpdateAllAnswers(bool showSummary, ref int updateCount)
+    {
+      var errorCount = 0;
+      var table = GetDataTable();
+      foreach (var group in table)
+        if (DoAnswerUpdate(table, group.First().QuestionKey, showSummary, ref updateCount) ==
+          SecurePage.UpdateStatus.Failure) errorCount++;
+      return errorCount;
+    }
+
+    private void UpdateQuestion(string questionKey, int sequence)
+    {
+      var page = VotePage.GetPage<SecurePoliticianPage>();
+      var responses = Answers.GetDataByPoliticianKeyQuestionKey(page.PoliticianKey, questionKey)
+        .Rows.Cast<DataRow>().ToList();
+      var row = responses.FirstOrDefault(r => r.Sequence() == sequence);
+
+      // refresh the sequence
+      // if the sequence no longer exists, make it "?"
+      var sequenceHidden = 
+        page.Master.FindMainContentControl("Sequence" + questionKey) as HtmlInputHidden;
+      sequenceHidden.Value = row == null
+        ? "?"
+        : sequence.ToString(CultureInfo.InvariantCulture);
+
+      SetResponseData(responses, row, sequenceHidden);
+
+      // recreate the action menu (it might need changing)
+      var actionContainer =
+        page.Master.FindMainContentControl("Action" + questionKey) as HtmlContainerControl;
+      CreateActionMenu(actionContainer, responses, row == null);
+    }
+
+    #region Event handlers and overrides
+
+    private void ButtonUpdate_OnClick(object sender, EventArgs e)
+    {
+      var page = VotePage.GetPage<SecurePage>();
+      var button = sender as Button;
+      if (button == null ||
+        !button.ID.StartsWith("Button", StringComparison.Ordinal)) return;
+      var questionKey = button.ID.Substring(6);
+      var feedback =
+        page.Master.FindMainContentControl("Feedback" + questionKey) as
+          FeedbackContainerControl;
+
+      try
+      {
+        DoAnswersUpdate(questionKey, true);
+        page.InvalidatePageCache();
+      }
+      catch (Exception ex)
+      {
+        if (feedback != null)
+          feedback.HandleException(ex);
+      }
+    }
+
+    #endregion Event handlers and overrides
+  }
+}

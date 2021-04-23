@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Payments Test</title>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" />
+  <link rel="stylesheet" href="/css/vote/public.min.css?470" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+
+  <script src="/js/vote/publicutil.js"></script>
+  <style>
+    h1
+    {
+      font-size: 24px;
+      margin: 10px 0;
+    }
+    body
+    {
+      text-align: left;
+      margin: 5px;
+    }
+    p
+    {
+      margin: 1em 0;
+    }
+    #payment-for
+    {
+      width: 100%;
+      max-width: 750px;
+    }
+    .error
+    {
+      background-color: #ff0;
+    }
+  </style>
+</head>
+<body>
+  <script src="https://www.paypal.com/sdk/js?client-id=AQhKnX0I0t0jlHoDS8zayIRCKql2YfoF0FToKxdKU7Ii_FrnvDTk76TM6AsR7sVNwQafJR_3wImI-ixu"></script>
+
+  <h1>PayPal Payment Test</h1>
+
+<div id="the-form">
+<p><label>This payment is for: </label><br/><input id="payment-for" /></p>
+
+<p><label>Amount: </label><input id="payment-amount"/></p>
+</div>
+  <div id="paypal-button-container"></div>
+
+<script>
+  function paymentForIsValid() {
+    return $.trim($("#payment-for").val()) != "";
+  }
+  function paymentAmountIsValid() {
+    return /^((-?[0-9]+)|(-?([0-9]+)?[.][0-9]+))$/.test($("#payment-amount").val());
+  }
+  paypal.Buttons({
+    onInit: function(data, actions) {
+      actions.disable();
+      $("#payment-amount,#payment-for").on("propertychange change click keyup input paste spinchange", function() {
+        if (paymentForIsValid() && paymentAmountIsValid())
+          actions.enable();
+        else
+          actions.disable();
+        if (paymentForIsValid()) $("#payment-for").removeClass("error");
+        if (paymentAmountIsValid()) $("#payment-amount").removeClass("error");
+      });
+    },
+    onClick() {
+      var msgs = [];
+      if (!paymentForIsValid()) {
+        $("#payment-for").addClass("error");
+        msgs.push("\"This payment is for\" is required");
+      }
+      if (!paymentAmountIsValid()) {
+        $("#payment-amount").addClass("error");
+        msgs.push("\"Amount\" is required and must be a valid number");
+      }
+      if (msgs.length) {
+        UTIL.alert(msgs.join("\n"));
+      }
+    },
+    createOrder: function (data, actions) {
+      // Set up the transaction
+      return actions.order.create({
+        //payer: {
+        //  name: {
+        //    given_name: 'Bozo',
+        //    surname: 'Clown'
+        //  },
+        //  address: {
+        //    address_line_1: '123 Some Street',
+        //    admin_area_2: 'Nowhere',
+        //    admin_area_1: 'MT',
+        //    postal_code: '87654',
+        //    country_code: 'US'
+        //  }
+        //},
+        purchase_units: [{
+          //description: 'For services rendered by Vote-USA.org',
+          items: [
+            {
+              name: $.trim($("#payment-for").val()),
+              unit_amount: { currency_code: 'USD', value: $("#payment-amount").val() },
+              quantity: '1'
+            }],
+          amount: {
+            value: $("#payment-amount").val(),
+            breakdown: { item_total: { currency_code: 'USD', value: $("#payment-amount").val() } }
+          }
+        }]
+      });
+    },
+    onApprove: function (data, actions) {
+      // Capture the funds from the transaction
+      return actions.order.capture().then(function (details) {
+        // Show a success message to your buyer
+        alert('Transaction completed by ' + details.payer.name.given_name + ' ' + details.payer.name.surname);
+      });
+    }
+  }).render('#paypal-button-container');
+</script>
+</body>
+</html>

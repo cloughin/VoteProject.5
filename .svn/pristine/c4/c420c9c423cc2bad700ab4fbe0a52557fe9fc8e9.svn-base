@@ -1,0 +1,605 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<generateDbClasses>
+  <databases 
+    supportMySql="true" 
+    supportMsSql="true"
+    secondary="false"
+    >
+    <database
+      mappedName="Vote"
+      provider="MySql"
+      connectionString="Server=votesql.c3fj3t5d5d77.us-east-1.rds.amazonaws.com;Uid=ron;Pwd=p17134;Database=vote"
+      connectionStringKey="CnVote.MySql"
+      providerKey="VoteDbProvider"
+      >
+      <tables>
+        <table name="Addresses" reader="true">
+          <indexes>
+            <index columns="Email" add="true"/>
+          </indexes>
+          <columnSets>
+            <columnSet name="Emails" columns="Id,Email"/>
+            <columnSet name="DistrictCoding" columns="Id,Address,City,StateCode,Zip5,Zip4,Email,CongressionalDistrict,StateSenateDistrict,StateHouseDistrict,County,DistrictLookupDate"/>
+          </columnSets>
+        </table>
+        <table name="AddressesMaster" singleton="true" />
+        <table name="Answers">
+          <indexes>
+            <index columns="PoliticianKey,QuestionKey" add="true"/>
+          </indexes>
+        </table>
+        <table name="AnswersView" allColumnsNullable="true"/>
+        <table name="BallotPediaCsvs">
+          <columnSets>
+            <columnSet name="NoContent" columns="Id,Filename,UploadTime,Candidates,CandidatesCoded,Completed">
+              <indexes skip="true">
+                <index add="true" columns="Completed" default="true" />
+              </indexes>
+            </columnSet>
+          </columnSets>
+        </table>
+        <table name="Counties">
+          <indexes>
+            <index columns="StateCode,CountyCode" default="true"/>
+          </indexes>
+          <columns>
+            <column name="AltEMail" mappedName="AltEmail" />
+            <column name="EMail" mappedName="Email" />
+            <column name="URL" mappedName="Url" />
+            <column name="URLDataPage" mappedName="UrlDataPage" />
+          </columns>
+          <columnSets>
+            <columnSet name="Cache" columns="StateCode,CountyCode,County">
+              <indexes skip="true">
+                <index add="true" columns="StateCode,CountyCode" default="true" />
+              </indexes>
+            </columnSet>
+            <columnSet name="Display" columns="County,StateCode,CountyCode">
+              <indexes skip="true">
+                <index add="true" columns="StateCode" orderBy="County" />
+              </indexes>
+            </columnSet>
+            <columnSet name="CountyCode" columns="CountyCode">
+              <indexes skip="true">
+                <index add="true" columns="StateCode" orderBy="County" />
+              </indexes>
+            </columnSet>
+            <columnSet name="Contact" columns="StateCode,CountyCode,Contact,ContactEmail,ContactTitle,Phone,AltContact,AltEMail,AltContactTitle,AltPhone" />
+          </columnSets>
+        </table>
+        <table name="DistrictAddressesView" reader="true" />
+        <table name="Domains">
+          <indexes>
+            <index columns="TestServerName" unique="true" />
+          </indexes>
+          <columnSets>
+            <columnSet name="UrlManager" columns="DomainServerName,TestServerName,IsCanonical,DomainDesignCode,StateCode,DomainOrganizationCode">
+              <indexes skip="true" />
+            </columnSet>
+          </columnSets>
+        </table>
+        <table name="DomainDesigns">
+          <indexes>
+            <index columns="DomainDesignCode" default="true" />
+          </indexes>
+          <columnSets>
+            <columnSet name="PrimaryKey" columns="DomainDesignCode">
+              <indexes skip="true" />
+            </columnSet>
+          </columnSets>
+        </table>
+        <table name="Donations">
+          <indexes>
+            <index add="true" columns="Email,Date" />
+          </indexes>
+        </table>
+        <table name="Elections">
+          <indexes>
+            <index columns="ElectionKey" default="true"/>
+          </indexes>
+          <columnSets>
+            <columnSet name="Display" columns="ElectionKey,ElectionDate,ElectionType,ElectionDesc,StateCode,PartyCode,IsViewable">
+              <indexes>
+                <index columns="StateCode" orderBy="ElectionDate DESC,ElectionOrder ASC,NationalPartyCode" />
+                <index add="true" columns="StateCode,IsViewable" orderBy="ElectionDate DESC,ElectionOrder ASC" />
+                <index add="true" columns="StateCode,ElectionType,IsViewable" orderBy="ElectionDate DESC,ElectionOrder ASC" />
+              </indexes>
+            </columnSet>
+            <columnSet name="ExtendedDisplay" columns="ElectionKey,StateCode,CountyCode,LocalCode,ElectionDate,ElectionType,ElectionDesc,StateCode,PartyCode,IsViewable">
+              <indexes>
+                <index add="true" columns="StateCode,CountyCode,LocalCode,IsViewable" orderBy="ElectionDate DESC,ElectionOrder ASC" />
+              </indexes>
+            </columnSet>
+            <columnSet name="Cache" columns="ElectionKey,ElectionDate,ElectionType,NationalPartyCode,ElectionDesc,ElectionAdditionalInfo,ElectionResultsSource,BallotInstructions">
+              <indexes skip="true">
+                <index add="true" columns="ElectionKey" default="true" />
+              </indexes>
+            </columnSet>
+            <columnSet name="Date" columns="ElectionKey,ElectionDate">
+              <indexes skip="true" />
+            </columnSet>
+            <columnSet name="Control" columns="ElectionKey,ElectionDate,ElectionDesc,ElectionOrder">
+              <indexes skip="true">
+                <index add="true" columns="StateCode,CountyCode,LocalCode" orderBy="ElectionDate DESC,ElectionOrder ASC,ElectionDesc ASC" />
+              </indexes>
+            </columnSet>
+          </columnSets>
+        </table>
+        <table name="ElectionsBallotOrder">
+        </table>
+        <table name="ElectionsFuture">
+          <columns>
+            <column name="ElectionDesc" mappedName="ElectionDescription" />
+          </columns>
+          <columnSets>
+            <columnSet name="Id" columns="ElectionDesc,ElectionDate,ElectionType">
+              <indexes skip="true">
+                <index add="true" default="true" columns="StateCode,CountyCode,LocalCode" orderBy="ElectionDate" />
+              </indexes>
+            </columnSet>
+          </columnSets>
+        </table>
+        <table name="ElectionsIncumbentsRemoved">
+          <indexes>
+            <index add="true" columns="ElectionKey" />
+          </indexes>
+        </table>
+        <table name="ElectionsOffices">
+          <indexes>
+            <index add="true" columns="ElectionKey" />
+          </indexes>
+          <columnSets>
+            <columnSet name="OfficeKeys" columns="OfficeKey">
+              <indexes skip="true">
+                <index add="true" columns="ElectionKey" default="true" />
+              </indexes>
+            </columnSet>
+            <columnSet name="Copy" columns="OfficeKey,OfficeLevel,DistrictCode">
+              <indexes skip="true">
+                <index add="true" columns="ElectionKey" default="true" />
+              </indexes>
+            </columnSet>
+          </columnSets>
+        </table>
+        <table name="ElectionsPoliticians">
+          <indexes>
+            <index add="true" columns="ElectionKey" />
+            <index add="true" columns="ElectionKey,OfficeKey" />
+          </indexes>
+          <columnSets>
+            <columnSet name="OfficeKey" columns="ElectionKey,OfficeKey">
+              <indexes skip="true" >
+                <index add="true" columns="PoliticianKey" default="true" />
+                <index add="true" columns="RunningMateKey" />
+              </indexes>
+            </columnSet>
+            <columnSet name="Cache" columns="OfficeKey,PoliticianKey,RunningMateKey,StateCode,OrderOnBallot,IsIncumbent">
+              <indexes skip="true">
+                <index add="true" columns="ElectionKey,OfficeKey" orderBy="OrderOnBallot" />
+              </indexes>
+            </columnSet>
+            <columnSet name="Winners" columns="ElectionKey,OfficeKey,PoliticianKey,RunningMateKey,IsWinner,AdvanceToRunoff">
+              <indexes skip="true">
+                <index add="true" columns="ElectionKey" default="true" />
+              </indexes>
+            </columnSet>
+          </columnSets>
+        </table>
+        <table name="EmailMaster" singleton="true" />
+        <table name="EmailQueue" reader="true">
+          <indexes>
+            <index columns="EmailBatchId" add="true"/>
+          </indexes>
+        </table>
+        <table name="Issues">
+          <indexes>
+            <index columns="IssueKey" default="true" />
+          </indexes>
+          <columnSets>
+            <columnSet name="Cache" columns="IssueKey,Issue">
+              <indexes skip="true">
+                <index add="true" columns="IssueKey" default="true" />
+              </indexes>
+            </columnSet>
+          </columnSets>
+        </table>"
+        <table name="LocalDistricts">
+          <indexes>
+            <index columns="StateCode,CountyCode,LocalCode" default="true" />
+            <index add="true " columns="StateCode,CountyCode" orderBy="LocalDistrict" />
+          </indexes>
+          <columns>
+            <column name="AltEMail" mappedName="AltEmail" />
+            <column name="EMail" mappedName="Email" />
+            <column name="URL" mappedName="Url" />
+            <column name="URLDataPage" mappedName="UrlDataPage" />
+          </columns>
+          <columnSets>
+            <columnSet name="Cache" columns="StateCode,CountyCode,LocalCode,LocalDistrict">
+              <indexes skip="true">
+                <index add="true" columns="StateCode,CountyCode,LocalCode" default="true" />
+              </indexes>
+            </columnSet>
+            <columnSet name="Display" columns="LocalDistrict,StateCode,CountyCode,LocalCode">
+              <indexes skip="true">
+                <index add="true" columns="StateCode,CountyCode" orderBy="LocalDistrict" />
+              </indexes>
+            </columnSet>
+            <columnSet name="LocalCode" columns="LocalCode">
+              <indexes skip="true">
+                <index add="true" columns="StateCode,CountyCode" orderBy="LocalDistrict" />
+              </indexes>
+            </columnSet>
+            <columnSet name="Names" columns="LocalCode,LocalDistrict">
+              <indexes skip="true">
+                <index add="true" columns="StateCode,CountyCode" />
+              </indexes>
+            </columnSet>
+            <columnSet name="Contact" columns="StateCode,CountyCode,LocalCode,Contact,ContactEmail,ContactTitle,Phone,AltContact,AltEMail,AltContactTitle,AltPhone" />
+          </columnSets>
+        </table>
+        <table name="Master" singleton="true" />
+        <table name="MasterDesign" singleton="true" />
+        <table name="Offices">
+          <indexes>
+            <index columns="OfficeKey" default="true" />
+          </indexes>
+          <columnSets>
+            <columnSet name="Cache" columns="OfficeKey,StateCode,CountyCode,LocalCode,DistrictCode,OfficeLine1,OfficeLine2,OfficeLevel,IsRunningMateOffice,Incumbents,IsVacant">
+              <indexes skip="true">
+                <index add="true" columns="OfficeKey" default="true" />
+                <index add="true" columns="IsInactive,IsOnlyForPrimaries,OfficeLevel"  />
+                <index add="true" columns="IsInactive,IsOnlyForPrimaries,OfficeLevel,StateCode"  />
+              </indexes>
+            </columnSet>
+            <columnSet name="AlternateOfficeLevelUpdate" columns="OfficeKey,OfficeLevel,AlternateOfficeLevel" />
+            <columnSet name="NameSearch" columns="OfficeKey,OfficeLevel,AlternateOfficeLevel,OfficeLine1,OfficeLine2,CountyCode,LocalCode">
+              <indexes skip="true" />
+            </columnSet>
+            <columnSet name="KeyInfo" columns="OfficeKey,CountyCode,LocalCode">
+              <indexes skip="true">
+                <index add="true" columns="OfficeKey" default="true" />
+              </indexes>
+            </columnSet>
+            <columnSet name="GeneralElection" columns="StateCode,OfficeKey,OfficeLevel,DistrictCode">
+              <indexes skip="true" />
+            </columnSet>
+            <columnSet name="Positions" columns="ElectionPositions,Incumbents" />
+          </columnSets>
+        </table>
+        <table name="OfficesOfficials">
+          <indexes>
+            <index add="true" columns="OfficeKey" default="true" />
+          </indexes>
+          <columnSets>
+            <columnSet name="OfficeKey" columns="OfficeKey">
+              <indexes skip="true" />
+            </columnSet>
+            <columnSet name="PoliticianKeys" columns="PoliticianKey">
+              <indexes skip="true">
+                <index add="true" columns="OfficeKey" default="true" />
+              </indexes>
+            </columnSet>
+          </columnSets>
+        </table>
+        <table name="Organizations">
+          <indexes>
+            <index columns="OrganizationCode" default="true" />
+          </indexes>
+          <columns>
+            <column name="OrganizationURL" mappedName="OrganizationUrl" />
+            <column name="AltContactEMail" mappedName="AltContactEmail" />
+          </columns>
+          <columnSets>
+            <columnSet name="Cache" columns="Organization,OrganizationURL,OrganizationEmail">
+              <indexes skip="true">
+                <index add="true" columns="OrganizationCode" default="true" />
+              </indexes>
+            </columnSet>
+          </columnSets>
+        </table>
+        <table name="Parties">
+          <indexes>
+            <index columns="PartyKey" default="true" />
+          </indexes>
+          <columns>
+            <column name="PartyURL" mappedName="PartyUrl" />
+          </columns>
+          <columnSets>
+            <columnSet name="Cache" columns="PartyKey,PartyCode,PartyName,PartyURL,StateCode,IsPartyMajor">
+              <indexes skip="true">
+                <index add="true" columns="PartyKey" default="true" />
+                <index add="true" columns="StateCode" orderBy="PartyOrder" />
+                <index add="true" columns="StateCode,PartyCode" orderBy="PartyOrder" />
+                <index add="true" columns="StateCode,IsPartyMajor" orderBy="PartyOrder" />
+              </indexes>
+            </columnSet>
+          </columnSets>
+        </table>
+        <table name="PartiesEmails">
+          <indexes>
+            <index columns="PartyEmail" default="true" />
+            <index columns="PartyEmail,IsVolunteer" add="true" unique="true" />
+          </indexes>
+          <columns>
+            <column name="PartyContactFName" mappedName="PartyContactFirstName" />
+            <column name="PartyContactLName" mappedName="PartyContactLastName" />
+          </columns>
+        </table>
+        <table name="Politicians">
+          <columns>
+            <column name="FName" mappedName="FirstName" />
+            <column name="MName" mappedName="MiddleName" />
+            <column name="LName" mappedName="LastName" />
+            <column name="EmailAddrVoteUSA" mappedName="EmailVoteUSA" />
+            <column name="EmailAddr" mappedName="Email" />
+            <column name="StateEmailAddr" mappedName="StateEmail" />
+            <column name="WebAddr" mappedName="WebAddress" />
+            <column name="StateWebAddr" mappedName="StateWebAddress" />
+            <column name="CampaignAddr" mappedName="CampaignAddress" />
+            <column name="LDSEmailAddr" mappedName="LDSEmail" />
+            <column name="LDSWebAddr" mappedName="LDSWebAddress" />
+          </columns>
+          <indexes>
+            <index columns="PoliticianKey" default="true" />
+          </indexes>
+          <columnSets>
+            <columnSet name="Names" columns="PoliticianKey,FName,MName,Nickname,LName,Suffix,AddOn">
+              <indexes>
+                <index columns="PoliticianKey" default="true" />
+              </indexes>
+            </columnSet>
+            <columnSet name="NameSearch" columns="PoliticianKey,FName,MName,Nickname,LName,Suffix,LiveOfficeKey,LiveOfficeStatus">
+              <indexes skip="true" />
+            </columnSet>
+            <columnSet name="Cache" columns="PoliticianKey,TemporaryOfficeKey,LiveOfficeKey,LiveOfficeStatus,LiveElectionKey,FName,MName,Nickname,LName,Suffix,AddOn,EmailAddr,StateEmailAddr,WebAddr,StateWebAddr,Phone,StatePhone,PartyKey,Address,CityStateZip,StateAddress,StateCityStateZip,LDSEmailAddr,LDSWebAddr,LDSPhone,LDSAddress,LDSCityStateZip,DateOfBirth,FacebookWebAddress,WikipediaWebAddress,YouTubeWebAddress,FlickrWebAddress,TwitterWebAddress,RSSFeedWebAddress,VimeoWebAddress,GooglePlusWebAddress,LinkedInWebAddress,PinterestWebAddress,BloggerWebAddress,WebstagramWebAddress,BallotPediaWebAddress">
+              <indexes skip="true">
+                <index add="true" columns="PoliticianKey" default="true" />
+              </indexes>
+            </columnSet>
+            <columnSet name="BioCache" columns="PoliticianKey,GeneralStatement,Personal,Education,Profession,Military,Civic,Political,Religion,Accomplishments">
+              <indexes skip="true">
+                <index add="true" columns="PoliticianKey" default="true" />
+              </indexes>
+            </columnSet>
+            <columnSet name="Addresses" columns="Address,CityStateZip,StateAddress,StateCityStateZip,LDSAddress,LDSCityStateZip">
+              <indexes>
+                <index columns="PoliticianKey" default="true" />
+              </indexes>
+            </columnSet>
+            <columnSet name="Phones" columns="Phone,StatePhone,LDSPhone">
+              <indexes>
+                <index columns="PoliticianKey" default="true" />
+              </indexes>
+            </columnSet>
+            <columnSet name="Emails" columns="EmailAddr,StateEmailAddr,LDSEmailAddr">
+              <indexes>
+                <index columns="PoliticianKey" default="true" />
+              </indexes>
+            </columnSet>
+            <columnSet name="WebAddresses" columns="WebAddr,StateWebAddr,LDSWebAddr">
+              <indexes>
+                <index columns="PoliticianKey" default="true" />
+              </indexes>
+            </columnSet>
+            <columnSet name="DuplicateNames" columns="PoliticianKey,PartyKey,TemporaryOfficeKey,StateAddress,StateCityStateZip,StatePhone,StateEmailAddr,StateWebAddr,Address,CityStateZip,Phone,EmailAddr,WebAddr,LDSAddress,LDSCityStateZip,LDSPhone,LDSEmailAddr,LDSWebAddr,LDSLegIDNum">
+              <indexes skip="true">
+                <index add="true" columns="LName,StateCode" orderBy="LName,FName,MName" />
+              </indexes>
+            </columnSet>
+            <columnSet name="LiveOffice" columns="PoliticianKey,LiveOfficeKey,LiveOfficeStatus,LiveElectionKey">
+              <indexes>
+                <index columns="PoliticianKey" default="true" />
+              </indexes>
+            </columnSet>
+            <columnSet name="PoliticianKeys" columns="PoliticianKey" />
+            <columnSet name="SearchKeyUpdate" columns="PoliticianKey,LName,AlphaName,VowelStrippedName">
+              <indexes skip="true">
+                <index add="true" columns="PoliticianKey" default="true" />
+              </indexes>
+            </columnSet>
+          </columnSets>
+        </table>
+        <table name="PoliticiansImagesBlobs">
+          <columns>
+            <column name="HeadshotOriginal" skip="true" />
+          </columns>
+          <indexes>
+            <index columns="PoliticianKey" default="true"/>
+          </indexes>
+          <columnSets>
+            <columnSet name="Key" columns="PoliticianKey" />
+            <columnSet name="Cache" columns="PoliticianKey,Profile300,Profile200,Headshot100,Headshot75,Headshot50,Headshot35,Headshot25,Headshot20,Headshot15" />
+          </columnSets>
+        </table>
+        <table name="PoliticiansImagesData">
+          <indexes>
+            <index columns="PoliticianKey" default="true"/>
+          </indexes>
+        </table>
+        <table name="PoliticiansImagesView" updateColumns="true">
+          <indexes>
+            <index add="true" columns="PoliticianKey" unique="true" default="true"/>
+          </indexes>
+          <columnSets>
+            <columnSet name="Sequence" columns="PoliticianKey,StateCode,DistrictCode,OfficeLevel,ProfileOriginalDate">
+              <indexes>
+                <index add="true" columns="PoliticianKey" unique="true" default="true"/>
+              </indexes>
+            </columnSet>
+          </columnSets>
+        </table>
+        <table name="PoliticiansVideosBlobs">
+          <indexes>
+            <index columns="PoliticianKey,IssueKey,QuestionKey,UploadDate" default="true"/>
+          </indexes>
+        </table>
+        <table name="PoliticiansVideosData">
+          <indexes>
+            <index columns="PoliticianKey,IssueKey,QuestionKey,UploadDate" default="true"/>
+          </indexes>
+        </table>
+        <table name="PoliticiansVideosView" updateColumns="true">
+          <indexes>
+            <index add="true" columns="PoliticianKey,IssueKey,QuestionKey,UploadDate" unique="true" default="true"/>
+          </indexes>
+        </table>
+        <table name="Referendums">
+          <indexes>
+            <index add="true" columns="ElectionKey" />
+            <index columns="ElectionKey,ReferendumKey" default="true"/>
+          </indexes>
+          <columns>
+            <column name="ReferendumDesc" mappedName="ReferendumDescription" />
+          </columns>
+          <columnSets>
+            <columnSet name="Cache" columns="StateCode,ReferendumTitle,ReferendumDesc,ReferendumDetail,ReferendumDetailUrl,ReferendumFullText,ReferendumFullTextUrl">
+              <indexes skip="true">
+                <index add="true" columns="ElectionKey,ReferendumKey" unique="true" default="true"/>
+              </indexes>
+            </columnSet>
+            <columnSet name="Summary" columns="ElectionKey,ReferendumKey,ReferendumTitle,ReferendumDesc,IsResultRecorded,IsPassed">
+              <indexes skip="true" />
+            </columnSet>
+            <columnSet name="List" columns="ReferendumKey,ReferendumTitle,OrderOnBallot,IsResultRecorded,IsPassed,IsReferendumTagForDeletion">
+              <indexes skip="true">
+                <index add="true" columns="ElectionKey" orderBy="OrderOnBallot" default="true"/>
+              </indexes>
+            </columnSet>
+          </columnSets>
+        </table>
+        <table name="ReportsElections" skip="true">
+          <indexes>
+            <index columns="ElectionKey" default="true"/>
+          </indexes>
+          <columns>
+            <column name="Report4Public" mappedName="ReportForPublic" />
+            <column name="Report4Admin" mappedName="ReportForAdmin" />
+            <column name="Report4Master" mappedName="ReportForMaster" />
+          </columns>
+        </table>
+        <table name="ReportsOffices" skip="true">
+          <columns>
+            <column name="Report4Public" mappedName="ReportForPublic" />
+            <column name="Report4Admin" mappedName="ReportForAdmin" />
+            <column name="Report4Master" mappedName="ReportForMaster" />
+          </columns>
+        </table>
+        <table name="ReportsOfficials" skip="true">
+          <columns>
+            <column name="Report4Public" mappedName="ReportForPublic" />
+            <column name="Report4Admin" mappedName="ReportForAdmin" />
+            <column name="Report4Master" mappedName="ReportForMaster" />
+          </columns>
+        </table>
+        <table name="ReportsPoliticians" skip="true">
+          <columns>
+            <column name="ReportByName4Public" mappedName="ReportByNameForPublic" />
+            <column name="ReportByName4Admin" mappedName="ReportByNameForAdmin" />
+            <column name="ReportByName4Master" mappedName="ReportByNameForMaster" />
+            <column name="ReportByOffice4Public" mappedName="ReportByOfficeForPublic" />
+            <column name="ReportByOffice4Admin" mappedName="ReportByOfficeForAdmin" />
+            <column name="ReportByOffice4Master" mappedName="ReportByOfficeForMaster" />
+          </columns>
+        </table>
+        <table name="Security">
+          <indexes>
+            <index columns="UserName" default="true"/>
+          </indexes>
+          <columnSets>
+            <columnSet name="Email" columns="UserEmail,UserEmails" />
+          </columnSets>
+        </table>
+        <table name="Sitemap">
+          <indexes>
+            <index columns="DomainDataCode" default="true" />
+          </indexes>
+          <columnSets>
+            <columnSet name="Key" columns="DomainDataCode">
+              <indexes skip="true">
+                <index add="true" columns="DomainDataCode" orderBy="DomainDataCode" />
+              </indexes>
+            </columnSet>
+            <columnSet name="RunTime" columns="DomainDataCode,RunTimeSeconds" />
+            <columnSet name="Domain" columns="DomainDataCode,DomainName" />
+          </columnSets>
+        </table>
+        <table name="States">
+          <columns>
+            <column name="EMail" mappedName="Email" />
+            <column name="AltEMail" mappedName="AltEmail" />
+            <column name="URL" mappedName="Url" />
+            <column name="LDSStateCode" mappedName="LdsStateCode" />
+            <column name="URLDataPage" mappedName="UrlDataPage" />
+            <column name="SecretaryEMail" mappedName="SecretaryEmail" />
+            <column name="CalendarURL" mappedName="CalendarUrl" />
+          </columns>
+          <indexes>
+            <index columns="StateCode" default="true" />
+          </indexes>
+          <columnSets>
+            <columnSet name="Cached" columns="StateCode,IsState,State,ShortName,BallotStateName,Abbreviations,IsIncumbentShownOnBallots,EncloseNickname,LDSStateCode,EMail,ContactEmail,URL,ElectionsAuthority,ShowUnopposed,ShowWriteIn" />
+            <columnSet name="Contact" columns="StateCode,Contact,ContactEmail,ContactTitle,Phone,AltContact,AltEMail,AltContactTitle,AltPhone" />
+          </columnSets>
+        </table>
+        <table name="StatesOffices">
+          <indexes>
+            <index columns="StateCode,OfficeLevel" default="true" />
+            <index columns="StateCode" add="true" />
+          </indexes>
+        </table>
+        <table name="USZD" skip="true" />
+        <table name="VolunteersView">
+          <indexes>
+            <index add="true" columns="Email" unique="true" default="true"/>
+          </indexes>
+        </table>
+        <table name="VsCandidates">
+          <indexes>
+            <index columns="CandidateId" default="true" />
+          </indexes>
+        </table>
+        <table name="VsCandidatesItems">
+          <indexes>
+            <index columns="CandidateId" default="true" />
+          </indexes>
+        </table>
+        <table name="VsCandidatesWebAddresses">
+          <indexes>
+            <index columns="CandidateId" default="true" />
+          </indexes>
+        </table>
+        <table name="VsElections">
+          <indexes>
+            <index columns="ElectionId,StageId" default="true" />
+          </indexes>
+        </table>
+        <table name="VsElectionsCandidates">
+          <indexes>
+            <index add="true" columns="ElectionId,StageId" default="true" />
+          </indexes>
+        </table>
+        <table name="VsElectionsCandidatesView" allColumnsNullable="true">
+          <indexes>
+            <index add="true" columns="ElectionId,StageId" default="true"/>
+          </indexes>
+        </table>
+        <table name="VsElectionYearState">
+          <indexes>
+            <index columns="ElectionYear,StateCode" default="true" />
+          </indexes>
+        </table>
+        <table name="VsWebAddressTypes">
+          <indexes>
+            <index columns="WebAddressTypeId" default="true" />
+          </indexes>
+        </table>
+        <table name="ZipCitiesDownloaded" skip="true" />
+        <table name="ZipSingleUSZD" skip="true" />
+        <table name="ZipStreets" skip="true" />
+        <table name="ZipStreetsDownloaded" skip="true" />
+        <table name="ZipStreetsUpdatesNeeded" skip="true" />
+      </tables>
+    </database>
+  </databases>
+</generateDbClasses>

@@ -1,0 +1,37 @@
+﻿using System.Collections.Generic;
+
+namespace DB.Vote
+{
+  public partial class OfficesOfficials
+  {
+    public static string GetIncumbentOfficeKeyByPoliticianKey(
+      string politicianKey, int commandTimeout = -1)
+    {
+      var cmdText = "SELECT OfficesOfficials.OfficeKey" +
+        " FROM OfficesOfficials,Offices" +
+        " WHERE OfficesOfficials.PoliticianKey=@PoliticianKey" +
+        "  AND OfficesOfficials.OfficeKey = Offices.OfficeKey" +
+        " ORDER BY OfficesOfficials.DataLastUpdated DESC";
+      cmdText = VoteDb.InjectSqlLimit(cmdText, 1);
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      VoteDb.AddCommandParameter(cmd, "PoliticianKey", politicianKey);
+      var table = FillTable(cmd, OfficesOfficialsTable.ColumnSet.OfficeKey);
+      return table.Count == 0 ? null : table[0].OfficeKey;
+    }
+
+    public static string GetIncumbentOfficeKeyByRunningMateKey(
+      string runningMateKey, int commandTimeout = -1)
+    {
+      var cmdText = "SELECT OfficesOfficials.OfficeKey" +
+        " FROM OfficesOfficials,Offices" +
+        " WHERE OfficesOfficials.RunningMateKey=@RunningMateKey" +
+        "  AND OfficesOfficials.OfficeKey = Offices.OfficeKey" +
+        " ORDER BY OfficesOfficials.DataLastUpdated DESC";
+      cmdText = VoteDb.InjectSqlLimit(cmdText, 1);
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      VoteDb.AddCommandParameter(cmd, "RunningMateKey", runningMateKey);
+      var table = FillTable(cmd, OfficesOfficialsTable.ColumnSet.OfficeKey);
+      return table.Count == 0 ? null : table[0].OfficeKey;
+    }
+  }
+}

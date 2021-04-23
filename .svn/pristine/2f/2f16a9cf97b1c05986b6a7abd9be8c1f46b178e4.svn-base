@@ -1,0 +1,61 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="xPrivacy.aspx.cs" 
+Inherits="Vote.PrivacyPageX" %>
+
+<%@ Register Src="/Controls/SocialMediaButtons.ascx" TagName="SocialMediaButtons" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonateBanner.ascx" TagName="DonateBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainBanner.ascx" TagName="MainBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainNavigation.ascx" TagName="MainNavigation" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainFooter.ascx" TagName="MainFooter" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeading.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntry.ascx" TagName="AddressEntry" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonationRequest.ascx" TagName="DonationRequest" TagPrefix="user" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+  <title runat="server" id="TitleTag" >Privacy Policy</title>
+  <meta runat="server" id="MetaDescriptionTag" content="" name="description" />
+  <meta runat="server" id="MetaKeywordsTag" content="" name="keywords" />
+</head>
+<body class="privacy-page">
+    <form id="form1" runat="server" enableviewstate="True">
+    <div id="outer">
+    <div id="container">
+      <user:SocialMediaButtons runat="server" />
+      <user:DonateBanner runat="server" />
+      <user:MainBanner runat="server" />
+      <user:MainNavigation runat="server" />
+      <div id="mainContent">
+        <user:PageHeading ID="PageHeading" runat="server" 
+          MainHeadingText="Privacy Policy" />
+
+        <div class="intro">
+          <p>Vote-USA uses your 9-digit zip code or address only to provide you 
+          with your customized electoral information, including your sample ballot, 
+          elected representatives, and various election reports. We do not sell, 
+          trade, or otherwise transfer any of this information to any other person, 
+          organization or third party.</p>
+
+          <p>We do not sell, trade, or otherwise transfer any of information we 
+          have about candidates and politicians to any other person, organization 
+          or third party.</p>
+
+          <p>We will honor a request by any candidate to delete any personal 
+          information, including picture, biographical information, and views 
+          on the issues. To maintain the accuracy of Vote-USA election reports, 
+          we will not delete any candidate’s name or offices the candidate sought. 
+          We consider this to be public information.</p>
+        </div>
+
+        <user:MainFooter runat="server" />
+      </div> <!-- id="mainContent" -->
+    </div> <!-- id="container" -->
+    </div> <!-- id="outer" -->
+
+    <user:AddressEntry runat="server" />
+    <user:DonationRequest runat="server" />
+
+    </form>
+</body>
+</html>

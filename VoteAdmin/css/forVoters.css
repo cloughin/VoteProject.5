@@ -1,0 +1,150 @@
+﻿#mainContent .floatBox
+{
+  overflow: auto;
+}
+#mainContent .linkBoxes
+{
+  float: left;
+  width: 644px;
+  margin: 0 60px 0 60px;
+}
+
+#mainContent .header
+{
+  height: auto;
+  padding-bottom: 10px;
+}
+#mainContent .header p
+{
+  color: #fff;
+  padding: 6px 13px 6px 13px;
+  font-family: Arial;
+  font-size: 13px;
+  line-height: 17px;
+  overflow: auto;
+}
+#mainContent .header a.bigButton
+{
+  display: block;
+  overflow: hidden;
+	text-indent: -10000px;
+	font-size: 0px;
+	line-height: 0px;
+  cursor: pointer;
+}
+#mainContent .header a.bigButtonText
+{
+  display: block;
+  cursor: pointer;
+  float: left;
+  height: 32px;
+  max-width: 845px;
+  background: url(/images/orangecenter.png);
+  padding-top: 11px;
+  font-family: Georgia;
+  text-shadow: 1px 1px 1px #888;
+  font-size: 20px;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+	overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#mainContent .header a.bigButtonLeft
+{
+  height: 44px;
+  width: 13px;
+  background: url(/images/orangeleft.png);
+}
+
+#mainContent .header a.bigButtonRight
+{
+  height: 44px;
+  width: 55px;
+  background: url(/images/orangeright.png);
+}
+#mainContent .header a.getStartedButton
+{
+  height: 40px;
+  width: 230px;
+  background: url(/images/getstarted.png);
+}
+#mainContent .header a:hover.getStartedButton
+{
+  background-position: 0 -40px;
+}
+#mainContent .header a.getAddressButton
+{
+  height: 44px;
+  width: 534px;
+  background: url(/images/orangemyaddress.png);
+}
+
+#mainContent .header a:hover.getAddressButton
+{
+  background-position: 0 -44px;
+}
+
+#mainContent .header a.statewideButton
+{
+  height: 44px;
+  width: 347px;
+  background: url(/images/orangestatewide.png);
+}
+
+#mainContent .header a:hover.statewideButton
+{
+  background-position: 0 -44px;
+}
+
+#mainContent .header a.electedOfficialsButton
+{
+  height: 44px;
+  width: 248px;
+  background: url(/images/orangeelectedofficials.png);
+}
+
+#mainContent .header a:hover.electedOfficialsButton
+{
+  background-position: 0 -44px;
+}
+
+#mainContent .header a.sampleBallotButton
+{
+  height: 44px;
+  width: 224px;
+  background: url(/images/orangesampleballot.png);
+}
+
+#mainContent .header .hovering a
+{
+  background-position: 0 -44px;
+}
+
+#mainContent .header .hoverChild
+{
+  float: left;
+}
+
+#mainContent .blurb
+{
+  margin: 30px 60px 0 60px;
+  line-height: 120%;
+  font-family: Arial;
+  /*font-size: 9pt;*/
+  /*line-height: 140%;*/
+  font-size: 16px;
+  color: #444;
+  line-height: 120%;
+}
+
+#mainContent .blurb a
+{
+  color: #2f6db1;
+}
+
+#mainContent .blurb a:hover
+{
+  color: #A00000;
+}

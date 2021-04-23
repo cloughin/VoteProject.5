@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<generateDbClasses>
+  <databases
+    supportMySql="true"
+    supportMsSql="true"
+    secondary="true"
+    >
+    <database
+      mappedName="VoteZip"
+      provider="MySql"
+      connectionString="Server=votesql.c3fj3t5d5d77.us-east-1.rds.amazonaws.com;Uid=ron;Pwd=p17134;Database=votezip"
+      connectionStringKey="CnVoteZip.MySql"
+      providerKey="VoteDbProvider"
+      >
+      <tables>
+        <table name="ZipAddressesTestedBad" skip="true" />
+        <table name="ZipAddressesTestedBadBackup" skip="true" />
+        <table name="ZipAddressesTestedLog" skip="true" />
+        <table name="ZipAddressesTesting" reader="true">
+          <columns>
+            <column name="Addr1" mappedName="Address1" />
+            <column name="Addr2" mappedName="Address2" />
+          </columns>
+        </table>
+        <table name="ZipAptSuites" skip="true" />
+        <table name="ZipCities" skip="true" />
+        <table name="ZipCitiesNames" skip="true" />
+        <table name="ZipStatesMaintenanceLog" skip="true" />
+        <table name="ZipStreetLogBadCityKeys" skip="true" />
+        <table name="ZipStreetsNames" skip="true" />
+        <table name="ZipStreetsNumbers" skip="true" />
+        <table name="ZipStreetsRanges" skip="true" />
+        <table name="ZipStreetsTemp" skip="true" />
+        <table name="ZipStreetsUnique" skip="true" />
+        <table name="ZipTableRowsProcessedLog" skip="true" />
+      </tables>
+    </database>
+  </databases>
+</generateDbClasses>

@@ -1,0 +1,423 @@
+﻿/***********************************************/
+/* Entire page                                 */
+/***********************************************/
+
+body.admin-page #outer
+{
+  position: relative;
+}
+
+body.admin-page .sub-heading.headings
+{
+  float: left;
+}
+
+body.admin-page .sub-heading.change-button
+{
+  position: absolute;
+  right: 0;
+  top: 10px;
+}
+
+body.admin-page h2.jurisdiction-message
+{
+  margin: 0;
+}
+
+body.admin-page h4.credential-message
+{
+  font-size: 12px;
+  font-style: italic;
+}
+
+body.admin-page .update-controls
+{
+  margin: 4px 0 0 0;
+  position: relative;
+}
+
+body.admin-page #main-tabs
+{
+  margin: 0 0 20px 0;
+  width: 933px;
+}
+
+body.admin-page #main-tabs .data-area
+{
+  min-height: 279px;
+}
+
+#main-tabs p.fieldlabel em
+{
+  color: #334f80;
+  font-style: normal;
+}
+
+#main-tabs p.fieldlabel.sub
+{
+  color: #334f80;
+  font-size: 8pt;
+  font-weight: normal;
+}
+
+#main-tabs p.fieldlabel.sub em
+{
+  color: #bf9241;
+  font-weight: bold;
+}
+
+#main-tabs .spacer
+{
+  height: 10px;
+  width: 1px;
+}
+
+#main-tabs .input-element
+{
+  float: left;
+  margin: 0 16px 0 0;
+}
+
+#main-tabs .content-footer
+{
+  margin: 0;
+}
+
+#main-tabs .feedback-floater-for-ie7
+{
+  float: left;
+  min-height: 1px;
+  width: 686px;
+}
+
+#main-tabs div.htab-panel div.inner-panel .feedback
+{
+  width: 650px;
+}
+
+#main-tabs input[type=text]
+{
+  margin-left: 0;
+}
+
+#main-tabs .htab-panel
+{
+  min-height: 509px;
+}
+
+#main-tabs div.htab-panel div.inner-panel
+{
+  min-height: 483px;
+}
+
+#main-tabs div.htab-panel div.content-area
+{
+  min-height: 400px;
+}
+
+#main-tabs div.instructions
+{
+  float: left;
+}
+
+#main-tabs div.instructions ul
+{
+  color: #bf9241;
+  list-style: disc;
+  margin: 50px 0 0 60px;
+  width: 300px;
+}
+
+#main-tabs div.instructions li
+{
+  margin-bottom: 5px;
+}
+
+#main-tabs div.instructions li span
+{
+  color: #334f80;
+  font-size: 11px;
+}
+
+#main-tabs div.instructions em
+{
+  color: #bf9241;
+  font-style: normal;
+  font-weight: bold;
+}
+ 
+#main-tabs .recase-button {
+  margin-top: 10px;
+}
+
+/***********************************************/
+/* Office Control                              */
+/***********************************************/
+
+body.admin-page .select-office-container {
+  left: auto;
+  top: 128px;
+}
+
+body.admin-page #tab-changeinfo .select-office-container {
+  top: 143px;
+}
+
+/***********************************************/
+/* Add Office                                  */
+/***********************************************/
+
+#main-tabs #tab-addoffice div.instructions ul {
+    color: #bf9241;
+    list-style: disc;
+    margin: 0 0 0 60px;
+    width: auto;
+}
+
+#main-tabs #tab-addoffice .data-area,
+#main-tabs #tab-addoffice .new-office-box {
+  margin-top: 12px;
+}
+
+#main-tabs #tab-addoffice .boxed-group-label {
+  color: #bf9241;
+}
+
+#main-tabs #tab-addoffice .office-class-box 
+{
+  width: 500px;
+}
+
+#main-tabs #tab-addoffice .office-class-box select
+{
+  width: 100%;
+}
+
+#main-tabs #tab-addoffice .current-office-list-container 
+{
+  margin: 5px 0 20px 0;
+}
+
+#main-tabs #tab-addoffice .current-office-list 
+{
+  max-height: 120px;
+  width: 100%;
+  border: 1px solid #ccc;
+  padding-left: 10px;
+  line-height: 150%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+  margin-top: 5px;
+}
+
+#main-tabs #tab-addoffice .office-line input[type=text] {
+  width: 370px;
+}
+
+#main-tabs #tab-addoffice .update-button 
+{
+  margin-top: 10px;
+}
+
+/***********************************************/
+/* Add Office Template                         */
+/***********************************************/
+
+#main-tabs #tab-addofficetemplate div.instructions ul {
+    color: #bf9241;
+    list-style: disc;
+    margin: 0 0 0 60px;
+    width: auto;
+}
+
+#main-tabs #tab-addofficetemplate .data-area,
+#main-tabs #tab-addofficetemplate .new-template-box {
+  margin-top: 12px;
+}
+
+#main-tabs #tab-addofficetemplate .boxed-group-label {
+  color: #bf9241;
+}
+
+#main-tabs #tab-addofficetemplate .office-level-box {
+  float: left;
+}
+
+#main-tabs #tab-addofficetemplate .office-class-box {
+  float: right;
+}
+
+#main-tabs #tab-addofficetemplate .office-class-box 
+{
+  margin-left: 20px;
+  width: 500px;
+}
+
+#main-tabs #tab-addofficetemplate .office-class-box select
+{
+  width: 100%;
+}
+
+#main-tabs #tab-addofficetemplate .office-level-box >div {
+  float: left;
+}
+
+#main-tabs #tab-addofficetemplate #AddOfficeTemplate_Local {
+  margin-left: 20px;
+}
+
+#main-tabs #tab-addofficetemplate .current-template-list-container 
+{
+  margin: 5px 0 20px 0;
+}
+
+#main-tabs #tab-addofficetemplate .current-template-list 
+{
+  max-height: 120px;
+  width: 100%;
+  border: 1px solid #ccc;
+  padding-left: 10px;
+  line-height: 150%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+  margin-top: 5px;
+}
+
+#main-tabs #tab-addofficetemplate .office-line input[type=text] {
+  width: 370px;
+}
+
+#main-tabs #tab-addofficetemplate .update-button 
+{
+  margin-top: 10px;
+}
+
+/***********************************************/
+/* Change/Delete Office                        */
+/***********************************************/
+
+#main-tabs #tab-changeinfo .changeinfo-delete-button {
+  margin-left: 20px;
+} 
+
+/***********************************************/
+/* Office incumbents                           */
+/***********************************************/
+
+#main-tabs #tab-addincumbents .template-node {
+  display: none;
+} 
+
+/***********************************************/
+/* Master only                                 */
+/***********************************************/
+
+#main-tabs #tab-masteronly #master-only-tabs 
+{
+  margin-top: 10px;
+}
+
+#main-tabs #tab-masteronly #master-only-tabs li.tab a 
+{
+  font-size: 8pt;
+  padding: 3px 12px;
+}
+
+#main-tabs #tab-masteronly .ui-tabs-panel 
+{
+  min-height: 316px;
+}
+
+#main-tabs #tab-masteronly div.instructions
+{
+  float: none;
+}
+
+#main-tabs #tab-masteronly div.instructions ul
+{
+  margin: 0 0 0 20px;
+  width: 750px;
+}
+
+#main-tabs #tab-masteronly div.instructions ul ul
+{
+  margin: 7px 0 7px 20px;
+}
+
+#main-tabs #tab-masteronly div.classestolock
+{
+  padding: 5px;
+  background-color: #f8f8f8;
+  overflow-y: scroll;
+  max-height: 288px;
+  width: 808px;
+}
+
+#main-tabs #tab-masteronly div.classestolock a.kalypto-checkbox
+{
+  float: left;
+  margin: 0 6px 3px 0;
+}
+
+#main-tabs #tab-masteronly div.classestolock label
+{
+  position: relative;
+  top: 2px;
+  color: #334f80;
+}
+
+#main-tabs #tab-masteronly-changekey .input-element,
+#main-tabs #tab-masteronly-consolidate .input-element
+{
+  float: none;
+  display: table;
+  margin: 20px 0 0 40px;
+}
+
+/***********************************************/
+/* Edit Office Dialog                          */
+/***********************************************/
+
+#edit-office-dialog .input-element {
+  float: left;
+}
+#edit-office-dialog .input-element.officeline input {
+  width: 370px;
+}
+
+/***********************************************/
+/* Delete Office Dialog                        */
+/***********************************************/
+
+#delete-office-dialog {
+  padding: 5px !important;
+  color: #666;
+}
+
+#delete-office-dialog .reference-heading {
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+#delete-office-dialog .info-table {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+#delete-office-dialog .info-table:first-child {
+  margin-top: 0;
+}
+
+#delete-office-dialog .reference-scroller {
+  padding: 5px;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+#delete-office-dialog .update-button {
+  float: none;
+  margin-top: 20px;
+}

@@ -1,0 +1,784 @@
+﻿body.election-explorer .entry
+{
+  font-family: "Segoe UI", helvetica, sans-serif;
+  font-size: 10pt;
+  color: #334f80;
+  margin: 8px 0;
+  position: relative;
+}
+
+body.election-explorer .red-arrow
+{
+  position: absolute;
+  display: none;
+}
+
+body.election-explorer .red-arrow.step-1
+{
+  position: absolute;
+  top: 14px;
+  left: -25px;
+  display: block;
+}
+
+body.election-explorer .red-arrow.step-2
+{
+  position: absolute;
+  top: 14px;
+  left: 606px;
+  display: block;
+}
+
+body.election-explorer .red-arrow.step-3
+{
+  position: absolute;
+  top: 72px;
+  left: 606px;
+  display: block;
+}
+
+body.election-explorer .entry .number
+{
+  margin-right: 10px;
+}
+
+body.election-explorer .entry .col
+{
+  float: left;
+}
+
+body.election-explorer .entry .col2
+{
+  margin-left: 7px;
+}
+
+body.election-explorer .entry .rounded-border
+{
+  padding: 5px;
+  background: #eee;
+}
+
+body.election-explorer .entry em label
+{
+  font-weight: bold;
+  font-style: normal;
+}
+
+body.election-explorer .entry .address-entry
+{
+  width: 410px;
+}
+
+body.election-explorer .entry .or p
+{
+  font-weight: bold;
+  margin: 6px 0;
+  text-align: center;
+}
+
+body.election-explorer .entry .or em
+{
+  font-size: 12pt;
+  font-style: normal;
+}
+
+body.election-explorer .entry select,
+body.election-explorer .entry input[type=text]
+{
+  font-size: 9pt;
+  color: #334f80;
+}
+
+body.election-explorer .entry .location-controls select
+{
+  width: 288px;
+}
+
+body.election-explorer .entry .state-controls,
+body.election-explorer .entry .congress-controls, 
+body.election-explorer .entry .state-senate-controls 
+{
+  margin-right: 8px;
+}
+
+body.election-explorer .entry .district-controls select
+{
+  width: 189px;
+}
+
+body.election-explorer .entry .election-controls 
+{
+  margin-bottom: 10px;
+}
+
+body.election-explorer .entry .election-controls select
+{
+  width: 320px;
+}
+
+#outer
+{
+  font-family: "Segoe UI", helvetica, sans-serif;
+  width: 100%;
+}
+
+#container {
+  margin: 0 auto;
+  width: 1000px;
+  text-align: left;
+}
+
+h1
+{
+  font-weight: bold;
+  font-size: 24pt;
+  color: #334f80;
+  text-align: left;
+  margin: 10px 0;
+}
+
+.state-only .htabs {
+  display: none;
+}
+
+.state-only #MainTabs {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;  
+  box-shadow: none;
+  border: none;
+}
+#MainTabs .tab-panel
+{
+  font-family: "Segoe UI", helvetica, sans-serif;
+  font-size: 9pt;
+  color: #334f80;
+} 
+
+#VoteReport #MainTabs div.vtab-panel
+{
+  padding: 5px 2px 2px 2px;
+}
+
+.LocalsTab-tabs .vtabs li
+{
+  display: none;
+}
+
+.LocalsTab-tabs .accordion .ui-widget-content
+{
+  border: none;
+}
+
+.LocalsTab-tabs .accordion .ui-accordion-content
+{
+  padding: 0.5em 0 0 0;
+}
+
+.LocalsTab-tabs .accordion ul
+{
+  background: transparent;
+}
+
+.LocalsTab-tabs div.accordion
+{
+  background: transparent;
+  border: none;
+  bottom: 0;
+  left: 0;
+  padding: 5px 0 0 2px;
+  padding-left: 0;
+  position: absolute;
+  top: 0;
+  width: 151px;
+}
+
+body.election-explorer h3.accordion-header
+{
+  background: #d0d9f4;
+  background-image: -ms-linear-gradient(top, #eeeeff 0, #b3c4e9 100%);
+  background-image: -moz-linear-gradient(top, #eeeeff 0, #b3c4e9 100%);
+  background-image: -o-linear-gradient(top, #eeeeff 0, #b3c4e9 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #eeeeff), color-stop(1, #b3c4e9));
+  background-image: -webkit-linear-gradient(top, #eeeeff 0, #b3c4e9 100%);
+  background-image: -ms-linear-gradient(top, #eeeeff 0, #b3c4e9 100%);
+  color: #000;
+  font-size: 11px;
+  margin-bottom: 0;
+  padding: 0 0 0 28px;
+  position: relative;
+  text-shadow: 0 1px 1px #fff;
+}
+
+.LocalsTab-tabs h3.accordion-header
+{
+  margin: 2px 2px 0 1px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+body.election-explorer h3.accordion-header.ui-state-hover
+{
+  background: #eeeeff;
+  background-image: -ms-linear-gradient(top, #779ad4 0, #eeeeff 100%);
+  background-image: -moz-linear-gradient(top, #779ad4 0, #eeeeff 100%);
+  background-image: -o-linear-gradient(top, #779ad4 0, #eeeeff 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #779ad4), color-stop(1, #eeeeff));
+  background-image: -webkit-linear-gradient(top, #779ad4 0, #eeeeff 100%);
+  background-image: linear-gradient(to bottom, #779ad4 0, #eeeeff 100%);
+}
+
+body.election-explorer h3.accordion-header.ui-state-active
+{
+  background: #fff4c5;
+  background-image: -ms-linear-gradient(top, #FFFFEE 0, #FFE9B8 100%);
+  background-image: -moz-linear-gradient(top, #FFFFEE 0, #FFE9B8 100%);
+  background-image: -o-linear-gradient(top, #FFFFEE 0, #FFE9B8 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FFFFEE), color-stop(1, #FFE9B8));
+  background-image: -webkit-linear-gradient(top, #FFFFEE 0, #FFE9B8 100%);
+  background-image: linear-gradient(to bottom, #FFFFEE 0, #FFE9B8 100%);
+}
+
+div.office-panel
+{
+  position: relative;
+  min-height: 0;
+}
+
+div.scroll-arrow
+{
+  position: absolute;
+  width: 15px;
+  height: 22px;
+  background-image: url(/images/arrows-sprite.png);
+}
+
+div.scroll-arrow.left
+{
+  background-position: 0 0;
+  top: 30px;
+  left: -8px;
+}
+
+div.scroll-arrow.left:hover
+{
+  background-position: 0 -44px;
+}
+
+div.scroll-arrow.left.disabled
+{
+  background-position: 0 -22px;
+}
+
+div.scroll-arrow.right
+{
+  background-position: -15px 0;
+  right: 1px;
+  top: 30px
+}
+
+div.scroll-arrow.right:hover
+{
+  background-position: -15px -44px;
+}
+
+div.scroll-arrow.right.disabled
+{
+  background-position: -15px -22px;
+}
+
+div.many-candidates-outer
+{
+  position: relative;
+  top: -3px;
+}
+
+div.select-candidates
+{
+  float: right;
+  margin-right: 20px;
+}
+
+div.select-candidates:hover
+{
+  float: right;
+  margin-right: 20px;
+  color: #ffaf1e;
+}
+
+div.many-candidates
+{
+  margin-left: 6px;
+}
+
+div.candidate-frame,
+div.info-group-frame
+{
+  overflow: hidden;
+  position: relative;
+  width: 804px;
+  margin-left: 3px;
+}
+
+div.candidates,
+div.info-group
+{
+  width: 20000px; /* infinite */
+  position: relative;
+  left: 0;
+}
+
+div.candidate
+{
+  float: left;
+  width: 193px;
+  min-height: 150px;
+  margin: 0 3px 3px 3px;
+  border-color: #aaa;
+  padding-bottom: 5px;
+  background-color: #ffffee;
+}
+
+.up2 div.candidate
+{
+  width: 394px;
+}
+
+.up3 div.candidate
+{
+  width: 260px;
+}
+
+div.candidates.canmove, div.candidates.canmove *
+{
+  cursor: move;
+}
+
+div.candidates.canmove a, div.candidates.canmove a *
+{
+  cursor: pointer;
+}
+
+.running-mate-office div.candidate
+{
+  width: 394px;
+}
+
+.up1rm.running-mate-office div.candidate
+{
+  width: 796px;
+}
+
+div.candidate div.info
+{
+  margin: 3px 5px 0 6px;
+  float: left;
+}
+
+div.candidate p.name
+{
+  font-weight: bold;
+  font-size: 10pt;
+  float: left;
+}
+
+div.candidate .winner p.name
+{
+  width: 160px;
+}
+
+.up2 div.candidate .winner p.name
+{
+  width: 361px;
+}
+
+.up3 div.candidate .winner p.name
+{
+  width: 227px;
+}
+
+.up1rm div.candidate .winner p.name
+{
+  width: 361px;
+}
+
+div.candidate p.name span
+{
+  font-weight: normal;
+}
+
+div.candidate div.winner-icon
+{
+  width: 19px;
+  height: 16px;
+  float: right;
+  background-image: url(/images/winner.png);
+}
+
+
+div.candidate img.headshot
+{
+  margin: 3px 3px 3px 0;
+  display: block;
+  float: left;
+  clear: both;
+}
+
+div.candidate div.right-side
+{
+  float: left;
+  width: 101px;
+  margin-top: 2px;
+  font-size: 8pt;
+}
+
+.up2 div.candidate div.right-side,
+.up1rm div.candidate div.right-side
+{
+  width: 302px;
+}
+
+.up3 div.candidate div.right-side
+{
+  width: 168px;
+}
+
+div.candidate div.website,
+div.candidate div.phone
+{
+  margin: 3px 0 0 5px;
+}
+
+div.candidate div.website span,
+div.candidate div.phone span
+{
+  padding-left: 3px;
+  position: relative;
+  top: -3px;
+}
+
+div.candidate div.social
+{
+  margin: 5px 0 0 0;
+}
+
+div.candidate div.social li
+{
+  float: left;
+  margin-left: 5px;
+}
+
+div.candidate div.address,
+div.candidate div.age
+{
+  margin: 3px 0 0 5px;
+  line-height: 115%;
+}
+
+div.candidate div.address p
+{
+  margin-left: 10px;
+  text-indent: -10px;
+}
+
+div.vote-for
+{
+  text-align: center;
+}
+
+ul.bio-bar
+{
+  height: 17px;
+  background: #bf9241;
+  background-image: -ms-linear-gradient(top, #ffaf1e 0, #bf9241 100%);
+  background-image: -moz-linear-gradient(top, #ffaf1e 0, #bf9241 100%);
+  background-image: -o-linear-gradient(top, #ffaf1e 0, #bf9241 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffaf1e), color-stop(1, #bf9241));
+  background-image: -webkit-linear-gradient(top, #ffaf1e 0, #bf9241 100%);
+  background-image: linear-gradient(to bottom, #ffaf1e 0, #bf9241 100%);
+  color: #2254aa;
+  margin: 0 16px 3px 6px;
+}
+
+li.bio-bar-item
+{
+  float: left;
+  display: block;
+  padding: 0 8px;
+  font-size: 10pt;
+  margin-right: 7px;
+  cursor: pointer;
+}
+
+li.bio-bar-item:hover,
+li.bio-bar-item.selected
+{
+  background: #ffaf1e;
+  background-image: -ms-linear-gradient(top, #bf9241 0, #ffaf1e 100%);
+  background-image: -moz-linear-gradient(top, #bf9241 0, #ffaf1e 100%);
+  background-image: -o-linear-gradient(top, #bf9241 0, #ffaf1e 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #bf9241), color-stop(1, #ffaf1e));
+  background-image: -webkit-linear-gradient(top, #bf9241 0, #ffaf1e 100%);
+  background-image: linear-gradient(to bottom, #bf9241 0, #ffaf1e 100%);
+}
+
+li.bio-bar-item.selected
+{
+  color: #fff;
+  cursor: default;
+}
+
+li.bio-bar-item.disabled
+{
+  background: none;
+  cursor: default;
+  color: #888;
+}
+
+li.bio-bar-item.bio-class-issues
+{
+  float: right;
+}
+
+ul.issue-bar
+{
+  height: 17px;
+  padding: 0 0 0 8px;
+  background: #0b306f;
+  background-image: -ms-linear-gradient(top, #779ad4 0, #0b306f 100%);
+  background-image: -moz-linear-gradient(top, #779ad4 0, #0b306f 100%);
+  background-image: -o-linear-gradient(top, #779ad4 0, #0b306f 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #779ad4), color-stop(1, #0b306f));
+  background-image: -webkit-linear-gradient(top, #779ad4 0, #0b306f 100%);
+  background-image: linear-gradient(to bottom, #779ad4 0, #0b306f 100%);
+  color: #ffc356;
+  margin: 0 16px 3px 6px;
+}
+
+li.issue-bar-item
+{
+  float: left;
+  display: block;
+}
+
+li.issue-bar-arrow
+{
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  background-image: url(/images/issue-arrows-sprite.png);
+  cursor: pointer;
+}
+
+li.issue-bar-arrow.left
+{
+  background-position: 0 0;
+}
+
+li.issue-bar-arrow.left:hover
+{
+  background-position: 0 -14px;
+}
+
+li.issue-bar-arrow.left.disabled
+{
+  background-position: 0 -28px;
+}
+
+li.issue-bar-arrow.right
+{
+  background-position: -14px 0;
+  margin-left: 5px;
+}
+
+li.issue-bar-arrow.right:hover
+{
+  background-position: -14px -14px;
+  margin-left: 5px;
+}
+
+li.issue-bar-arrow.right.disabled
+{
+  background-position: -14px -28px;
+  margin-left: 5px;
+}
+
+li.issue-bar-arrow.disabled
+{
+  cursor: default;
+}
+
+li.text-container
+{
+  position: relative;
+}
+
+.issue-bar-text,
+.issue-bar .text-menu div
+{
+  margin-left: 4px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  padding: 0 3px;
+}
+
+.issue-bar .text-menu
+{
+  position: absolute;
+  z-index: 1;
+  display: none;
+}
+
+.issue-bar .text-question-menu
+{
+  left: -4px
+}
+
+.issue-bar .text-menu div
+{
+  background: #0b306f;
+  background-image: -ms-linear-gradient(top, #779ad4 0, #0b306f 100%);
+  background-image: -moz-linear-gradient(top, #779ad4 0, #0b306f 100%);
+  background-image: -o-linear-gradient(top, #779ad4 0, #0b306f 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #779ad4), color-stop(1, #0b306f));
+  background-image: -webkit-linear-gradient(top, #779ad4 0, #0b306f 100%);
+  background-image: linear-gradient(to bottom, #779ad4 0, #0b306f 100%);
+}
+
+.issue-bar .text-menu div:hover
+{
+  background: #779ad4;
+  background-image: -ms-linear-gradient(top, #0b306f 0, #779ad4 100%);
+  background-image: -moz-linear-gradient(top, #0b306f 0, #779ad4 100%);
+  background-image: -o-linear-gradient(top, #0b306f 0, #779ad4 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #0b306f), color-stop(1, #779ad4));
+  background-image: -webkit-linear-gradient(top, #0b306f 0, #779ad4 100%);
+  background-image: linear-gradient(to bottom, #0b306f 0, #779ad4 100%);
+}
+
+.issue-bar-text.issue-text,
+.issue-bar .text-issue-menu div
+{
+  width: 194px;
+}
+
+.issue-bar-text.question-text,
+.issue-bar .text-question-menu div
+{
+  width: 494px;
+}
+
+.issue-bar-text:hover
+{
+  background: #779ad4;
+  background-image: -ms-linear-gradient(top, #0b306f 0, #779ad4 100%);
+  background-image: -moz-linear-gradient(top, #0b306f 0, #779ad4 100%);
+  background-image: -o-linear-gradient(top, #0b306f 0, #779ad4 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #0b306f), color-stop(1, #779ad4));
+  background-image: -webkit-linear-gradient(top, #0b306f 0, #779ad4 100%);
+  background-image: linear-gradient(to bottom, #0b306f 0, #779ad4 100%);
+}
+
+.issue-bar-text.disabled
+{
+  cursor: default;
+  background: #0b306f;
+  background-image: -ms-linear-gradient(top, #779ad4 0, #0b306f 100%);
+  background-image: -moz-linear-gradient(top, #779ad4 0, #0b306f 100%);
+  background-image: -o-linear-gradient(top, #779ad4 0, #0b306f 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #779ad4), color-stop(1, #0b306f));
+  background-image: -webkit-linear-gradient(top, #779ad4 0, #0b306f 100%);
+  background-image: linear-gradient(to bottom, #779ad4 0, #0b306f 100%);
+  color: #ffc356;
+}
+
+div.info-group
+{
+  font-size: 8pt;
+  clear: both;
+}
+
+div.info-item
+{
+  float: left;
+  width: 189px;
+  border: 1px solid #aaa;
+  max-height: 1px;
+  overflow-y: scroll;
+  margin: 0 3px;
+  background: #ffffee;
+  padding: 0 2px;
+}
+
+.up2 div.info-item,
+.up1rm div.info-item
+{
+  width: 390px;
+}
+
+.up3 div.info-item
+{
+  width: 256px;
+}
+
+div.info-item.empty-item
+{
+  float: left;
+  width: 195px;
+  border: none;
+  height: 1px;
+  margin: 0 3px;
+  background: none;
+  padding: 0;
+}
+
+.up2 div.info-item.empty-item,
+.up1rm div.info-item.empty-item
+{
+  width: 396px;
+}
+
+.up3 div.info-item.empty-item
+{
+  width: 262px;
+}
+
+.referendums-panel .ui-accordion-content
+{
+  padding: 8px;
+}
+
+.referendums-panel .referendum-result
+{
+  float: right;
+  width: 19px;
+  height: 16px;
+  background-image: url(/images/referendum-sprite.png);
+}
+
+.referendums-panel .referendum-result.defeated
+{
+  background-position: 0 -16px;
+}
+
+#select-candidates-dialog
+{
+  text-align: left;
+}
+
+#select-candidates-dialog .controls
+{
+  text-align: right;
+  margin-top: 10px;
+}
+
+body.election-explorer form.iframe
+{
+  margin: 0;
+}
+body.election-explorer form.iframe .entry,
+body.election-explorer form.iframe .entry + hr
+{
+  display: none;
+}

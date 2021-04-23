@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<generateDbClasses>
+  <databases 
+    supportMySql="true" 
+    supportMsSql="true"
+    secondary="true"
+    >
+    <database
+      mappedName="VoteCache"
+      provider="MySql"
+      connectionString="Server=votesql.c3fj3t5d5d77.us-east-1.rds.amazonaws.com;Uid=ron;Pwd=p17134;Database=votecache"
+      connectionStringKey="CnVoteCache.MySql"
+      providerKey="VoteDbProvider"
+      >
+      <tables>
+        <table name="CacheControl" singleton="true" />
+        <table name="CachePages" deleteTable="true" truncateTable="true" />
+        <table name="DonationNags2" delete="false" insert="false" select="true" selectColumns="false" update="false" updateColumns="false">
+          <indexes>
+            <index columns="Id" skip="true"/>
+          </indexes>
+        </table>
+        <table name="DonationNagsControl" singleton="true" />
+        <table name="LastProcessedId" skip="true" />
+      </tables>
+    </database>
+  </databases>
+</generateDbClasses>

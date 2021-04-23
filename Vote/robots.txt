@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /400.aspx
+Disallow: /500.aspx
+Disallow: /FacebookShare.aspx
+Disallow: /Image.aspx
+Disallow: /image.aspx
+Disallow: /nocache.aspx
+Disallow: /SetCookies.aspx
+Disallow: /AjaxContent.asmx
+Disallow: /WebService.asmx

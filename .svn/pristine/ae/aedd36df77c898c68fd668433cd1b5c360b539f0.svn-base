@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Vote;
+
+namespace CreateSitemaps
+{
+  class Program
+  {
+    static void Main(string[] args)
+    {
+      Console.WriteLine("Begin CreateSitemaps");
+      SitemapManager.UpdateAllSitemapVirtualPages();
+      Console.WriteLine("End CreateSitemaps");
+    }
+  }
+}

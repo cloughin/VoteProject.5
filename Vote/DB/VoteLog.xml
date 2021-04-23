@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<generateDbClasses>
+  <databases
+    supportMySql="true"
+    supportMsSql="true"
+    secondary="true"
+    >
+    <database
+      mappedName="VoteLog"
+      provider="MySql"
+      connectionString="Server=votesql.c3fj3t5d5d77.us-east-1.rds.amazonaws.com;Uid=ron;Pwd=p17134;Database=votelog"
+      connectionStringKey="CnVoteLog.MySql"
+      providerKey="VoteDbProvider"
+      >
+      <tables>
+        <table name="Log301Redirect" truncateTable="true" />
+        <table name="Log302Redirect" truncateTable="true" />
+        <table name="Log404PageNotFound" truncateTable="true" />
+        <table name="LogAddressesBad" reader="true">
+          <columns>
+            <column name="Addr1" mappedName="Address1" />
+            <column name="Addr2" mappedName="Address2" />
+          </columns>
+        </table>
+        <table name="LogAddressesGood" reader="true">
+          <columns>
+            <column name="Addr1" mappedName="Address1" />
+            <column name="Addr2" mappedName="Address2" />
+          </columns>
+        </table>
+        <table name="LogAddressesGoodNew" reader="true" />
+        <table name="LogAdminData" >
+          <columnSets>
+            <columnSet name="Billing" columns="UserName,DateStamp" />
+          </columnSets>
+        </table>
+        <table name="LogControl" singleton="true" />
+        <table name="LogDebug" truncateTable="true" />
+        <table name="LogDataChange">
+          <indexes>
+            <index columns="TableName,ColumnName,KeyValues,DateStamp" add="true" />
+          </indexes>
+          <columnSets>
+            <columnSet name="DateAndUser" columns="DateStamp,UserName">
+              <indexes skip="true" />
+            </columnSet>
+            <columnSet name="Billing" columns="DateStamp,UserName,TableName,ColumnName">
+              <indexes skip="true" />
+            </columnSet>
+          </columnSets>
+        </table>
+        <table name="LogElectionOfficeChanges" >
+          <columnSets>
+            <columnSet name="Billing" columns="UserName,DateStamp" />
+          </columnSets>
+        </table>
+        <table name="LogElectionPoliticianAddsDeletes" >
+          <indexes>
+            <index columns="PoliticianKey" add="true" />
+          </indexes>
+          <columnSets>
+            <columnSet name="Billing" columns="UserName,DateStamp" />
+          </columnSets>
+        </table>
+        <table name="LogEmails">
+          <columns>
+            <column name="FromAddr" mappedName="FromAddress" />
+            <column name="ToAddr" mappedName="ToAddresses" />
+            <column name="CcAddr" mappedName="CcAddresses" />
+            <column name="BccAddr" mappedName="BccAddresses" />
+          </columns>
+        </table>
+        <table name="LogErrorsAdmin" truncateTable="true" />
+        <table name="LogNotes">
+          <indexes>
+            <index columns="UserStateCode" add="true" orderBy="DateStamp DESC"/>
+          </indexes>
+        </table>
+        <table name="LogOfficeChanges" >
+          <columnSets>
+            <columnSet name="Billing" columns="UserName,DateStamp" />
+          </columnSets>
+        </table>
+        <table name="LogOfficeOfficialAddsDeletes" >
+          <columnSets>
+            <columnSet name="Billing" columns="UserName,DateStamp" />
+          </columnSets>
+        </table>
+        <table name="LogOfficeOfficialChanges" >
+          <columnSets>
+            <columnSet name="Billing" columns="UserName,DateStamp" />
+          </columnSets>
+        </table>
+        <table name="LogPoliticianAdds">
+          <indexes>
+            <index columns="PoliticianKey" add="true" />
+          </indexes>
+          <columns>
+            <column name="FName" mappedName="FirstName" />
+            <column name="LName" mappedName="LastName" />
+            <column name="MName" mappedName="MiddleName" />
+            <column name="StateEmailAddr" mappedName="StateEmail" />
+            <column name="StateWebAddr" mappedName="StateWebAddress" />
+          </columns>
+          <columnSets>
+            <columnSet name="Billing" columns="UserName,DateStamp" />
+            <columnSet name="StateCode" columns="StateCode">
+              <indexes>
+                <index columns="UserName" />
+              </indexes>
+            </columnSet>
+          </columnSets>
+        </table>
+        <table name="LogPoliticianAnswers">
+          <indexes>
+            <index columns="PoliticianKey" add="true" />
+            <index columns="QuestionKey" add="true" />
+          </indexes>
+          <columnSets>
+            <columnSet name="Billing" columns="UserName,DateStamp" />
+          </columnSets>
+        </table>
+        <table name="LogPoliticianChanges">
+          <indexes>
+            <index columns="PoliticianKey" add="true" />
+          </indexes>
+          <columnSets>
+            <columnSet name="Billing" columns="UserName,DateStamp" />
+          </columnSets>
+        </table>
+        <table name="LogPoliticiansImagesHeadshot" >
+          <columnSets>
+            <columnSet name="Billing" columns="UserName,ProfileOriginalDate" />
+          </columnSets>
+        </table>
+        <table name="LogPoliticiansImagesOriginal" >
+          <indexes>
+            <index columns="PoliticianKey,ProfileOriginalDate" add="true" />
+          </indexes>
+          <columnSets>
+            <columnSet name="Billing" columns="UserName,ProfileOriginalDate" />
+            <columnSet name="DateAndUser" columns="ProfileOriginalDate,UserName">
+              <indexes skip="true" />
+            </columnSet>
+          </columnSets>
+        </table>
+        <table name="LogSampleBallotRequests" reader="true"/>
+      </tables>
+    </database>
+  </databases>
+</generateDbClasses>

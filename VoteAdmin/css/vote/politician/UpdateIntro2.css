@@ -1,0 +1,894 @@
+﻿#outer h1
+{
+  margin-bottom: 10px;
+}
+
+div.content-header
+{
+  margin-top: 0;
+}
+
+#outer h1
+{
+  margin-bottom: 7px;
+}
+
+.main-heading
+{
+  float: left;
+  width: 525px;
+}
+
+#outer .politician-links
+{
+  float: right;
+  margin-top: 12px;
+}
+
+#outer .politician-links .actions
+{
+  float: left;
+}
+
+#outer .politician-links .intro-actions
+{
+  margin-right: 15px;
+}
+
+#outer .politician-links a.action
+{
+  border: 1px solid #bf9241;
+  display: block;
+  margin-bottom: 5px;
+  padding: 1px 4px;
+  text-decoration: none;
+}
+
+#outer .politician-links a.action:hover
+{
+  border-color: #ffaf1e;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+#outer .politician-links a.action.disabled
+{
+  -moz-opacity: 0.3;
+  cursor: default;
+  filter: alpha(opacity: 30);
+  opacity: 0.3;
+}
+
+#outer .politician-links a.action p
+{
+  color: #707070;
+  font-family: "trebuchet ms", helvetica, sans-serif;
+  font-size: 12px;
+  line-height: 150%;
+  margin-bottom: 0;
+}
+
+#outer .politician-links a.action p em
+{
+  color: #25a;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: bold;
+}
+
+#outer .politician-links a.action p em span
+{
+  color: #bf9241;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+#outer .politician-links a.action ul
+{
+  color: #bf9241;
+  list-style: disc;
+  margin: 5px 0 0 50px;
+}
+
+#outer .politician-links a.action li
+{
+  color: #bf9241;
+  font-family: "trebuchet ms", helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+#outer .politician-links a.action li span
+{
+  color: #707070;
+}
+
+/***********************************************/
+
+/* horizontal tabs                             */
+
+/***********************************************/
+
+#main-tabs li.htab .tab-ast
+{
+  left: 2px;
+  top: 1px;
+}
+
+#main-tabs li.htab a
+{
+  font-size: 11pt;
+}
+
+/***********************************************/
+
+/* vertical tabs                               */
+
+/***********************************************/
+
+#main-tabs div.vtab-panel
+{
+  min-height: 327px;
+}
+
+/***********************************************/
+
+/* contact tab                                 */
+
+/***********************************************/
+
+#main-tabs #tab-contact h5
+{
+  margin: 10px 0;
+}
+
+#main-tabs #tab-contact h5 em
+{
+  color: #bf9241;
+  font-style: normal;
+}
+
+#main-tabs #tab-contact h5 em a:hover
+{
+  color: #ffaf1e;
+}
+
+#main-tabs #tab-contact .spacer
+{
+  height: 10px;
+  width: 1px;
+}
+
+#main-tabs #tab-contact .input-element
+{
+  float: left;
+  margin: 0 16px 0 0;
+}
+
+#main-tabs #tab-contact p.ballot-name-info
+{
+  font-size: 11px;
+  margin-top: 5px;
+  width: 760px;
+}
+
+#main-tabs #tab-contact .input-element.fname input
+{
+  width: 150px;
+}
+
+#main-tabs #tab-contact .input-element.mname input
+{
+  width: 100px;
+}
+
+#main-tabs #tab-contact .input-element.nickname input
+{
+  width: 100px;
+}
+
+#main-tabs #tab-contact .input-element.lname input
+{
+  width: 150px;
+}
+
+#main-tabs #tab-contact .input-element.suffix input
+{
+  width: 50px;
+}
+
+#main-tabs #tab-contact .input-element.publicaddress input
+{
+  width: 350px;
+}
+
+#main-tabs #tab-contact .input-element.publiccitystatezip input
+{
+  width: 350px;
+}
+
+#main-tabs #tab-contact .input-element.publicphone input
+{
+  width: 150px;
+}
+
+#main-tabs #tab-contact .input-element.publicemail input
+{
+  width: 250px;
+}
+
+#main-tabs #tab-contact .input-element.dateofbirth input
+{
+  width: 150px;
+}
+
+#main-tabs #tab-contact .input-element.age input
+{
+  width: 50px;
+}
+
+#main-tabs #tab-contact .input-element div.databox
+{
+  padding-right: 16px;
+  position: relative;
+}
+
+#main-tabs #tab-contact .input-element .tab-ast
+{
+  display: inline-block;
+  right: 0;
+  top: 7px;
+}
+
+/***********************************************/
+
+/* reasons tab                                 */
+
+/***********************************************/
+
+/*
+#main-tabs #tab-reasons .input-element
+{
+  float: left;
+  margin: 0 16px 0 0;
+}
+
+#main-tabs #tab-reasons .input-element.source input
+{
+  width: 568px;
+}
+
+#main-tabs #tab-reasons .input-element.remove-line-breaks
+{
+  margin-bottom: 8px;
+}
+
+#main-tabs #tab-reasons textarea.source-textbox {
+  height: 28px;
+  margin-top: 0;
+}
+
+#main-tabs #tab-reasons .input-element.date
+{
+  clear: both;
+  margin: 5px 0 0 0;
+}
+
+#main-tabs #tab-reasons .input-element.date input
+{
+  width: 100px;
+}
+
+#main-tabs #tab-reasons .spacer
+{
+  margin-bottom: 20px;
+}
+*/
+
+/***********************************************/
+
+/* social media tab                            */
+
+/***********************************************/
+
+#main-tabs #tab-social h5
+{
+  margin: 10px 0;
+}
+
+#main-tabs #tab-social div.col
+{
+  float: left;
+}
+
+#main-tabs #tab-social div.col1
+{
+  margin: 0 30px 0 20px;
+}
+
+#main-tabs #tab-social div.medium
+{
+  margin: 0 0 12px 0;
+  padding: 6px 0 6px 9px;
+  position: relative;
+  width: 392px;
+}
+
+#main-tabs #tab-social div.medium.website
+{
+  float: left;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  padding: 12px 0 12px 9px;
+}
+
+#main-tabs #tab-social div.instructions
+{
+  float: left;
+}
+
+#main-tabs #tab-social div.instructions ul
+{
+  color: #bf9241;
+  list-style: disc;
+  margin: 0 0 0 60px;
+  width: 390px;
+}
+
+#main-tabs #tab-social div.instructions li
+{
+  margin-bottom: 5px;
+}
+
+#main-tabs #tab-social div.instructions li span
+{
+  color: #334f80;
+  font-size: 11px;
+}
+
+#main-tabs #tab-social div.instructions em
+{
+  color: #bf9241;
+  font-style: normal;
+  font-weight: bold;
+}
+
+#main-tabs #tab-social h6
+{
+  margin: 0 0 4px 32px;
+}
+
+#main-tabs #tab-social div.medium div.icon-box
+{
+  border: 1px solid #ccc;
+  float: left;
+  margin: 2px 5px 0 0;
+  padding: 2px;
+}
+
+#main-tabs #tab-social div.medium .icon
+{
+  background: #fff url(/images/socialsprite.png);
+  display: block;
+  height: 20px;
+  width: 20px;
+}
+
+#main-tabs #tab-social div.medium input[type=text]
+{
+  display: block;
+  float: left;
+  width: 326px;
+}
+
+#main-tabs #tab-social div.medium .tab-ast
+{
+  right: 3px;
+  top: 31px;
+}
+
+#main-tabs #tab-social div.medium.website .tab-ast
+{
+  right: 3px;
+  top: 18px;
+}
+
+#main-tabs #tab-social div.medium.website .icon
+{
+  background-position: 0 0;
+}
+
+#main-tabs #tab-social div.medium.website .icon:hover
+{
+  background-position: 0 -20px;
+}
+
+#main-tabs #tab-social div.medium.website .icon.disabled
+{
+  background-position: 0 -40px;
+}
+
+#main-tabs #tab-social div.medium.facebook .icon
+{
+  background-position: -20px 0;
+}
+
+#main-tabs #tab-social div.medium.facebook .icon:hover
+{
+  background-position: -20px -20px;
+}
+
+#main-tabs #tab-social div.medium.facebook .icon.disabled
+{
+  background-position: -20px -40px;
+}
+
+#main-tabs #tab-social div.medium.youtube .icon
+{
+  background-position: -40px 0;
+}
+
+#main-tabs #tab-social div.medium.youtube .icon:hover
+{
+  background-position: -40px -20px;
+}
+
+#main-tabs #tab-social div.medium.youtube .icon.disabled
+{
+  background-position: -40px -40px;
+}
+
+#main-tabs #tab-social div.medium.flickr .icon
+{
+  background-position: -60px 0;
+}
+
+#main-tabs #tab-social div.medium.flickr .icon:hover
+{
+  background-position: -60px -20px;
+}
+
+#main-tabs #tab-social div.medium.flickr .icon.disabled
+{
+  background-position: -60px -40px;
+}
+
+#main-tabs #tab-social div.medium.twitter .icon
+{
+  background-position: -80px 0;
+}
+
+#main-tabs #tab-social div.medium.twitter .icon:hover
+{
+  background-position: -80px -20px;
+}
+
+#main-tabs #tab-social div.medium.twitter .icon.disabled
+{
+  background-position: -80px -40px;
+}
+
+#main-tabs #tab-social div.medium.rssfeed .icon
+{
+  background-position: -100px 0;
+}
+
+#main-tabs #tab-social div.medium.rssfeed .icon:hover
+{
+  background-position: -100px -20px;
+}
+
+#main-tabs #tab-social div.medium.rssfeed .icon.disabled
+{
+  background-position: -100px -40px;
+}
+
+#main-tabs #tab-social div.medium.wikipedia .icon
+{
+  background-position: -120px 0;
+}
+
+#main-tabs #tab-social div.medium.wikipedia .icon:hover
+{
+  background-position: -120px -20px;
+}
+
+#main-tabs #tab-social div.medium.wikipedia .icon.disabled
+{
+  background-position: -120px -40px;
+}
+
+#main-tabs #tab-social div.medium.vimeo .icon
+{
+  background-position: -140px 0;
+}
+
+#main-tabs #tab-social div.medium.vimeo .icon:hover
+{
+  background-position: -140px -20px;
+}
+
+#main-tabs #tab-social div.medium.vimeo .icon.disabled
+{
+  background-position: -140px -40px;
+}
+
+#main-tabs #tab-social div.medium.googleplus .icon
+{
+  background-position: -160px 0;
+}
+
+#main-tabs #tab-social div.medium.googleplus .icon:hover
+{
+  background-position: -160px -20px;
+}
+
+#main-tabs #tab-social div.medium.googleplus .icon.disabled
+{
+  background-position: -160px -40px;
+}
+
+#main-tabs #tab-social div.medium.linkedin .icon
+{
+  background-position: -180px 0;
+}
+
+#main-tabs #tab-social div.medium.linkedin .icon:hover
+{
+  background-position: -180px -20px;
+}
+
+#main-tabs #tab-social div.medium.linkedin .icon.disabled
+{
+  background-position: -180px -40px;
+}
+
+#main-tabs #tab-social div.medium.pinterest .icon
+{
+  background-position: -200px 0;
+}
+
+#main-tabs #tab-social div.medium.pinterest .icon:hover
+{
+  background-position: -200px -20px;
+}
+
+#main-tabs #tab-social div.medium.pinterest .icon.disabled
+{
+  background-position: -200px -40px;
+}
+
+#main-tabs #tab-social div.medium.blogger .icon
+{
+  background-position: -220px 0;
+}
+
+#main-tabs #tab-social div.medium.blogger .icon:hover
+{
+  background-position: -220px -20px;
+}
+
+#main-tabs #tab-social div.medium.blogger .icon.disabled
+{
+  background-position: -220px -40px;
+}
+
+#main-tabs #tab-social div.medium.webstagram .icon
+{
+  background-position: -240px 0;
+}
+
+#main-tabs #tab-social div.medium.webstagram .icon:hover
+{
+  background-position: -240px -20px;
+}
+
+#main-tabs #tab-social div.medium.webstagram .icon.disabled
+{
+  background-position: -240px -40px;
+}
+
+#main-tabs #tab-social div.medium.ballotpedia .icon
+{
+  background-position: -260px 0;
+}
+
+#main-tabs #tab-social div.medium.ballotpedia .icon:hover
+{
+  background-position: -260px -20px;
+}
+
+#main-tabs #tab-social div.medium.ballotpedia .icon.disabled
+{
+  background-position: -260px -40px;
+}
+
+/***********************************************/
+
+/* upload tab                                  */
+
+/***********************************************/
+
+#main-tabs #tab-upload .tab-panel-heading
+{
+  margin-bottom: 5px;
+}
+
+#main-tabs #tab-upload .cols
+{
+  margin-top: 15px;
+}
+
+#main-tabs #tab-upload .col
+{
+  margin: 0 0 20px 0;
+}
+
+#main-tabs #tab-upload .col
+{
+  float: left;
+}
+
+#main-tabs #tab-upload .col1
+{
+  margin: 30px 80px 0 60px;
+  padding: 20px;
+  width: 337px;
+}
+
+#main-tabs #tab-upload .fileinputs
+{
+  margin: 18px 0 18px 25px;
+}
+
+#main-tabs #tab-upload .image-outer-container
+{
+  width: 302px;
+}
+
+#main-tabs #tab-upload .image-outer-container p.too-small
+{
+  background: #eee;
+  display: none;
+  font-size: 9px;
+  line-height: 12px;
+  margin: 10px;
+  padding: 4px;
+}
+
+#main-tabs #tab-upload .image-container
+{
+  background: #ddd;
+  border: 1px solid #888;
+  min-height: 100px;
+  width: 300px;
+}
+
+#main-tabs #tab-upload .image-picture
+{
+  display: block;
+}
+
+#main-tabs #tab-upload .fileinputs
+{
+  height: 24px;
+  position: relative;
+}
+
+#main-tabs #tab-upload .masker
+{
+  background: #eee;
+  display: none;
+  position: absolute;
+  z-index: 3;
+}
+
+#main-tabs #tab-upload .upload-file
+{
+  -moz-opacity: 0;
+  cursor: pointer;
+  filter: alpha(opacity: 0);
+  opacity: 0;
+  position: absolute;
+  text-align: right;
+  z-index: 2;
+}
+
+#main-tabs #tab-upload .browse-button
+{
+  font-size: 11px;
+  left: 0;
+  padding: 2px 18px;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+}
+
+#main-tabs #tab-upload .file-name-container
+{
+  left: 100px;
+  position: absolute;
+  top: 1px;
+}
+
+#main-tabs #tab-upload .file-name-clear
+{
+  background: #fff url(/images/opsprite.png) -100px 0;
+  cursor: pointer;
+  float: left;
+  height: 20px;
+  margin: 2px 0 0 5px;
+  width: 20px;
+}
+
+#main-tabs #tab-upload .file-name-clear:hover
+{
+  background-position: -100px -20px;
+}
+
+#main-tabs #tab-upload .file-name
+{
+  background: #ffffee;
+  border: 1px solid #2554aa;
+  cursor: default;
+  float: left;
+  overflow: hidden;
+  padding: 3px 5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 171px;
+}
+
+#main-tabs #tab-upload .file-name.disabled
+{
+  color: #bbb;
+  font-style: italic;
+}
+
+#main-tabs #tab-upload .col1 .nx
+{
+  background: #fff url(/images/numbers.png);
+  float: left;
+  height: 20px;
+  margin-right: 5px;
+  width: 20px;
+}
+
+#main-tabs #tab-upload .col1 .n1
+{
+  background-position: 0 -20px;
+}
+
+#main-tabs #tab-upload .col1 .n2
+{
+  background-position: -20px -20px;
+}
+
+#main-tabs #tab-upload .col1 h6
+{
+  padding-top: 3px;
+}
+
+#main-tabs #tab-upload .col1 h6 em
+{
+  color: #0b306f;
+  font-size: 110%;
+  font-style: normal;
+}
+
+/***********************************************/
+
+/* FIREFOX                                     */
+
+/***********************************************/
+
+@-moz-document url-prefix()
+{
+  #main-tabs #tab-social div.medium input
+  {
+    margin-top: 2px;
+  }
+  #main-tabs #tab-upload .browse-button
+  {
+    font-size: 11px;
+    left: 0;
+    padding: 1px 9px;
+    top: 4px;
+  }
+  #main-tabs #tab-upload .upload-file
+  {
+    left: -142px;
+    top: 2px;
+  }
+  #main-tabs #tab-upload .file-name-container
+  {
+    left: 82px;
+  }
+  #main-tabs #tab-upload .file-name
+  {
+    width: 189px;
+  }
+  div.vtab-panel .undo-button
+  {
+    right: 20px;
+  }
+  div.vtab-panel .clear-button
+  {
+    right: 50px;
+  }
+}
+
+/***********************************************/
+
+/* CHROME                                      */
+
+/***********************************************/
+
+@media
+screen and (-webkit-min-device-pixel-ratio: 0)
+{
+  #main-tabs #tab-upload .browse-button
+  {
+    font-size: 11px;
+    padding: 2px 18px;
+    top: 1px;
+  }
+
+  #main-tabs #tab-upload .upload-file
+  {
+    left: 0;
+    top: 0;
+  }
+
+  #main-tabs #tab-upload .masker2
+  {
+    display: block;
+    height: 26px;
+    left: 82px;
+    opacity: 0;
+    width: 190px;
+  }
+}
+
+/***********************************************/
+
+/* IE10                                        */
+
+/***********************************************/
+
+.ie10 #main-tabs #tab-social div.medium input
+{
+  margin-top: 2px;
+}
+
+.ie10 #main-tabs #tab-upload .masker2
+{
+  display: block;
+  height: 26px;
+  left: -155px;
+  opacity: 0;
+  width: 155px;
+}
+
+.ie10 #main-tabs #tab-upload .browse-button
+{
+  padding: 1px 21px;
+  top: 5px;
+}
+
+.ie10 #main-tabs #tab-upload .upload-file
+{
+  left: -149px;
+  top: 4px;
+}
+
+.ie10 #main-tabs #tab-upload .file-name-container
+{
+  left: 94px;
+}
+
+.ie10 #main-tabs #tab-upload .file-name
+{
+  width: 177px;
+}

@@ -1,0 +1,48 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Dropbox.aspx.cs" Inherits="Vote.Master.Dropbox" %>
+<%@ Register Src="../LoginBar.ascx" TagName="LoginBar" TagPrefix="user" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+  <title>Vote-USA Dropbox</title>
+  <link href="/css/AllAdmin.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+      <user:LoginBar ID="LoginBar1" runat="server" />
+    </div>
+      <table class="tableAdmin" id="Top" cellspacing="0" cellpadding="0" border="0">
+      <tr>
+        <td align="left" class="HLarge">
+          Vote-USA Dropbox</td>
+      </tr>
+      <tr>
+        <td align="left" colspan="2">
+          <asp:Label ID="Msg" runat="server"></asp:Label></td>
+      </tr>
+    </table>
+   <table id="Table3" cellpadding="0" cellspacing="0" class="tableAdmin" runat="server">
+    <tr><td class="T">
+      Use this form to deposit files is the Vote-USA dropbox and to tag the files with
+      comments and other metadata.</td></tr>
+      </table>
+    <div class="T" style="margin: 10px 0 0 4px;clear:both">
+      <b>File to upload:</b><br />
+      <input id="UploadFile" runat="server" name="UploadFile" size="95"
+         type="file" /><br /><br />
+      <b>Save file as:</b><br />
+      <input id="Filename" runat="server" name="Filename" size="50"
+         type="text" /><br />
+      <span class="T">Do not include extension. The original extension will be used. If omitted, original filename will be used.</span><br /><br />
+      <b>Comments:</b><br />
+      <textarea id="Comments" runat="server" name="Comments" rows="10" cols="90"></textarea><br />
+      <span class="T">For videos, include the politician name and state, and the issue that is being addressed.</span><br /><br />
+      <input id="UploadFileButton" runat="server" class="Buttons" name="UploadFileButton"
+        style="width: 222px" type="submit"
+        value="Upload File" onserverclick="ButtonUploadFile_ServerClick" />
+    </div>
+    </form>
+</body>
+</html>

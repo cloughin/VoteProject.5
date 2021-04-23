@@ -1,0 +1,89 @@
+﻿using System;
+
+namespace Vote
+{
+  public partial class ForVolunteersPagex : CacheablePage
+  {
+    public ForVolunteersPagex()
+    {
+      NoUrlEdit = true; /* bacause disabled */
+      NoIndex = true; /* bacause disabled */
+    }
+
+   #region Caching support
+
+    protected override bool SuppressCaching
+    {
+      get { return true; }
+    }
+
+    protected override string GetCacheKey()
+    {
+      var key = UrlManager.GetStateCodeFromHostName();
+      var siteId = UrlManager.CurrentQuerySiteId;
+      if (!string.IsNullOrEmpty(siteId))
+        key += "." + siteId;
+
+      return key;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "forVolunteers";
+    }
+
+    #endregion Caching support
+    
+    private const string TitleTagAllStatesDomain =
+      "Volunteer to Help Inform Voters and Support Better Elections";
+
+    private const string MetaDescriptionAllStatesDomain =
+      "Numerous ways to volunteer your help to inform voters and to support better elections. All you need is an internet connection and the desire.";
+
+    private const string MetaKeywordsAllStatesDomain =
+      "volunteer, volunteers, election volunteer, elections volunteer";
+
+    private const string TitleTagSingleStateDomain =
+      "Volunteer to Help Inform [[state]] Voters and Support Better Elections";
+
+    private const string MetaDescriptionSingleStateDomain =
+      "Numerous ways to volunteer your help to inform voters and to support better [[state]] elections. All you need is an internet connection and the desire.";
+
+    private const string MetaKeywordsSingleStateDomain =
+      "[[state]] volunteer, [[state]] volunteers, [[state]] election volunteer, [[state]] elections volunteer";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/SecondaryCommon.css");
+
+      if (!IsPostBack)
+        if (DomainData.IsValidStateCode) // Single state
+        {
+          if (DomainDesign.IncludeTitleForSingleState)
+            TitleTag.Text = TitleTagSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForSingleState)
+            MetaDescriptionTag.Content = MetaDescriptionSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForSingleState)
+            MetaKeywordsTag.Content = MetaKeywordsSingleStateDomain.Substitute();
+        }
+        else
+        {
+          if (DomainDesign.IncludeTitleForAllStates)
+            TitleTag.Text = TitleTagAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForAllStates)
+            MetaDescriptionTag.Content = MetaDescriptionAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForAllStates)
+            MetaKeywordsTag.Content = MetaKeywordsAllStatesDomain.Substitute();
+        }
+
+      EmailForm.ToEmailAddress = "interns@Vote-USA.org";
+
+      EmailForm.SetItems(
+        "I would like to volunteer for whatever is needed",
+        "I would like to volunteer to scrape candidate websites",
+        "I would like to volunteer to research county and local elected offices",
+        "I would like to volunteer to interview and video candidates");
+    }
+  }
+}

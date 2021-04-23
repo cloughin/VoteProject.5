@@ -1,0 +1,257 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>Milgard Tuscany&reg; Series Videos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow">
+    <style type="text/css">
+/* BEGIN Eric Meyer reset */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+body {
+	line-height: 1;
+	color: black;
+	background: white;
+}
+ol, ul {
+	list-style: none;
+}
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+caption, th, td {
+	text-align: left;
+	font-weight: normal;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: "";
+}
+blockquote, q {
+	quotes: "" "";
+}
+/* END Eric Meyer reset */
+
+html {
+  background: #fff;
+  min-width: 320px;
+  overflow-y: auto;
+}
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  color: #333333;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;        
+  min-width: 320px;
+  min-height: 100%;
+  text-align: center;
+}
+h1
+{
+  font-size: 2.7rem;
+  font-weight: bold;
+}
+sub, sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+
+.outer-page {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.content
+{
+  margin: 3%;
+}
+
+.main-heading
+{
+  display: table-row;
+}
+
+.main-heading a
+{
+  display: table-cell;
+  width: 20%;
+}
+
+.main-heading img
+{
+  width: 100%;
+  max-width: 124px;
+}
+
+.main-heading h1
+{
+  display: table-cell;
+  vertical-align: top;
+  padding-top: 2%;
+  padding-left: 10px;
+}
+p.intro
+{
+  padding-top: 1rem;
+  line-height: 180%;
+}
+h2 {
+  margin: 20px 0 10px 0;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: .85rem;
+  line-height: 130%;
+}
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+  color: #ed1c24;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+strong
+{
+  font-weight: bold;
+}
+.videos
+{
+  text-align: center;
+}
+.videos-inner
+{
+  display: inline-block;
+  margin: 0 auto;
+  text-align: left;
+  width: 100%;
+}
+.video-wrapper {
+  max-width: 420px;
+  width: 100%;
+  display: none;
+}
+.video-wrapper-inner {
+	position: relative;
+	padding-bottom: 56.25%; /* 16:9 */
+	height: 0;
+}
+.video-wrapper iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}    
+
+@media only screen and (max-width : 519px) 
+{
+  /* small */
+  .min-medium {
+    display: none;
+  }
+  .main-heading a
+  {
+    width: 20%;
+  }
+  .main-heading img
+  {
+    width: 100%;
+  }
+  .main-heading h1
+  {
+    font-size: 1.15rem;
+  }
+}
+    
+@media only screen and (max-width : 759px) 
+{
+  /* small & medium*/
+  .min-large,
+  .min-huge {
+    display: none;
+  }
+}
+    
+@media only screen and (min-width : 520px) and (max-width : 759px) 
+{
+  /* medium */
+  .min-large,
+  .min-huge {
+    display: none;
+  }
+  .max-small {
+    display: none;
+  }
+  .main-heading h1
+  {
+    font-size: 1.8rem;
+  }
+}
+    
+@media only screen and (min-width : 760px) and (max-width : 959px) 
+{
+  /* large */
+  .min-huge {
+    display: none;
+  }
+  .max-small,
+  .max-medium {
+    display: none;
+  }
+}
+    
+@media only screen and (min-width : 960px) 
+{
+  /* huge */
+  .max-small,
+  .max-medium,
+  .max-large {
+    display: none;
+  }
+}
+    </style>
+  </head>
+  <body>
+       
+            <div class="video-wrapper">
+              <div class="video-wrapper-inner">
+                <iframe width="420" height="236" src="https://www.youtube.com/embed/Q2HuxDOAv30?rel=0&controls=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
+              </div>
+            </div>
+  </body>
+</html>

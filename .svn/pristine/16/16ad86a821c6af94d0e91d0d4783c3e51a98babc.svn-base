@@ -1,0 +1,885 @@
+using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.IO;
+using DB.Vote;
+
+namespace Vote.Combine2Politicians
+{
+  public partial class Combine2Politicians : VotePage
+  {
+
+    protected System.Web.UI.WebControls.Label HTMLTablePoliticians;
+
+    #region Checks
+    private void Check_Textboxes_For_Consolidate_One()
+    {
+      #region Consolidate and Delete
+      if (Textbox_PoliticianKey_From.Text.Trim() == string.Empty)
+        throw new ApplicationException("The textbox for the first politician Id is empty.");
+      if (!Politicians.IsValid(Textbox_PoliticianKey_From.Text.Trim()))
+        throw new ApplicationException("The first politician Id is invalid.");
+      #endregion Consolidate and Delete
+
+      #region Into this
+      if (Textbox_PoliticianKey_To.Text.Trim() == string.Empty)
+        throw new ApplicationException("The textbox for the first politician Id is empty.");
+      if (!Politicians.IsValid(Textbox_PoliticianKey_To.Text.Trim()))
+        throw new ApplicationException("The first politician Id is invalid.");
+      #endregion Into this
+
+    }
+
+    private void Check_Politicians_In_Same_State_One()
+    {
+      if (!SecurePage.IsMasterUser)
+      {
+        #region Same State for Administrators
+        if (Politicians.GetStateCodeFromKey(Textbox_PoliticianKey_From.Text.Trim())
+           != Politicians.GetStateCodeFromKey(Textbox_PoliticianKey_To.Text.Trim()))
+          throw new ApplicationException(
+            "The politicians are not in the same State."
+            );
+
+
+        if (Politicians.GetStateCodeFromKey(Textbox_PoliticianKey_From.Text.Trim())
+        != ViewState["StateCode"].ToString())
+          throw new ApplicationException(
+            "The politician does not belong to "
+            + StateCache.GetStateName(ViewState["StateCode"].ToString())
+            );
+        #endregion Same State for Administrators
+      }
+    }
+
+    private void Check_Textboxes_For_Show_Two()
+    {
+      #region First Politician Id:
+      if (TextBox_Id_First.Text.Trim() == string.Empty)
+        throw new ApplicationException("The textbox for the first politician Id is empty.");
+      if (!Politicians.IsValid(TextBox_Id_First.Text.Trim()))
+        throw new ApplicationException("The first politician Id is invalid.");
+      #endregion First Politician Id:
+
+      #region Second Politician Id:
+      if (
+        (TextBox_Id_Second.Text.Trim() != string.Empty)
+        && (!Politicians.IsValid(TextBox_Id_Second.Text.Trim()))
+        )
+        throw new ApplicationException("The second politician Id is invalid.");
+      #endregion Second Politician Id:
+    }
+
+    private void Check_Politicians_In_Same_State_Two()
+    {
+      if (!SecurePage.IsMasterUser)
+      {
+        #region Same State for Administrators
+        if (TextBox_Id_Second.Text.Trim() != string.Empty)
+        {
+          if (Politicians.GetStateCodeFromKey(TextBox_Id_First.Text.Trim())
+            != Politicians.GetStateCodeFromKey(TextBox_Id_Second.Text.Trim()))
+            throw new ApplicationException(
+              "The politicians are not in the same State."
+              );
+        }
+
+        if (Politicians.GetStateCodeFromKey(TextBox_Id_First.Text.Trim())
+        != ViewState["StateCode"].ToString())
+          throw new ApplicationException(
+            "The politician does not belong to "
+            + StateCache.GetStateName(ViewState["StateCode"].ToString())
+            );
+        #endregion Same State for Administrators
+      }
+    }
+
+    private void CheckTextBoxs4HtmlAndIlleagalInput()
+    {
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBoxFirst);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBoxMiddle);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBoxNickName);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBoxLast);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBoxSuffix);
+      db.Throw_Exception_TextBox_Html_Or_Script(Textbox_PoliticianKey_From);
+      db.Throw_Exception_TextBox_Html_Or_Script(Textbox_PoliticianKey_To);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Id_First);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Id_Second);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_OfficeKey_New);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_FName_New);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Middle_New);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_NickName_Last);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_LName_New);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_Suffix_New);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBox_StateNew);
+    }
+    #endregion Checks
+
+    private void Reset_For_Next_Consolidate()
+    {
+      TextBoxFirst.Text = string.Empty;
+      TextBoxMiddle.Text = string.Empty;
+      TextBoxNickName.Text = string.Empty;
+      TextBoxLast.Text = string.Empty;
+      TextBoxSuffix.Text = string.Empty;
+
+      Textbox_PoliticianKey_From.Text = string.Empty;
+      Textbox_PoliticianKey_To.Text = string.Empty;
+
+      TextBox_Id_First.Text = string.Empty;
+      TextBox_Id_Second.Text = string.Empty;
+
+      TextBox_OfficeKey_New.Text = string.Empty;
+      TextBox_FName_New.Text = string.Empty;
+      TextBox_Middle_New.Text = string.Empty;
+      TextBox_NickName_Last.Text = string.Empty;
+      TextBox_LName_New.Text = string.Empty;
+      TextBox_Suffix_New.Text = string.Empty;
+
+      ViewState["ShowConsolidateOne"] = false;
+      ViewState["ShowConsolidateTwo"] = false;
+    }
+
+
+    #region sql
+    private string Sql_Select_FROM_Politicians()
+    {
+      string SQL = string.Empty;
+      SQL += " SELECT ";
+      SQL += " Politicians.PoliticianKey ";
+      SQL += " ,Politicians.StateCode ";
+      SQL += " ,Politicians.FName ";
+      SQL += " ,Politicians.MName ";
+      SQL += " ,Politicians.LName ";
+      SQL += " ,Politicians.Suffix ";
+      SQL += " ,Politicians.Nickname ";
+      SQL += " ,Politicians.PartyKey ";
+      SQL += " ,Politicians.TemporaryOfficeKey ";
+      SQL += " ,Politicians.StateAddress ";
+      SQL += " ,Politicians.StateCityStateZip ";
+      SQL += " ,Politicians.StatePhone ";
+      SQL += " ,Politicians.StateEmailAddr ";
+      SQL += " ,Politicians.StateWebAddr ";
+      SQL += " ,Politicians.Address ";
+      SQL += " ,Politicians.CityStateZip ";
+      SQL += " ,Politicians.Phone ";
+      SQL += " ,Politicians.EmailAddr ";
+      SQL += " ,Politicians.WebAddr ";
+      SQL += " ,Politicians.LDSAddress ";
+      SQL += " ,Politicians.LDSCityStateZip ";
+      SQL += " ,Politicians.LDSPhone ";
+      SQL += " ,Politicians.LDSEmailAddr ";
+      SQL += " ,Politicians.LDSWebAddr ";
+      SQL += " ,Politicians.LDSLegIDNum ";
+      SQL += " ,Politicians.DataLastUpdated ";
+      SQL += " FROM Politicians ";
+
+      return SQL;
+    }
+
+    private string Sql_Politicians_To_Find()
+    {
+      //string SQL = string.Empty;
+      //SQL += " SELECT ";
+      //SQL += " Politicians.PoliticianKey ";
+      //SQL += " ,Politicians.StateCode ";
+      //SQL += " ,Politicians.FName ";
+      //SQL += " ,Politicians.MName ";
+      //SQL += " ,Politicians.LName ";
+      //SQL += " ,Politicians.Suffix ";
+      //SQL += " ,Politicians.Nickname ";
+      //SQL += " ,Politicians.PartyKey ";
+      //SQL += " ,Politicians.OfficeKey ";
+      //SQL += " ,Politicians.StateAddress ";
+      //SQL += " ,Politicians.StateCityStateZip ";
+      //SQL += " ,Politicians.StatePhone ";
+      //SQL += " ,Politicians.StateEmailAddr ";
+      //SQL += " ,Politicians.StateWebAddr ";
+      //SQL += " ,Politicians.Address ";
+      //SQL += " ,Politicians.CityStateZip ";
+      //SQL += " ,Politicians.Phone ";
+      //SQL += " ,Politicians.EmailAddr ";
+      //SQL += " ,Politicians.WebAddr ";
+      //SQL += " ,Politicians.LDSAddress ";
+      //SQL += " ,Politicians.LDSCityStateZip ";
+      //SQL += " ,Politicians.LDSPhone ";
+      //SQL += " ,Politicians.LDSEmailAddr ";
+      //SQL += " ,Politicians.LDSWebAddr ";
+      //SQL += " ,Politicians.LDSLegIDNum ";
+      //SQL += " ,Politicians.DataLastUpdated ";
+      //SQL += " FROM Politicians ";
+      string SQL = Sql_Select_FROM_Politicians();
+      SQL += " WHERE Politicians.LName = " + db.SQLLit(TextBoxLast.Text.Trim());
+      if (TextBoxFirst.Text.Trim() != string.Empty)
+        SQL += " AND Politicians.FName = " + db.SQLLit(TextBoxFirst.Text.Trim());
+      if (TextBoxMiddle.Text.Trim() != string.Empty)
+        SQL += " AND Politicians.MName = " + db.SQLLit(TextBoxMiddle.Text.Trim());
+      if (TextBoxNickName.Text.Trim() != string.Empty)
+        SQL += " AND Politicians.Nickname = " + db.SQLLit(TextBoxNickName.Text.Trim());
+      if (TextBoxSuffix.Text.Trim() != string.Empty)
+        SQL += " AND Politicians.Suffix = " + db.SQLLit(TextBoxSuffix.Text.Trim());
+      else if ((ViewState["StateCode"].ToString() != "U1")
+          && (ViewState["StateCode"].ToString() != "U2")
+          && (ViewState["StateCode"].ToString() != "U3"))
+        SQL += " AND Politicians.StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+      SQL += " ORDER BY Politicians.FName,Politicians.MName";
+
+      return SQL;
+    }
+
+    private string Sql_Politicians_To_Consolidate_One()
+    {
+      string SQL = Sql_Select_FROM_Politicians();
+      SQL += " WHERE Politicians.PoliticianKey = " + db.SQLLit(Textbox_PoliticianKey_From.Text.Trim());
+      SQL += " OR Politicians.PoliticianKey = " + db.SQLLit(Textbox_PoliticianKey_To.Text.Trim());
+
+      return SQL;
+    }
+
+    private string Sql_Politicians_To_Consolidate_Two()
+    {
+      string SQL = Sql_Select_FROM_Politicians();
+      SQL += " WHERE Politicians.PoliticianKey = " + db.SQLLit(TextBox_Id_First.Text.Trim());
+
+      if (TextBox_Id_Second.Text.Trim() != string.Empty)
+        SQL += " OR Politicians.PoliticianKey = " + db.SQLLit(TextBox_Id_Second.Text.Trim());
+
+      return SQL;
+    }
+    private string Sql_Politicians_Consolidated(string PoliticianKey_New)
+    {
+      string SQL = Sql_Select_FROM_Politicians();
+      SQL += " WHERE Politicians.PoliticianKey = " + db.SQLLit(PoliticianKey_New);
+
+      return SQL;
+    }
+    #endregion sql
+
+    #region Show Politicians
+    private void Show_Politicians(DataTable PoliticiansTable)
+    {
+      #region replaced SQL
+      //string SQL = string.Empty;
+      //SQL += " SELECT ";
+      //SQL += " Politicians.PoliticianKey ";
+      //SQL += " ,Politicians.StateCode ";
+      //SQL += " ,Politicians.FName ";
+      //SQL += " ,Politicians.MName ";
+      //SQL += " ,Politicians.LName ";
+      //SQL += " ,Politicians.Suffix ";
+      //SQL += " ,Politicians.Nickname ";
+      //SQL += " ,Politicians.PartyKey ";
+      //SQL += " ,Politicians.OfficeKey ";
+      //SQL += " ,Politicians.StateAddress ";
+      //SQL += " ,Politicians.StateCityStateZip ";
+      //SQL += " ,Politicians.StatePhone ";
+      //SQL += " ,Politicians.StateEmailAddr ";
+      //SQL += " ,Politicians.StateWebAddr ";
+      //SQL += " ,Politicians.Address ";
+      //SQL += " ,Politicians.CityStateZip ";
+      //SQL += " ,Politicians.Phone ";
+      //SQL += " ,Politicians.EmailAddr ";
+      //SQL += " ,Politicians.WebAddr ";
+      //SQL += " ,Politicians.LDSAddress ";
+      //SQL += " ,Politicians.LDSCityStateZip ";
+      //SQL += " ,Politicians.LDSPhone ";
+      //SQL += " ,Politicians.LDSEmailAddr ";
+      //SQL += " ,Politicians.LDSWebAddr ";
+      //SQL += " ,Politicians.LDSLegIDNum ";
+      //SQL += " ,Politicians.DataLastUpdated ";
+      //SQL += " FROM Politicians ";
+      //SQL += " WHERE Politicians.LName = " + db.SQLLit(TextBoxLast.Text.Trim());
+      //if (TextBoxFirst.Text.Trim() != string.Empty)
+      //  SQL += " AND Politicians.FName = " + db.SQLLit(TextBoxFirst.Text.Trim());
+      //if (TextBoxMiddle.Text.Trim() != string.Empty)
+      //  SQL += " AND Politicians.MName = " + db.SQLLit(TextBoxMiddle.Text.Trim());
+      //if (TextBoxNickName.Text.Trim() != string.Empty)
+      //  SQL += " AND Politicians.Nickname = " + db.SQLLit(TextBoxNickName.Text.Trim());
+      //if (TextBoxSuffix.Text.Trim() != string.Empty)
+      //  SQL += " AND Politicians.Suffix = " + db.SQLLit(TextBoxSuffix.Text.Trim());
+      //else if ((ViewState["StateCode"].ToString() != "U1")
+      //    && (ViewState["StateCode"].ToString() != "U2")
+      //    && (ViewState["StateCode"].ToString() != "U3"))
+      //  SQL += " AND Politicians.StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+      //SQL += " ORDER BY Politicians.FName,Politicians.MName";
+      #endregion
+
+      //DataTable PoliticiansTable = db.Table(SQL);
+      //DataTable PoliticiansTable = db.Table(Sql_Politicians_To_Find());
+      //Show_Politicians_To_Consolidate_Two
+
+      string PoliticiansHTMLTable = string.Empty;
+      PoliticiansHTMLTable += "<table cellspacing=0 cellpadding=0>";
+
+      #region Heading
+      PoliticiansHTMLTable += "<tr>";
+
+      PoliticiansHTMLTable += "<td align=center class=tdReportGroupHeading>";
+      PoliticiansHTMLTable += "ID<br>Politician (Party)<br>Last Updated<br>Picture";
+      PoliticiansHTMLTable += "</td>";
+
+      PoliticiansHTMLTable += "<td align=center class=tdReportGroupHeading>";
+      PoliticiansHTMLTable += "Office";
+      PoliticiansHTMLTable += "</td>";
+
+      PoliticiansHTMLTable += "<td align=center class=tdReportGroupHeading>";
+      PoliticiansHTMLTable += "State Information";
+      PoliticiansHTMLTable += "</td>";
+
+      PoliticiansHTMLTable += "<td align=center class=tdReportGroupHeading>";
+      PoliticiansHTMLTable += "Politician Information";
+      PoliticiansHTMLTable += "</td>";
+
+      PoliticiansHTMLTable += "<td align=center class=tdReportGroupHeading>";
+      PoliticiansHTMLTable += "Other";
+      PoliticiansHTMLTable += "</td>";
+
+      PoliticiansHTMLTable += "</tr>";
+      #endregion
+
+      if (PoliticiansTable.Rows.Count > 0)
+      {
+        foreach (DataRow PoliticianRow in PoliticiansTable.Rows)
+        {
+          string politicianKey = PoliticianRow["PoliticianKey"].ToString();
+          string officeKey =
+            PageCache.Politicians.GetOfficeKey(politicianKey);
+          #region Politicians with same last name
+          PoliticiansHTMLTable += "<tr>";
+
+          #region Politician <td>
+
+          PoliticiansHTMLTable += "<td valign=top class=tdReportDetail>";
+
+          PoliticiansHTMLTable += "<strong>" + politicianKey + "</strong>";
+
+          PoliticiansHTMLTable += "<br>" + db.Anchor_Intro(
+             politicianKey,
+             Politicians.GetFormattedName(politicianKey),
+             Politicians.GetFormattedName(politicianKey) + " Introduction Page", 
+             "view");
+
+          if (PoliticianRow["PartyKey"].ToString() != string.Empty)
+            PoliticiansHTMLTable += " (" + db.Parties_Str(PoliticianRow["PartyKey"].ToString(), "PartyCode") + ")";
+
+          PoliticiansHTMLTable += "<br>"
+            + Convert.ToDateTime(PoliticianRow["DataLastUpdated"]).ToString("MM/dd/yyyy");
+
+          PoliticiansHTMLTable += "<br>" + 
+            db.AnchorPoliticianImageOrNoPhoto(
+              UrlManager.GetIntroPageUri(politicianKey).ToString(), 
+              politicianKey,
+              db.Image_Size_50_Headshot,
+              Politicians.GetFormattedName(politicianKey) + " Introduction Page",
+              //"_edit2"
+              "_intro"
+              );
+
+          PoliticiansHTMLTable += "</td>";
+          #endregion
+
+          #region Office <td>
+          PoliticiansHTMLTable += "<td valign=top class=tdReportDetail>";
+          //					PoliticiansHTMLTable += PoliticianRow["OfficeLine1"].ToString();
+          //					PoliticiansHTMLTable += " " + PoliticianRow["OfficeLine2"].ToString();
+          if (db.Offices_Str_Optional(officeKey, "OfficeLine1") != string.Empty)
+          {
+            PoliticiansHTMLTable += db.Offices_Str_Optional(officeKey, "OfficeLine1");
+            PoliticiansHTMLTable += " " + db.Offices_Str_Optional(officeKey, "OfficeLine2");
+          }
+          else
+            PoliticiansHTMLTable += "No Office Identified for Politician";
+
+          //					PoliticiansHTMLTable += " " + PoliticianRow["OfficeLine2"].ToString();
+          PoliticiansHTMLTable += "</td>";
+          #endregion
+
+          #region State Data
+          PoliticiansHTMLTable += "<td valign=top class=tdReportDetail>";
+          if (PoliticianRow["StateAddress"].ToString() != string.Empty)
+          {
+            PoliticiansHTMLTable += PoliticianRow["StateAddress"].ToString() + "<br>";
+            PoliticiansHTMLTable += PoliticianRow["StateCityStateZip"].ToString() + "<br>";
+          }
+          else
+            PoliticiansHTMLTable += "&nbsp;";
+
+          if (PoliticianRow["StatePhone"].ToString() != string.Empty)
+            PoliticiansHTMLTable += PoliticianRow["StatePhone"].ToString() + "<br>";
+          else
+            PoliticiansHTMLTable += "&nbsp;";
+          if (PoliticianRow["StateEmailAddr"].ToString() != string.Empty)
+            PoliticiansHTMLTable += PoliticianRow["StateEmailAddr"].ToString() + "<br>";
+          else
+            PoliticiansHTMLTable += "&nbsp;";
+          if (PoliticianRow["StateWebAddr"].ToString() != string.Empty)
+            PoliticiansHTMLTable += PoliticianRow["StateWebAddr"].ToString() + "<br>";
+          else
+            PoliticiansHTMLTable += "&nbsp;";
+          PoliticiansHTMLTable += "</td>";
+          #endregion
+
+          #region Politician Data
+          PoliticiansHTMLTable += "<td valign=top class=tdReportDetail>";
+          if (PoliticianRow["Address"].ToString() != string.Empty)
+          {
+            PoliticiansHTMLTable += PoliticianRow["Address"].ToString() + "<br>";
+            PoliticiansHTMLTable += PoliticianRow["CityStateZip"].ToString() + "<br>";
+          }
+          else
+            PoliticiansHTMLTable += "&nbsp;";
+          if (PoliticianRow["Phone"].ToString() != string.Empty)
+            PoliticiansHTMLTable += PoliticianRow["Phone"].ToString() + "<br>";
+          else
+            PoliticiansHTMLTable += "&nbsp;";
+          if (PoliticianRow["EmailAddr"].ToString() != string.Empty)
+            PoliticiansHTMLTable += PoliticianRow["EmailAddr"].ToString() + "<br>";
+          else
+            PoliticiansHTMLTable += "&nbsp;";
+          if (PoliticianRow["WebAddr"].ToString() != string.Empty)
+            PoliticiansHTMLTable += PoliticianRow["WebAddr"].ToString() + "<br>";
+          else
+            PoliticiansHTMLTable += "&nbsp;";
+          PoliticiansHTMLTable += "</td>";
+          #endregion
+
+          #region Other Data
+          PoliticiansHTMLTable += "<td valign=top class=tdReportDetail>";
+          if (PoliticianRow["LDSAddress"].ToString() != string.Empty)
+          {
+            PoliticiansHTMLTable += PoliticianRow["LDSAddress"].ToString() + "<br>";
+            PoliticiansHTMLTable += PoliticianRow["LDSCityStateZip"].ToString() + "<br>";
+          }
+          else
+            PoliticiansHTMLTable += "&nbsp;";
+          if (PoliticianRow["LDSPhone"].ToString() != string.Empty)
+            PoliticiansHTMLTable += PoliticianRow["LDSPhone"].ToString() + "<br>";
+          else
+            PoliticiansHTMLTable += "&nbsp;";
+          if (PoliticianRow["LDSEmailAddr"].ToString() != string.Empty)
+            PoliticiansHTMLTable += PoliticianRow["LDSEmailAddr"].ToString() + "<br>";
+          else
+            PoliticiansHTMLTable += "&nbsp;";
+          if (PoliticianRow["LDSWebAddr"].ToString() != string.Empty)
+            PoliticiansHTMLTable += PoliticianRow["LDSWebAddr"].ToString() + "<br>";
+          else
+            PoliticiansHTMLTable += "&nbsp;";
+          PoliticiansHTMLTable += "</td>";
+          #endregion
+
+          PoliticiansHTMLTable += "</tr>";
+          #endregion
+        }
+      }
+      else
+      {
+        #region No politicians in the State have the same last name
+        PoliticiansHTMLTable += "<tr>";
+        PoliticiansHTMLTable += "<td colspan=5>";
+        PoliticiansHTMLTable += "<span class=tdReportDetail>";
+        PoliticiansHTMLTable += "No politicians in the database have the same last name.";
+        PoliticiansHTMLTable += "</span>";
+        PoliticiansHTMLTable += "</td>";
+        PoliticiansHTMLTable += "</tr>";
+        #endregion
+      }
+      PoliticiansHTMLTable += "</table>";
+      HTMLTablePoliticians.Text = PoliticiansHTMLTable;
+    }
+    private void Show_Politicians_Found()
+    {
+      DataTable PoliticiansTable = db.Table(Sql_Politicians_To_Find());
+      Show_Politicians(PoliticiansTable);
+    }
+    private void Show_Politicians_To_Consolidate_One()
+    {
+      DataTable PoliticiansTable = db.Table(Sql_Politicians_To_Consolidate_One());
+      Show_Politicians(PoliticiansTable);
+    }
+    private void Show_Politicians_To_Consolidate_Two()
+    {
+      DataTable PoliticiansTable = db.Table(Sql_Politicians_To_Consolidate_Two());
+      Show_Politicians(PoliticiansTable);
+    }
+    private void Show_Politicians_Consolidated(string PoliticianKey_New)
+    {
+      DataTable PoliticiansTable = db.Table(Sql_Politicians_Consolidated(PoliticianKey_New));
+      Show_Politicians(PoliticiansTable);
+    }
+    #endregion Show Politicians
+
+    protected void Consolidate_Politicians(
+      TextBox Textbox_PoliticianKey_From
+      , TextBox Textbox_PoliticianKey_To
+      )
+    {
+      db.Consolidate_Politicians(
+        Textbox_PoliticianKey_From.Text.Trim()
+        , Textbox_PoliticianKey_To.Text.Trim()
+        );
+    }
+
+    protected void Button_Show_For_Name_Parts_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region Checks
+        CheckTextBoxs4HtmlAndIlleagalInput();
+
+        if (TextBoxLast.Text.Trim() == string.Empty)
+          throw new ApplicationException("Politician Last Name needs to be entered in the text box provided.");
+        #endregion Checks
+
+        Show_Politicians_Found();
+
+        Msg.Text = db.Msg("These are the politicians' data meeting the name criterion you entered.");
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void Button_Show_Consolidate_One_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region checks
+        CheckTextBoxs4HtmlAndIlleagalInput();
+
+        Check_Textboxes_For_Consolidate_One();
+
+        Check_Politicians_In_Same_State_One();
+        #endregion checks
+
+        Show_Politicians_To_Consolidate_One();
+
+        ViewState["ShowConsolidateOne"] = true;
+
+        Msg.Text = db.Msg("These are the two politicians' data for the Id's entered.");
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Button_Consolidate_One_Into_Another_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region checks
+        CheckTextBoxs4HtmlAndIlleagalInput();
+
+        Check_Textboxes_For_Consolidate_One();
+
+        Check_Politicians_In_Same_State_One();
+
+        if (!Convert.ToBoolean(ViewState["ShowConsolidateOne"]))
+          throw new ApplicationException(
+            "The Show Both Politicians's Data Button needs to be clicked first.");
+
+        #endregion checks
+
+        Consolidate_Politicians(
+          Textbox_PoliticianKey_From
+          , Textbox_PoliticianKey_To
+          );
+
+        Show_Politicians_To_Consolidate_One();
+
+        #region Msg
+        Msg.Text = db.Ok(
+          //"The consolidation was done for "
+          //db.Politician_Name(PoliticianKey_From)
+          "Politician with Id: " + Textbox_PoliticianKey_From.Text.Trim()
+          + " was consolidated INTO: "
+          + Politicians.GetFormattedName(Textbox_PoliticianKey_To.Text.Trim())
+          + " - Id: " + Textbox_PoliticianKey_To.Text.Trim()
+          + ", as shown in the report below.");
+        #endregion Msg
+
+        Reset_For_Next_Consolidate();
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Button_Show_Consolidate_Two_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region checks
+        CheckTextBoxs4HtmlAndIlleagalInput();
+        Check_Textboxes_For_Show_Two();
+        Check_Politicians_In_Same_State_Two();
+        #endregion checks
+
+        #region load values in controls
+        string politicianKey1 = TextBox_Id_First.Text.Trim();
+
+        Label_OfficeKey_First.Text = Politicians.GetTemporaryOfficeKey(politicianKey1, string.Empty);
+        Label_State_First.Text = Politicians.GetStateCodeFromKey(politicianKey1);
+        Label_FName_First.Text = Politicians.GetFirstName(politicianKey1, string.Empty);
+        Label_Middle_First.Text = Politicians.GetMiddleName(politicianKey1, string.Empty);
+        Label_NickName_First.Text = Politicians.GetNickname(politicianKey1, string.Empty);
+        Label_LName_First.Text = Politicians.GetLastName(politicianKey1, string.Empty);
+        Label_Suffix_First.Text = Politicians.GetSuffix(politicianKey1, string.Empty);
+
+        string politicianKey2 = TextBox_Id_Second.Text.Trim();
+        if (politicianKey2 != string.Empty)
+        {
+          Label_OfficeKey_Second.Text = Politicians.GetTemporaryOfficeKey(politicianKey2, string.Empty);
+          Label_State_Second.Text = Politicians.GetStateCodeFromKey(politicianKey2);
+          Label_FName_Second.Text = Politicians.GetFirstName(politicianKey2, string.Empty);
+          Label_Middle_Second.Text = Politicians.GetMiddleName(politicianKey2, string.Empty);
+          Label_NickName_Second.Text = Politicians.GetNickname(politicianKey2, string.Empty);
+          Label_LName_Second.Text = Politicians.GetLastName(politicianKey2, string.Empty);
+          Label_Suffix_Second.Text = Politicians.GetSuffix(politicianKey2, string.Empty);
+        }
+
+        TextBox_StateNew.Text = Politicians.GetStateCodeFromKey(politicianKey1);
+        #endregion load values in controls
+
+        Show_Politicians_To_Consolidate_Two();
+
+        ViewState["ShowConsolidateTwo"] = true;
+
+        Msg.Text = db.Msg("These are the two politicians' data for the Id's entered.");
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Button_Consolidate_Two_Into_New_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region Checks
+        CheckTextBoxs4HtmlAndIlleagalInput();
+
+        Check_Textboxes_For_Show_Two();
+
+        #region OfficeKey
+        if (TextBox_OfficeKey_New.Text.Trim() == string.Empty)
+          throw new ApplicationException("The textbox for the New Politician OfficeKey is empty.");
+        if (!Offices.OfficeKeyExists(TextBox_OfficeKey_New.Text.Trim()))
+          throw new ApplicationException("The New Politician OfficeKey is invalid.");
+        #endregion OfficeKey
+
+        #region StateCode
+        if (!StateCache.IsValidStateCode(TextBox_StateNew.Text.ToUpper()))
+          throw new ApplicationException("The StateCode is invalid.");
+
+        #endregion StateCode
+
+        #region Last & First Names
+        if (TextBox_FName_New.Text.Trim() == string.Empty)
+          throw new ApplicationException("The textbox for the Politician first name is empty.");
+        if (TextBox_LName_New.Text.Trim() == string.Empty)
+          throw new ApplicationException("The textbox for the Politician last name is empty.");
+        #endregion Last & First Names
+
+        Check_Politicians_In_Same_State_Two();
+
+        if (!Convert.ToBoolean(ViewState["ShowConsolidateTwo"]))
+          throw new ApplicationException(
+            "The Show Both Politicians's Data Button"
+            + " needs to be clicked first.");
+
+        #endregion Checks
+
+        string PoliticianKey_New = db.Politician_Key(
+          //db.StateCode_In_OfficeKey(TextBox_OfficeKey_New.Text.Trim())
+          TextBox_StateNew.Text.ToUpper()
+          , TextBox_LName_New.Text.Trim()
+          , TextBox_FName_New.Text.Trim()
+          , TextBox_Middle_New.Text.Trim()
+          , TextBox_Suffix_New.Text.Trim()
+          );
+
+        //Use same party as first politician
+        string PartyKey = Politicians.GetPartyKey(
+          TextBox_Id_First.Text.Trim(), string.Empty);
+
+        if (!Politicians.IsValid(PoliticianKey_New))
+        {
+          //create the new politician
+          db.Politician_Insert(
+                PoliticianKey_New
+                , TextBox_OfficeKey_New.Text.Trim()
+                //, Label_State_New.Text
+                , TextBox_StateNew.Text.ToUpper()
+                , TextBox_FName_New.Text.Trim()
+                , TextBox_Middle_New.Text.Trim()
+                , TextBox_LName_New.Text.Trim()
+                , TextBox_Suffix_New.Text.Trim()
+                , string.Empty
+                , TextBox_NickName_Last.Text.Trim()
+                , PartyKey
+                );
+        }
+        else
+        {
+          throw new ApplicationException(
+            "The consolidated politician"
+            + " with the newly created PoliticianKey"
+            + " " + PoliticianKey_New
+            + " already exists.");
+        }
+
+        //consolidate the first politician into the new politician
+        db.Consolidate_Politicians(
+          TextBox_Id_First.Text.Trim()
+          , PoliticianKey_New
+          );
+
+        if (TextBox_Id_Second.Text.Trim() != string.Empty)
+        {
+          //consolidate the second politician into the new politician
+          db.Consolidate_Politicians(
+            TextBox_Id_Second.Text.Trim()
+            , PoliticianKey_New
+            );
+        }
+
+        //delete the first politician
+        db.Politician_Delete(
+          TextBox_Id_First.Text.Trim());
+
+        if (TextBox_Id_Second.Text.Trim() != string.Empty)
+        {
+          //delete the second politician
+          db.Politician_Delete(
+           TextBox_Id_Second.Text.Trim());
+        }
+
+        Show_Politicians_Consolidated(PoliticianKey_New);
+
+        #region Msg
+        string Message = "Politician with Id: " + TextBox_Id_First.Text.Trim();
+
+        if (TextBox_Id_Second.Text.Trim() != string.Empty)
+          Msg.Text += " and Politician with Id: " + TextBox_Id_Second.Text.Trim();
+
+        Msg.Text += " was consolidated INTO: "
+        + Politicians.GetFormattedName(PoliticianKey_New)
+        + " - Id: " + PoliticianKey_New
+        + ", as shown in the report below.";
+
+        Msg.Text = db.Ok(Message);
+        #endregion Msg
+
+        Reset_For_Next_Consolidate();
+
+        #region Clear Labels
+        Label_OfficeKey_First.Text = string.Empty;
+        Label_State_First.Text = string.Empty;
+        Label_FName_First.Text = string.Empty;
+        Label_Middle_First.Text = string.Empty;
+        Label_NickName_First.Text = string.Empty;
+        Label_LName_First.Text = string.Empty;
+        Label_Suffix_First.Text = string.Empty;
+        Label_OfficeKey_Second.Text = string.Empty;
+        Label_State_Second.Text = string.Empty;
+        Label_FName_Second.Text = string.Empty;
+        Label_Middle_Second.Text = string.Empty;
+        Label_NickName_Second.Text = string.Empty;
+        Label_LName_Second.Text = string.Empty;
+        Label_Suffix_Second.Text = string.Empty;
+        //Label_State_New.Text = string.Empty;
+        TextBox_StateNew.Text = string.Empty;
+        #endregion Clear Labels
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        #region Security Check and Values for ViewState["StateCode"] ViewState["CountyCode"] ViewState["LocalCode"]
+
+        ViewState["StateCode"] = db.State_Code();
+        ViewState["CountyCode"] = db.County_Code();
+        ViewState["LocalCode"] = db.Local_Code();
+        if (!db.Is_User_Security_Ok())
+          SecurePage.HandleSecurityException();
+
+        #endregion Security Check and Values for ViewState["StateCode"] ViewState["CountyCode"] ViewState["LocalCode"]
+
+        try
+        {
+          #region StateCode
+          if (SecurePage.IsMasterUser)
+          {
+            TextBox_State.Enabled = true;
+            TextBox_State.Text = string.Empty;
+            Label_State_First.Text = string.Empty;
+            Label_State_Second.Text = string.Empty;
+            //Label_State_New.Text = string.Empty;
+            TextBox_StateNew.Text = string.Empty;
+          }
+          else
+          {
+            TextBox_State.Enabled = false;
+            TextBox_State.Text = ViewState["StateCode"].ToString();
+            Label_State_First.Text = ViewState["StateCode"].ToString();
+            Label_State_Second.Text = ViewState["StateCode"].ToString();
+            //Label_State_New.Text = ViewState["StateCode"].ToString();
+            TextBox_StateNew.Text = ViewState["StateCode"].ToString();
+          }
+          #endregion StateCode
+
+          ViewState["ShowConsolidateOne"] = false;
+          ViewState["ShowConsolidateTwo"] = false;
+
+        }
+        catch (Exception ex)
+        {
+          #region
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+          #endregion
+        }
+      }
+
+    }
+
+    protected void Textbox_PoliticianKey_From_TextChanged(object sender, EventArgs e)
+    {
+
+    }
+
+  }
+}

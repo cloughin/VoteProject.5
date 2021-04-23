@@ -1,0 +1,138 @@
+<%@ Page ValidateRequest="false" Language="C#" AutoEventWireup="true" 
+ MasterPageFile="~/Master/Admin.Master"
+CodeBehind="Default.aspx.cs" Inherits="Vote.Party.Default" %>
+
+<asp:Content ID="HeadContent" ContentPlaceHolderID="MasterHeadContent" runat="server">
+  <link href="/css/AllAdmin.css" type="text/css" rel="stylesheet" />
+  <meta content="Microsoft Visual Studio .NET 7.1" name="GENERATOR" />
+  <meta content="C#" name="CODE_LANGUAGE" />
+  <meta content="JavaScript" name="vs_defaultClientScript" />
+  <meta content="http://schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema" />
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+
+  <asp:UpdatePanel ID="UpdatePanel" runat="server">
+    <ContentTemplate>
+    <table id="TitleTable" cellpadding="0" cellspacing="0" class="tableAdmin">
+      <tr>
+        <td align="left" class="HLarge" valign="middle">
+          <asp:Label ID="PageTitle" runat="server"></asp:Label></td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="middle">
+          <asp:Label ID="Msg" runat="server"></asp:Label></td>
+      </tr>
+    </table>
+
+    <table class="tableAdmin" id="Table_Election_Candidates" cellspacing="0" cellpadding="0" runat=server>
+      <tr>
+        <td align="left" class="HSmall" valign="middle" colspan="2">
+          &nbsp;Party Candidates for
+          <asp:Label ID="Label_Election_Candidates" runat="server"></asp:Label></td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="middle">
+          <asp:Button ID="Button_Election_Candidates" runat="server" CssClass="Buttons" OnClick="Button_Election_Candidates_Click"
+            Text="Party Candidates in this Election" Width="300px" /></td>
+        <td align="left" class="T" valign="middle">
+          Click this button to obtain a list of all your party's candidates in this 
+          election and the means
+          to provide information about each candidate on our website.</td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="middle">
+          &nbsp;</td>
+        <%--<td align="left" class="TColor" valign="middle">
+          It may take some time to assemble the data. Please be patient.</td>--%>
+      </tr>
+    </table>
+
+    <table class="tableAdmin" id="Table_Elected_Representatives" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left" class="HSmall" colspan="2" valign="middle">
+          Currently Elected Party Members</td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="middle">
+          <asp:Button ID="Button_Elected_Representatives" runat="server" CssClass="Buttons"
+            OnClick="Button_Elected_Representatives_Click" Text="Party Elected Representatives"
+            Width="300px" /></td>
+        <td align="left" class="T" valign="middle">
+          Click this button to obtain a list of all your party&#39;s elected officials and the 
+          means to provide information about each elected representative on our website.</td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="middle">
+          &nbsp;</td>
+        <%--<td align="left" class="TColor" valign="middle">
+          It may take some time to assemble the data. Please be patient.</td>--%>
+      </tr>
+      </table>
+
+    <table class="tableAdmin" id="Table_Elected_Representatives_Report" cellspacing="0" cellpadding="0" border="0" runat=server>
+      <tr>
+        <td align="left" class="H">
+          <asp:Label ID="LabelRepresentatives" runat="server"></asp:Label>
+&nbsp;Party Elected Officials</td>
+      </tr>
+      <%--<tr>
+        <td align="left" class="T">
+          This is a report of all your party's elected officials. 
+          For each elected representative three or four links are provided. Use the first link to 
+          view the introduction page we provide of the elected representative. There are 
+          links on this page to view the positions and views on various issues of the elected representative. The second link will provide a form 
+          where the information on the introduction page can added, changed or deleted. 
+          The third link will provide a form where the positions and views of the elected 
+          representative can be added, changed or deleted. If we have a website address the final link will present the 
+          elected representative&#39;s website. Use it to obtain additional or more current 
+          information that you would like added to the pages we present. </td>
+      </tr>--%>
+      <%--<tr>
+        <td align="left" class="TColor">
+          If you click on the link to view the Introduction Page we show voters it may 
+          take up to 10 minutes to view any information you entered for this page or the 
+          pages for the answers to issue questions. This is the time required to propagate 
+          the data to all our servers.</td>
+      </tr>--%>
+    </table>
+
+    <asp:Label ID="Label_Elected_Representatives_Report" runat="server" 
+      ViewStateMode="Disabled"></asp:Label>
+
+    <table class="tableAdmin" id="Table_Election_Candidates_Report" cellspacing="0" cellpadding="0" border="0" runat=server>
+      <tr>
+        <td align="left" class="H">
+          <asp:Label ID="LabelCandidates" runat="server"></asp:Label>
+&nbsp;Party Candidates</td>
+      </tr>
+      <%--<tr>
+        <td align="left" class="T">
+          This is a 
+          reoport of all your party's candidates in the election. For each candidate three 
+          or four 
+          links are provided. Use the first link to view the introduction page we provide 
+          of the candidate. There are links on this page to view the positions and views 
+          on various issues candidate. The second link will 
+          provide a form where the information on the introduction page can added, 
+          changed or deleted. The third link will provide a form where the positions and 
+          views of the candidate can be added, changed or deleted. If we have a website 
+          address the final link will 
+          present the candidate&#39;s website. Use it to obtain additional or more current 
+          information that you would like added to the pages we present. </td>
+      </tr>--%>
+      <%--<tr>
+        <td align="left" class="TColor">
+          If you click on the link to view the Introduction Page we show voters it may 
+          take up to 10 minutes to view any information you entered for this page or the 
+          pages for the answers to issue questions. This is the time required to propagate 
+          the data to all our servers.</td>
+      </tr>--%>
+    </table>
+
+    <asp:Label ID="Label_Election_Candidates_Report" runat="server" 
+      ViewStateMode="Disabled"></asp:Label>
+
+    </ContentTemplate>
+  </asp:UpdatePanel>
+</asp:Content>

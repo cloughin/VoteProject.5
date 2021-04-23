@@ -1,0 +1,72 @@
+<%@ Page Language="C#" EnableSessionState="ReadOnly" AutoEventWireup="true" 
+Codebehind="xIssue2.aspx.cs" Inherits="Vote.Issue2PageX" %>
+
+<%@ Register Src="/Controls/SocialMediaButtons.ascx" TagName="SocialMediaButtons" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonateBanner.ascx" TagName="DonateBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainBanner.ascx" TagName="MainBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainNavigation.ascx" TagName="MainNavigation" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainFooter.ascx" TagName="MainFooter" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeading.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntry.ascx" TagName="AddressEntry" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonationRequest.ascx" TagName="DonationRequest" TagPrefix="user" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+  <title runat="server" id="TitleTag" ></title>
+  <meta id="MetaDescriptionTag" content="" name="description" runat="server" EnableViewState="False" />
+  <meta id="MetaKeywordsTag" content="" name="keywords" runat="server" EnableViewState="False" />
+  <style type="text/css">
+    .explorer-container
+    {
+      width: 1000px;
+    }
+    iframe.explorer
+    {
+      /*width: 1000px;*/
+      /*height: 1000px;*/
+      margin-left: -30px;
+      border-top: 1px solid #cbdbdb;
+    }
+    #mainFooter
+    {
+      padding-left: 30px;
+      padding-right: 30px;
+      margin-left: -30px;    
+    }
+  </style>
+</head>
+<body class="issue-page">
+    <form id="form1" runat="server">
+
+    <div id="outer">
+    <div id="container">
+      <user:SocialMediaButtons ID="SocialMediaButtons1" runat="server" />
+      <user:DonateBanner ID="DonateBanner1" runat="server" />
+      <user:MainBanner ID="MainBanner1" runat="server" />
+      <user:MainNavigation ID="MainNavigation1" runat="server" />
+      <div id="mainContent">
+      <div id="InnerContent" runat="server">
+    </div>
+    <div class="explorer-container">
+    <iframe id="explorer" runat="server" class="explorer" width="100%" scrolling="no"></iframe>
+    </div>
+    <script>
+      //iFrameResize({ log: true }); 
+      var isOldIE = (navigator.userAgent.indexOf("MSIE") !== -1); // Detect IE10 and below
+      iFrameResize({
+        heightCalculationMethod: isOldIE ? 'max' : 'lowestElement'
+      });
+    </script>
+       <user:MainFooter ID="MainFooter1" runat="server" />
+      </div> <!-- id="mainContent" -->
+    </div> <!-- id="container" -->
+    </div> <!-- id="outer" -->
+
+    <user:AddressEntry ID="AddressEntry" runat="server" />
+    <user:DonationRequest runat="server" />
+
+    </form>
+</body>
+</html>

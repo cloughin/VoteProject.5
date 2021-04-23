@@ -1,0 +1,27 @@
+﻿body.admin-page .select-jurisdiction-button a
+{
+  display: block;
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+body.admin-page .select-jurisdiction-button
+{
+  text-align: right;
+  max-width: 160px;
+}
+
+body.admin-page .sub-heading.change-button
+{
+  top: 16px;
+}
+
+body.admin-page .sub-heading.change-button.county
+{
+  top: 3px;
+}
+
+body.admin-page .sub-heading.change-button.local
+{
+  top: -13px;
+}

@@ -1,0 +1,96 @@
+using System;
+using System.Collections.Generic;
+using DB.Vote;
+using Vote.Reports;
+
+namespace Vote.Admin
+{
+  public partial class Officials : SecureAdminPage
+  {
+    private void Page_Title()
+    {
+      PageTitle.Text = string.Empty;
+      PageTitle.Text += Offices.GetElectoralClassDescription(ViewState["StateCode"].ToString(),
+        ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString());
+
+      PageTitle.Text += "<br>";
+      PageTitle.Text += "CURRENTLY ELECTED OFFICIALS (INCUMBENTS)";
+    }
+
+    private void Visible_Controls()
+    {
+      TableIncumbentStatusRadioButtons.Visible =
+        db.Is_Electoral_Class_State_County_Local(ViewState["StateCode"].ToString(),
+          ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString());
+
+      TablePoliticianData.Visible = IsMasterUser;
+    }
+
+    private void ShowOfficialsReport()
+    {
+      OfficialsReport.GetReport(Report.SignedInReportUser,
+        ViewState["StateCode"].ToString(), ViewState["CountyCode"].ToString(),
+        ViewState["LocalCode"].ToString()).AddTo(ReportPlaceHolder);
+    }
+
+    internal override IEnumerable<string> NonStateCodesAllowed
+    {
+      get
+      {
+        return new[]
+        {
+          "U1",
+          "U2",
+          "U3",
+          "U4"
+        };
+      }
+    }
+
+    private void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        Page.Title = "Officials";
+
+        ViewState["StateCode"] = db.State_Code();
+        ViewState["CountyCode"] = db.County_Code();
+        ViewState["LocalCode"] = db.Local_Code();
+        if (!db.Is_User_Security_Ok())
+          HandleSecurityException();
+
+        try
+        {
+          Visible_Controls();
+
+          var stateCode = db.State_Code();
+          HyperLink_View_Public_Report.NavigateUrl =
+            UrlManager.GetOfficialsPageUri(stateCode)
+              .ToString();
+
+          Page_Title();
+
+          Label_Report_Elections_Winners_Identified.Text =
+            db.Elections_Winners_Identified(ViewState["StateCode"].ToString());
+
+          ShowOfficialsReport();
+        }
+        catch (Exception ex)
+        {
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+        }
+      }
+    }
+
+    protected void Page_PreRender(object sender, EventArgs e)
+    {
+      try
+      {
+        if (Session["ErrNavBarAdmin"].ToString() != string.Empty)
+          Msg.Text = db.Fail(Session["ErrNavBarAdmin"].ToString());
+      }
+      catch /*(Exception ex)*/ {}
+    }
+  }
+}

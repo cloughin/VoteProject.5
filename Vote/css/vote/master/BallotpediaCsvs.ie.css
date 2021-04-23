@@ -1,0 +1,16 @@
+﻿.fileinputs .masker2
+{
+  display: block;
+  filter: alpha(opacity: 0);
+  height: 26px;
+  left: -155px;
+  opacity: 0;
+  width: 155px;
+}
+
+#main-tabs .upload-boxed-group .saveas input
+{
+  width: 766px;
+  padding: 4px 5px;
+  margin-left: -6px;
+}

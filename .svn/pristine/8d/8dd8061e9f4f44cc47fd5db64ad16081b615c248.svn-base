@@ -1,0 +1,230 @@
+﻿/* Styles for the Address Entry dialog */
+
+.ui-widget-overlay 
+{
+  background: repeat-x scroll 50% 50% #000;
+}
+.ui-dialog
+{
+  background-color: transparent;
+  border: none;
+}
+.ui-dialog-titlebar
+{
+  display: none;
+}
+#addressEntryDialog
+{
+  display: none;
+  padding: 0;
+  text-align: left;
+  color: #666;
+}
+#addressEntryDialog img.ajaxLoader
+{
+  margin-top: 110px;
+  visibility: hidden;
+}
+#addressEntryDialog .ajaxMessage,
+#addressEntryDialog .ajaxMessage2
+{
+  margin-top: 20px;
+  width: 326px;
+}
+#addressEntryDialog .ajaxSuccess
+{
+  font-size:66%;
+  line-height:18px;
+  border: 1px solid #666;
+  padding: 3px 6px;
+  background: #eee;
+}
+#addressEntryDialog .ajaxFailure
+{
+  font-size:66%;
+  line-height:18px;
+  border: 1px solid #e00;
+  padding: 3px 6px;
+  background: #ecc;
+  color: #e00;
+}
+#addressEntryDialog .inner
+{
+  width: 700px;
+  height: 358px;
+  margin-top:7px;
+  border: 1px solid #666;
+  background-color: #fff;
+}
+#addressEntryDialog .header
+{
+  width: 100%;
+  height: 52px;
+  background: #365e77;
+}
+#addressEntryDialog .header img
+{
+  padding: 15px 0 0 27px;
+}
+#addressEntryDialog .dialogClose
+{
+  cursor: pointer;
+}
+#addressEntryDialog a.dialogClose
+{
+  cursor: pointer;
+  position: absolute;
+  top: -1px;
+  left: 685px;      
+  display: block;
+  height: 26px;
+  width: 26px;
+  background: url(/images/closebutton.png);
+  overflow: hidden;
+	text-indent: -10000px;
+	font-size: 0px;
+	line-height: 0px;
+}
+#addressEntryDialog a:hover.dialogClose
+{
+  background-position: 0 -26px;
+}
+#addressEntryDialog .panel1
+{
+  float: left;
+  width: 250px;
+  padding-left: 30px;
+}
+#addressEntryDialog .panel1 .subhead
+{
+  font-family: Georgia;
+  font-size: 13.5pt;
+  font-style: italic;
+  font-weight: bold;
+  color: #a1000e;
+  margin-top: 16px;
+}
+#addressEntryDialog .panel1 .text
+{
+  font-family: Georgia;
+  font-size: 8pt;
+  color: #333;
+  line-height: 18px;
+  margin-top: 4px;
+  height: 226px;
+}
+#addressEntryDialog .divider
+{
+  float: left;
+  width: 60px;
+  text-align: center;
+}
+#addressEntryDialog .panel2
+{
+  float: left;
+  width: 342px;
+}
+#addressEntryDialog .panel2 .subhead
+{
+  font-family: Georgia;
+  font-size: 12pt;
+  color: #a1000e;
+  margin-top: 16px;
+}
+#addressEntryDialog .panel2 .textblock
+{
+  overflow: auto;
+}
+#addressEntryDialog .panel2 .textblock .text
+{
+  float: left;
+}
+#addressEntryDialog .panel2 .text
+{
+  font-family: Arial;
+  font-size: 8pt;
+  font-style: italic;
+  color: #000;
+  line-height: 18px;
+  margin-top: 4px;
+}
+#addressEntryDialog .panel2 a.usps
+{
+  display: block;
+  float: right;
+  font-family: Arial;
+  font-size: 8pt;
+  margin-top:26px;
+  color: #999;
+}
+#addressEntryDialog .panel2 a:hover.usps
+{
+  color: #000;
+}
+#addressEntryDialog .panel2 .address .input
+{
+  float: left;
+  background-image: url(/images/addressinput.png);
+  width: 212px;
+  height: 29px;
+}
+#addressEntryDialog .panel2 .address .input2
+{
+  padding: 7px 4px;
+}
+#addressEntryDialog .panel2 .state .input
+{
+  float: left;
+  display: inline-table;
+  width: 212px;
+  height: 29px;
+  background: url(/images/addressinput.png) no-repeat;
+}
+#addressEntryDialog .panel2 .state .input2
+{
+  padding: 5px 4px;
+}
+#addressEntryDialog .panel2 input
+{
+  width: 212px;
+  height: 13px;
+  border: none;
+  font-family: Arial;
+  font-size: 10px;
+  background-color: transparent;
+}
+#addressEntryDialog .panel2 select
+{
+  width: 202px;
+  border: none;
+  font-size: 14px;
+  background-color: transparent;
+}
+#addressEntryDialog .panel2 a.find
+{
+  float: left;
+  width: 128px;
+  height: 29px;
+  display: block;
+  background: url(/images/findmylocation.png);
+  overflow: hidden;
+	text-indent: -10000px;
+	font-size: 0px;
+	line-height: 0px;
+  cursor: pointer;
+}
+#addressEntryDialog .panel2 a:hover.find
+{
+  background-position: 0 -29px;
+}
+#addressEntryDialog .panel2 .address
+{
+  margin-top: 9px;
+  overflow: auto; /* to clear floats */
+}
+#addressEntryDialog .panel2 .state
+{
+  margin-top: 9px;
+  overflow: auto; /* to clear floats */
+}
+

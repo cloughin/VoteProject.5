@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace Vote.Party
+{
+  public partial class VideosPage : SecurePartyPage
+  {
+    #region private
+    #endregion private
+
+    #region Event handlers and overrides
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        Page.Title = "Instructional Videos for Volunteers";
+        H1.InnerHtml = "Instructional Videos for Volunteers";
+      }
+    }
+
+    #endregion Event handlers and overrides
+  }
+}

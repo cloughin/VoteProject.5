@@ -1,0 +1,23 @@
+﻿using System;
+
+namespace Vote
+{
+  public partial class ForCandidatesPage : PublicPage // not CacheablePage due to Captcha
+  {
+    private const string TitleTag = "Free Candidate Advertising & Promotion | {0}";
+    private const string MetaDescriptionTag = "Free promotion for candidates in {0}elections including pictures, bios, position statements and social media links.";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      var stateName = Master.StateName + " ";
+      if (stateName == "US ") stateName = string.Empty;
+      Title = string.Format(TitleTag, Master.SiteName);
+      MetaDescription = string.Format(MetaDescriptionTag, stateName);
+
+      VoteUsaAddress.NoBreak = true;
+      EmailForm.ToEmailAddress = "mgr@Vote-USA.org";
+      EmailForm.SetItems(
+        "I am a candidate -- I need my logon credentials and instructions");
+    }
+  }
+}

@@ -1,0 +1,213 @@
+﻿#mainContent
+{
+  background-color:#fff;
+}
+#mainContent .header
+{
+  width: 100%;
+  height: 49px;
+  background-color: #365e77;
+}
+#mainContent .header .title
+{
+  color: #fff;
+  font-family: Georgia;
+  font-size: 24px;
+  text-shadow: 1px 1px 1px #888;
+  padding: 13px 0 0 12px;
+}
+#mainContent .header .subtitle
+{
+  color: #fff;
+  font-family: Georgia;
+  font-size: 18px;
+  text-shadow: 1px 1px 1px #888;
+  padding: 8px 0 0 12px;
+}
+#mainContent .header img
+{
+  padding: 13px 0 0 14px;
+}
+#mainContent .intro
+{
+  margin: 40px 60px;
+  /*font-family: Arial;*/
+  /*font-size: 9pt;*/
+  /*line-height: 140%;*/
+  font-size: 16px;
+  color: #444;
+  line-height: 120%;
+}
+#mainContent .intro a
+{
+  color: #2f6db1;
+}
+#mainContent .intro a:hover
+{
+  color: #a00000;
+}
+#mainContent .intro .address
+{
+  margin-left: 30px;
+}
+#mainContent .intro .sub
+{
+  margin: 0 40px;
+}
+#mainContent .intro p
+{
+  margin: 20px 0 10px 0;
+}
+#mainContent .intro p.head
+{
+  font-weight: bold;
+}
+#mainContent .intro p.lead
+{
+  font-style: italic;
+  font-size: 120%;
+  text-align:center;
+}
+#mainContent .intro ul
+{
+  list-style-type: disc;
+  margin-left:24px;
+}
+#mainContent .intro h2
+{
+  margin-top:30px;
+  font-weight: bold;
+  font-size: 120%
+}
+#mainContent .intro .sample-ballot-button-box
+{
+  padding: 15px 20px;
+  background: #F4F4F4;
+  border: 1px solid #DFDFDF;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  width: 560px;
+}
+
+#mainContent .intro .sample-ballot-button-box .button-group
+{
+  float: left;
+}
+#mainContent .intro .sample-ballot-button-box .style-x
+{
+  margin-top: 10px;
+}
+#mainContent .intro .sample-ballot-button-box .style-1,
+#mainContent .intro .sample-ballot-button-box .style-4
+{
+  margin-top: 0;
+}
+.button-group-2,
+.button-group-3
+{
+  margin-left: 24px;
+}
+#mainContent .linkBoxes
+{
+  /*font-family: Arial;*/
+  width: 844px;
+  margin: 20px 60px;
+}
+#mainContent .linkBox
+{
+  margin: 30px 0 0 0;
+  width: 800px;
+}
+#mainContent .linkBox .ajaxLoader
+{
+  position: relative;
+  top: 3px;
+  visibility: hidden;
+}
+#mainContent .linkBox .linkHeader
+{
+  background: #d3d3d3;
+  /*color: #333;
+  font-size: 13px;
+  line-height: 140%;*/
+  padding: 8px;
+  font-size: 16px;
+  color: #444;
+  line-height: 120%;
+}
+#mainContent .linkBox .links p
+{
+  padding: 6px;
+  border-left: 1px solid #d3d3d3;
+  border-right: 1px solid #d3d3d3;
+  border-bottom: 1px solid #d3d3d3;
+  /*color: #333;
+  font-size: 12px;
+  line-height: 140%;*/
+  font-size: 16px;
+  color: #444;
+  line-height: 120%;
+}
+#mainContent .linkBox .links a
+{
+  /*text-decoration: none;*/
+  text-decoration: underline;
+  color: #333;
+  cursor:pointer;
+}
+#mainContent .linkBox .links a:hover
+{
+  color: #A00000;
+  text-decoration: underline;
+}
+#mainContent .linkBox .links a.hiliteAnchor
+{
+  color: #00A;
+}
+#mainContent .linkBox .links a:hover.hiliteAnchor
+{
+  color: #00F;
+}
+#mainContent .linkBox .links .date
+{
+  font-size: 75%;
+}
+#mainContent a.compareCandidates
+{
+  display: block;
+  width: 143px;
+  height: 38px;
+  background: url(/images/compareButtons.png);
+  overflow: hidden;
+  text-indent: -10000px;
+  font-size: 0;
+  line-height: 0;
+  background-position: 0 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+#mainContent a:hover.compareCandidates
+{
+  background-position: 0 -38px;
+}
+
+/* Social Media styles */
+
+#mainContent ul.social-media-anchors li
+{
+  float: left;
+  margin-right: 8px;
+  margin-bottom: 4px;
+}
+
+/*
+.intro-page #mainContent ul.social-media-anchors
+{
+  margin-left: 33px;
+}
+*/
+
+.intro-page span.tdSocialMediaDetail
+{
+  line-height: 0;
+}

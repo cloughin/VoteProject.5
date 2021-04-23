@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<generateDbClasses>
+  <databases
+    supportMySql="true"
+    supportMsSql="true"
+    secondary="true"
+    >
+    <database
+      mappedName="VoteZipNew"
+      provider="MySql"
+      connectionString="Server=votesql.c3fj3t5d5d77.us-east-1.rds.amazonaws.com;Uid=ron;Pwd=p17134;Database=votezipnew"
+      connectionStringKey="CnVoteZipNew.MySql"
+      providerKey="VoteDbProvider"
+      >
+      <tables>
+        <table name="LastUpdate" singleton="true" />
+        <table name="USZD" mappedName="Uszd" >
+          <columns>
+            <column name="ZIP5" mappedName="Zip5" />
+            <column name="ZIP4" mappedName="Zip4" />
+            <column name="CD" mappedName="Congress" />
+            <column name="SD" mappedName="StateSenate" />
+            <column name="HD" mappedName="StateHouse" />
+            <column name="ST" mappedName="LdsStateCode" />
+            <column name="CNTY" mappedName="County" />
+          </columns>
+        </table>
+        <table name="ZipCitiesDownloaded" truncateTable="true" reader="true" >
+          <columns>
+            <column name="CountyFIPS" mappedName="CountyFips" />
+            <column name="DayLightSaving" mappedName="DaylightSaving" />
+            <column name="StateFIPS" mappedName="StateFips" />
+            <column name="StateANSI" mappedName="StateAnsi" />
+            <column name="CountyANSI" mappedName="CountyAnsi" />
+            <column name="UniqueZIPName" mappedName="UniqueZipName" />
+          </columns>
+          <indexes>
+            <index name="PrimaryKey" columns="ZipCode,CityAliasName" />
+          </indexes>
+          <columnSets>
+            <columnSet name="CityAliases" columns="ZipCode,City,State,CityAliasAbbreviation,CityAliasName,PrimaryRecord"/>
+            <columnSet name="PrimaryKeys" columns="ZipCode,CityAliasName"/>
+          </columnSets>
+        </table>
+        <table name="ZipSingleUSZD" mappedName="ZipSingleUszd" truncateTable="true" reader="true" />
+        <table name="ZipStreets" reader="true" >
+          <columns>
+            <column name="StPreDirAbbr" mappedName="DirectionPrefix" />
+            <column name="StName" mappedName="StreetName" />
+            <column name="StSuffixAbbr" mappedName="StreetSuffix" />
+            <column name="StPostDirAbbr" mappedName="DirectionSuffix" />
+            <column name="AddressPrimaryLowNumber" mappedName="PrimaryLowNumber" />
+            <column name="AddressPrimaryHighNumber" mappedName="PrimaryHighNumber" />
+            <column name="AddressPrimaryEvenOdd" mappedName="PrimaryOddEven" />
+            <column name="AddressSecAbbr" mappedName="SecondaryType" />
+            <column name="AddressSecLowNumber" mappedName="SecondaryLowNumber" />
+            <column name="AddressSecHighNumber" mappedName="SecondaryHighNumber" />
+            <column name="AddressSecOddEven" mappedName="SecondaryOddEven" />
+          </columns>
+          <indexes>
+            <index add="true" columns="ZipCode" />
+            <index name="FullStreetName" add="true" columns="ZipCode,StPreDirAbbr,StName,StSuffixAbbr,StPostDirAbbr" />
+          </indexes>
+        </table>
+        <table name="ZipStreetsDownloaded" truncateTable="true" reader="true">
+          <columns>
+            <column name="StPreDirAbbr" mappedName="DirectionPrefix" />
+            <column name="StName" mappedName="StreetName" />
+            <column name="StSuffixAbbr" mappedName="StreetSuffix" />
+            <column name="StPostDirAbbr" mappedName="DirectionSuffix" />
+            <column name="AddressPrimaryLowNumber" mappedName="PrimaryLowNumber" />
+            <column name="AddressPrimaryHighNumber" mappedName="PrimaryHighNumber" />
+            <column name="AddressPrimaryEvenOdd" mappedName="PrimaryOddEven" />
+            <column name="AddressSecAbbr" mappedName="SecondaryType" />
+            <column name="AddressSecLowNumber" mappedName="SecondaryLowNumber" />
+            <column name="AddressSecHighNumber" mappedName="SecondaryHighNumber" />
+            <column name="AddressSecOddEven" mappedName="SecondaryOddEven" />
+            <column name="LACSStatus" mappedName="LacsStatus" />
+            <column name="CountyFIPS" mappedName="CountyFips" />
+            <column name="TLID" mappedName="Tlid" />
+            <column name="LatLonMultiMatch" mappedName="LatitudeLongitudeMultiMatch" />
+          </columns>
+          <indexes>
+            <index add="true" columns="State" />
+          </indexes>
+          <columnSets>
+            <columnSet name="Lookup" columns="ZipCode,StPreDirAbbr,StName,StSuffixAbbr,StPostDirAbbr,AddressPrimaryLowNumber,AddressPrimaryHighNumber,AddressPrimaryEvenOdd,Plus4Low,Plus4High,State">
+              <indexes skip="true">
+                <index add="true" columns="ZipCode" />
+              </indexes>
+            </columnSet>
+            <columnSet name="Analysis" columns="ZipCode,UpdateKey,StPreDirAbbr,StName,StSuffixAbbr,StPostDirAbbr,AddressPrimaryLowNumber,AddressPrimaryHighNumber,AddressPrimaryEvenOdd,BuildingName,AddressSecAbbr,AddressSecLowNumber,AddressSecHighNumber,AddressSecOddEven,Plus4Low,Plus4High,State">
+              <indexes skip="true">
+                <index add="true" columns="ZipCode" orderBy="StPreDirAbbr,StName,StSuffixAbbr,StPostDirAbbr"/>
+                <index add="true" name="FullStreetName" columns="ZipCode,StPreDirAbbr,StName,StSuffixAbbr,StPostDirAbbr" />
+              </indexes>
+            </columnSet>
+          </columnSets>
+        </table>
+        <table name="ZipStreetsUpdatesNeeded" reader="true" truncateTable="true">
+          <columns>
+            <column name="StPreDirAbbr" mappedName="DirectionPrefix" />
+            <column name="StName" mappedName="StreetName" />
+            <column name="StSuffixAbbr" mappedName="StreetSuffix" />
+            <column name="StPostDirAbbr" mappedName="DirectionSuffix" />
+          </columns>
+          <indexes>
+            <index name="FullStreetName" columns="ZipCode,StPreDirAbbr,StName,StSuffixAbbr,StPostDirAbbr" />
+          </indexes>
+        </table>
+      </tables>
+    </database>
+  </databases>
+</generateDbClasses>

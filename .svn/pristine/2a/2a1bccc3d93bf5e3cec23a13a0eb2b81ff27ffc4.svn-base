@@ -1,0 +1,83 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Public.Master" AutoEventWireup="true" CodeBehind="Donate.aspx.cs" Inherits="Vote.DonatePage" %>
+
+<%@ Register Src="/Controls/PageHeadingResponsive.ascx" TagName="PageHeading" TagPrefix="user" %>
+
+<asp:Content ID="HeadTopContent" ContentPlaceHolderID="MasterHeadTopContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="HeadBottomContent" ContentPlaceHolderID="MasterHeadBottomContent" runat="server">
+  <style type="text/css">
+    .donatebox
+    {
+      float: right;
+      padding: 4% 6%;
+    }
+
+    .donatebox a
+    {
+      display: block;
+      height: 162px;
+      width: 195px;
+      background: url(/images/donatebox.png);
+      overflow: hidden;
+	    text-indent: -10000px;
+	    font-size: 0px;
+	    line-height: 0px;
+      cursor: pointer;
+    }
+
+    .donatebox a:hover
+    {
+      background-position: 0 -162px;
+    }
+
+    .donatetoday a
+    {
+      display: block;
+      height: 42px;
+      width: 142px;
+      background: url(/images/donatetoday.png);
+      overflow: hidden;
+	    text-indent: -10000px;
+	    font-size: 0px;
+	    line-height: 0px;
+      cursor: pointer;
+    }
+
+    .donatetoday a:hover
+    {
+      background-position: 0 -42px;
+    }  
+    
+    @media only screen and (max-width : 519px) 
+    {
+      /* small */
+      .donatebox {
+        float: none;
+        padding-bottom: 0;
+      }
+    }
+  </style>
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+  <user:PageHeading ID="PageHeading" runat="server" MainHeadingText="Donate" />
+
+  <div class="donatebox"><a href="https://co.clickandpledge.com/Default.aspx?WID=37518" target="donate">Donate now</a></div>
+
+  <div class="intro-copy">
+
+    <p>Vote-USA is a 501(c)(3) charitable organization and currently derives 100% of its financial support from voters like you. If you find the information we provide to be valuable to you and other voters, please consider making a 100% tax-deductible donation of any size to help us continue to provide these resources.</p>
+
+    <p>Over seven billion dollars was spent on the 2012 elections. Much of the money was spent to influence your vote to elect people who would best represent the interests of special interest groups. Our objective is to provide you with information to help you cast your vote for candidates who will represent your interests and the causes you believe in. As the “One-Stop Shopping for Voters”, we want to make it easier to be an informed voter.  But we need your financial support to be able to continue our mission.</p>
+
+    <p>Please help us make our representative democracy more “of the people, by the people, and for the people”.</p>
+
+    <p><strong>Donations do not support any particular candidate.</strong></p>
+
+    <p class="donatetoday no-print"><a href="https://co.clickandpledge.com/Default.aspx?WID=37518" target="donate">Donate now</a></p>
+  </div>
+</asp:Content>
+
+<asp:Content ID="BottomContent" ContentPlaceHolderID="MasterBottomContent" runat="server">
+</asp:Content>

@@ -1,0 +1,37 @@
+﻿<?xml version="1.0"?>
+
+<!--
+  For more information on how to configure your ASP.NET application, please visit
+  http://go.microsoft.com/fwlink/?LinkId=169433
+  -->
+
+<configuration>
+    <system.web>
+      <compilation debug="true" targetFramework="4.0" />
+      <!--
+      <sessionState
+        mode="StateServer"
+        sessionIDManagerType="BotDetect.Web.CustomSessionIdManager,BotDetect"
+        stateConnectionString="tcpip=127.0.0.1:42424"
+        cookieless="false"
+        timeout="20"
+      />
+      -->
+      <sessionState
+        sessionIDManagerType="BotDetect.Web.CustomSessionIdManager,BotDetect"
+      />
+      <httpHandlers>
+        <add verb="GET" path="BotDetectCaptcha.ashx" type="BotDetect.Web.CaptchaHandler, BotDetect"/>
+      </httpHandlers>
+      </system.web>
+  
+  <system.webServer>
+    <handlers>
+      <remove name="BotDetectCaptchaHandler"/>
+      <add name="BotDetectCaptchaHandler"
+        preCondition="integratedMode" verb="GET" path="BotDetectCaptcha.ashx" 
+        type="BotDetect.Web.CaptchaHandler, BotDetect"/>    
+    </handlers>
+  </system.webServer>
+
+</configuration>

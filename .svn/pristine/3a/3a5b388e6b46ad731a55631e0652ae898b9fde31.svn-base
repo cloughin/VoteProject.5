@@ -1,0 +1,111 @@
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+
+namespace Vote
+{
+  public partial class PublicMasterPage : MasterPage
+  {
+    // ReSharper disable once MemberCanBePrivate.Global
+    public string MenuPage { get; set; }
+
+    public string StateName
+    {
+      get
+      {
+        var stateCode = UrlManager.GetStateCodeFromHostName();
+        if (StateCache.IsValidStateCode(stateCode))
+          return StateCache.GetStateName(stateCode);
+        return "US";
+      } 
+    }
+
+    public string SiteName
+    {
+      get
+      {
+        var stateCode = UrlManager.GetStateCodeFromHostName();
+        if (StateCache.IsValidStateCode(stateCode))
+          return "Vote-" + stateCode;
+        return "Vote-USA";
+      } 
+    }
+
+    private void SetupMainBanner()
+    {
+      MainBannerImageTag.Src = DomainDesign.GetImageUri("lgbanner.png")
+        .ToString();
+      MainBannerHomeLink.HRef = UrlManager.CurrentSiteUri.ToString();
+
+      if (DomainData.IsValidStateCode)
+      {
+        var stateCode = DomainData.FromQueryStringOrDomain;
+        var stateName = StateCache.GetStateName(stateCode);
+        var title = "Go to the Official " + stateName +
+                    " Election Authority Website";
+        MainBannerStateSiteLink.InnerText = title + " →";
+        MainBannerStateSiteLink.HRef = StateCache.GetUri(stateCode)
+          .ToString();
+        StateTitle.InnerText = stateName;
+      }
+      else
+      {
+        StateSite.Visible = false;
+        StateTitle.InnerText = "Select a state";
+        MainBannerStateBanner.AddCssClasses("no-state");
+      }
+      StateLinks.Controls.Clear();
+      HtmlControl span = null;
+      var breaks = new[] {0, 17, 34};
+      var count = 0;
+      foreach (var st in StateCache.All51StateCodes)
+      {
+        var menuPage = MenuPage;
+        if (string.IsNullOrWhiteSpace(menuPage))
+          menuPage = UrlManager.GetCurrentPath();
+        if (breaks.Contains(count++))
+          span = new HtmlSpan().AddTo(StateLinks, "states-menu-col");
+        Debug.Assert(span != null, "div != null");
+        if (count == 1)
+          new HtmlAnchor {InnerText = "Vote-USA Home", HRef = UrlManager.GetSiteUri().ToString()}.AddTo(
+            span);
+        (new HtmlAnchor
+        {
+          InnerText = StateCache.GetStateName(st),
+          HRef = UrlManager.GetStateUri(st, menuPage).ToString()
+        }).AddTo(span);
+      }
+    }
+
+
+    private void SetupSocialMedia()
+    {
+      //var votePublicPage = Page as PublicPage;
+      //if (votePublicPage != null && votePublicPage.NoSocialMedia)
+      //  AddThisButtons.Visible = false;
+      //else
+        AddThisButtons.Visible = true;
+    }
+
+    private void SetupSpecialLinks()
+    {
+      SpecialLink.Visible = true;
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      var page = Regex.Match(Request.Path, 
+       @"^/(?<page>[^.]*)\.aspx$", RegexOptions.IgnoreCase).Groups["page"].Value;
+      Body.AddCssClasses(page.ToLowerInvariant() + "-page");
+      if (!IsPostBack)
+      {
+        SetupSocialMedia();
+        SetupSpecialLinks();
+      }
+      SetupMainBanner();
+    }
+  }
+}

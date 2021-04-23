@@ -1,0 +1,10 @@
+﻿namespace TestGetYouTubeVideoInfo
+{
+  static class Program
+  {
+    static void Main(string[] args)
+    {
+      var info = Vote.YouTubeUtility.GetYouTubeVideoInfoViaProxy("Q2HuxDOAv30");
+    }
+  }
+}

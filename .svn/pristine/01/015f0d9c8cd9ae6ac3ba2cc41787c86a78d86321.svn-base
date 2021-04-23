@@ -1,0 +1,186 @@
+﻿using System;
+using System.Globalization;
+using DB.Vote;
+
+namespace Vote.Master
+{
+  public partial class VideosPage : SecurePage, ISuperUser
+  {
+    //#region Private methods
+
+    //private void ClearLabels()
+    //{
+    //  PoliticianName.Text = string.Empty;
+    //  QuestionDescription.Text = string.Empty;
+    //  LabelUploadDate.Text = string.Empty;
+    //  RowsRemaining.Text = string.Empty;
+    //}
+
+    //private void EnableControls()
+    //{
+    //  switch (RadioButtonList_ProcessMethod.SelectedValue)
+    //  {
+    //    case "New":
+    //      TextBox_PoliticianKey.Enabled = false;
+    //      break;
+
+    //    case "Single":
+    //      TextBox_PoliticianKey.Enabled = true;
+    //      break;
+    //  }
+    //}
+
+    //private void GetNextVideoForNewOption()
+    //{
+    //  var lastDate = Str.ToDateTime(LabelUploadDate.Text, VoteDb.DateTimeMax);
+    //  var lastKey = LabelPoliticianKey.Text;
+
+    //  var table =
+    //    PoliticiansVideosData.GetNextUnprocessedVideo(lastDate, lastKey);
+
+    //  if (table.Count == 0)
+    //    throw new VoteUIException("No more unprocessed videos.");
+
+    //  SetLabelsFromDataTable(table);
+    //}
+
+    //private void GetNextVideoForSingleOption()
+    //{
+    //  var lastDate = Str.ToDateTime(LabelUploadDate.Text, VoteDb.DateTimeMax);
+    //  var lastKey = LabelPoliticianKey.Text;
+
+    //  var table =
+    //    PoliticiansVideosData.GetNextUnprocessedVideoByPoliticianKey(lastDate, lastKey);
+
+    //  if (table.Count == 0)
+    //    throw new VoteUIException("No more unprocessed videos for this politician.");
+
+    //  SetLabelsFromDataTable(table);
+    //}
+
+    //private void HandleException(Exception ex)
+    //{
+    //  // We normally only catch exceptions in event handlers (ALL event handlers, 
+    //  // unless they absolutely cannot fail). Deeper code that needs to do cleanup
+    //  // after an exception should use either try/finally or try/catch with the
+    //  // caught exception rethrown.
+
+    //  string message;
+
+    //  try
+    //  {
+    //    ClearLabels();
+    //    message = db.Fail(ex.Message);
+    //    // We don't log routine UI exceptions
+    //    if (!(ex is VoteUIException))
+    //      db.Log_Error_Admin(ex);
+    //  }
+    //  catch (Exception ex2)
+    //  {
+    //    // Don't put anything in here that could possibly
+    //    // throw an exception. In the rare event that this block
+    //    // executes, we use ex.ToString() instead of ex.Message
+    //    // to make sure we capture and report the stack trace.
+    //    message = "Unexpected failure in exception handler: " +
+    //      ex2 + Environment.NewLine +
+    //      "Original exception: " + ex;
+    //  }
+
+    //  Msg.Text = message;
+    //}
+
+    //private void SetLabelsFromDataTable(PoliticiansVideosDataTable table)
+    //{
+    //  if (table != null && table.Count > 0)
+    //  {
+    //    var row = table[0];
+    //    LabelUploadDate.Text = row.UploadDate.ToString(CultureInfo.InvariantCulture);
+    //    LabelPoliticianKey.Text = row.PoliticianKey;
+    //    PoliticianName.Text = Politicians.GetFormattedName(row.PoliticianKey);
+    //    QuestionDescription.Text = Questions.GetQuestionByQuestionKey(row.QuestionKey);
+    //  }
+    //}
+
+    //private void SetRowCountForNewOption()
+    //{
+    //  RowsRemaining.Text =
+    //    PoliticiansVideosData.CountUnprocessed().ToString(CultureInfo.InvariantCulture);
+    //}
+
+    //private void SetRowCountForSingleOption(string politicianKey)
+    //{
+    //  RowsRemaining.Text =
+    //    PoliticiansVideosData.CountUnprocessedByPoliticianKey(politicianKey).ToString(CultureInfo.InvariantCulture);
+    //}
+
+    //#endregion Private methods
+
+    //#region Event handlers
+
+    //protected void Page_Load(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    if (!IsPostBack) // default is New mode
+    //    {
+    //      if (!IsSuperUser)
+    //        throw new VoteUIException("This page is only accessible to user Ron");
+
+    //      Title = H1.InnerText = "YouTube Video Approval";
+
+    //      if (!string.IsNullOrWhiteSpace(QueryId))
+    //      {
+    //        var politicianKey = QueryId;
+    //        TextBox_PoliticianKey.Text = politicianKey;
+    //        LabelPoliticianKey.Text = politicianKey;
+    //        RadioButtonList_ProcessMethod.SelectedValue = "Single";
+    //        SetRowCountForSingleOption(politicianKey);
+    //        GetNextVideoForSingleOption();
+    //      }
+    //      else
+    //      {
+    //        SetRowCountForNewOption();
+    //        GetNextVideoForNewOption();
+    //      }
+
+    //      EnableControls();
+    //    }
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    HandleException(ex);
+    //  }
+    //}
+
+    //protected void RadioButtonList_ProcessMethod_SelectedIndexChanged(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    // Clear inputs and current values and get first match
+    //    TextBox_PoliticianKey.Text = string.Empty;
+    //    ClearLabels();
+    //    EnableControls();
+
+    //    switch (RadioButtonList_ProcessMethod.SelectedValue)
+    //    {
+    //      case "New":
+    //        Msg.Text = string.Empty;
+    //        SetRowCountForNewOption();
+    //        GetNextVideoForNewOption();
+    //        break;
+
+    //      case "Single":
+    //        Msg.Text = db.Msg("Enter the PoliticianKey");
+    //        RowsRemaining.Text = "0";
+    //        break;
+    //    }
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    HandleException(ex);
+    //  }
+    //}
+
+    //#endregion Event handlers
+  }
+}

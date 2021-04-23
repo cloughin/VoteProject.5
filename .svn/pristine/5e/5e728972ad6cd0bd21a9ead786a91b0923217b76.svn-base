@@ -1,0 +1,128 @@
+<%@ Page Language="C#" EnableSessionState="ReadOnly" AutoEventWireup="true" Codebehind="xPoliticianIssue.aspx.cs"
+  Inherits="Vote.PoliticianIssuePageX" %>
+
+<%@ Register Src="/Controls/SocialMediaButtons.ascx" TagName="SocialMediaButtons" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonateBanner.ascx" TagName="DonateBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainBanner.ascx" TagName="MainBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainNavigation.ascx" TagName="MainNavigation" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainFooter.ascx" TagName="MainFooter" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeading.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntry.ascx" TagName="AddressEntry" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonationRequest.ascx" TagName="DonationRequest" TagPrefix="user" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+  <title runat="server" id="TitleTag" ></title>
+  <meta id="MetaDescriptionTag" content="" name="description" runat="server" EnableViewState="False" />
+  <meta id="MetaKeywordsTag" content="" name="keywords" runat="server" EnableViewState="False" />
+</head>
+<body class="politicianissue-page">
+    <form id="form1" runat="server">
+
+    <div id="outer">
+    <div id="container">
+      <user:SocialMediaButtons ID="SocialMediaButtons1" runat="server" />
+      <user:DonateBanner ID="DonateBanner1" runat="server" />
+      <user:MainBanner ID="MainBanner1" runat="server" />
+      <user:MainNavigation ID="MainNavigation1" runat="server" />
+      <div id="mainContent">
+        <div id="InnerContent" runat="server">
+        <user:PageHeading ID="PageHeading" runat="server" 
+          MainHeadingText="Positions and Views of {0}"
+          SubHeadingText="on {0}" />
+
+        <%-- 
+        <table class="tablePage " cellspacing="0" cellpadding="0">
+          <tr class="trPoliticianInfoTop">
+            <td class="tdPoliticianInfoBio">
+              <table cellspacing="0" cellpadding="0" border="0">
+                <tr class="trPoliticianInfoPoliticianTitle">
+                  <td class="tdPoliticianInfoPoliticianTitle tdOfficeName" colspan="2">
+                    <asp:Label ID="PoliticianOffice" runat="server" EnableViewState="False"></asp:Label></td>
+                </tr>
+                <tr class="trPoliticianInfoPoliticianTitle">
+                  <td class="tdPoliticianInfoPoliticianTitle tdElectionName" colspan="2">
+                    <asp:Label ID="PoliticianElection" runat="server" EnableViewState="False"></asp:Label></td>
+                </tr>
+              </table>
+              <table cellspacing="0" cellpadding="0" border="0" class="bioTable">
+                <tr class="trPoliticianInfoContact trPoliticianInfoContactAge">
+                  <td class="tdPoliticianInfoContactHeading">
+                    <span>Age:</span></td>
+                  <td class="tdPoliticianInfoContactDetail">
+                    <asp:Label ID="PoliticianAge" runat="server"></asp:Label>
+                  </td>
+                </tr>
+                <tr class="trPoliticianInfoContact">
+                  <td class="tdPoliticianInfoContactHeading">
+                    <span>Party:</span></td>
+                  <td class="tdPoliticianInfoContactDetail">
+                    <asp:HyperLink ID="PartyLink" runat="server" EnableViewState="False"></asp:HyperLink></td>
+                </tr>
+                <tr class="trPoliticianInfoContact">
+                  <td class="tdPoliticianInfoContactHeading">
+                    <span>Phone:</span></td>
+                  <td class="tdPoliticianInfoContactDetail">
+                    <asp:Label ID="PoliticianPhone" runat="server" EnableViewState="False"></asp:Label></td>
+                </tr>
+                <tr class="trPoliticianInfoContact">
+                  <td class="tdPoliticianInfoContactHeading">
+                    <span>Address:</span></td>
+                  <td class="tdPoliticianInfoContactDetail">
+                    <asp:Label ID="PoliticianAddress" runat="server" EnableViewState="False"></asp:Label></td>
+                </tr>
+                <tr class="trPoliticianInfoContact">
+                  <td class="tdPoliticianInfoContactHeading">
+                    &nbsp;</td>
+                  <td class="tdPoliticianInfoContactDetail socialMedia">
+                    <asp:Label ID="SocialMedia" runat="server"></asp:Label>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td class="tdPoliticianInfoImage">
+              <asp:Image ID="PoliticianImage" runat="server" EnableViewState="False" ImageAlign="Top">
+              </asp:Image></td>
+          </tr>
+        </table>
+        --%>
+        <asp:PlaceHolder ID="InfoPlaceHolder" runat="server"></asp:PlaceHolder>
+
+        <table class="tablePage" cellspacing="0" cellpadding="0">
+          <tr class="trPoliticianIssueLinksHeading">
+            <td class="tdPoliticianIssueLinksHeading">
+              <asp:Label ID="MyPositionsHeading" runat="server" EnableViewState="False"></asp:Label><br />
+              <span class="subheading">Links are only provided where we have information. The first link is a 
+              report of all issues and questions made available to the candidates.</span>
+            </td>
+          </tr>
+          <tr class="trPoliticianIssueLinks">
+            <td class="tdPoliticianIssueLinks">
+              <asp:PlaceHolder ID="LinksPlaceHolder" EnableViewState="False" runat="server"></asp:PlaceHolder>
+            </td>
+          </tr>
+        </table>
+        
+        <asp:PlaceHolder ID="ReportPlaceHolder" runat="server"></asp:PlaceHolder>
+
+        <table class="tablePage" cellspacing="0" cellpadding="0">
+          <tr class="trPoliticianIssueFooter">
+            <td class="tdPoliticianIssueFooter">
+              <asp:Label ID="Footer" runat="server" EnableViewState="False"></asp:Label></td>
+          </tr>
+        </table>
+
+      </div>
+       <user:MainFooter ID="MainFooter1" runat="server" />
+      </div> <!-- id="mainContent" -->
+    </div> <!-- id="container" -->
+    </div> <!-- id="outer" -->
+
+    <user:AddressEntry ID="AddressEntry" runat="server" />
+    <user:DonationRequest ID="DonationRequest1" runat="server" />
+
+    </form>
+</body>
+</html>

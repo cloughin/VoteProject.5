@@ -1,0 +1,229 @@
+/*--Heading--*/
+.warning
+{
+  color: Red !important;
+}
+.trElectionName
+{
+}
+.tdElectionName
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 18px;
+font-weight: bold;
+color: #373737;
+margin: 0px;
+padding:10px 10px 0px 10px;
+}
+.trElectionTitle
+{
+}
+.tdElectionTitle
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+font-weight: bold;
+color: #373737;
+margin: 0px;
+padding:2px 10px 0px 10px;
+}
+.trElectionElection
+{
+}
+.tdElectionElection
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 14px;
+font-weight: bold;
+color: #373737;
+margin: 0px;
+padding:2px 10px 0px 10px;
+}
+/*--Additional Election Info--*/
+.trElectionElectionInfo
+{
+}
+.tdElectionElectionInfo
+{
+vertical-align: top;
+font-family: Arial, Helvetica, sans-serif;
+padding:10px 10px 0px 10px;
+/*font-size: 14px;*/
+font-size: 16px;
+line-height: 120%;
+color: #373737;
+}
+/*--Election Results--*/
+.trElectionResultsHead
+{
+}
+.tdElectionResultsHead
+{
+font-family: Arial, Helvetica, sans-serif;
+font-weight:bold;
+padding:10px 10px 0px 10px;
+font-size: 14px;
+color: #373737;
+vertical-align: top;
+text-align:center;
+}
+.trElectionResultsImage
+{
+}
+.tdElectionResultsImage
+{
+vertical-align: top;
+text-align:center;
+}
+.trElectionResultsSource
+{
+}
+.tdElectionResultsSource
+{
+font-family: Arial, Helvetica, sans-serif;
+padding:10px 10px 0px 10px;
+font-size: 11px;
+color: #373737;
+vertical-align: top;
+text-align:center;
+}
+/*--Instruction--*/
+.trElectionInstruction
+{
+}
+.tdElectionInstruction
+{
+font-family: Arial, Helvetica, sans-serif;
+/*font-size: 14px;*/
+vertical-align: top;
+color: #373737;
+}
+.tdElectionInstruction
+{
+padding:10px 10px 0px 10px;
+}
+/*--Candidates Report--*/
+
+.trReportIncumbentKeyHeading
+{
+}
+.tdReportIncumbentKeyHeading
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 11px;
+font-weight: bold;
+padding: 2px 5px 2px 5px;
+border-right:solid 1px Gray;
+border-bottom:solid 1px Gray;
+background-color: #F5F5F5;
+color: #373737;
+}
+.trReportDetailHeading
+{
+}
+.tdReportDetailHeading
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 13px;
+font-weight:bold;
+padding:2px;
+border-right:solid 1px Gray;
+border-bottom:solid 1px Gray;
+background-color: #F5F5F5;
+color: #373737;
+}
+.trReportDetail
+{
+}
+
+.tdReportDetail
+{
+border-right:solid 1px Gray;
+border-bottom:solid 1px Gray;
+padding: 2px 5px 2px 5px;
+}
+
+.tdReportDetail
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 13px;
+}
+
+.tdReportDetail
+{
+font-weight:normal;
+color: #373737;
+}
+
+.tdReportDetail .detail
+{
+  margin-top: 8px;
+}
+
+.tdReportDetail .detail:first-child
+{
+  margin-top: 0;
+}
+
+#mainContent .trElectionTitle
+{
+  display: none;
+}
+
+#mainContent #ElectionInstructionTable
+{
+  /*display: none;*/
+  font-family: Arial, Helvetica, sans-serif;
+  /*line-height: 15px;
+  font-size: 14px;
+  color: #373737;*/
+  padding-bottom: 15px;
+  font-size: 16px;
+  color: #444;
+  line-height: 120%;
+}
+
+#mainContent #ElectionHeading
+{
+  margin-bottom: 8px;
+}
+
+#mainContent #ElectionHeading span
+{
+  color: #666;
+}
+
+#mainContent .tdReportHeading
+{
+  color: #fff;
+  font-size: 120%;
+  font-weight: normal;
+}
+
+#mainContent .tdReportDetail
+{
+  padding-top: 10px;
+}
+
+#mainContent .tdReportDetail font
+{
+  font-weight: normal;
+  font-size: 11px;
+  line-height: 130%;
+}
+
+#mainContent td.tdReportHeading,
+#mainContent td.tdReportGroupHeading,
+#mainContent .lasttd
+{
+  border-right: none;
+}
+
+#mainContent img.compareCandidatesButton
+{
+  padding-top: 5px;
+}
+#mainContent a.compareCandidates
+{
+  margin-top: 5px;
+}

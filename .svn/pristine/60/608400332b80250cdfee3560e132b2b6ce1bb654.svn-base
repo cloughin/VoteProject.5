@@ -1,0 +1,83 @@
+﻿using System;
+
+namespace Vote
+{
+  public partial class ForPoliticalPartiesPageX : CacheablePage
+  {
+    public ForPoliticalPartiesPageX()
+    {
+      NoUrlEdit = true;
+    }
+
+    #region Caching support
+
+    protected override bool SuppressCaching
+    {
+      get { return true; }
+    }
+
+    protected override string GetCacheKey()
+    {
+      var key = UrlManager.GetStateCodeFromHostName();
+      var siteId = UrlManager.CurrentQuerySiteId;
+      if (!string.IsNullOrEmpty(siteId))
+        key += "." + siteId;
+
+      return key;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "forPoliticalParties";
+    }
+
+    #endregion Caching support
+
+    private const string TitleTagAllStatesDomain =
+      "Free Promotion of Political Party Candidates";
+
+    private const string MetaDescriptionAllStatesDomain =
+      "Helping political parties to promote their candidates in elections, free of charge";
+
+    private const string MetaKeywordsAllStatesDomain =
+      "political parties, democratic party, republican party, green party, libertarian party";
+
+    private const string TitleTagSingleStateDomain =
+      "Free Promotion of [[state]] Political Party Candidates";
+
+    private const string MetaDescriptionSingleStateDomain =
+      "Helping [[state]] political parties to promote their candidates in elections, free of charge";
+
+    private const string MetaKeywordsSingleStateDomain =
+      "[[state]] political parties, [[state]] democratic party, [[state]] republican party, [[state]] green party, [[state]] libertarian party";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/SecondaryCommon.css");
+
+      if (!IsPostBack)
+        if (DomainData.IsValidStateCode) // Single state
+        {
+          if (DomainDesign.IncludeTitleForSingleState)
+            TitleTag.Text = TitleTagSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForSingleState)
+            MetaDescriptionTag.Content = MetaDescriptionSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForSingleState)
+            MetaKeywordsTag.Content = MetaKeywordsSingleStateDomain.Substitute();
+        }
+        else
+        {
+          if (DomainDesign.IncludeTitleForAllStates)
+            TitleTag.Text = TitleTagAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForAllStates)
+            MetaDescriptionTag.Content = MetaDescriptionAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForAllStates)
+            MetaKeywordsTag.Content = MetaKeywordsAllStatesDomain.Substitute();
+        }
+
+      EmailForm.ToEmailAddress = "mgr@Vote-USA.org";
+      EmailForm.SetItems("Request from a political party for username and password");
+    }
+  }
+}

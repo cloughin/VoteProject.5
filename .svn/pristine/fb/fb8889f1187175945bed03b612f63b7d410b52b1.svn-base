@@ -1,0 +1,41 @@
+﻿using System;
+
+namespace Vote.Controls
+{
+  public partial class Disqus : System.Web.UI.UserControl
+  {
+    protected string CanonicalUrl
+    {
+      get
+      {
+        return VotePage.GetPage<PublicPage>().CanonicalUri.ToString();
+      }
+    }
+
+    protected string EmbedFilename
+    {
+      get
+      {
+        return VotePage.IsDebugging
+          ? "//voteusadev.disqus.com/embed.js"
+          : "//voteusa.disqus.com/embed.js";
+      }
+    }
+
+    protected string CacheKey
+    {
+      get
+      {
+        return VotePage.GetPage<CacheablePage>().CacheKey;
+      }
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      Page.ClientScript.RegisterStartupScript(GetType(), "Disqus", 
+        VotePage.IsDebugging
+          ? "<script id=\"dsq-count-scr\" src=\"//voteusadev.disqus.com/count.js\" async></script>"
+          : "<script id=\"dsq-count-scr\" src=\"//voteusa.disqus.com/count.js\" async></script>");
+    }
+  }
+}

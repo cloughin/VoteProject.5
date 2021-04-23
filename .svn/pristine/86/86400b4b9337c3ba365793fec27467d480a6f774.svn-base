@@ -1,0 +1,142 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using DB;
+using DB.Vote;
+
+namespace Vote.Reports
+{
+  internal class ResponsiveReport : Report
+  {
+    #region Protected
+
+    #region ReSharper disable
+
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable VirtualMemberNeverOverriden.Global
+
+    #endregion ReSharper disable
+
+    protected const int ImageSize100 = 100;
+
+    protected readonly Control ReportContainer =
+      new HtmlGenericControl("div").AddCssClasses("responsive-report");
+
+    protected void ReportPolitician(Control container, DataRow politician, bool isWinner,
+      bool isIncumbent, string heading = null)
+    {
+      var content = new HtmlGenericControl("div").AddTo(container, "candidate-cell");
+      if (politician.IsRunningMate()) content.AddCssClasses("running-mate-cell");
+      content = new HtmlGenericControl("div").AddTo(content, "candidate-cell-inner");
+
+      if (!string.IsNullOrWhiteSpace(heading))
+        new HtmlGenericControl("div"){ InnerText = heading }.AddTo(content, "cell-heading");
+
+      var politicianKey = politician.PoliticianKey();
+
+      var nameContainer = new HtmlGenericControl("div").AddTo(content,
+        "candidate-name");
+
+      if (isIncumbent)
+        nameContainer.AddCssClasses("incumbent");
+      var span = new HtmlGenericControl("span") { InnerText = Politicians.FormatName(politician, true) }
+        .AddTo(nameContainer);
+      if (!string.IsNullOrWhiteSpace(politician.PartyCode()))
+      {
+        new Literal { Text = " - " }.AddTo(span);
+        CreatePartyAnchor(politician, "view").AddTo(span);
+      }
+      var imageContainer = new HtmlGenericControl("div").AddTo(content, "candidate-image");
+      CreatePoliticianImageTag(politicianKey, ImageSize100, string.Empty).AddTo(imageContainer);
+
+      var infoContainer = new HtmlGenericControl("div").AddTo(content, "candidate-info");
+
+      if (isWinner)
+        new HtmlGenericControl("div").AddTo(infoContainer, "candidate-is-winner");
+
+      var webAddress = politician.PublicWebAddress();
+      var website = FormatPoliticianWebsite(politician, webAddress);
+      var isEmptyWebsite = website as Literal;
+      if (isEmptyWebsite == null || string.IsNullOrWhiteSpace(isEmptyWebsite.Text))
+      {
+        var websiteContainer = new HtmlGenericControl("div").AddTo(infoContainer,
+          "candidate-website");
+        var wrapper = new HtmlGenericControl("span").AddTo(websiteContainer, "no-print");
+        website.AddTo(wrapper);
+        new HtmlGenericControl("span") { InnerText = webAddress }
+          .AddTo(websiteContainer, "break-all only-print");
+      }
+
+      var socalMediaAnchors = SocialMedia.GetAnchors(politician, false);
+      if (socalMediaAnchors.Controls.Count > 0)
+        socalMediaAnchors.AddTo(infoContainer, "candidate-social-media clearfix");
+
+      var addressLines = new List<string>();
+      var streetAddress = politician.PublicAddress();
+      var cityStateZip = politician.PublicCityStateZip();
+      if (!string.IsNullOrEmpty(streetAddress) &&
+        !string.IsNullOrEmpty(cityStateZip))
+      {
+        addressLines.Add(streetAddress);
+        addressLines.Add(cityStateZip);
+      }
+      else addressLines.Add("no address");
+
+      var addressContainer = new HtmlGenericControl("div").AddTo(infoContainer,
+        "candidate-address");
+
+      foreach (var line in addressLines)
+        new HtmlGenericControl("span"){ InnerText = line }.AddTo(addressContainer);
+
+      var phone = politician.PublicPhone();
+
+      if (!string.IsNullOrEmpty(phone))
+        new HtmlGenericControl("div"){ InnerText=phone }.AddTo(infoContainer,
+          "candidate-phone");
+
+      var age = politician.Age();
+      if (!string.IsNullOrEmpty(age)) 
+        new HtmlGenericControl("div"){ InnerText = age }.AddTo(infoContainer,
+         "candidate-age");
+
+      var moreInfoDiv = new HtmlGenericControl("div").AddTo(infoContainer, "candidate-more-info no-print");
+      CreatePoliticianIntroAnchor(politician, "More information").AddTo(moreInfoDiv);
+    }
+
+    protected sealed class OfficialsSort : ReportDataManager<DataRow>.OrderBy
+    {
+      public override int Compare(DataRow row1, DataRow row2)
+      {
+        var result = row1.OfficeLevel()
+          .CompareTo(row2.OfficeLevel());
+        if (result != 0) return result;
+        result = string.Compare(row1.DistrictCode(), row2.DistrictCode(),
+          StringComparison.OrdinalIgnoreCase);
+        if (result != 0) return result;
+        result = row1.OfficeOrderWithinLevel()
+          .CompareTo(row2.OfficeOrderWithinLevel());
+        if (result != 0) return result;
+        result = string.Compare(row1.OfficeLine1(), row2.OfficeLine1(),
+          StringComparison.OrdinalIgnoreCase);
+        if (result != 0) return result;
+        result = string.Compare(row1.AddOn(), row2.AddOn(),
+          StringComparison.OrdinalIgnoreCase);
+        if (result != 0) return result;
+        return string.Compare(row1.LastName(), row2.LastName(),
+          StringComparison.OrdinalIgnoreCase);
+      }
+    }
+
+    #region ReSharper restore
+
+    // ReSharper restore VirtualMemberNeverOverriden.Global
+    // ReSharper restore MemberCanBePrivate.Global
+
+    #endregion ReSharper restore
+
+    #endregion Protected
+  }
+}

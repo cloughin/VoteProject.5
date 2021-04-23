@@ -1,0 +1,36 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Public.Master" AutoEventWireup="true" CodeBehind="CompareCandidates.aspx.cs" Inherits="Vote.CompareCandidates" %>
+
+<%@ Register Src="/Controls/PageHeadingResponsive.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonationRequestResponsive.ascx" TagName="DonationRequest" TagPrefix="user" %>
+
+<asp:Content ID="HeadTopContent" ContentPlaceHolderID="MasterHeadTopContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="HeadBottomContent" ContentPlaceHolderID="MasterHeadBottomContent" runat="server">
+  <style type="text/css">
+  </style>
+  <script type="text/javascript">
+    $(function () {
+      $(".issues-container,.issues-content").accordion({
+        collapsible: true,
+        heightStyle: "content",
+        activate: PUBLIC.accordionActivate
+      });
+    });
+  </script>
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+  <user:PageHeading ID="PageHeading" runat="server" MainHeadingText="Compare the Candidates &ndash; Biographical Profiles and Positions on the Issues" />
+  
+  <div class="intro">
+    <h1 id="ElectionTitle" class="election-title" runat="server"></h1>
+    <h2 id="OfficeTitle" class="office-title" runat="server"></h2>
+  </div>
+        
+  <asp:PlaceHolder ID="ReportPlaceHolder" runat="server"  EnableViewState="False"></asp:PlaceHolder>
+</asp:Content>
+
+<asp:Content ID="BottomContent" ContentPlaceHolderID="MasterBottomContent" runat="server">
+  <user:DonationRequest ID="DonationRequest" runat="server" />
+</asp:Content>

@@ -1,0 +1,14 @@
+﻿input.button-1,
+input.button-1:hover,
+input.button-2,
+input.button-2:hover,
+input.button-3,
+input.button-3:hover
+{
+  filter: none;
+}
+
+#main-tabs div.vtab-panel textarea
+{
+  height: 225px;
+}

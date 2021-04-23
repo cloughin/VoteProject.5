@@ -1,0 +1,264 @@
+﻿.menu-outer
+{
+  min-height: 16px;
+}
+
+.ui-accordion-header .ajax-loader
+{
+  display: none;
+  margin-left: 10px;
+  position: relative;
+  top: 2px;
+}
+
+.answer-panel
+{
+  position: relative;
+}
+
+div.answer-panel .undo-button
+{
+  right: 3px;
+  top: 0;
+}
+
+div.answer-panel .clear-button
+{
+  right: 33px;
+  top: 0;
+}
+
+.remove-line-breaks
+{
+  margin: 4px 0 8px;
+}
+.ui-accordion .issue-accordion {
+  background-color: #add8e6;
+  background-image: none;
+                               }
+.search-topics
+{
+  margin-bottom: 10px;
+}
+  .search-topics span {
+    font-weight: bold;
+    width: 120px;
+    display: inline-block;  }
+  .search-topics .search-box {
+    display: inline-block;
+    width: calc(100% - 160px);
+    position: absolute;
+    right: 20px;
+    margin-top: -4px;
+    z-index: 1;
+    background-color: #ffffff;
+  }
+          .search-topics .search-box input
+{
+  display: block;
+  width: calc(100% - 12px);
+}
+  .search-topics .search-box .results {
+    border: 1px solid #dbdbdb;
+    border-top: none;
+    height: 300px;
+    overflow-y: scroll;
+    display: none;
+    padding: 3px;
+  }
+.search-box .results p {
+  margin: 3px 0;
+}
+.can-touch .search-box .results p {
+  margin: 12px 0;
+}
+
+.response-count
+{
+  color: #888;
+  font-size: 12px;
+}
+@media only screen and (max-width: 945px)
+{
+  #main-tabs,
+  .answer-sub-tabs
+  {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+  }
+  .ui-tabs div.content-panel
+  {
+    padding: 0;
+  }
+  .ui-accordion .issue-accordion-content
+  {
+    padding: 0 10px;
+  }
+
+  .ui-accordion .question-accordion-content
+  {
+    padding: 0;
+  }
+
+  .delete-message {
+    margin-left: 10px;
+    max-width: calc(100% - 75px);
+  }
+  .menu-outer
+  {
+    margin-top: 10px;
+  }
+
+  .action-menu {
+    margin: 0 0 5px 10px;
+    max-width: calc(100% - 75px);
+  }
+
+  .action-menu select
+  {
+    max-width: 100%;
+  }
+
+  .answer-sub-tabs .kalypto-checkbox-label {
+    max-width: calc(100% - 30px);
+  }
+
+  .today.for-youtubedate
+  {
+    margin-bottom: 10px;
+  }
+
+  .search-topics
+  {
+    margin-top: 10px;
+  }
+  .search-topics span {
+    padding-left: 10px;
+                      }
+  .search-topics .search-box {
+    width: calc(100% - 130px);
+    right: 3px;
+                       }
+}
+
+@media only screen and (max-width: 939px)
+{
+  body.admin-page form
+  {
+    width: 100vw;
+  }
+
+  h1
+  {
+    margin: 9px 0 5px !important;
+  }
+
+  #MainAdminMenu
+  {
+    display: none !important;
+  }
+
+  .nav-arrow
+  {
+    display: none;
+  }
+
+  .slicknav-container
+  {
+    position: absolute;
+    top: 40px;
+    right: 3px;
+    z-index: 1;
+  }
+
+  .slicknav-container a
+  {
+    text-decoration: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .slicknav_nav a:hover,
+  .slicknav_row:hover
+  {
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+    color: #fff !important;
+  }
+
+  .slicknav_btn
+  {
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+  }
+
+  .slicknav_menu .slicknav_menutxt
+  {
+    color: #333;
+    font-weight: bold;
+    text-shadow: none;
+  }
+
+  .slicknav_menu .slicknav_icon-bar
+  {
+    background-color: #333;
+  }
+
+  .slicknav_nav
+  {
+    background-color: #779ad4;
+  }
+
+  .slicknav_menu
+  {
+    display: block !important;
+    background: none;
+    padding: 0;
+  }
+}
+body.has-changes .save-button:before
+{
+  content: "Save Changes"
+}
+body:not(.has-changes) .save-button:before
+{
+  content: "No Changes to Save"
+}
+.change-button-line {
+  text-align: center;
+  margin-bottom: 10px;
+              }
+@media only screen and (max-width: 679px)
+{
+  .source-and-date-container,
+  .youtube-description-and-time-container {
+    display: block !important;
+  }
+
+    .source-and-date-container .source-container,
+    .youtube-description-and-time-container .youtube-description-container {
+      display: inline-block !important;
+      margin-bottom: 5px;
+    }
+
+      .source-and-date-container .source-container div.databox/*,
+      .youtube-description-and-time-container .youtube-time-container*/ {
+        padding-right: 0;
+      }
+
+    .source-and-date-container .date-container,
+    .youtube-description-and-time-container .youtube-time-container {
+      display: inline-block !important;
+    }    
+}
+
+@media only screen and (max-width: 342px) {
+  #main-tabs li.htab a {
+    font-size: 8pt;
+  }
+}

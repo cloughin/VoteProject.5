@@ -1,0 +1,178 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Web;
+using DB.Vote;
+using DB.VoteZipNew;
+
+namespace Vote
+{
+  public class StreetAnalysisData
+  {
+    public string ZipCode;
+    public string UpdateKey;
+    public string DirectionPrefix;
+    public string StreetName;
+    public string StreetSuffix;
+    public string DirectionSuffix;
+    public string PrimaryLowNumber;
+    public string PrimaryHighNumber;
+    public string PrimaryOddEven;
+    public string BuildingName;
+    public string SecondaryType;
+    public string SecondaryLowNumber;
+    public string SecondaryHighNumber;
+    public string SecondaryOddEven;
+    public string Plus4Low;
+    public string Plus4High;
+    public string State;
+    public LdsInfo LdsInfo;
+
+    // For caching metaphone lookups
+    static string MetaphoneStreet;
+    static string MetaphoneValue;
+
+    private StreetAnalysisData()
+    {
+    }
+
+    public StreetAnalysisData(DB.VoteZipNew.ZipStreetsDownloadedReader reader)
+    {
+      ZipCode = reader.ZipCode;
+      UpdateKey = reader.UpdateKey;
+      DirectionPrefix = reader.DirectionPrefix;
+      StreetName = reader.StreetName;
+      StreetSuffix = reader.StreetSuffix;
+      DirectionSuffix = reader.DirectionSuffix;
+      PrimaryLowNumber = reader.PrimaryLowNumber;
+      PrimaryHighNumber = reader.PrimaryHighNumber;
+      BuildingName = reader.BuildingName;
+      PrimaryOddEven = reader.PrimaryOddEven;
+      SecondaryType = reader.SecondaryType;
+      SecondaryLowNumber = reader.SecondaryLowNumber;
+      SecondaryHighNumber = reader.SecondaryHighNumber;
+      SecondaryOddEven = reader.SecondaryOddEven;
+      Plus4Low = reader.Plus4Low;
+      Plus4High = reader.Plus4High;
+      State = reader.State;
+    }
+
+    //private static void AddField(List<string> fields, string field)
+    //{
+    //  field = field.Replace("\"", "\"\""); // double up quotes
+    //  fields.Add("\"" + field + "\""); // enclose in quotes
+    //}
+
+    public StreetAnalysisData Clone()
+    {
+      StreetAnalysisData cloned = new StreetAnalysisData();
+      cloned.ZipCode = ZipCode;
+      cloned.UpdateKey = UpdateKey;
+      cloned.DirectionPrefix = DirectionPrefix;
+      cloned.StreetName = StreetName;
+      cloned.StreetSuffix = StreetSuffix;
+      cloned.DirectionSuffix = DirectionSuffix;
+      cloned.PrimaryLowNumber = PrimaryLowNumber;
+      cloned.BuildingName = BuildingName;
+      cloned.PrimaryHighNumber = PrimaryHighNumber;
+      cloned.PrimaryOddEven = PrimaryOddEven;
+      cloned.SecondaryType = SecondaryType;
+      cloned.SecondaryLowNumber = SecondaryLowNumber;
+      cloned.SecondaryHighNumber = SecondaryHighNumber;
+      cloned.SecondaryOddEven = SecondaryOddEven;
+      cloned.Plus4Low = Plus4Low;
+      cloned.Plus4High = Plus4High;
+      cloned.State = State;
+      cloned.LdsInfo = LdsInfo;
+
+      return cloned;
+    }
+
+    public bool IsWildcard
+    {
+      get
+      {
+        return PrimaryLowNumber.Length == 0 &&
+          PrimaryHighNumber.Length == 0;
+      }
+    }
+
+    public bool MatchesSecondary(StreetAnalysisData other)
+    {
+      return SecondaryLowNumber == other.SecondaryLowNumber &&
+        SecondaryHighNumber == other.SecondaryHighNumber &&
+        SecondaryOddEven == other.SecondaryOddEven &&
+        BuildingName == other.BuildingName;
+    }
+
+    public string PrimaryOddEvenNormalized
+    {
+      get
+      {
+        return (PrimaryOddEven == "E" || PrimaryOddEven == "O") ?
+          PrimaryOddEven : "B";
+      }
+    }
+
+    public void SetMissingLdsInfo()
+    {
+      LdsInfo = LdsInfo.Missing;
+    }
+
+    public void Write(TextWriter writer)
+    {
+      if (StreetName != MetaphoneStreet)
+        try
+        {
+          string metaphone = Vote.DoubleMetaphone.EncodePhrase(StreetName);
+          if (metaphone.Length > DB.VoteZipNew.ZipStreets.MetaphoneMaxLength)
+            metaphone = metaphone.Substring(0, DB.VoteZipNew.ZipStreets.MetaphoneMaxLength);
+          MetaphoneStreet = StreetName;
+          MetaphoneValue = metaphone;
+        }
+        catch (Exception /*ex*/)
+        {
+        }
+
+      if (writer == null) // write to database
+        ZipStreets.Insert(
+          zipCode: ZipCode, updateKey: UpdateKey, directionPrefix: DirectionPrefix,
+          streetName: StreetName, streetSuffix: StreetSuffix,
+          directionSuffix: DirectionSuffix, primaryLowNumber: PrimaryLowNumber,
+          primaryHighNumber: PrimaryHighNumber, primaryOddEven: PrimaryOddEven,
+          buildingName: BuildingName, secondaryType: SecondaryType,
+          secondaryLowNumber: SecondaryLowNumber,
+          secondaryHighNumber: SecondaryHighNumber,
+          secondaryOddEven: SecondaryOddEven, metaphone: MetaphoneValue,
+          stateCode: State, congress: LdsInfo.Congress,
+          stateSenate: LdsInfo.StateSenate, stateHouse: LdsInfo.StateHouse,
+          county: LdsInfo.County);
+      else // write to csv
+      {
+        SimpleCSVWriter csvWriter = new SimpleCSVWriter();
+        csvWriter.AddField(ZipCode);
+        csvWriter.AddField(UpdateKey);
+        csvWriter.AddField(DirectionPrefix);
+        csvWriter.AddField(StreetName);
+        csvWriter.AddField(StreetSuffix);
+        csvWriter.AddField(DirectionSuffix);
+        csvWriter.AddField(PrimaryLowNumber);
+        csvWriter.AddField(PrimaryHighNumber);
+        csvWriter.AddField(PrimaryOddEven);
+        csvWriter.AddField(BuildingName);
+        csvWriter.AddField(SecondaryType);
+        csvWriter.AddField(SecondaryLowNumber);
+        csvWriter.AddField(SecondaryHighNumber);
+        csvWriter.AddField(SecondaryOddEven);
+        csvWriter.AddField(MetaphoneValue);
+        csvWriter.AddField(State);
+        csvWriter.AddField(LdsInfo.Congress);
+        csvWriter.AddField(LdsInfo.StateSenate);
+        csvWriter.AddField(LdsInfo.StateHouse);
+        csvWriter.AddField(LdsInfo.County);
+        csvWriter.Write(writer);
+      }
+    }
+  }
+}

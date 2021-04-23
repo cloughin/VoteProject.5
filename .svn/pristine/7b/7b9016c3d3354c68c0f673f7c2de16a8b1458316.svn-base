@@ -1,0 +1,71 @@
+﻿using System;
+using Vote.Reports;
+
+namespace Vote
+{
+  public partial class IssueListPageX : CacheablePage
+  {
+    protected IssueListPageX()
+    {
+      NoUrlEdit = true; /* bacause disabled */
+      NoIndex = true; /* bacause disabled */
+    }
+
+    #region Caching support
+
+    protected override bool SuppressCaching
+    {
+      get { return true; }
+    }
+
+    protected override string GetCacheKey()
+    {
+      var key = UrlManager.GetStateCodeFromHostName();
+      var siteId = UrlManager.CurrentQuerySiteId;
+      if (!string.IsNullOrEmpty(siteId))
+        key += "." + siteId;
+
+      return key;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "IssueList";
+    }
+
+    #endregion Caching support
+
+    private static string IssueListTag()
+    {
+      return "Issues and issue questions available for candidate responses";
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      // The OnPreInit method of the parent class handles serving from cache, 
+      // in which case this method is never called.
+
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/SecondaryCommon.css");
+      this.IncludeCss("~/css/All.css");
+      this.IncludeCss("~/css/Issue.css");
+
+      TitleTag.Text = IssueListTag();
+      MetaDescriptionTag.Content = IssueListTag();
+      MetaKeywordsTag.Content = IssueListTag();
+
+      LinksInstruction.Text = "These are the issues and issue questions" +
+        " made available to candidates to provide voters with their positions" +
+        " and views on various issues. Since many candidates choose not to" +
+        " respond to many questions, pages are provided only where we" +
+        " have replies. Unfortunately, there are instances where candidates" +
+        " have provided no information.";
+
+      IssueReportIssueList.GetReportByStateCode(QueryState)
+        .AddTo(ReportPlaceHolder);
+
+      Footer.Text = "The responses above were provided by the candidates" +
+        " or were obtained from their websites.";
+    }
+  }
+}

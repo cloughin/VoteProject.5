@@ -1,0 +1,244 @@
+﻿using System;
+using DB.Vote;
+using DB.VoteLog;
+using Vote.Politician;
+
+namespace Vote.Admin
+{
+  public partial class UpdateElectionsPage
+  {
+    #region Private
+
+    #region DataItem object
+
+    [PageInitializer]
+    private class EditPoliticianDialogItem : DataItemBase
+    {
+      protected readonly UpdateElectionsPage Page;
+      private const string GroupName = "EditPolitician";
+
+      protected EditPoliticianDialogItem(UpdateElectionsPage page)
+        : base(GroupName)
+      {
+        Page = page;
+      }
+
+      protected override string GetCurrentValue()
+      {
+        return Politicians.GetColumnExtended(Column, Page.GetPoliticianKeyToEdit());
+      }
+
+      private static EditPoliticianDialogItem[] GetDialogInfo(
+        UpdateElectionsPage page)
+      {
+        var editPoliticianInfo = new[]
+          {
+            new EditPoliticianDialogItem(page)
+              {
+                Column = "FName",
+                Description = "First Name",
+                Validator = ValidateFirstName
+              },
+            new EditPoliticianDialogItem(page)
+              {
+                Column = "MName",
+                Description = "Middle Name",
+                Validator = ValidateMiddleName
+              },
+            new EditPoliticianDialogItem(page)
+              {
+                Column = "Nickname",
+                Description = "Nickname",
+                Validator = ValidateNickname
+              },
+            new EditPoliticianDialogItem(page)
+              {
+                Column = "LName",
+                Description = "Last Name",
+                Validator = ValidateLastName
+              },
+            new EditPoliticianDialogItem(page)
+              {
+                Column = "Suffix",
+                Description = "Suffix",
+                Validator = ValidateSuffix
+              },
+            new EditPoliticianDialogItem(page)
+              {
+                Column = "AddOn",
+                Description = "ANC AddOn"
+              },
+            new EditPoliticianDialogItem(page)
+              {
+                Column = "PublicAddress",
+                Description = "Street Address",
+                Validator = ValidateStreet
+              },
+            new EditPoliticianDialogItem(page)
+              {
+                Column = "PublicCityStateZip",
+                Description = "City, State Zip",
+                Validator = ValidateCityStateZip
+              },
+            new EditPoliticianDialogItem(page)
+              {
+                Column = "PublicPhone",
+                Description = "Phone"
+              },
+            new EditPoliticianDialogItem(page)
+              {
+                Column = "PublicEmail",
+                Description = "Email",
+                Validator = ValidateEmail
+              },
+            new EditPoliticianDialogItem(page)
+              {
+                Column = "PublicWebAddress",
+                Description = "Web Site",
+                Validator = ValidateWebAddress
+              },
+            new EditPoliticianDialogItem(page)
+              {
+                Column = "PartyKey",
+                Description = "Political Party"
+              },
+            new EditPoliticianIncumbentDialogItem(page)
+              {
+                Column = "IsIncumbent",
+                Description = "Is Incumbent",
+                ConvertFn = ToBool
+              }
+          };
+
+        foreach (var item in editPoliticianInfo)
+          item.InitializeItem(page);
+
+        InitializeGroup(page, GroupName);
+
+        return editPoliticianInfo;
+      }
+
+      // ReSharper disable UnusedMember.Local
+      // Invoked via Reflection
+      internal static void Initialize(UpdateElectionsPage page)
+        // ReSharper restore UnusedMember.Local
+      {
+        page._EditPoliticianDialogInfo = GetDialogInfo(page);
+      }
+
+      protected override void Log(string oldValue, string newValue)
+      {
+        LogDataChange.LogUpdate(Politicians.TableName, Column, oldValue, newValue,
+          UserName, UserSecurityClass, DateTime.UtcNow,
+          Page.GetPoliticianKeyToEdit());
+      }
+
+      protected override bool Update(object newValue)
+      {
+        Politicians.UpdateColumnExtended(Column, newValue,
+          Page.GetPoliticianKeyToEdit());
+        return true;
+      }
+    }
+
+    private class EditPoliticianIncumbentDialogItem : EditPoliticianDialogItem
+    {
+      internal EditPoliticianIncumbentDialogItem(UpdateElectionsPage page)
+        : base(page) {}
+
+      protected override string GetCurrentValue()
+      {
+        return
+          ElectionsPoliticians.GetIsIncumbentByElectionKeyOfficeKeyPoliticianKey(
+            Page.GetElectionKey(), Page.GetOfficeKey(),
+            Page.GetPoliticianKeyToEdit(), false)
+            .ToString();
+      }
+
+      protected override void Log(string oldValue, string newValue)
+      {
+        LogDataChange.LogUpdate(ElectionsPoliticians.Column.IsIncumbent, oldValue,
+          newValue, UserName, UserSecurityClass, DateTime.UtcNow,
+          Page.GetElectionKey(), Page.GetOfficeKey(), Page.GetPoliticianKeyToEdit());
+      }
+
+      protected override bool Update(object newValue)
+      {
+        ElectionsPoliticians.UpdateIsIncumbentByElectionKeyOfficeKeyPoliticianKey(
+          (bool) newValue, Page.GetElectionKey(), Page.GetOfficeKey(),
+          Page.GetPoliticianKeyToEdit());
+        return true;
+      }
+    }
+
+    private EditPoliticianDialogItem[] _EditPoliticianDialogInfo;
+
+    #endregion DataItem object
+
+    private string GetPoliticianKeyToEdit()
+    {
+      return CandidateToEdit.Value;
+    }
+
+    #endregion Private
+
+    #region Event handlers and overrides
+
+    protected void ButtonEditPolitician_OnClick(object sender, EventArgs e)
+    {
+      var politiciankey = GetPoliticianKeyToEdit();
+      CandidateHtml.Controls.Clear();
+      var isRunningMate =
+        !String.IsNullOrWhiteSpace(MainCandidateIfRunningMate.Value);
+      if (StateCode != "DC") AddOnEditElement.AddCssClasses("hidden");
+
+      switch (EditPoliticianReloading.Value)
+      {
+        case "reloading":
+          {
+            EditPoliticianReloading.Value = String.Empty;
+            ControlEditPoliticianPartyKey.Items.Clear();
+            LoadPartiesDropdown(Politicians.GetStateCodeFromKey(politiciankey),
+              ControlEditPoliticianPartyKey, String.Empty, PartyCategories.None,
+              PartyCategories.StateParties, PartyCategories.NationalParties,
+              PartyCategories.NonParties);
+            _EditPoliticianDialogInfo.LoadControls();
+            if (isRunningMate ||
+              !ElectionsPoliticians.ElectionKeyOfficeKeyPoliticianKeyExists(
+                GetElectionKey(), GetOfficeKey(), politiciankey))
+              InputEditPoliticianIsIncumbent.AddCssClasses("hidden");
+            else
+              InputEditPoliticianIsIncumbent.RemoveCssClass("hidden");
+            FeedbackEditPolitician.AddInfo("Candidate information loaded.");
+          }
+          break;
+
+        case "":
+          {
+            // normal update
+            _EditPoliticianDialogInfo.Update(FeedbackEditPolitician);
+            var partyCodeToSuppress = String.Empty;
+            if (isRunningMate)
+              partyCodeToSuppress =
+                Parties.GetPartyCode(
+                  Politicians.GetPartyKey(MainCandidateIfRunningMate.Value));
+            var row = Politicians.GetCandidateData(GetElectionKey(), politiciankey,
+              isRunningMate);
+            CandidateHtml.Controls.Add(CreateCandidateEntry(row,
+              partyCodeToSuppress));
+          }
+          break;
+
+        default:
+          throw new VoteException("Unknown reloading option");
+      }
+
+      NameOnBallots.InnerText =
+        PageCache.Politicians.GetPoliticianName(politiciankey);
+      UpdateIntroPage.SetPartyNameAndLink(
+        ControlEditPoliticianPartyKey.GetValue(), PartyName);
+    }
+
+    #endregion Event handlers and overrides
+  }
+}

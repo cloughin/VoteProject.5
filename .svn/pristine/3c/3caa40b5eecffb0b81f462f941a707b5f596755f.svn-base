@@ -1,0 +1,84 @@
+﻿using System;
+
+namespace Vote
+{
+  public partial class ForPartnersPageX : CacheablePage
+  {
+    public ForPartnersPageX()
+    {
+      NoUrlEdit = true;
+    }
+
+    #region Caching support
+
+    protected override bool SuppressCaching
+    {
+      get { return true; }
+    }
+
+    protected override string GetCacheKey()
+    {
+      var key = UrlManager.GetStateCodeFromHostName();
+      var siteId = UrlManager.CurrentQuerySiteId;
+      if (!string.IsNullOrEmpty(siteId))
+        key += "." + siteId;
+
+      return key;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "forPartners";
+    }
+
+    #endregion Caching support
+
+    private const string TitleTagAllStatesDomain =
+      "Partner with Political Organizations, Associations and News Media";
+
+    private const string MetaDescriptionAllStatesDomain =
+      "Partner with politically engaged organizations, political parties, associations and news media to share candidate and election information.";
+
+    private const string MetaKeywordsAllStatesDomain =
+      "political parties, political organizations, political news media, political associations";
+
+    private const string TitleTagSingleStateDomain =
+      "Partner with [[state]] Political Organizations, Associations and News Media";
+
+    private const string MetaDescriptionSingleStateDomain =
+      "Partner with [[state]]’s politically engaged organizations, political parties, associations and news media to share candidate and election information.";
+
+    private const string MetaKeywordsSingleStateDomain =
+      "[[state]] political parties, [[state]] political organizations, [[state]] political news media, [[state]] political associations";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/SecondaryCommon.css");
+      this.IncludeCss("~/css/forPartners.css");
+
+      if (!IsPostBack)
+        if (DomainData.IsValidStateCode) // Single state
+        {
+          if (DomainDesign.IncludeTitleForSingleState)
+            TitleTag.Text = TitleTagSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForSingleState)
+            MetaDescriptionTag.Content = MetaDescriptionSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForSingleState)
+            MetaKeywordsTag.Content = MetaKeywordsSingleStateDomain.Substitute(); 
+        }
+        else
+        {
+          if (DomainDesign.IncludeTitleForAllStates)
+            TitleTag.Text = TitleTagAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForAllStates)
+            MetaDescriptionTag.Content = MetaDescriptionAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForAllStates)
+            MetaKeywordsTag.Content = MetaKeywordsAllStatesDomain.Substitute();
+        }
+
+      EmailForm.ToEmailAddress = "mgr@Vote-USA.org";
+      EmailForm.SetItems("We are interested in partnering with Vote-USA");
+    }
+  }
+}

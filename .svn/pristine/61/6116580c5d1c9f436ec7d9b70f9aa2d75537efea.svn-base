@@ -1,0 +1,795 @@
+﻿ 
+/***********************************************/
+/* Candidates List                             */
+/***********************************************/
+
+#body .incumbent-count-message {
+  margin-bottom: 5px;
+}
+
+#body .candidates-list .outer
+{
+  border: 1px solid #aaa;
+  line-height: 105%;
+  margin-bottom: 4px;
+  width: 413px;
+}
+
+#body .candidates-list .name
+{
+  font-weight: bold;
+  line-height: 13px;
+}
+
+#body .candidates-list .deleting
+{
+  background-color: #fcc;
+  opacity: .4;
+}
+
+#body .candidates-list .running-mate
+{
+  border-top: 1px solid #dbdbdb;
+}
+
+#body .candidates-list .cell
+{
+  color: #2254aa;
+  float: left;
+  font-size: 8pt;
+}
+
+#body .candidates-list .cell.pic
+{
+  min-height: 1px;
+  width: 35px;
+}
+
+#body .candidates-list .cell.pic img
+{
+  border-right: 1px solid #dbdbdb;
+}
+
+#body .candidates-list .cell.data
+{
+  line-height: 11px;
+  padding: 1px 0 0 4px;
+}
+
+#body .candidates-list .cell.data .na
+{
+  color: #aaa;
+}
+
+#body .candidates-list .cell .header
+{
+  color: #bf9241;
+  font-size: 7pt;
+}
+
+#body .candidates-list .cell.data .mate-header
+{
+  color: #bf9241;
+  font-size: 7pt;
+  line-height: 9px;
+  padding-top: 2px;
+}
+
+#body .candidates-list .cell.data1
+{
+  width: 185px;
+}
+
+#body .candidates-list .mate .cell.data1
+{
+  padding-top: 0;
+}
+
+#body .candidates-list .cell.data2
+{
+  padding-top: 2px;
+  width: 135px;
+}
+
+#body .candidates-list .cell .data-item
+{
+  font-size: 7pt;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#body .candidates-list .cell.icons
+{
+  margin: 2px 2px 0 0;
+  width: 48px;
+}
+
+#body .candidates-list .mate .cell .icon-move
+{
+  visibility: hidden;
+}
+
+#body .icon-move {
+  background-image: url(/images/opsprite.png);
+  background-position: -200px 0;
+  border: solid 1px #ccc;
+  float: left;
+  height: 20px;
+  margin-left: 2px;
+  width: 20px;
+}
+
+#body div.candidate-menu
+{
+  float: left;
+  height: 22px;
+  margin-left: 2px;
+  width: 22px;
+}
+
+#body div.candidate-menu ul ul
+{
+  z-index: 100;
+}
+
+#body div.candidate-menu ul.candidate-menu
+{
+  border: none;
+  padding: 0;
+}
+
+#body div.candidate-menu ul.candidate-menu ul
+{
+  background: #ddd;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  text-shadow: 0 1px 1px #fff;
+  border: 1px solid #bbb;
+  padding-right: 4px;
+}
+
+#body div.candidate-menu ul.candidate-menu li.rounded-border
+{
+  border-color: #ddd;
+}
+
+#body div.candidate-menu ul.candidate-menu li.rounded-border:hover
+{
+  border-color: #779ad4;
+}
+
+#body div.candidate-menu ul.candidate-menu li.rounded-border a
+{
+  padding: 3px;
+  color: #333;
+}
+
+#body div.candidate-menu .ui-icon
+{
+  display: none;
+}
+
+#body div.candidate-menu a
+{
+  border: none;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+#body .candidates-list .cell .icon-menu
+{
+  background-image: url(/images/opsprite.png);
+  border: solid 1px #ccc;
+  height: 20px;
+  width: 20px;
+}
+
+#body .input-element.candidatelist
+{
+  margin-right: 2px;
+}
+
+#body .input-element.candidatelist .databox
+{
+  min-height: 1px;
+  width: 415px;
+}
+
+#body .candidates-list .cell .icon-menu
+{
+  background-position: -280px 0;
+}
+
+#body .candidates-list .cell .icon-menu:hover
+{
+  background-position: -280px -20px;
+}
+
+#body .candidates-list .cell .icon-remove
+{
+  background-image: url(/images/opsprite.png);
+  background-position: -60px -40px;
+  border: solid 1px #ccc;
+  float: right;
+  height: 20px;
+  margin-top: 5px;
+  width: 20px;
+}
+
+#body .candidates-list .cell .icon-remove.checked
+{
+  background-position: -60px 0;
+}
+
+#body .candidates-list .cell .icon-add-mate
+{
+  background-image: url(/images/opsprite.png);
+  background-position: -20px 0;
+  border: solid 1px #ccc;
+  float: right;
+  height: 20px;
+  margin-bottom: 2px;
+  width: 20px;
+}
+
+#body .candidates-list .cell .icon-add-mate:hover
+{
+  background-position: -20px -20px;
+}
+
+#add-candidate-tabs li.tab a
+{
+  font-size: 8pt;
+}
+
+#add-candidate-tabs .ui-tabs-panel
+{
+  padding: 5px 7px;
+}
+
+#add-candidate-tabs .ui-tabs-panel
+{
+  min-height: 309px;
+}
+
+#add-candidate-tabs .footer
+{
+  margin-top: 6px;
+}
+
+#add-candidate-tabs .footer div
+{
+  float: left;
+}
+
+#add-candidate-tabs .footer div.msg
+{
+  display: none;
+  font-size: 7pt;
+  line-height: 11px;
+  margin-left: 10px;
+  width: 200px;
+}
+
+#add-candidate-tabs .footer div.msg.disabled
+{
+  -moz-opacity: 0.5;
+  filter: alpha(opacity: 50);
+  opacity: 0.5;
+}
+
+#add-candidate-tabs .footer div.msg em
+{
+  color: green;
+  font-family: verdana;
+  font-size: 10pt;
+  font-weight: bold;
+}
+
+#add-candidate-tabs .footer
+{
+  bottom: 5px;
+  position: absolute;
+}
+
+/***********************************************/
+/* Add Politician Panel                        */
+/***********************************************/
+
+#body .add-politician-panel
+{
+  border-left: 1px solid #ccc;
+  display: none;
+  float: left;
+  padding-left: 16px;
+}
+
+#body .add-politician-panel .inner
+{
+  min-height: 357px;
+  width: 410px;
+}
+
+/***********************************************/
+/* Add Politician Panel: Search                */
+/***********************************************/
+
+#body .add-politician-panel .search-politician-name
+{
+  margin-top: 2px;
+}
+
+#body .add-politician-panel .search-politician-name .label
+{
+  color: #2254aa;
+  float: left;
+  font-size: 7pt;
+  line-height: 13px;
+  margin: 0 5px 0 0;
+  width: 140px;
+}
+
+#body .add-politician-panel .search-politician-name .input
+{
+  float: left;
+}
+
+#body .add-politician-panel .search-politician-name .input input
+{
+  width: 232px;
+}
+
+/***********************************************/
+/* Add Candidate                               */
+/***********************************************/
+
+#add-candidate-tabs #tab-add-candidate-add .intro
+{
+  color: #2254aa;
+  font-size: 8pt;
+  margin: 16px 0 24px 0;
+}
+
+#add-candidate-tabs #tab-add-candidate-add .intro em
+{
+  color: #bf9241;
+  font-style: normal;
+  font-weight: bold;
+}
+
+#add-candidate-tabs #tab-add-candidate-add .input-element
+{
+  float: left;
+  margin: 0;
+}
+
+#add-candidate-tabs #tab-add-candidate-add .input-element
+{
+  float: left;
+  margin: 0;
+}
+
+#add-candidate-tabs #tab-add-candidate-add .input-element p.fieldlabel
+{
+  font-size: 11px;
+}
+
+#add-candidate-tabs #tab-add-candidate-add .input-element input
+{
+  font-size: 11px;
+  padding: 2px 3px;
+}
+
+#add-candidate-tabs #tab-add-candidate-add .input-element .dropdown
+{
+  margin-top: 2px;
+}
+
+#add-candidate-tabs #tab-add-candidate-add .input-element .dropdown select
+{
+  font-size: 11px;
+  padding: 1px 0;
+}
+
+#add-candidate-tabs #tab-add-candidate-add .input-element.fname input
+{
+  width: 100px;
+}
+
+#add-candidate-tabs #tab-add-candidate-add .input-element.mname input
+{
+  width: 100px;
+}
+
+#add-candidate-tabs #tab-add-candidate-add .input-element.nickname input
+{
+  width: 80px;
+}
+
+#add-candidate-tabs #tab-add-candidate-add .input-element.lname input
+{
+  width: 100px;
+}
+
+#add-candidate-tabs #tab-add-candidate-add .input-element.suffix input
+{
+  width: 35px;
+}
+
+#add-candidate-tabs #tab-add-candidate-add .add-candidates-open-edit-panel
+{
+  color: #2254aa;
+  font-size: 8pt;
+}
+
+#add-candidate-tabs #tab-add-candidate-add div.feedback-container
+{
+  margin: 16px 0 22px 0;
+}
+
+#add-candidate-tabs #tab-add-candidate-add div.feedback
+{
+  width: 350px;
+}
+
+/***********************************************/
+/* Edit Candidate                              */
+/***********************************************/
+
+#body .edit-candidate .ui-dialog-titlebar
+{
+  background: #779ad4 url(/images/menubg.gif) repeat-x;
+  height: 23px;
+  padding: 0;
+}
+
+#body .edit-candidate .ui-dialog-title
+{
+  color: #ffffee;
+  font-size: 10pt;
+  padding: 1px 12px;
+}
+
+#body .edit-candidate div.content-area
+{
+  min-height: 326px;
+}
+
+#body .edit-candidate h5
+{
+  margin: 10px 0;
+}
+
+#body .edit-candidate h5 em
+{
+  color: #bf9241;
+  font-style: normal;
+}
+
+#body .edit-candidate .input-element
+{
+  float: left;
+  margin: 0 16px 0 0;
+}
+
+#body .edit-candidate .dob-item {
+  float: none;
+  display: inline-block;
+}
+
+#body .edit-candidate .input-element.fname input
+{
+  width: 135px;
+}
+
+#body .edit-candidate .input-element.mname input
+{
+  width: 90px;
+}
+
+#body .edit-candidate .input-element.nickname input
+{
+  width: 90px;
+}
+
+#body .edit-candidate .input-element.lname input
+{
+  width: 135px;
+}
+
+#body .edit-candidate .input-element.suffix input
+{
+  width: 50px;
+}
+
+#body .edit-candidate .input-element.addon input
+{
+  width: 50px;
+}
+
+#body .edit-candidate .input-element.publicaddress input
+{
+  width: 350px;
+}
+
+#body .edit-candidate .input-element.publiccitystatezip input
+{
+  width: 350px;
+}
+
+#body .edit-candidate .input-element.publicphone input
+{
+  width: 150px;
+}
+
+#body .edit-candidate .input-element.publicemail input
+{
+  width: 250px;
+}
+
+#body .edit-candidate .input-element.publicwebaddress input
+{
+  width: 280px;
+}
+
+#body .edit-candidate .input-element.partykey select
+{
+  min-width: 200px;
+}    
+
+#body .edit-candidate .input-element.incumbent div.kalypto-checkbox
+{
+  margin: 15px 0 0 25px;
+}    
+ 
+/***********************************************/
+/* Consolidate Politicians Dialog              */
+/***********************************************/
+
+#body .consolidate-politicians-dialog .ui-dialog-titlebar
+{
+  background: #779ad4 url(/images/menubg.gif) repeat-x;
+  height: 23px;
+  padding: 0;
+}
+
+#body .consolidate-politicians-dialog .ui-dialog-title
+{
+  color: #ffffee;
+  font-size: 10pt;
+  padding: 1px 12px;
+}
+
+#body .consolidate-politicians-dialog div.content-area
+{
+  min-height: 326px;
+}
+
+#body .consolidate-politicians-dialog .search-results-container
+{
+  border: none;
+  height: auto;
+  margin-top: 0;
+  overflow-y: auto;
+  width: auto;
+  display: inline-block;
+  vertical-align: top;
+}
+
+#body .consolidate-politicians-dialog .search-results-container.consolidate-item-2 {
+  float: right;
+}
+
+#body .consolidate-politicians-dialog .instructions {
+  color: #bf9241;
+  font-weight: bold;
+}
+
+#body .consolidate-politicians-dialog .sub-instructions {
+  color: #2254aa;
+  font-size: 90%;
+}
+  
+#body .consolidate-politicians-dialog .pick-politician {
+  margin-top: 5px;
+}
+
+#body .consolidate-politicians-dialog .search-results-container .search-politician
+{
+  border: none;
+  width: 400px;
+  border: 1px solid #cccccc;
+}
+
+#body .consolidate-politicians-dialog .search-results-container .search-politician
+{
+  border: none;
+  width: 400px;
+  border: 1px solid #cccccc;
+}
+
+#body .consolidate-politicians-dialog .search-results-container .search-politician.not-selected {
+  background: #dddddd;
+  opacity: .5;
+}
+
+#body #consolidate-tabs {
+  font-size: 8pt;
+  margin-top: 10px;
+}
+
+#body #consolidate-tabs li.htab a 
+{
+  font-size: 8pt;
+}
+
+#body #consolidate-tabs .consolidate-tab-content {
+  max-height: 360px;
+  border: 1px solid #aaaaaa;
+  padding: 5px;
+  overflow-y: auto;
+}
+
+/*
+#body .consolidate-politicians-dialog div.category-heading {
+  background: url(/images/1x1-aaaaaa.png) repeat-x;
+  background-position: -6px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #bf9241;
+  text-align: center;
+  margin: 10px 0 6px 0;
+}
+*/
+
+#body .consolidate-politicians-dialog div.category-heading:first-child 
+{
+  margin-top: 0;
+}
+
+#body .consolidate-politicians-dialog .databox {
+  border: 1px solid #aaaaaa;
+  padding: 5px;
+  width: 49%;
+  display: inline-block;
+  box-sizing: border-box;  
+}
+
+#body .consolidate-politicians-dialog .databox.no-content:before
+{
+  content: 'no content';
+  font-style: italic;
+}
+
+#body .consolidate-politicians-dialog .databox.scrollable {
+  max-height: 60px;
+  overflow-y: auto;
+}
+
+#body .consolidate-politicians-dialog .databox.picture {
+  text-align: center;
+}
+
+#body .consolidate-politicians-dialog .databox-2 {
+  float: right;
+}
+
+#body .consolidate-politicians-dialog .databox.selected
+{
+  background: #afa;
+}
+
+#body .consolidate-politicians-dialog .databox.not-selected
+{
+  background: #dddddd;
+  opacity: .5;
+}
+
+/*
+#body .consolidate-politicians-dialog div.category-heading span {
+  background: #ffffff;
+  padding: 0 4px;  
+}
+*/
+
+#body .consolidate-politicians-dialog .consolidate-answers-tab-content .question-title {
+  text-align: center;
+  font-weight: bold;
+  color: #2553aa;  
+}
+
+#body .consolidate-politicians-dialog .consolidate-answers-tab-content .answerbox {
+  width: 49%;
+  min-height: 1px;
+}
+
+#body .consolidate-politicians-dialog .consolidate-answers-tab-content .answerbox-2 {
+  float: right;
+}
+
+#body .consolidate-politicians-dialog .consolidate-answers-tab-content .response-box {
+  border: 1px solid #aaaaaa;
+  padding: 5px;
+  margin: 5px 0;
+  max-height: 60px;
+  overflow-y: auto;
+  background: #dddddd;
+  opacity: .5;
+}
+
+#body .consolidate-politicians-dialog .consolidate-answers-tab-content .response-box.selected 
+{
+  background: #afa;
+  opacity: 1;
+}
+
+#body .consolidate-politicians-dialog .consolidate-answers-tab-content .response-box .response-youtube a {
+  float: left;
+}
+
+#body .consolidate-politicians-dialog .consolidate-answers-tab-content .response-box .response-youtube img {
+  padding-right: 10px;
+  vertical-align: bottom;
+}
+
+#body .consolidate-politicians-dialog .consolidate-answers-tab-content .response-box .response-youtube p:first-of-type {
+  padding-top: 5px;
+}
+
+#body .consolidate-politicians-dialog .consolidate-answers-tab-content .response-box p {
+  margin-top: 5px;
+}
+
+#body .consolidate-politicians-dialog .consolidate-answers-tab-content .response-box p:first-child {
+  margin-top: 0;
+}
+
+/***********************************************/
+/* Duplicate Last Name Dialog                  */
+/***********************************************/
+
+#body .duplicate-last-name-dialog .ui-dialog-titlebar
+{
+  background-color: #5583d4;
+  background-image: linear-gradient(to bottom, #5583d4 5%, #2553aa 100%);
+}
+
+#body .duplicate-last-name-dialog .ui-dialog-title
+{
+  color: #fff;
+}
+
+#body .duplicate-last-name-dialog .info
+{
+  color: #2254aa;
+  font-size: 8pt;
+  margin: 6px 16px;
+}
+
+#body .duplicate-last-name-dialog .info em
+{
+  color: #bf9241;
+  font-style: normal;
+  font-weight: bold;
+}
+
+#body .duplicate-last-name-dialog .search-results-container
+{
+  height: 500px;
+  margin: 20px 0 0 57px;
+}
+
+#body .duplicate-last-name-dialog .footer
+{
+  height: 27px;
+  margin: 12px 0 0 65px;
+}
+
+#body .duplicate-last-name-dialog .footer div
+{
+  float: left;
+  margin-right: 20px;
+}

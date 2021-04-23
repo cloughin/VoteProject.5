@@ -1,0 +1,76 @@
+﻿div.vert-center
+{
+  position: relative;
+}
+
+div.vert-center .center-inner
+{
+  position: absolute;
+  top: 50%;
+}
+
+div.vert-center .center-inner .center-element
+{
+  position: relative;
+  top: -50%;
+}
+
+input.button-1,
+input.button-2,
+input.button-3
+{
+  padding: 2px 3px;
+}
+
+div.footer-button
+{
+  margin-top: 1px;
+}
+
+#main-tabs li.vtab
+{
+  padding-left: 8px;
+  padding-right: 7px;
+  width: 138px;
+}
+
+#main-tabs li.vtab.ui-state-active
+{
+  padding-right: 8px;
+}
+
+#main-tabs ul.vtabs
+{
+  width: 158px;
+}
+
+div.footer-item.footer-feedback
+{
+  width: 755px;
+}
+
+#main-tabs div.accordion-panel textarea
+{
+  width: 665px !important;
+}
+
+div.footer-item.footer-feedback .feedback-container .feedback
+{
+  width: 729px;
+}
+
+#main-tabs div.vtab-panel .undo-button
+{
+  top: -7px;
+}
+
+#main-tabs div.vtab-panel .clear-button
+{
+  top: -7px;
+}
+
+#main-tabs div.vtab-panel textarea
+{
+  height: 224px;
+  width: 702px;
+}

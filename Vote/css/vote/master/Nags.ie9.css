@@ -1,0 +1,14 @@
+﻿#outer .nag-container td
+{
+  height: 24px;
+}
+
+#outer .nag-container td p
+{
+  padding: 4px 0 0 3px;
+}
+
+#outer .nag-container table input
+{
+  padding: 2px 0 0 2px;
+}

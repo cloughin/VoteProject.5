@@ -1,0 +1,12 @@
+﻿#main-tabs #tab-upload .upload-file
+{
+  left: -146px;
+  top: 3px;
+}
+
+#main-tabs #tab-upload .browse-button
+{
+  font-size: 10px;
+  padding: 0 6px;
+  top: 4px;
+}

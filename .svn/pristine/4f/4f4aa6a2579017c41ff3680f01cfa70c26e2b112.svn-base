@@ -1,0 +1,1041 @@
+using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+
+namespace Vote.Master
+{
+  public partial class TestZipAddresses : VotePage
+  {
+    #region Dead code
+
+    //#region methods
+    //protected void DELETE_ZipAddressesTesting_Rows(
+    //  DataRow Row_ZipAddressesTesting
+    //  )
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " DELETE FROM ZipAddressesTesting";
+    //  SQL += " WHERE Addr1 = " + db.SQLLit(Row_ZipAddressesTesting["Addr1"].ToString());
+    //  SQL += " AND City = " + db.SQLLit(Row_ZipAddressesTesting["City"].ToString());
+    //  SQL += " AND StateCode = " + db.SQLLit(Row_ZipAddressesTesting["StateCode"].ToString());
+    //  db.ExecuteSQL(SQL);
+    //}
+  
+    //protected void Insert_ZipAddressesTestedBad(
+    //  DataRow Row_ZipAddressesTesting
+    //  )
+    //{
+    //  #region only insert unique rows
+    //  string SQL_Count = string.Empty;
+    //  SQL_Count += "ZipAddressesTestedBad";
+    //  SQL_Count += " WHERE StateCode = "
+    //    + db.SQLLit(Row_ZipAddressesTesting["StateCode"].ToString());
+    //  SQL_Count += " AND City = "
+    //    + db.SQLLit(Row_ZipAddressesTesting["City"].ToString());
+    //  SQL_Count += " AND Addr1 = "
+    //    + db.SQLLit(Row_ZipAddressesTesting["Addr1"].ToString());
+
+    //  int Rows = db.Rows_Count_From(SQL_Count);
+    //  #endregion only insert unique rows
+
+    //  if (Rows == 0)
+    //  {
+    //    #region Insert into ZipAddressesTestedBad
+    //    string SQL = string.Empty;
+    //    SQL += " INSERT INTO ZipAddressesTestedBad";
+    //    SQL += "(";
+    //    SQL += " Addr1";
+    //    SQL += ",Addr2";
+    //    SQL += ",City";
+    //    SQL += ",StateCode";
+    //    SQL += ",Zip5";
+    //    SQL += ",Zip4";
+    //    SQL += ")";
+    //    SQL += "VALUES";
+    //    SQL += "(";
+    //    SQL += db.SQLLit(Row_ZipAddressesTesting["Addr1"].ToString());
+    //    SQL += "," + db.SQLLit(Row_ZipAddressesTesting["Addr2"].ToString());
+    //    SQL += "," + db.SQLLit(Row_ZipAddressesTesting["City"].ToString());
+    //    SQL += "," + db.SQLLit(Row_ZipAddressesTesting["StateCode"].ToString());
+    //    SQL += "," + db.SQLLit(Row_ZipAddressesTesting["Zip5"].ToString());
+    //    SQL += "," + db.SQLLit(Row_ZipAddressesTesting["Zip4"].ToString());
+    //    SQL += ")";
+
+    //    db.ExecuteSQL(SQL);
+    //    #endregion Insert into ZipAddressesTestedBad
+    //  }
+    //}
+    //protected void xInsert_ZipAddressesTestedGood(
+    //  DataRow Row_ZipAddressesTesting
+    //  , DataRow Row_ZipStreetsRange
+    //  , string StreetNumber
+    //  , string StreetPre
+    //  , string Street
+    //  , string StreetType
+    //  , string StreetDirection
+    //  )
+    //{
+    //  #region only insert unique rows
+    //  string SQL_Count = string.Empty;
+    //  SQL_Count += "ZipAddressesTestedGood";
+    //  SQL_Count += " WHERE StateCode = "
+    //    + db.SQLLit(Row_ZipStreetsRange["StateCode"].ToString());
+    //  SQL_Count += " AND CityNameKey = "
+    //    + db.SQLLit(Row_ZipStreetsRange["CityNameKey"].ToString());
+    //  SQL_Count += " AND StreetNumber = "
+    //    + db.SQLLit(StreetNumber);
+    //  SQL_Count += " AND StreetPre = "
+    //    + db.SQLLit(StreetPre);
+    //  SQL_Count += " AND Street = "
+    //    + db.SQLLit(Street);
+    //  SQL_Count += " AND StreetType = "
+    //    + db.SQLLit(StreetType);
+    //  SQL_Count += " AND StreetDirection = "
+    //    + db.SQLLit(StreetDirection);
+
+    //  int Rows = db.Rows_Count_From(SQL_Count);
+    //  #endregion only insert unique rows
+
+    //  if (Rows == 0)
+    //  {
+    //    #region Insert only unique addresses into ZipAddressesTestedGood
+    //    string SQL = string.Empty;
+    //    SQL += " INSERT INTO ZipAddressesTestedGood";
+    //    SQL += "(";
+    //    SQL += " StateCode";
+    //    SQL += ",CityEntered";
+    //    SQL += ",CityNameKey";
+    //    SQL += ",Addr1Entered";
+    //    SQL += ",StreetNumber";
+    //    SQL += ",StreetPre";
+    //    SQL += ",Street";
+    //    SQL += ",StreetType";
+    //    SQL += ",StreetDirection";
+    //    SQL += ",Addr2Entered";
+    //    SQL += ",Zip5LDS";
+    //    SQL += ",Zip5";
+    //    SQL += ",Zip4LDS";
+    //    SQL += ",Zip4";
+    //    SQL += ")";
+    //    SQL += "VALUES";
+    //    SQL += "(";
+    //    SQL += db.SQLLit(Row_ZipAddressesTesting["StateCode"].ToString());
+    //    SQL += "," + db.SQLLit(Row_ZipAddressesTesting["City"].ToString());
+    //    SQL += "," + db.SQLLit(Row_ZipStreetsRange["CityNameKey"].ToString());
+    //    SQL += "," + db.SQLLit(Row_ZipAddressesTesting["Addr1"].ToString());
+    //    SQL += "," + db.SQLLit(StreetNumber);
+    //    SQL += "," + db.SQLLit(StreetPre);
+    //    SQL += "," + db.SQLLit(Street);
+    //    SQL += "," + db.SQLLit(StreetType);
+    //    SQL += "," + db.SQLLit(StreetDirection);
+    //    SQL += "," + db.SQLLit(Row_ZipAddressesTesting["Addr2"].ToString());
+    //    SQL += "," + db.SQLLit(Row_ZipAddressesTesting["Zip5"].ToString());
+    //    SQL += "," + db.SQLLit(Row_ZipStreetsRange["Zip5"].ToString());
+    //    SQL += "," + db.SQLLit(Row_ZipAddressesTesting["Zip4"].ToString());
+    //    SQL += "," + db.SQLLit(Row_ZipStreetsRange["Zip4Low"].ToString());
+    //    SQL += ")";
+
+    //    db.ExecuteSQL(SQL);
+    //    #endregion Insert only unique addresses into ZipAddressesTestedGood
+    //  }
+    //}
+    //protected void Insert_ZipAddressesTesting(
+    //  DataRow Row_Addresses
+    //  )
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " INSERT INTO ZipAddressesTesting";
+    //  SQL += "(";
+    //  SQL += " Addr1";
+    //  SQL += ",Addr2";
+    //  SQL += ",City";
+    //  SQL += ",StateCode";
+    //  SQL += ",Zip5";
+    //  SQL += ",Zip4";
+    //  SQL += ")";
+    //  SQL += " VALUES";
+    //  SQL += "(";
+    //  SQL += db.SQLLit(Row_Addresses["Addr1"].ToString());
+    //  SQL += "," + db.SQLLit(Row_Addresses["Addr2"].ToString());
+    //  SQL += "," + db.SQLLit(Row_Addresses["City"].ToString());
+    //  SQL += "," + db.SQLLit(Row_Addresses["StateCode"].ToString());
+    //  SQL += "," + db.SQLLit(Row_Addresses["Zip5"].ToString());
+    //  SQL += "," + db.SQLLit(Row_Addresses["Zip4"].ToString());
+    //  SQL += ")";
+    //  db.ExecuteSQL(SQL);
+    //}
+    //protected DataTable DataTable_ZipAddressesTesting(
+    //  )
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT * ";
+    //  //SQL += " Addr1";
+    //  //SQL += " ,City";
+    //  //SQL += " ,StateCode";
+    //  //SQL += " ,Zip5";
+    //  //SQL += " ,Zip4";
+    //  SQL += " FROM ZipAddressesTesting";
+    //  return db.Table(SQL);
+    //}
+    //protected void Show_City(
+    //  string StateCode
+    //  , string CityNameKey
+    //  , string City
+    //  )
+    //{
+    //  Label_StateCode.Text = StateCode;
+    //  Label_City_Name_Key.Text = CityNameKey;
+    //  //Label_City_Name.Text = City;
+    //}
+    //protected void Show_Zips(
+    //  DataRow Row_ZipAddressesTesting
+    //  , DataRow Row_ZipStreetsRange
+    //  )
+    //{
+    //  //DataRow Row_USZD = db.Row_Optional(db.sql_Zip_5_4(
+    //  //      Row_ZipStreetsRange["Zip5"].ToString()
+    //  //      , Row_ZipStreetsRange["Zip4Low"].ToString()
+    //  //      )
+    //  //      );
+    //  DataRow Row_USZD = null;
+    //  Row_USZD =
+    //    db.Row_USZD_Optional(
+    //      Row_ZipStreetsRange
+    //      );
+
+    //  if (Row_USZD != null)
+    //  {
+    //    Label_Zip5_ZipStreets.Text = Row_USZD["ZIP5"].ToString();
+    //    Label_Zip4_ZipStreets.Text = Row_USZD["ZIP4"].ToString();
+    //    if (Row_USZD["ZIP5"].ToString() !=
+    //      Row_ZipAddressesTesting["Zip5"].ToString())
+    //    {
+    //      Label_Zip5_Compare.Text = "Zip5 IS DIFFERENT";
+    //      //Is_Zip5_Same = false;
+    //    }
+    //    else
+    //      Label_Zip5_Compare.Text = string.Empty;
+
+    //    if (Row_USZD["ZIP4"].ToString() !=
+    //      Row_ZipAddressesTesting["Zip4"].ToString())
+    //      Label_Zip4_Compare.Text = "Zip4 IS DIFFERENT";
+    //    else
+    //      Label_Zip4_Compare.Text = string.Empty;
+    //  }
+    //  else
+    //  {
+    //    string Err_Msg = "No USZD Row for:"
+    //      + Row_ZipStreetsRange["Zip5"].ToString()
+    //      + " - "
+    //      + Row_ZipStreetsRange["Zip4"].ToString();
+
+    //    Label_Zip5_Compare.Text = Err_Msg;
+    //  }
+    //}
+    //#endregion methods
+
+    //#region Buttons
+    //protected void Button_Debug_Click(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    #region replaced
+    //    //string StreetNumber = string.Empty;
+    //    //string StreetPre = string.Empty;
+    //    //string Street = string.Empty;
+    //    //string StreetType = string.Empty;
+    //    //string StreetDirection = string.Empty;
+
+    //    //db.Address_Components(
+    //    //   Label_Street_Bad.Text
+    //    //  , ref  StreetNumber
+    //    //  , ref  StreetPre
+    //    //  , ref  Street
+    //    //  , ref  StreetType
+    //    //  , ref  StreetDirection
+    //    //  );
+    //    //DataRow Row_ZipStreetsRange = db.Row_ZipStreetsRange_Optional(
+    //    //       Label_State_Bad.Text
+    //    //      , Label_City_Bad.Text
+    //    //      , StreetNumber
+    //    //      , StreetPre
+    //    //      , Street
+    //    //      , StreetType
+    //    //      , StreetDirection
+    //    //      );
+    //    #endregion replaced
+
+    //    DataTable Table_ZipAddressesTesting =
+    //      (DataTable)ViewState["Table_ZipAddressesTesting"];
+
+    //    DataRow Row_ZipAddressesTesting =
+    //      Table_ZipAddressesTesting.Rows[Convert.ToInt16(ViewState["Row"])];
+
+    //    Label_DomainState.Text =
+    //      Row_ZipAddressesTesting["StateCode"].ToString();
+
+    //    Label_City_Entered.Text =
+    //      Row_ZipAddressesTesting["City"].ToString();
+
+    //    Label_Address_Entered.Text =
+    //      Row_ZipAddressesTesting["Addr1"].ToString();
+
+    //    #region Zip5 and Zip5 provided by LDS component
+    //    Label_Zip5_LDS.Text =
+    //      Row_ZipAddressesTesting["Zip5"].ToString();
+
+    //    Label_Zip4_LDS.Text =
+    //      Row_ZipAddressesTesting["Zip4"].ToString();
+    //    #endregion Zip5 and Zip5 provided by LDS component
+
+    //    #region ZipAddressesTesting Values
+    //    string StreetNumber = string.Empty;
+    //    string StreetPre = string.Empty;
+    //    string Street = string.Empty;
+    //    string StreetType = string.Empty;
+    //    string StreetDirection = string.Empty;
+
+    //    DataRow Row_ZipStreetsRange = db.Row_ZipStreetsRange(
+    //      Row_ZipAddressesTesting
+    //      , ref  StreetNumber
+    //      , ref  StreetPre
+    //      , ref  Street
+    //      , ref  StreetType
+    //      , ref  StreetDirection
+    //      );
+    //    Label_StreetNumber.Text = StreetNumber;
+    //    Label_StreetPre.Text = StreetPre;
+    //    Label_Street.Text = Street;
+    //    Label_StreetType.Text = StreetType;
+    //    Label_StreetDirection.Text = StreetDirection;
+    //    #endregion ZipAddressesTesting Values
+
+
+    //    if (Row_ZipStreetsRange != null)
+    //    {
+    //      Show_City(
+    //        Row_ZipStreetsRange["StateCode"].ToString()
+    //        , Row_ZipStreetsRange["CityNameKey"].ToString()
+    //        , Row_ZipStreetsRange["CityNameKey"].ToString()
+    //        );
+
+    //      #region Zips
+    //      Show_Zips(
+    //        Row_ZipAddressesTesting
+    //        , Row_ZipStreetsRange
+    //        );
+    //      #endregion Zips
+
+    //      #region TextBoxes & Labels
+    //      Label_Street.Text = Row_ZipStreetsRange["Street"].ToString();
+    //      Label_StreetPre.Text = Row_ZipStreetsRange["StreetPre"].ToString();
+    //      Label_StreetType.Text = Row_ZipStreetsRange["StreetType"].ToString();
+    //      Label_StreetDirection.Text = Row_ZipStreetsRange["StreetDirection"].ToString();
+
+    //      Label_Address_Bad.Text = string.Empty;
+
+    //      Label_Street_Bad.Text = string.Empty;
+    //      Label_City_Bad.Text = string.Empty;
+    //      Label_State_Bad.Text = string.Empty;
+
+    //      TextBox_Street_Alt.Text = string.Empty;
+    //      TextBox_Street.Text = string.Empty;
+    //      TextBox_City_Alt.Text = string.Empty;
+    //      #endregion TextBoxes & Labels
+
+    //      Msg.Text += db.Ok("ZipStreetsRanges Found");
+    //    }
+    //    else
+    //    {
+    //      Msg.Text += db.Fail("ZipStreetsRanges NOT Found");
+    //    }
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    #region
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //    #endregion
+    //  }
+
+    //}
+
+    //protected void Button_City_Alternate_Click(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    string SQL = string.Empty;
+
+    //    #region Get the Key City in ALL States with this name
+    //    SQL = string.Empty;
+    //    SQL += " SELECT";
+    //    SQL += " StateCode";
+    //    SQL += ",CityNameKey";
+    //    SQL += ",PreferredLastLineKey";
+    //    SQL += " FROM ZipCities";
+    //    SQL += " WHERE CityNameKey = "
+    //      + db.SQLLit(TextBox_City.Text.Trim());
+    //    DataTable Table_ZipCities = db.Table(SQL);
+    //    if (Table_ZipCities.Rows.Count > 0)
+    //    {
+    //      #region Insert Alternative name in every State with key city name
+    //      foreach (DataRow Row_ZipCities in Table_ZipCities.Rows)
+    //      {
+    //        string SQL_Count = string.Empty;
+    //        SQL_Count += "ZipCitiesNames";
+    //        SQL_Count += " WHERE StateCode="
+    //          + db.SQLLit(Row_ZipCities["StateCode"].ToString());
+    //        SQL_Count += " AND City="
+    //          + db.SQLLit(TextBox_City.Text.ToUpper());
+    //        if (db.Rows_Count_From(SQL_Count) == 0)
+    //        {
+    //          #region Insert Alternative
+    //          SQL = string.Empty;
+    //          SQL += " INSERT INTO ZipCitiesNames";
+    //          SQL += "(";
+    //          SQL += " StateCode";
+    //          SQL += ",City";
+    //          SQL += ",CityNameKey";
+    //          SQL += ",PreferredLastLineKey";
+    //          SQL += ",CityMixedCase";
+    //          SQL += ")";
+    //          SQL += "VALUES";
+    //          SQL += "(";
+    //          SQL += db.SQLLit(Row_ZipCities["StateCode"].ToString());
+    //          SQL += "," + db.SQLLit(TextBox_City_Alt.Text.ToUpper());
+    //          SQL += "," + db.SQLLit(Row_ZipCities["CityNameKey"].ToString());
+    //          SQL += "," + db.SQLLit(Row_ZipCities["PreferredLastLineKey"].ToString());
+    //          SQL += "," + db.SQLLit(db.Str_ReCase(TextBox_City_Alt.Text));
+    //          SQL += ")";
+    //          db.ExecuteSQL(SQL);
+    //          #endregion Insert Alternative
+    //        }
+    //      }
+
+    //      ViewState["Row"] = Convert.ToInt16(ViewState["Row"]) - 1;
+
+    //      Msg.Text = db.Ok("This city spelling has been added"
+    //        + " as an alternative city name"
+    //        + " in EVERY State that has a city named "
+    //        + TextBox_City.Text.ToUpper() + "."
+    //        + " Click the NEXT Button to test this address again.");
+    //      #endregion INsert Alternative name in every State with key city name
+    //    }
+    //    else
+    //    {
+    //      Msg.Text = db.Fail("There is no valid city with this spelling in any State."
+    //        + " This address will still be considered bad"
+    //        + " and the next address will be tested.");
+    //    }
+
+    //    #endregion Get the Key City in ALL States with this name
+
+
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    #region
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //    #endregion
+    //  }
+
+    //}
+
+    //protected void Button_Street_Alt_Click(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    string SQL_Count = string.Empty;
+    //    SQL_Count += "ZipStreetsNames";
+    //    SQL_Count += " WHERE StreetAlt="
+    //      + db.SQLLit(TextBox_Street_Alt.Text.ToUpper().Trim());
+    //    if (db.Rows_Count_From(SQL_Count) == 0)
+    //    {
+    //      #region Insert Alternative Street or Street Part Name
+    //      string SQL = string.Empty;
+    //      SQL += " INSERT INTO ZipStreetsNames";
+    //      SQL += "(";
+    //      SQL += " StreetAlt";
+    //      SQL += ",Street";
+    //      SQL += ")";
+    //      SQL += "VALUES";
+    //      SQL += "(";
+    //      SQL += db.SQLLit(TextBox_Street_Alt.Text.ToUpper().Trim());
+    //      SQL += "," + db.SQLLit(TextBox_Street.Text.ToUpper().Trim());
+    //      SQL += ")";
+    //      db.ExecuteSQL(SQL);
+    //      #endregion Insert Alternative Street or Street Part Name
+
+    //      ViewState["Row"] = Convert.ToInt16(ViewState["Row"]) - 1;
+
+    //      Msg.Text = db.Ok("This street (or street part) spelling has been added"
+    //        + " as an alternative spelling"
+    //        + " for EVERY street that has a street (or street part) named "
+    //        + TextBox_Street_Alt.Text.ToUpper() + "."
+    //        + " Click the NEXT Button to test this address again.");
+    //    }
+    //    else
+    //    {
+    //      Msg.Text = db.Fail("There already exits an alternative street (or street part)"
+    //        + " with this spelling."
+    //        + " This address will still be considered bad"
+    //        + " and the next address will be tested.");
+    //    }
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    #region
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //    #endregion
+    //  }
+
+    //}
+    //protected void Button_Make_New_Click(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    string SQL = string.Empty;
+    //    SQL = "TRUNCATE TABLE ZipAddressesTesting";
+    //    db.ExecuteSQL(SQL);
+
+    //    SQL = string.Empty;
+    //    SQL += " SELECT * ";
+    //    SQL += " FROM " + TextBox_Table.Text.Trim();
+    //    SQL += " WHERE StateCode = " + db.SQLLit(TextBox_StateCode.Text.Trim());
+    //    SQL += " AND SUBSTRING(City,1,1) = " + db.SQLLit(TextBox_FirstChar.Text.Trim());
+
+    //    DataTable Table_Addresses = db.Table(SQL);
+    //    foreach (DataRow Row_Addresses in Table_Addresses.Rows)
+    //    {
+    //      Insert_ZipAddressesTesting(Row_Addresses);
+    //    }
+    //    Label_ZipAddressesTable_Rows.Text =
+    //      db.Rows_Count_From("ZipAddressesTesting").ToString();
+
+    //    Msg.Text = db.Ok("A new ZipAddressesTesting Table has been created with "
+    //      + db.Rows_Count_From("ZipAddressesTesting").ToString()
+    //      + " rows.");
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    #region
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //    #endregion
+    //  }
+    //}
+
+    //protected void Button_Record_Click(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    db.Master_Update_Str(
+    //      "LogAddressesTestedTableName"
+    //      , TextBox_Table.Text.Trim()
+    //      );
+    //    db.Master_Update_Str(
+    //      "LogAddressesTestedStateCode"
+    //      , TextBox_StateCode.Text.Trim().ToUpper()
+    //      );
+    //    db.Master_Update_Str(
+    //      "LogAddressesTestedCityFirstChar"
+    //      , TextBox_FirstChar.Text.Trim().ToUpper()
+    //      );
+
+    //    Msg.Text = db.Ok("The AddressesTested parameters have been recorded.");
+
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    #region
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //    #endregion
+    //  }
+    //}
+
+    //protected void Button_Load_Bad_Addresses_Click(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    db.ExecuteSQL("TRUNCATE TABLE ZipAddressesTesting");
+
+    //    string SQL = string.Empty;
+    //    SQL += "SELECT * FROM ZipAddressesTestedBad";
+    //    DataTable Table_ZipAddressesTestedBad = db.Table(SQL);
+    //    foreach (DataRow Row_ZipAddressesTesting in Table_ZipAddressesTestedBad.Rows)
+    //    {
+    //      Insert_ZipAddressesTesting(
+    //        Row_ZipAddressesTesting);
+    //    }
+
+    //    #region create an internal ZipAddressesTesting Table of the new bad addresses
+    //    DataTable Table_ZipAddressesTesting = DataTable_ZipAddressesTesting();
+    //    ViewState["Table_ZipAddressesTesting"] = Table_ZipAddressesTesting;
+    //    ViewState["Rows"] = Table_ZipAddressesTesting.Rows.Count;
+    //    #endregion create an internal ZipAddressesTesting Table of the new bad addresses
+
+    //    Label_Rows_Bad.Text = db.Rows_Count_From("ZipAddressesTestedBad").ToString();
+    //    Label_ZipAddressesTable_Rows.Text = db.Rows_Count_From("ZipAddressesTesting").ToString();
+
+    //    Msg.Text = db.Ok("Use the NEXT button below to test the bad addresses loaded into"
+    //      + " ZipAddressesTesting, on row at a time.");
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    #region
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //    #endregion
+    //  }
+
+    //}
+
+    //protected void Button_Next_Address_Click(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    #region Clear controls
+    //    Label_DomainState.Text = string.Empty;
+    //    Label_StateCode.Text = string.Empty;
+    //    //Label_City_Error.Text = string.Empty;
+    //    Label_City_Entered.Text = string.Empty;
+    //    //Label_City_Name.Text = string.Empty;
+    //    Label_City_Name_Key.Text = string.Empty;
+    //    Label_Address_Error.Text = string.Empty;
+    //    Label_Address_Entered.Text = string.Empty;
+    //    Label_StreetNumber.Text = string.Empty;
+    //    Label_StreetPre.Text = string.Empty;
+    //    Label_Street.Text = string.Empty;
+    //    Label_StreetType.Text = string.Empty;
+    //    Label_StreetDirection.Text = string.Empty;
+    //    Label_Zip5_LDS.Text = string.Empty;
+    //    Label_Zip5_ZipStreets.Text = string.Empty;
+    //    Label_Zip5_Compare.Text = string.Empty;
+    //    Label_Zip4_LDS.Text = string.Empty;
+    //    Label_Zip4_ZipStreets.Text = string.Empty;
+    //    Label_Zip4_Compare.Text = string.Empty;
+
+    //    Label_Address_Bad.Text = string.Empty;
+    //    Label_City_Bad.Text = string.Empty;
+    //    Label_State_Bad.Text = string.Empty;
+    //    TextBox_City_Alt.Text = string.Empty;
+
+    //    DataRow Row_ZipStreetsRange = null;
+    //    DataRow Row_USZD = null;
+
+    //    //bool Is_ZipStreetsRanges_Row_Found = true;
+    //    //bool Is_Zip5_Same = true;
+    //    #endregion Clear controls
+
+    //    ViewState["Row"] = Convert.ToInt16(ViewState["Row"]) + 1;
+    //    #region Note
+    //    //this button should only be done once 
+    //    //when processing bad addresses
+    //    #endregion Note
+    //    Button_Load_Bad_Addresses.Enabled = false;
+
+    //    #region user values entered in ZipAddressesTesting Table
+
+    //    DataTable Table_ZipAddressesTesting =
+    //      (DataTable)ViewState["Table_ZipAddressesTesting"];
+
+    //    DataRow Row_ZipAddressesTesting =
+    //      Table_ZipAddressesTesting.Rows[Convert.ToInt16(ViewState["Row"])];
+
+    //    Label_DomainState.Text =
+    //      Row_ZipAddressesTesting["StateCode"].ToString();
+
+    //    Label_City_Entered.Text =
+    //      Row_ZipAddressesTesting["City"].ToString();
+
+    //    Label_Address_Entered.Text =
+    //      Row_ZipAddressesTesting["Addr1"].ToString();
+    //    #endregion user values entered in ZipAddressesTesting Table
+
+    //    #region Zip5 and Zip5 provided by LDS component
+    //    Label_Zip5_LDS.Text =
+    //      Row_ZipAddressesTesting["Zip5"].ToString();
+
+    //    Label_Zip4_LDS.Text =
+    //      Row_ZipAddressesTesting["Zip4"].ToString();
+    //    #endregion Zip5 and Zip5 provided by LDS component
+
+    //    #region replaced ZipAddressesTesting Values
+    //    //db.Address_Components(
+    //    //   Row_ZipAddressesTesting["Addr1"].ToString().ToUpper()
+    //    //  , ref  StreetNumber
+    //    //  , ref  StreetPre
+    //    //  , ref  Street
+    //    //  , ref  StreetType
+    //    //  , ref  StreetDirection
+    //    //  );
+    //    //Label_StreetNumber.Text = StreetNumber;
+    //    //Label_StreetPre.Text = StreetPre;
+    //    //Label_Street.Text = Street;
+    //    //Label_StreetType.Text = StreetType;
+    //    //Label_StreetDirection.Text = StreetDirection;
+
+    //    //Row_ZipStreetsRange = db.Row_ZipStreetsRange_Optional(
+    //    //   Row_ZipAddressesTesting["StateCode"].ToString()
+    //    //  , Row_ZipAddressesTesting["City"].ToString().ToUpper()
+    //    //  , Row_ZipAddressesTesting["Addr1"].ToString().ToUpper()
+    //    //  );
+    //    #endregion ZipAddressesTesting Values
+
+    //    #region ZipAddressesTesting Values
+    //    string StreetNumber = string.Empty;
+    //    string StreetPre = string.Empty;
+    //    string Street = string.Empty;
+    //    string StreetType = string.Empty;
+    //    string StreetDirection = string.Empty;
+
+    //    Row_ZipStreetsRange = db.Row_ZipStreetsRange(
+    //      Row_ZipAddressesTesting
+    //      , ref  StreetNumber
+    //      , ref  StreetPre
+    //      , ref  Street
+    //      , ref  StreetType
+    //      , ref  StreetDirection
+    //      );
+    //    Label_StreetNumber.Text = StreetNumber;
+    //    Label_StreetPre.Text = StreetPre;
+    //    Label_Street.Text = Street;
+    //    Label_StreetType.Text = StreetType;
+    //    Label_StreetDirection.Text = StreetDirection;
+    //    #endregion ZipAddressesTesting Values
+
+    //    #region Common Msg
+    //    Msg.Text = db.Msg("Row: "
+    //      + Convert.ToInt16(ViewState["Row"]).ToString()
+    //      + " of "
+    //      + ViewState["Rows"].ToString())
+    //      ;
+    //    #endregion Common Msg
+
+    //    if (Row_ZipStreetsRange != null)
+    //    {
+    //      #region FOUND ZipStreetsRanges_Row
+
+    //      Label_Address_Error.Text = string.Empty;
+
+    //      #region ZipStreetsRange City
+    //      Show_City(
+    //        Row_ZipStreetsRange["StateCode"].ToString()
+    //        , Row_ZipStreetsRange["CityNameKey"].ToString()
+    //        , Row_ZipStreetsRange["CityNameKey"].ToString()
+    //        );
+    //      #endregion ZipStreetsRange City
+
+    //      #region Zips
+    //      Show_Zips(
+    //        Row_ZipAddressesTesting
+    //        , Row_ZipStreetsRange
+    //        );
+    //      #endregion Zips
+
+    //      #region Delete Good ZipAddressesTesting Rows
+    //      //string SQL = string.Empty;
+    //      //SQL += " DELETE FROM ZipAddressesTesting";
+    //      //SQL += " WHERE Addr1 = " + db.SQLLit(Row_ZipAddressesTesting["Addr1"].ToString());
+    //      //SQL += " AND City = " + db.SQLLit(Row_ZipAddressesTesting["City"].ToString());
+    //      //SQL += " AND StateCode = " + db.SQLLit(Row_ZipAddressesTesting["StateCode"].ToString());
+    //      //db.ExecuteSQL(SQL);
+    //      DELETE_ZipAddressesTesting_Rows(
+    //        Row_ZipAddressesTesting
+    //        );
+    //      Msg.Text += db.Ok(" Rows with this good address have been deleted from ZipAddressesTesting.");
+    //      #endregion Delete Good ZipAddressesTesting Rows
+
+    //      #region report a bad zip5
+    //      Row_USZD = db.Row_USZD_Optional(
+    //        Row_ZipStreetsRange
+    //        );
+    //      if (!db.Is_Zip5_Same(
+    //        Row_ZipStreetsRange
+    //        , Row_USZD)
+    //        )
+    //      {
+    //        Msg.Text += db.Fail("Zip5's ARE DIFFERENT");
+    //      }
+    //      #endregion report a bad zip5
+
+    //      #region TextBoxes & Labels
+    //      Label_Street.Text = Row_ZipStreetsRange["Street"].ToString();
+    //      Label_StreetPre.Text = Row_ZipStreetsRange["StreetPre"].ToString();
+    //      Label_StreetType.Text = Row_ZipStreetsRange["StreetType"].ToString();
+    //      Label_StreetDirection.Text = Row_ZipStreetsRange["StreetDirection"].ToString();
+
+    //      Label_Address_Bad.Text = string.Empty;
+
+    //      Label_Street_Bad.Text = string.Empty;
+    //      Label_City_Bad.Text = string.Empty;
+    //      Label_State_Bad.Text = string.Empty;
+
+    //      TextBox_Street_Alt.Text = string.Empty;
+    //      TextBox_Street.Text = string.Empty;
+    //      TextBox_City_Alt.Text = string.Empty;
+    //      #endregion TextBoxes & Labels
+
+    //      #endregion FOUND ZipStreetsRanges_Row
+    //    }
+    //    else
+    //    {
+    //      #region NOT FOUND ZipStreetsRanges_Row
+
+    //      Label_Address_Error.Text = "ZipStreetsRanges Row NOT FOUND";
+
+    //      tr_Skip_Address.Visible = true;//Skip Address Button
+
+    //      Insert_ZipAddressesTestedBad(
+    //        Row_ZipAddressesTesting
+    //        );
+
+    //      #region Msg
+    //      Msg.Text += db.Fail("ADDRESS WAS NOT FOUND in ZipStreetsRanges Table: "
+    //        + Row_ZipAddressesTesting["Addr1"].ToString()
+    //        + " " + Row_ZipAddressesTesting["City"].ToString()
+    //        + " " + Row_ZipAddressesTesting["StateCode"].ToString());
+    //      #endregion Msg
+
+    //      #region Load Bad TextBoxes
+    //      Label_Address_Bad.Text = Row_ZipAddressesTesting["Addr1"].ToString()
+    //        + " " + Row_ZipAddressesTesting["City"].ToString()
+    //        + " " + Row_ZipAddressesTesting["StateCode"].ToString();
+
+    //      Label_Street_Bad.Text = Street.ToUpper();
+    //      Label_City_Bad.Text = Row_ZipAddressesTesting["City"].ToString().ToUpper();
+    //      Label_State_Bad.Text = Row_ZipAddressesTesting["StateCode"].ToString().ToUpper();
+
+    //      TextBox_Street_Alt.Text = string.Empty;
+    //      TextBox_Street.Text = string.Empty;
+    //      TextBox_City_Alt.Text = string.Empty;
+    //      #endregion Load Bad TextBoxes
+
+    //      #endregion NOT FOUND ZipStreetsRanges_Row
+    //    }
+
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    #region
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //    #endregion
+    //  }
+
+    //}
+
+    //protected void Button_Skip_Address_Click(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+
+    //    DataTable Table_ZipAddressesTesting =
+    //      (DataTable)ViewState["Table_ZipAddressesTesting"];
+
+    //    DataRow Row_ZipAddressesTesting =
+    //      Table_ZipAddressesTesting.Rows[Convert.ToInt16(ViewState["Row"])];
+
+    //    DELETE_ZipAddressesTesting_Rows(
+    //      Row_ZipAddressesTesting
+    //      );
+        
+    //    tr_Skip_Address.Visible = false;//Hide Skip Address Button
+
+    //    Msg.Text = db.Msg("The row for ZipAddressesTesting has been deleted for address: "
+    //      + Row_ZipAddressesTesting["Addr1"].ToString());
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    #region
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //    #endregion
+    //  }
+    //}
+
+    //protected void Button_Process_Click(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    Server.ScriptTimeout = 600000;//600000 sec = 10000 min = 160 hours
+    //    DateTime Start_Time = DateTime.Now;
+    //    string SQL = string.Empty;
+    //    Int64 AddressesTested = 0;
+    //    Int64 AddressesFound = 0;
+    //    Int64 AddressesNotFound = 0;
+    //    int AddressesFoundPercent = 0;
+
+    //    db.ExecuteSQL("TRUNCATE TABLE ZipAddressesTestedBad");
+
+    //    DataTable Table_ZipAddressesTesting = DataTable_ZipAddressesTesting();
+    //    foreach (DataRow Row_ZipAddressesTesting in Table_ZipAddressesTesting.Rows)
+    //    {
+    //      #region ZipAddressesTesting Row
+    //      DataRow Row_ZipStreetsRange = null;
+
+    //      AddressesTested++;
+
+    //      //Row_ZipStreetsRange = db.Row_ZipStreetsRange_Optional(
+    //      //   Row_ZipAddressesTesting["StateCode"].ToString()
+    //      //  , Row_ZipAddressesTesting["City"].ToString().ToUpper()
+    //      //  , Row_ZipAddressesTesting["Addr1"].ToString().ToUpper()
+    //      //  );
+    //      string StreetNumber = string.Empty;
+    //      string StreetPre = string.Empty;
+    //      string Street = string.Empty;
+    //      string StreetType = string.Empty;
+    //      string StreetDirection = string.Empty;
+
+    //      Row_ZipStreetsRange = db.Row_ZipStreetsRange(
+    //        Row_ZipAddressesTesting
+    //        , ref  StreetNumber
+    //        , ref  StreetPre
+    //        , ref  Street
+    //        , ref  StreetType
+    //        , ref  StreetDirection
+    //        );
+
+    //      if (Row_ZipStreetsRange != null)
+    //      {
+    //        AddressesFound++;
+
+    //        #region deleted
+    //        //Insert_ZipAddressesTestedGood(
+    //        //   Row_ZipAddressesTesting
+    //        //  , Row_ZipStreetsRange
+    //        //  , StreetNumber
+    //        //  , StreetPre
+    //        //  , Street
+    //        //  , StreetType
+    //        //  , StreetDirection
+    //        //  );
+    //        #endregion deleted
+    //      }
+    //      else
+    //      {
+    //        AddressesNotFound++;
+
+    //        Insert_ZipAddressesTestedBad(
+    //          Row_ZipAddressesTesting
+    //          );
+    //      }
+
+    //      #endregion ZipAddressesTesting Row
+    //    }
+
+    //    #region Log the test
+
+    //    DateTime Run_Time_End = DateTime.Now;
+    //    TimeSpan Run_Time = Run_Time_End.Subtract(Start_Time);
+    //    //Int32 RunTime_Seconds = Run_Time.Seconds;
+    //    decimal Pct = Decimal.Divide(AddressesFound, AddressesTested) * 100;
+    //    AddressesFoundPercent = (int)Pct;
+
+    //    SQL = string.Empty;
+    //    SQL += " INSERT INTO ZipAddressesTestedLog";
+    //    SQL += "(";
+    //    SQL += " TableName";
+    //    SQL += ",StateCode";
+    //    SQL += ",CityFirstChar";
+    //    SQL += ",AddressesTested";
+    //    SQL += ",AddressesFound";
+    //    SQL += ",AddressesNotFound";
+    //    SQL += ",DateStamp";
+    //    SQL += ",RunTime";
+    //    SQL += ",AddressesFoundPercent";
+    //    SQL += ")";
+    //    SQL += "VALUES";
+    //    SQL += "(";
+    //    SQL += db.SQLLit(TextBox_Table.Text.Trim());
+    //    SQL += "," + db.SQLLit(TextBox_StateCode.Text.Trim());
+    //    SQL += "," + db.SQLLit(TextBox_FirstChar.Text.Trim());
+    //    SQL += "," + AddressesTested.ToString();
+    //    SQL += "," + AddressesFound.ToString();
+    //    SQL += "," + AddressesNotFound.ToString();
+    //    SQL += "," + db.SQLLit(Db.DbNow);
+    //    SQL += "," + db.SQLLit(db.Str_Run_Time(Run_Time));
+    //    SQL += "," + AddressesFoundPercent.ToString();
+    //    SQL += ")";
+
+    //    db.ExecuteSQL(SQL);
+    //    #endregion Log the test
+
+    //    Button_Load_Bad_Addresses.Enabled = true;
+
+    //    Msg.Text = db.Ok("<br>Done Time: "
+    //      + db.Str_Run_Time(Start_Time, DateTime.Now)
+    //      + "  :::Percent of Addresses Found: "
+    //      + AddressesFoundPercent.ToString());
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    #region
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //    #endregion
+    //  }
+    //}
+    //#endregion Buttons
+
+    //protected void Page_Load(object sender, EventArgs e)
+    //{
+    //  if (!IsPostBack)
+    //  {
+    //    if (!SecurePage.IsMasterUser)
+    //      SecurePage.HandleSecurityException();
+
+    //    try
+    //    {
+    //      tr_Skip_Address.Visible = false;//Skip Testing Address Button
+
+    //      TextBox_Table.Text = db.Master_Str("LogAddressesTestedTableName");
+    //      TextBox_StateCode.Text = db.Master_Str("LogAddressesTestedStateCode");
+    //      TextBox_FirstChar.Text = db.Master_Str("LogAddressesTestedCityFirstChar");
+
+
+    //      #region create internal ZipAddressesTesting Table
+    //      DataTable Table_ZipAddressesTesting = DataTable_ZipAddressesTesting();
+    //      ViewState["Table_ZipAddressesTesting"] = Table_ZipAddressesTesting;
+    //      ViewState["Rows"] = Table_ZipAddressesTesting.Rows.Count;
+
+    //      ViewState["Row"] = -1;//will be incremented to 0 when Next button is selected
+
+    //      #endregion create internal ZipAddressesTesting Table
+
+    //      Label_ZipAddressesTable_Rows.Text = db.Rows_Count_From("ZipAddressesTesting").ToString();
+    //      Label_Rows_Bad.Text = db.Rows_Count_From("ZipAddressesTestedBad").ToString();
+
+    //      Msg.Text = db.Msg(Table_ZipAddressesTesting.Rows.Count.ToString()
+    //        + " rows in the ZipAddressesTesting Table to check."
+    //        + " Click the Next Address Button start testing the addresses.");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //      #region
+    //      Msg.Text = db.Fail(ex.Message);
+    //      db.Log_Error_Admin(ex);
+    //      #endregion
+    //    }
+    //  }
+    //}
+
+    //protected void TextBox_City_Alt_TextChanged(object sender, EventArgs e)
+    //{
+
+    //}
+
+    #endregion Dead code
+
+  }
+}

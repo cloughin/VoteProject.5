@@ -1,0 +1,43 @@
+﻿#main-tabs #tab-contact h5 em a
+{
+  color: #bf9241;
+}
+
+#main-tabs #tab-social div.medium.website
+{
+  padding: 12px 0 2px 9px;
+}
+
+#main-tabs #tab-upload .browse-button
+{
+  font-size: 10px;
+  padding: 0 6px;
+  top: 4px;
+}
+
+#main-tabs #tab-upload .upload-file
+{
+  left: -146px;
+  top: 3px;
+}
+
+#main-tabs #tab-upload .file-name-container
+{
+  left: 92px;
+}
+
+#main-tabs #tab-upload .file-name
+{
+  width: 179px;
+}
+
+#main-tabs .vtab-control .feedback-floater-for-ie7
+{
+  height: 1px;
+  width: 628px;
+}
+
+#main-tabs .vtab-control div.update-button
+{
+  float: left;
+}

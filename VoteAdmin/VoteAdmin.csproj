@@ -1,0 +1,2230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{09D87237-7CFB-43AD-93D1-86EB77AB8E53}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VoteAdmin</RootNamespace>
+    <AssemblyName>VoteAdmin</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+    <Use64BitIISExpress />
+    <TypeScriptToolsVersion>2.5</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ExcludeGeneratedDebugSymbol>false</ExcludeGeneratedDebugSymbol>
+    <PublishDatabases>false</PublishDatabases>
+    <FilesToIncludeForPublish>AllFilesInProjectFolder</FilesToIncludeForPublish>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EGIS.ShapeFileLib, Version=4.5.6.0, Culture=neutral, PublicKeyToken=05b98c869b5ffe6a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Vote\Tiger\Software\Easy GIS .NET Desktop\egis_dt_4_5_6\egis_dt_4_5_6\EGIS.ShapeFileLib.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader, Version=3.4.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.4.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.4.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.DataSet.3.4.0\lib\net45\ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=11.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.11.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\MySQL\Connector.NET 6.9\Assemblies\v4.5\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Admin\BulkEmail.aspx" />
+    <Content Include="Admin\CountyJurisdictionsReport.aspx" />
+    <Content Include="Admin\DownloadCountyOfficesCsv.aspx" />
+    <Content Include="Admin\DownloadLocalOfficesCsv.aspx" />
+    <Content Include="Admin\DownloadOfficesCsv.aspx" />
+    <Content Include="Admin\Election.aspx" />
+    <Content Include="Admin\OfficesAndCandidatesReport.aspx" />
+    <Content Include="Admin\OfficesAndCandidatesSelection.aspx" />
+    <Content Include="Admin\SetupBallotPageBannerAd.aspx" />
+    <Content Include="Admin\SetUpComparePageBannerAd.aspx" />
+    <Content Include="Admin\SetupElectedPageBannerAd.aspx" />
+    <Content Include="Controls\BannerAdInput.ascx" />
+    <Content Include="css\slicknav.css" />
+    <Content Include="css\slicknav.min.css" />
+    <Content Include="css\vote\admin\UpdateIssues.css" />
+    <Content Include="css\vote\controls\BannerAdInput.css" />
+    <Content Include="css\vote\master\AdRates.css" />
+    <Content Include="css\vote\master\LogPaypalDonations.css" />
+    <Content Include="css\vote\master\Nags2.css" />
+    <Content Include="css\vote\politician\Update.css" />
+    <Content Include="css\vote\politician\UpdateInfo.css" />
+    <Content Include="images\ajax-loader16.gif" />
+    <Content Include="images\cancel16.png" />
+    <Content Include="images\close24.png" />
+    <Content Include="images\loader.gif" />
+    <Content Include="images\logo-2019-48h.png" />
+    <Content Include="images\pencil16.png" />
+    <Content Include="images\podcast-icon-2.png" />
+    <Content Include="images\podcasts-icon.sm.png" />
+    <Content Include="images\logo-2019-full.png" />
+    <Content Include="images\yt-play-button.png" />
+    <Content Include="images\yt-play-button2.png" />
+    <Content Include="images\yt16.png" />
+    <Content Include="js\ace\mode\html_votetemplate_highlight_rules - Copy.js" />
+    <Content Include="js\jq\jquery.slicknav.js" />
+    <Content Include="js\jq\jquery.slicknav.min.js" />
+    <Content Include="js\vote\admin\DownloadOfficesCsv.js" />
+    <Content Include="js\vote\admin\OfficesAndCandidatesSelection.js" />
+    <Content Include="js\vote\admin\setupBallotPageBannerAd.js" />
+    <Content Include="js\vote\admin\setupElectedPageBannerAd.js" />
+    <Content Include="js\vote\admin\setupComparePageBannerAd.js" />
+    <Content Include="js\vote\controls\BannerAdInput.js" />
+    <Content Include="js\vote\master\adrates.js" />
+    <Content Include="js\vote\master\databasestats.js" />
+    <Content Include="js\vote\master\LogPaypalDonations.js" />
+    <Content Include="js\vote\master\nags - Copy.js" />
+    <Content Include="js\vote\master\setupHomePageBannerAd2.js" />
+    <Content Include="js\vote\master\uploadImages.js" />
+    <Content Include="js\vote\master\setupHomePageBannerAd.js" />
+    <Content Include="js\vote\master\updateOrganizations.js" />
+    <Content Include="js\vote\politician\update.js" />
+    <Content Include="js\vote\politician\updateInfo.js" />
+    <Content Include="Master\AdRates.aspx" />
+    <Content Include="Master\AjaxFileUploader.aspx" />
+    <Content Include="Master\DownloadOrganizationsCsv.aspx" />
+    <Content Include="Master\ElectionSpreadsheets.aspx" />
+    <Content Include="Admin\LocalJurisdictionsReport.aspx" />
+    <Content Include="Admin\CountiesReport.aspx" />
+    <Content Include="Admin\Default.aspx" />
+    <Content Include="Admin\DownloadVotersEdgeCsv.aspx" />
+    <Content Include="Admin\Issues.aspx" />
+    <Content Include="Admin\IssuesReport.aspx" />
+    <Content Include="Admin\KeepAlive.aspx" />
+    <Content Include="Admin\Offices.aspx" />
+    <Content Include="Admin\Officials.aspx" />
+    <Content Include="Admin\Parties.aspx" />
+    <Content Include="Admin\Politicians.aspx" />
+    <Content Include="Admin\QuestionAnswers.aspx" />
+    <Content Include="Admin\Questions.aspx" />
+    <Content Include="Admin\UpdateElections.aspx" />
+    <Content Include="Admin\UpdateIssues.aspx" />
+    <Content Include="Admin\UpdateJurisdictions.aspx" />
+    <Content Include="Admin\UpdateOffices.aspx" />
+    <Content Include="Admin\UpdateParties.aspx" />
+    <Content Include="Admin\UpdatePoliticians.aspx" />
+    <Content Include="Admin\Video.aspx" />
+    <Content Include="Admin\Videos.aspx" />
+    <Content Include="Admin\WebService.asmx" />
+    <Content Include="Controls\AdminHeading.ascx" />
+    <Content Include="Controls\AdminMenu.ascx" />
+    <Content Include="Controls\CountiesMenu.ascx" />
+    <Content Include="Controls\ElectionControl.ascx" />
+    <Content Include="Controls\ElectionsOfficesCandidates.ascx" />
+    <Content Include="Controls\EmailTemplateDialogs.ascx" />
+    <Content Include="Controls\FeedbackContainer.ascx" />
+    <Content Include="Controls\FindPolitician.ascx" />
+    <Content Include="Controls\LocalsMenu.ascx" />
+    <Content Include="Controls\ManagePoliticiansPanel.ascx" />
+    <Content Include="Controls\NavigateJurisdiction.ascx" />
+    <Content Include="Controls\NoJurisdiction.ascx" />
+    <Content Include="Controls\OfficeControl.ascx" />
+    <Content Include="Controls\SelectJurisdictionButton.ascx" />
+    <Content Include="Controls\SelectJurisdictions.ascx" />
+    <Content Include="Controls\StatesMenu.ascx" />
+    <Content Include="Controls\SubHeadingWithHelp.ascx" />
+    <Content Include="css\AllAdmin.css" />
+    <Content Include="css\Officials.css" />
+    <Content Include="css\tipTip.css" />
+    <Content Include="css\vote\adminMaster.css" />
+    <Content Include="css\vote\adminMaster.ie7.css" />
+    <Content Include="css\vote\adminMaster.ie8.css" />
+    <Content Include="css\vote\adminMaster.ie9.css" />
+    <Content Include="css\vote\admin\BulkEmail.css" />
+    <Content Include="css\vote\master\ElectionSpreadsheets.css" />
+    <Content Include="css\vote\admin\UpdateElections.css" />
+    <Content Include="css\vote\admin\UpdateJurisdictions.css" />
+    <Content Include="css\vote\admin\UpdateOffices.css" />
+    <Content Include="css\vote\admin\UpdatePoliticians.css" />
+    <Content Include="css\vote\controls\ManagePoliticiansPanel.css" />
+    <Content Include="css\vote\controls\SelectJurisdictionButton.css" />
+    <Content Include="css\vote\controls\NavigateJurisdiction.css" />
+    <Content Include="css\vote\master\BallotpediaCsvs.css" />
+    <Content Include="css\vote\master\BallotpediaCsvs.ie.css" />
+    <Content Include="css\vote\master\BallotpediaCsvs.ie7.css" />
+    <Content Include="css\vote\master\BallotpediaCsvs.ie8.css" />
+    <Content Include="css\vote\master\BallotpediaCsvs.ie9.css" />
+    <Content Include="css\vote\master\EmailBulkDelete.css" />
+    <Content Include="css\vote\master\LogDonations.css" />
+    <Content Include="css\vote\master\DatabaseStats.css" />
+    <Content Include="css\vote\master\Nags.css" />
+    <Content Include="css\vote\master\Nags.ie7.css" />
+    <Content Include="css\vote\master\Nags.ie8.css" />
+    <Content Include="css\vote\master\Nags.ie9.css" />
+    <Content Include="css\vote\master\UpdateUsers.css" />
+    <Content Include="css\vote\master\UpdateVolunteers.css" />
+    <Content Include="css\vote\politician\UpdateIntro.css" />
+    <Content Include="css\vote\politician\UpdateIntro.ie.css" />
+    <Content Include="css\vote\politician\UpdateIntro.ie7.css" />
+    <Content Include="css\vote\politician\UpdateIntro.ie8.css" />
+    <Content Include="css\vote\politician\UpdateIntro.ie9.css" />
+    <Content Include="css\vote\politician\UpdateIssues.css" />
+    <Content Include="css\vote\politician\UpdateIssues.ie7.css" />
+    <Content Include="css\vote\SignIn.css" />
+    <Content Include="css\vote\SignIn.ie7.css" />
+    <Content Include="default.aspx" />
+    <Content Include="election.js" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="Image.aspx" />
+    <Content Include="images\1x1-aaaaaa.png" />
+    <Content Include="images\ajax-loader32.gif" />
+    <Content Include="images\ajax-loader64.gif" />
+    <Content Include="images\append.png" />
+    <Content Include="images\ballotpedia.2.png" />
+    <Content Include="images\Ballotpedia.png" />
+    <Content Include="images\big-number-sprite.png" />
+    <Content Include="images\blogger.2.png" />
+    <Content Include="images\Blogger.jpg" />
+    <Content Include="images\blue-arrow-sprite-63x60.jpg" />
+    <Content Include="images\button-sprite.png" />
+    <Content Include="images\check.png" />
+    <Content Include="images\checkboxes.png" />
+    <Content Include="images\ckboxsprites-on.png" />
+    <Content Include="images\ckboxsprites.png" />
+    <Content Include="images\crowdpac.png" />
+    <Content Include="images\crowdpac.sm.png" />
+    <Content Include="images\delete.png" />
+    <Content Include="images\Designs\VOTE-USA\lgbanner.png" />
+    <Content Include="images\dynatree\skin-vista\icons.gif" />
+    <Content Include="images\dynatree\skin-vista\loading.gif" />
+    <Content Include="images\dynatree\skin-vista\ui.dynatree.css" />
+    <Content Include="images\edit.png" />
+    <Content Include="images\email.2.png" />
+    <Content Include="images\Email.png" />
+    <Content Include="images\facebook.2.png" />
+    <Content Include="images\Facebook.png" />
+    <Content Include="images\Flicker.png" />
+    <Content Include="images\flickr.2.png" />
+    <Content Include="images\forward.png" />
+    <Content Include="images\gofundme.png" />
+    <Content Include="images\gofundme.sm.png" />
+    <Content Include="images\googleplus.2.png" />
+    <Content Include="images\GooglePlus.jpg" />
+    <Content Include="images\info.png" />
+    <Content Include="images\instagram.2.png" />
+    <Content Include="images\Instagram.jpg" />
+    <Content Include="images\linkedin.2.png" />
+    <Content Include="images\LinkedIn.jpg" />
+    <Content Include="images\menubg.gif" />
+    <Content Include="images\notes.png" />
+    <Content Include="images\numbers.png" />
+    <Content Include="images\opsprite.png" />
+    <Content Include="images\pinterest.2.png" />
+    <Content Include="images\Pinterest.jpg" />
+    <Content Include="images\prepend.png" />
+    <Content Include="images\radio.png" />
+    <Content Include="images\replace.png" />
+    <Content Include="images\resize.png" />
+    <Content Include="images\rss.2.png" />
+    <Content Include="images\Rss.png" />
+    <Content Include="images\small-ajax-loader.gif" />
+    <Content Include="images\socialsprite.png" />
+    <Content Include="images\sort-arrows.png" />
+    <Content Include="images\swap32.png" />
+    <Content Include="images\tabbg.png" />
+    <Content Include="images\treeicons.gif" />
+    <Content Include="images\twitter.2.png" />
+    <Content Include="images\Twitter.png" />
+    <Content Include="images\undo-redo.png" />
+    <Content Include="images\view.png" />
+    <Content Include="images\vimeo.2.png" />
+    <Content Include="images\vimeo.jpg" />
+    <Content Include="images\wikipedia.2.png" />
+    <Content Include="images\Wikipedia.png" />
+    <Content Include="images\youtube.2.new.png" />
+    <Content Include="images\youtube.2.png" />
+    <Content Include="images\YouTube.png" />
+    <Content Include="images\yt-icon.png" />
+    <Content Include="js\ace\ace.js" />
+    <Content Include="js\ace\anchor.js" />
+    <Content Include="js\ace\anchor_test.js" />
+    <Content Include="js\ace\autocomplete.js" />
+    <Content Include="js\ace\autocomplete\popup.js" />
+    <Content Include="js\ace\autocomplete\text_completer.js" />
+    <Content Include="js\ace\autocomplete\util.js" />
+    <Content Include="js\ace\background_tokenizer.js" />
+    <Content Include="js\ace\background_tokenizer_test.js" />
+    <Content Include="js\ace\commands\command_manager.js" />
+    <Content Include="js\ace\commands\command_manager_test.js" />
+    <Content Include="js\ace\commands\default_commands.js" />
+    <Content Include="js\ace\commands\incremental_search_commands.js" />
+    <Content Include="js\ace\commands\multi_select_commands.js" />
+    <Content Include="js\ace\commands\occur_commands.js" />
+    <Content Include="js\ace\config.js" />
+    <Content Include="js\ace\config_test.js" />
+    <Content Include="js\ace\css\codefolding-fold-button-states.png" />
+    <Content Include="js\ace\css\editor.css" />
+    <Content Include="js\ace\css\expand-marker.png" />
+    <Content Include="js\ace\document.js" />
+    <Content Include="js\ace\document_test.js" />
+    <Content Include="js\ace\editor.js" />
+    <Content Include="js\ace\editor_change_document_test.js" />
+    <Content Include="js\ace\editor_highlight_selected_word_test.js" />
+    <Content Include="js\ace\editor_navigation_test.js" />
+    <Content Include="js\ace\editor_text_edit_test.js" />
+    <Content Include="js\ace\edit_session.js" />
+    <Content Include="js\ace\edit_session\bracket_match.js" />
+    <Content Include="js\ace\edit_session\fold.js" />
+    <Content Include="js\ace\edit_session\folding.js" />
+    <Content Include="js\ace\edit_session\fold_line.js" />
+    <Content Include="js\ace\edit_session_test.js" />
+    <Content Include="js\ace\ext\chromevox.js" />
+    <Content Include="js\ace\ext\elastic_tabstops_lite.js" />
+    <Content Include="js\ace\ext\emmet.js" />
+    <Content Include="js\ace\ext\keybinding_menu.js" />
+    <Content Include="js\ace\ext\language_tools.js" />
+    <Content Include="js\ace\ext\menu_tools\add_editor_menu_options.js" />
+    <Content Include="js\ace\ext\menu_tools\element_generator.js" />
+    <Content Include="js\ace\ext\menu_tools\generate_settings_menu.js" />
+    <Content Include="js\ace\ext\menu_tools\get_editor_keyboard_shortcuts.js" />
+    <Content Include="js\ace\ext\menu_tools\get_set_functions.js" />
+    <Content Include="js\ace\ext\menu_tools\overlay_page.js" />
+    <Content Include="js\ace\ext\menu_tools\settings_menu.css" />
+    <Content Include="js\ace\ext\modelist.js" />
+    <Content Include="js\ace\ext\old_ie.js" />
+    <Content Include="js\ace\ext\old_ie_test.js" />
+    <Content Include="js\ace\ext\searchbox.css" />
+    <Content Include="js\ace\ext\searchbox.js" />
+    <Content Include="js\ace\ext\settings_menu.js" />
+    <Content Include="js\ace\ext\spellcheck.js" />
+    <Content Include="js\ace\ext\split.js" />
+    <Content Include="js\ace\ext\static.css" />
+    <Content Include="js\ace\ext\static_highlight.js" />
+    <Content Include="js\ace\ext\static_highlight_test.js" />
+    <Content Include="js\ace\ext\statusbar.js" />
+    <Content Include="js\ace\ext\textarea.js" />
+    <Content Include="js\ace\ext\themelist.js" />
+    <Content Include="js\ace\ext\whitespace.js" />
+    <Content Include="js\ace\incremental_search.js" />
+    <Content Include="js\ace\incremental_search_test.js" />
+    <Content Include="js\ace\keyboard\emacs.js" />
+    <Content Include="js\ace\keyboard\emacs_test.js" />
+    <Content Include="js\ace\keyboard\hash_handler.js" />
+    <Content Include="js\ace\keyboard\keybinding.js" />
+    <Content Include="js\ace\keyboard\keybinding_test.js" />
+    <Content Include="js\ace\keyboard\state_handler.js" />
+    <Content Include="js\ace\keyboard\textinput.js" />
+    <Content Include="js\ace\keyboard\vim.js" />
+    <Content Include="js\ace\keyboard\vim\commands.js" />
+    <Content Include="js\ace\keyboard\vim\maps\aliases.js" />
+    <Content Include="js\ace\keyboard\vim\maps\motions.js" />
+    <Content Include="js\ace\keyboard\vim\maps\operators.js" />
+    <Content Include="js\ace\keyboard\vim\maps\util.js" />
+    <Content Include="js\ace\keyboard\vim\registers.js" />
+    <Content Include="js\ace\layer\cursor.js" />
+    <Content Include="js\ace\layer\gutter.js" />
+    <Content Include="js\ace\layer\marker.js" />
+    <Content Include="js\ace\layer\text.js" />
+    <Content Include="js\ace\layer\text_test.js" />
+    <Content Include="js\ace\lib\dom.js" />
+    <Content Include="js\ace\lib\es5-shim.js" />
+    <Content Include="js\ace\lib\event.js" />
+    <Content Include="js\ace\lib\event_emitter.js" />
+    <Content Include="js\ace\lib\event_emitter_test.js" />
+    <Content Include="js\ace\lib\fixoldbrowsers.js" />
+    <Content Include="js\ace\lib\keys.js" />
+    <Content Include="js\ace\lib\lang.js" />
+    <Content Include="js\ace\lib\net.js" />
+    <Content Include="js\ace\lib\oop.js" />
+    <Content Include="js\ace\lib\regexp.js" />
+    <Content Include="js\ace\lib\useragent.js" />
+    <Content Include="js\ace\line_widgets.js" />
+    <Content Include="js\ace\model\editor.js" />
+    <Content Include="js\ace\mode\abap.js" />
+    <Content Include="js\ace\mode\abap_highlight_rules.js" />
+    <Content Include="js\ace\mode\actionscript.js" />
+    <Content Include="js\ace\mode\actionscript_highlight_rules.js" />
+    <Content Include="js\ace\mode\ada.js" />
+    <Content Include="js\ace\mode\ada_highlight_rules.js" />
+    <Content Include="js\ace\mode\apache_conf.js" />
+    <Content Include="js\ace\mode\apache_conf_highlight_rules.js" />
+    <Content Include="js\ace\mode\asciidoc.js" />
+    <Content Include="js\ace\mode\asciidoc_highlight_rules.js" />
+    <Content Include="js\ace\mode\assembly_x86.js" />
+    <Content Include="js\ace\mode\assembly_x86_highlight_rules.js" />
+    <Content Include="js\ace\mode\autohotkey.js" />
+    <Content Include="js\ace\mode\autohotkey_highlight_rules.js" />
+    <Content Include="js\ace\mode\batchfile.js" />
+    <Content Include="js\ace\mode\batchfile_highlight_rules.js" />
+    <Content Include="js\ace\mode\behaviour.js" />
+    <Content Include="js\ace\mode\behaviour\css.js" />
+    <Content Include="js\ace\mode\behaviour\cstyle.js" />
+    <Content Include="js\ace\mode\behaviour\html.js" />
+    <Content Include="js\ace\mode\behaviour\xml.js" />
+    <Content Include="js\ace\mode\behaviour\xquery.js" />
+    <Content Include="js\ace\mode\c9search.js" />
+    <Content Include="js\ace\mode\c9search_highlight_rules.js" />
+    <Content Include="js\ace\mode\clojure.js" />
+    <Content Include="js\ace\mode\clojure_highlight_rules.js" />
+    <Content Include="js\ace\mode\cobol.js" />
+    <Content Include="js\ace\mode\cobol_highlight_rules.js" />
+    <Content Include="js\ace\mode\coffee.js" />
+    <Content Include="js\ace\mode\coffee\coffee-script.js" />
+    <Content Include="js\ace\mode\coffee\helpers.js" />
+    <Content Include="js\ace\mode\coffee\lexer.js" />
+    <Content Include="js\ace\mode\coffee\nodes.js" />
+    <Content Include="js\ace\mode\coffee\parser.js" />
+    <Content Include="js\ace\mode\coffee\parser_test.js" />
+    <Content Include="js\ace\mode\coffee\rewriter.js" />
+    <Content Include="js\ace\mode\coffee\scope.js" />
+    <Content Include="js\ace\mode\coffee_highlight_rules.js" />
+    <Content Include="js\ace\mode\coffee_worker.js" />
+    <Content Include="js\ace\mode\coldfusion.js" />
+    <Content Include="js\ace\mode\coldfusion_highlight_rules.js" />
+    <Content Include="js\ace\mode\coldfusion_test.js" />
+    <Content Include="js\ace\mode\csharp.js" />
+    <Content Include="js\ace\mode\csharp_highlight_rules.js" />
+    <Content Include="js\ace\mode\css.js" />
+    <Content Include="js\ace\mode\css\csslint.js" />
+    <Content Include="js\ace\mode\css_highlight_rules.js" />
+    <Content Include="js\ace\mode\css_test.js" />
+    <Content Include="js\ace\mode\css_worker.js" />
+    <Content Include="js\ace\mode\css_worker_test.js" />
+    <Content Include="js\ace\mode\curly.js" />
+    <Content Include="js\ace\mode\curly_highlight_rules.js" />
+    <Content Include="js\ace\mode\c_cpp.js" />
+    <Content Include="js\ace\mode\c_cpp_highlight_rules.js" />
+    <Content Include="js\ace\mode\d.js" />
+    <Content Include="js\ace\mode\dart.js" />
+    <Content Include="js\ace\mode\dart_highlight_rules.js" />
+    <Content Include="js\ace\mode\diff.js" />
+    <Content Include="js\ace\mode\diff_highlight_rules.js" />
+    <Content Include="js\ace\mode\django.js" />
+    <Content Include="js\ace\mode\doc_comment_highlight_rules.js" />
+    <Content Include="js\ace\mode\dot.js" />
+    <Content Include="js\ace\mode\dot_highlight_rules.js" />
+    <Content Include="js\ace\mode\d_highlight_rules.js" />
+    <Content Include="js\ace\mode\ejs.js" />
+    <Content Include="js\ace\mode\erlang.js" />
+    <Content Include="js\ace\mode\erlang_highlight_rules.js" />
+    <Content Include="js\ace\mode\folding\asciidoc.js" />
+    <Content Include="js\ace\mode\folding\c9search.js" />
+    <Content Include="js\ace\mode\folding\coffee.js" />
+    <Content Include="js\ace\mode\folding\coffee_test.js" />
+    <Content Include="js\ace\mode\folding\csharp.js" />
+    <Content Include="js\ace\mode\folding\cstyle.js" />
+    <Content Include="js\ace\mode\folding\cstyle_test.js" />
+    <Content Include="js\ace\mode\folding\diff.js" />
+    <Content Include="js\ace\mode\folding\fold_mode.js" />
+    <Content Include="js\ace\mode\folding\html.js" />
+    <Content Include="js\ace\mode\folding\html_test.js" />
+    <Content Include="js\ace\mode\folding\ini.js" />
+    <Content Include="js\ace\mode\folding\latex.js" />
+    <Content Include="js\ace\mode\folding\lua.js" />
+    <Content Include="js\ace\mode\folding\markdown.js" />
+    <Content Include="js\ace\mode\folding\mixed.js" />
+    <Content Include="js\ace\mode\folding\pythonic.js" />
+    <Content Include="js\ace\mode\folding\pythonic_test.js" />
+    <Content Include="js\ace\mode\folding\velocity.js" />
+    <Content Include="js\ace\mode\folding\xml.js" />
+    <Content Include="js\ace\mode\folding\xml_test.js" />
+    <Content Include="js\ace\mode\forth.js" />
+    <Content Include="js\ace\mode\forth_highlight_rules.js" />
+    <Content Include="js\ace\mode\ftl.js" />
+    <Content Include="js\ace\mode\ftl_highlight_rules.js" />
+    <Content Include="js\ace\mode\glsl.js" />
+    <Content Include="js\ace\mode\glsl_highlight_rules.js" />
+    <Content Include="js\ace\mode\golang.js" />
+    <Content Include="js\ace\mode\golang_highlight_rules.js" />
+    <Content Include="js\ace\mode\groovy.js" />
+    <Content Include="js\ace\mode\groovy_highlight_rules.js" />
+    <Content Include="js\ace\mode\haml.js" />
+    <Content Include="js\ace\mode\haml_highlight_rules.js" />
+    <Content Include="js\ace\mode\handlebars.js" />
+    <Content Include="js\ace\mode\handlebars_highlight_rules.js" />
+    <Content Include="js\ace\mode\haskell.js" />
+    <Content Include="js\ace\mode\haskell_highlight_rules.js" />
+    <Content Include="js\ace\mode\haxe.js" />
+    <Content Include="js\ace\mode\haxe_highlight_rules.js" />
+    <Content Include="js\ace\mode\html.js" />
+    <Content Include="js\ace\mode\html_completions.js" />
+    <Content Include="js\ace\mode\html_highlight_rules.js" />
+    <Content Include="js\ace\mode\html_ruby.js" />
+    <Content Include="js\ace\mode\html_ruby_highlight_rules.js" />
+    <Content Include="js\ace\mode\html_test.js" />
+    <Content Include="js\ace\mode\html_votetemplate.js" />
+    <Content Include="js\ace\mode\html_votetemplate_highlight_rules.js" />
+    <Content Include="js\ace\mode\ini.js" />
+    <Content Include="js\ace\mode\ini_highlight_rules.js" />
+    <Content Include="js\ace\mode\jack.js" />
+    <Content Include="js\ace\mode\jack_highlight_rules.js" />
+    <Content Include="js\ace\mode\jade.js" />
+    <Content Include="js\ace\mode\jade_highlight_rules.js" />
+    <Content Include="js\ace\mode\java.js" />
+    <Content Include="js\ace\mode\javascript.js" />
+    <Content Include="js\ace\mode\javascript\jshint.js" />
+    <Content Include="js\ace\mode\javascript_highlight_rules.js" />
+    <Content Include="js\ace\mode\javascript_test.js" />
+    <Content Include="js\ace\mode\javascript_worker.js" />
+    <Content Include="js\ace\mode\javascript_worker_test.js" />
+    <Content Include="js\ace\mode\java_highlight_rules.js" />
+    <Content Include="js\ace\mode\json.js" />
+    <Content Include="js\ace\mode\jsoniq.js" />
+    <Content Include="js\ace\mode\json\json_parse.js" />
+    <Content Include="js\ace\mode\json_highlight_rules.js" />
+    <Content Include="js\ace\mode\json_worker.js" />
+    <Content Include="js\ace\mode\json_worker_test.js" />
+    <Content Include="js\ace\mode\jsp.js" />
+    <Content Include="js\ace\mode\jsp_highlight_rules.js" />
+    <Content Include="js\ace\mode\jsx.js" />
+    <Content Include="js\ace\mode\jsx_highlight_rules.js" />
+    <Content Include="js\ace\mode\js_regex_highlight_rules.js" />
+    <Content Include="js\ace\mode\julia.js" />
+    <Content Include="js\ace\mode\julia_highlight_rules.js" />
+    <Content Include="js\ace\mode\latex.js" />
+    <Content Include="js\ace\mode\latex_highlight_rules.js" />
+    <Content Include="js\ace\mode\less.js" />
+    <Content Include="js\ace\mode\less_highlight_rules.js" />
+    <Content Include="js\ace\mode\liquid.js" />
+    <Content Include="js\ace\mode\liquid_highlight_rules.js" />
+    <Content Include="js\ace\mode\lisp.js" />
+    <Content Include="js\ace\mode\lisp_highlight_rules.js" />
+    <Content Include="js\ace\mode\livescript.js" />
+    <Content Include="js\ace\mode\logiql.js" />
+    <Content Include="js\ace\mode\logiql_highlight_rules.js" />
+    <Content Include="js\ace\mode\logiql_test.js" />
+    <Content Include="js\ace\mode\lsl.js" />
+    <Content Include="js\ace\mode\lsl_highlight_rules.js" />
+    <Content Include="js\ace\mode\lua.js" />
+    <Content Include="js\ace\mode\luapage.js" />
+    <Content Include="js\ace\mode\luapage_highlight_rules.js" />
+    <Content Include="js\ace\mode\lua\luaparse.js" />
+    <Content Include="js\ace\mode\lua_highlight_rules.js" />
+    <Content Include="js\ace\mode\lua_worker.js" />
+    <Content Include="js\ace\mode\lucene.js" />
+    <Content Include="js\ace\mode\lucene_highlight_rules.js" />
+    <Content Include="js\ace\mode\makefile.js" />
+    <Content Include="js\ace\mode\makefile_highlight_rules.js" />
+    <Content Include="js\ace\mode\markdown.js" />
+    <Content Include="js\ace\mode\markdown_highlight_rules.js" />
+    <Content Include="js\ace\mode\matching_brace_outdent.js" />
+    <Content Include="js\ace\mode\matching_parens_outdent.js" />
+    <Content Include="js\ace\mode\matlab.js" />
+    <Content Include="js\ace\mode\matlab_highlight_rules.js" />
+    <Content Include="js\ace\mode\mel.js" />
+    <Content Include="js\ace\mode\mel_highlight_rules.js" />
+    <Content Include="js\ace\mode\mushcode.js" />
+    <Content Include="js\ace\mode\mushcode_high_rules.js" />
+    <Content Include="js\ace\mode\mysql.js" />
+    <Content Include="js\ace\mode\mysql_highlight_rules.js" />
+    <Content Include="js\ace\mode\nix.js" />
+    <Content Include="js\ace\mode\nix_highlight_rules.js" />
+    <Content Include="js\ace\mode\objectivec.js" />
+    <Content Include="js\ace\mode\objectivec_highlight_rules.js" />
+    <Content Include="js\ace\mode\ocaml.js" />
+    <Content Include="js\ace\mode\ocaml_highlight_rules.js" />
+    <Content Include="js\ace\mode\pascal.js" />
+    <Content Include="js\ace\mode\pascal_highlight_rules.js" />
+    <Content Include="js\ace\mode\perl.js" />
+    <Content Include="js\ace\mode\perl_highlight_rules.js" />
+    <Content Include="js\ace\mode\pgsql.js" />
+    <Content Include="js\ace\mode\pgsql_highlight_rules.js" />
+    <Content Include="js\ace\mode\php.js" />
+    <Content Include="js\ace\mode\php\php.js" />
+    <Content Include="js\ace\mode\php_highlight_rules.js" />
+    <Content Include="js\ace\mode\php_worker.js" />
+    <Content Include="js\ace\mode\plain_text.js" />
+    <Content Include="js\ace\mode\plain_text_test.js" />
+    <Content Include="js\ace\mode\powershell.js" />
+    <Content Include="js\ace\mode\powershell_highlight_rules.js" />
+    <Content Include="js\ace\mode\prolog.js" />
+    <Content Include="js\ace\mode\prolog_highlight_rules.js" />
+    <Content Include="js\ace\mode\properties.js" />
+    <Content Include="js\ace\mode\properties_highlight_rules.js" />
+    <Content Include="js\ace\mode\protobuf.js" />
+    <Content Include="js\ace\mode\protobuf_highlight_rules.js" />
+    <Content Include="js\ace\mode\python.js" />
+    <Content Include="js\ace\mode\python_highlight_rules.js" />
+    <Content Include="js\ace\mode\python_test.js" />
+    <Content Include="js\ace\mode\r.js" />
+    <Content Include="js\ace\mode\rdoc.js" />
+    <Content Include="js\ace\mode\rdoc_highlight_rules.js" />
+    <Content Include="js\ace\mode\rhtml.js" />
+    <Content Include="js\ace\mode\rhtml_highlight_rules.js" />
+    <Content Include="js\ace\mode\ruby.js" />
+    <Content Include="js\ace\mode\ruby_highlight_rules.js" />
+    <Content Include="js\ace\mode\ruby_test.js" />
+    <Content Include="js\ace\mode\rust.js" />
+    <Content Include="js\ace\mode\rust_highlight_rules.js" />
+    <Content Include="js\ace\mode\r_highlight_rules.js" />
+    <Content Include="js\ace\mode\sass.js" />
+    <Content Include="js\ace\mode\sass_highlight_rules.js" />
+    <Content Include="js\ace\mode\scad.js" />
+    <Content Include="js\ace\mode\scad_highlight_rules.js" />
+    <Content Include="js\ace\mode\scala.js" />
+    <Content Include="js\ace\mode\scala_highlight_rules.js" />
+    <Content Include="js\ace\mode\scheme.js" />
+    <Content Include="js\ace\mode\scheme_highlight_rules.js" />
+    <Content Include="js\ace\mode\scss.js" />
+    <Content Include="js\ace\mode\scss_highlight_rules.js" />
+    <Content Include="js\ace\mode\sh.js" />
+    <Content Include="js\ace\mode\sh_highlight_rules.js" />
+    <Content Include="js\ace\mode\sjs.js" />
+    <Content Include="js\ace\mode\sjs_highlight_rules.js" />
+    <Content Include="js\ace\mode\snippets.js" />
+    <Content Include="js\ace\mode\soy_template.js" />
+    <Content Include="js\ace\mode\soy_template_highlight_rules.js" />
+    <Content Include="js\ace\mode\space.js" />
+    <Content Include="js\ace\mode\space_highlight_rules.js" />
+    <Content Include="js\ace\mode\sql.js" />
+    <Content Include="js\ace\mode\sql_highlight_rules.js" />
+    <Content Include="js\ace\mode\stylus.js" />
+    <Content Include="js\ace\mode\stylus_highlight_rules.js" />
+    <Content Include="js\ace\mode\svg.js" />
+    <Content Include="js\ace\mode\svg_highlight_rules.js" />
+    <Content Include="js\ace\mode\tcl.js" />
+    <Content Include="js\ace\mode\tcl_highlight_rules.js" />
+    <Content Include="js\ace\mode\tex.js" />
+    <Content Include="js\ace\mode\text.js" />
+    <Content Include="js\ace\mode\textile.js" />
+    <Content Include="js\ace\mode\textile_highlight_rules.js" />
+    <Content Include="js\ace\mode\text_highlight_rules.js" />
+    <Content Include="js\ace\mode\text_test.js" />
+    <Content Include="js\ace\mode\tex_highlight_rules.js" />
+    <Content Include="js\ace\mode\toml.js" />
+    <Content Include="js\ace\mode\toml_highlight_rules.js" />
+    <Content Include="js\ace\mode\twig.js" />
+    <Content Include="js\ace\mode\twig_highlight_rules.js" />
+    <Content Include="js\ace\mode\typescript.js" />
+    <Content Include="js\ace\mode\typescript_highlight_rules.js" />
+    <Content Include="js\ace\mode\vbscript.js" />
+    <Content Include="js\ace\mode\vbscript_highlight_rules.js" />
+    <Content Include="js\ace\mode\velocity.js" />
+    <Content Include="js\ace\mode\velocity_highlight_rules.js" />
+    <Content Include="js\ace\mode\verilog.js" />
+    <Content Include="js\ace\mode\verilog_highlight_rules.js" />
+    <Content Include="js\ace\mode\vhdl.js" />
+    <Content Include="js\ace\mode\vhdl_highlight_rules.js" />
+    <Content Include="js\ace\mode\xml.js" />
+    <Content Include="js\ace\mode\xml_highlight_rules.js" />
+    <Content Include="js\ace\mode\xml_test.js" />
+    <Content Include="js\ace\mode\xml_util.js" />
+    <Content Include="js\ace\mode\xquery.js" />
+    <Content Include="js\ace\mode\xquery\JSONiqLexer.js" />
+    <Content Include="js\ace\mode\xquery\JSONiqTokenizer.js" />
+    <Content Include="js\ace\mode\xquery\JSONParseTreeHandler.js" />
+    <Content Include="js\ace\mode\xquery\visitors\SemanticHighlighter.js" />
+    <Content Include="js\ace\mode\xquery\XQueryLexer.js" />
+    <Content Include="js\ace\mode\xquery\XQueryParser.js" />
+    <Content Include="js\ace\mode\xquery\XQueryTokenizer.js" />
+    <Content Include="js\ace\mode\xquery_worker.js" />
+    <Content Include="js\ace\mode\yaml.js" />
+    <Content Include="js\ace\mode\yaml_highlight_rules.js" />
+    <Content Include="js\ace\mode\_test\highlight_rules_test.js" />
+    <Content Include="js\ace\mode\_test\text_asciidoc.txt" />
+    <Content Include="js\ace\mode\_test\text_coffee.txt" />
+    <Content Include="js\ace\mode\_test\text_curly.txt" />
+    <Content Include="js\ace\mode\_test\text_html.txt" />
+    <Content Include="js\ace\mode\_test\text_javascript.txt" />
+    <Content Include="js\ace\mode\_test\text_livescript.txt" />
+    <Content Include="js\ace\mode\_test\text_lucene.txt" />
+    <Content Include="js\ace\mode\_test\text_markdown.txt" />
+    <Content Include="js\ace\mode\_test\text_ruby.txt" />
+    <Content Include="js\ace\mode\_test\text_xml.txt" />
+    <Content Include="js\ace\mouse\default_gutter_handler.js" />
+    <Content Include="js\ace\mouse\default_handlers.js" />
+    <Content Include="js\ace\mouse\dragdrop_handler.js" />
+    <Content Include="js\ace\mouse\fold_handler.js" />
+    <Content Include="js\ace\mouse\mouse_event.js" />
+    <Content Include="js\ace\mouse\mouse_handler.js" />
+    <Content Include="js\ace\mouse\multi_select_handler.js" />
+    <Content Include="js\ace\multi_select.js" />
+    <Content Include="js\ace\multi_select_test.js" />
+    <Content Include="js\ace\occur.js" />
+    <Content Include="js\ace\occur_test.js" />
+    <Content Include="js\ace\placeholder.js" />
+    <Content Include="js\ace\placeholder_test.js" />
+    <Content Include="js\ace\range.js" />
+    <Content Include="js\ace\range_list.js" />
+    <Content Include="js\ace\range_list_test.js" />
+    <Content Include="js\ace\range_test.js" />
+    <Content Include="js\ace\renderloop.js" />
+    <Content Include="js\ace\requirejs\text.js" />
+    <Content Include="js\ace\scrollbar.js" />
+    <Content Include="js\ace\search.js" />
+    <Content Include="js\ace\search_highlight.js" />
+    <Content Include="js\ace\search_test.js" />
+    <Content Include="js\ace\selection.js" />
+    <Content Include="js\ace\selection_test.js" />
+    <Content Include="js\ace\snippets.js" />
+    <Content Include="js\ace\snippets\abap.js" />
+    <Content Include="js\ace\snippets\actionscript.js" />
+    <Content Include="js\ace\snippets\ada.js" />
+    <Content Include="js\ace\snippets\apache_conf.js" />
+    <Content Include="js\ace\snippets\asciidoc.js" />
+    <Content Include="js\ace\snippets\assembly_x86.js" />
+    <Content Include="js\ace\snippets\autohotkey.js" />
+    <Content Include="js\ace\snippets\batchfile.js" />
+    <Content Include="js\ace\snippets\c9search.js" />
+    <Content Include="js\ace\snippets\clojure.js" />
+    <Content Include="js\ace\snippets\cobol.js" />
+    <Content Include="js\ace\snippets\coffee.js" />
+    <Content Include="js\ace\snippets\coldfusion.js" />
+    <Content Include="js\ace\snippets\csharp.js" />
+    <Content Include="js\ace\snippets\css.js" />
+    <Content Include="js\ace\snippets\curly.js" />
+    <Content Include="js\ace\snippets\c_cpp.js" />
+    <Content Include="js\ace\snippets\d.js" />
+    <Content Include="js\ace\snippets\dart.js" />
+    <Content Include="js\ace\snippets\diff.js" />
+    <Content Include="js\ace\snippets\django.js" />
+    <Content Include="js\ace\snippets\dot.js" />
+    <Content Include="js\ace\snippets\ejs.js" />
+    <Content Include="js\ace\snippets\erlang.js" />
+    <Content Include="js\ace\snippets\forth.js" />
+    <Content Include="js\ace\snippets\ftl.js" />
+    <Content Include="js\ace\snippets\glsl.js" />
+    <Content Include="js\ace\snippets\golang.js" />
+    <Content Include="js\ace\snippets\groovy.js" />
+    <Content Include="js\ace\snippets\haml.js" />
+    <Content Include="js\ace\snippets\handlebars.js" />
+    <Content Include="js\ace\snippets\haskell.js" />
+    <Content Include="js\ace\snippets\haxe.js" />
+    <Content Include="js\ace\snippets\html.js" />
+    <Content Include="js\ace\snippets\html_ruby.js" />
+    <Content Include="js\ace\snippets\ini.js" />
+    <Content Include="js\ace\snippets\jade.js" />
+    <Content Include="js\ace\snippets\java.js" />
+    <Content Include="js\ace\snippets\javascript.js" />
+    <Content Include="js\ace\snippets\json.js" />
+    <Content Include="js\ace\snippets\jsoniq.js" />
+    <Content Include="js\ace\snippets\jsp.js" />
+    <Content Include="js\ace\snippets\jsx.js" />
+    <Content Include="js\ace\snippets\julia.js" />
+    <Content Include="js\ace\snippets\latex.js" />
+    <Content Include="js\ace\snippets\less.js" />
+    <Content Include="js\ace\snippets\liquid.js" />
+    <Content Include="js\ace\snippets\lisp.js" />
+    <Content Include="js\ace\snippets\livescript.js" />
+    <Content Include="js\ace\snippets\logiql.js" />
+    <Content Include="js\ace\snippets\lsl.js" />
+    <Content Include="js\ace\snippets\lua.js" />
+    <Content Include="js\ace\snippets\luapage.js" />
+    <Content Include="js\ace\snippets\lucene.js" />
+    <Content Include="js\ace\snippets\makefile.js" />
+    <Content Include="js\ace\snippets\markdown.js" />
+    <Content Include="js\ace\snippets\matlab.js" />
+    <Content Include="js\ace\snippets\mushcode.js" />
+    <Content Include="js\ace\snippets\mushcode_high_rules.js" />
+    <Content Include="js\ace\snippets\mysql.js" />
+    <Content Include="js\ace\snippets\nix.js" />
+    <Content Include="js\ace\snippets\objectivec.js" />
+    <Content Include="js\ace\snippets\ocaml.js" />
+    <Content Include="js\ace\snippets\pascal.js" />
+    <Content Include="js\ace\snippets\perl.js" />
+    <Content Include="js\ace\snippets\pgsql.js" />
+    <Content Include="js\ace\snippets\php.js" />
+    <Content Include="js\ace\snippets\powershell.js" />
+    <Content Include="js\ace\snippets\prolog.js" />
+    <Content Include="js\ace\snippets\properties.js" />
+    <Content Include="js\ace\snippets\protobuf.js" />
+    <Content Include="js\ace\snippets\python.js" />
+    <Content Include="js\ace\snippets\r.js" />
+    <Content Include="js\ace\snippets\rdoc.js" />
+    <Content Include="js\ace\snippets\rhtml.js" />
+    <Content Include="js\ace\snippets\ruby.js" />
+    <Content Include="js\ace\snippets\rust.js" />
+    <Content Include="js\ace\snippets\sass.js" />
+    <Content Include="js\ace\snippets\scad.js" />
+    <Content Include="js\ace\snippets\scala.js" />
+    <Content Include="js\ace\snippets\scheme.js" />
+    <Content Include="js\ace\snippets\scss.js" />
+    <Content Include="js\ace\snippets\sh.js" />
+    <Content Include="js\ace\snippets\snippets.js" />
+    <Content Include="js\ace\snippets\soy_template.js" />
+    <Content Include="js\ace\snippets\sql.js" />
+    <Content Include="js\ace\snippets\stylus.js" />
+    <Content Include="js\ace\snippets\svg.js" />
+    <Content Include="js\ace\snippets\tcl.js" />
+    <Content Include="js\ace\snippets\tex.js" />
+    <Content Include="js\ace\snippets\text.js" />
+    <Content Include="js\ace\snippets\textile.js" />
+    <Content Include="js\ace\snippets\toml.js" />
+    <Content Include="js\ace\snippets\twig.js" />
+    <Content Include="js\ace\snippets\typescript.js" />
+    <Content Include="js\ace\snippets\vbscript.js" />
+    <Content Include="js\ace\snippets\velocity.js" />
+    <Content Include="js\ace\snippets\verilog.js" />
+    <Content Include="js\ace\snippets\vhdl.js" />
+    <Content Include="js\ace\snippets\xml.js" />
+    <Content Include="js\ace\snippets\xquery.js" />
+    <Content Include="js\ace\snippets\yaml.js" />
+    <Content Include="js\ace\snippets_test.js" />
+    <Content Include="js\ace\split.js" />
+    <Content Include="js\ace\test\all.js" />
+    <Content Include="js\ace\test\all_browser.js" />
+    <Content Include="js\ace\test\assertions.js" />
+    <Content Include="js\ace\test\asyncjs\assert.js" />
+    <Content Include="js\ace\test\asyncjs\async.js" />
+    <Content Include="js\ace\test\asyncjs\index.js" />
+    <Content Include="js\ace\test\asyncjs\test.js" />
+    <Content Include="js\ace\test\asyncjs\utils.js" />
+    <Content Include="js\ace\test\benchmark.js" />
+    <Content Include="js\ace\test\mockdom.js" />
+    <Content Include="js\ace\test\mockrenderer.js" />
+    <Content Include="js\ace\test\tests.html" />
+    <Content Include="js\ace\theme\ambiance.css" />
+    <Content Include="js\ace\theme\ambiance.js" />
+    <Content Include="js\ace\theme\chaos.css" />
+    <Content Include="js\ace\theme\chaos.js" />
+    <Content Include="js\ace\theme\chrome.css" />
+    <Content Include="js\ace\theme\chrome.js" />
+    <Content Include="js\ace\theme\clouds.css" />
+    <Content Include="js\ace\theme\clouds.js" />
+    <Content Include="js\ace\theme\clouds_midnight.css" />
+    <Content Include="js\ace\theme\clouds_midnight.js" />
+    <Content Include="js\ace\theme\cobalt.css" />
+    <Content Include="js\ace\theme\cobalt.js" />
+    <Content Include="js\ace\theme\crimson_editor.css" />
+    <Content Include="js\ace\theme\crimson_editor.js" />
+    <Content Include="js\ace\theme\dawn.css" />
+    <Content Include="js\ace\theme\dawn.js" />
+    <Content Include="js\ace\theme\dreamweaver.css" />
+    <Content Include="js\ace\theme\dreamweaver.js" />
+    <Content Include="js\ace\theme\eclipse.css" />
+    <Content Include="js\ace\theme\eclipse.js" />
+    <Content Include="js\ace\theme\github.css" />
+    <Content Include="js\ace\theme\github.js" />
+    <Content Include="js\ace\theme\idle_fingers.css" />
+    <Content Include="js\ace\theme\idle_fingers.js" />
+    <Content Include="js\ace\theme\katzenmilch.css" />
+    <Content Include="js\ace\theme\katzenmilch.js" />
+    <Content Include="js\ace\theme\kr_theme.css" />
+    <Content Include="js\ace\theme\kr_theme.js" />
+    <Content Include="js\ace\theme\kuroir.css" />
+    <Content Include="js\ace\theme\kuroir.js" />
+    <Content Include="js\ace\theme\merbivore.css" />
+    <Content Include="js\ace\theme\merbivore.js" />
+    <Content Include="js\ace\theme\merbivore_soft.css" />
+    <Content Include="js\ace\theme\merbivore_soft.js" />
+    <Content Include="js\ace\theme\monokai.css" />
+    <Content Include="js\ace\theme\monokai.js" />
+    <Content Include="js\ace\theme\mono_industrial.css" />
+    <Content Include="js\ace\theme\mono_industrial.js" />
+    <Content Include="js\ace\theme\pastel_on_dark.css" />
+    <Content Include="js\ace\theme\pastel_on_dark.js" />
+    <Content Include="js\ace\theme\solarized_dark.css" />
+    <Content Include="js\ace\theme\solarized_dark.js" />
+    <Content Include="js\ace\theme\solarized_light.css" />
+    <Content Include="js\ace\theme\solarized_light.js" />
+    <Content Include="js\ace\theme\terminal.css" />
+    <Content Include="js\ace\theme\terminal.js" />
+    <Content Include="js\ace\theme\textmate.css" />
+    <Content Include="js\ace\theme\textmate.js" />
+    <Content Include="js\ace\theme\tomorrow.css" />
+    <Content Include="js\ace\theme\tomorrow.js" />
+    <Content Include="js\ace\theme\tomorrow_night.css" />
+    <Content Include="js\ace\theme\tomorrow_night.js" />
+    <Content Include="js\ace\theme\tomorrow_night_blue.css" />
+    <Content Include="js\ace\theme\tomorrow_night_blue.js" />
+    <Content Include="js\ace\theme\tomorrow_night_bright.css" />
+    <Content Include="js\ace\theme\tomorrow_night_bright.js" />
+    <Content Include="js\ace\theme\tomorrow_night_eighties.css" />
+    <Content Include="js\ace\theme\tomorrow_night_eighties.js" />
+    <Content Include="js\ace\theme\twilight.css" />
+    <Content Include="js\ace\theme\twilight.js" />
+    <Content Include="js\ace\theme\vibrant_ink.css" />
+    <Content Include="js\ace\theme\vibrant_ink.js" />
+    <Content Include="js\ace\theme\votetemplate.css" />
+    <Content Include="js\ace\theme\votetemplate.js" />
+    <Content Include="js\ace\theme\xcode.css" />
+    <Content Include="js\ace\theme\xcode.js" />
+    <Content Include="js\ace\tokenizer.js" />
+    <Content Include="js\ace\tokenizer_dev.js" />
+    <Content Include="js\ace\tokenizer_test.js" />
+    <Content Include="js\ace\token_iterator.js" />
+    <Content Include="js\ace\token_iterator_test.js" />
+    <Content Include="js\ace\undomanager.js" />
+    <Content Include="js\ace\unicode.js" />
+    <Content Include="js\ace\virtual_renderer.js" />
+    <Content Include="js\ace\virtual_renderer_test.js" />
+    <Content Include="js\ace\worker\mirror.js" />
+    <Content Include="js\ace\worker\worker.js" />
+    <Content Include="js\ace\worker\worker_client.js" />
+    <Content Include="js\ace\worker\worker_test.js" />
+    <Content Include="js\jq\ajaxfileupload.js" />
+    <Content Include="js\jq\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="js\jq\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="js\jq\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="js\jq\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="js\jq\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="js\jq\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="js\jq\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="js\jq\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="js\jq\images\ui-icons_222222_256x240.png" />
+    <Content Include="js\jq\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="js\jq\images\ui-icons_454545_256x240.png" />
+    <Content Include="js\jq\images\ui-icons_888888_256x240.png" />
+    <Content Include="js\jq\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="js\jq\jquery-1.11.3.js" />
+    <Content Include="js\jq\jquery-ui-1.11.4.js" />
+    <Content Include="js\jq\jquery.alphanum.js" />
+    <Content Include="js\jq\jquery.dynatree.js" />
+    <Content Include="js\jq\jquery.dynatree.min.js" />
+    <Content Include="js\jq\jquery.resizableColumns.js" />
+    <Content Include="js\jq\jquery.slimscroll.min.js" />
+    <Content Include="js\jq\jquery.tipTip.minified.js" />
+    <Content Include="js\jq\kalypto.js" />
+    <Content Include="js\jq\kalypto.min.js" />
+    <Content Include="js\jq\kalypto.mod.js" />
+    <Content Include="js\jq\modernizr.custom.63696.js" />
+    <Content Include="js\jq\moment.min.js" />
+    <Content Include="js\jq\pie\PIE.htc" />
+    <Content Include="js\jq\pie\PIE.js" />
+    <Content Include="js\jq\pie\PIE_uncompressed.htc" />
+    <Content Include="js\jq\pie\PIE_uncompressed.js" />
+    <Content Include="js\jq\store.js" />
+    <Content Include="js\jq\stupidtable.js" />
+    <Content Include="js\jq\textchange.js" />
+    <Content Include="js\jq\treeskin\dynatree.custom.css" />
+    <Content Include="js\jq\treeskin\icons.gif" />
+    <Content Include="js\jq\treeskin\loading.gif" />
+    <Content Include="js\jq\treeskin\originalicons.gif" />
+    <Content Include="js\jq\treeskin\originalvline.gif" />
+    <Content Include="js\jq\treeskin\ui.dynatree.css" />
+    <Content Include="js\jq\treeskin\vline.gif" />
+    <Content Include="js\json2.js" />
+    <Content Include="js\Legacy.js" />
+    <Content Include="js\Monitor.js" />
+    <Content Include="js\require-main.js" />
+    <Content Include="js\require.js" />
+    <Content Include="js\vote\adminMaster.js" />
+    <Content Include="js\vote\admin\bulkemail.js" />
+    <Content Include="js\vote\admin\electionforiframe.js" />
+    <Content Include="js\vote\admin\districts.js" />
+    <Content Include="js\vote\admin\updateElections.js" />
+    <Content Include="js\vote\admin\updateIssues.js" />
+    <Content Include="js\vote\admin\updateJurisdictions.js" />
+    <Content Include="js\vote\admin\updateOffices.js" />
+    <Content Include="js\vote\master\electionspreadsheets.js" />
+    <Content Include="js\vote\admin\updateParties.js" />
+    <Content Include="js\vote\admin\updatePoliticians.js" />
+    <Content Include="js\vote\controls\electionControl.js" />
+    <Content Include="js\vote\controls\electionsOfficesCandidates.js" />
+    <Content Include="js\vote\controls\emailTemplateDialogs.js" />
+    <Content Include="js\vote\controls\findPolitician.js" />
+    <Content Include="js\vote\controls\managePoliticiansPanel.js" />
+    <Content Include="js\vote\controls\navigateJurisdiction.js" />
+    <Content Include="js\vote\controls\officeControl.js" />
+    <Content Include="js\vote\controls\selectJurisdictions.js" />
+    <Content Include="js\vote\init.js" />
+    <Content Include="js\vote\master\BallotpediaCsvs.js" />
+    <Content Include="js\vote\master\emailbulkdelete.js" />
+    <Content Include="js\vote\master\imagesHeadshots.js" />
+    <Content Include="js\vote\master\logdonations.js" />
+    <Content Include="js\vote\master\nags.js" />
+    <Content Include="js\vote\master\reviewyoutubechannels.js" />
+    <Content Include="js\vote\master\updateUsers.js" />
+    <Content Include="js\vote\master\updateVolunteers.js" />
+    <Content Include="js\vote\master\videos.js" />
+    <Content Include="js\vote\politician\updateAnswer.js" />
+    <Content Include="js\vote\politician\updateIntro.js" />
+    <Content Include="js\vote\politician\updateIssues.js" />
+    <Content Include="js\vote\sandbox\dateTest.js" />
+    <Content Include="js\vote\util.js" />
+    <Content Include="Master\AjaxCsvUploader.aspx" />
+    <Content Include="Master\AuditShapeFiles.aspx" />
+    <Content Include="Master\BallotpediaCsvs.aspx" />
+    <Content Include="Master\CacheControl.aspx" />
+    <Content Include="Master\DatabaseStats.aspx" />
+    <Content Include="Master\Default.aspx" />
+    <Content Include="Master\DownloadCsv.aspx" />
+    <Content Include="Master\EmailBulkDelete.aspx" />
+    <Content Include="Master\ImagesHeadshots.aspx" />
+    <Content Include="Master\LatestLoggedImage.aspx" />
+    <Content Include="Master\LogDonations.aspx" />
+    <Content Include="Master\LogPaypalDonations.aspx" />
+    <Content Include="Master\Logs.aspx" />
+    <Content Include="Master\Nags.aspx" />
+    <Content Include="Master\Nags2.aspx" />
+    <Content Include="Master\ReviewYouTubeChannels.aspx" />
+    <Content Include="Master\SetNoCache.aspx" />
+    <Content Include="Master\SetStaging.aspx" />
+    <Content Include="Master\SetupHomePageBannerAd.aspx" />
+    <Content Include="Master\SetupHomePageBannerAd2.aspx" />
+    <Content Include="Master\UpdateOrganizations.aspx" />
+    <Content Include="Master\UpdateUsers.aspx" />
+    <Content Include="Master\UpdateVolunteers.aspx" />
+    <Content Include="Master\UploadImages.aspx" />
+    <Content Include="Master\Videos.aspx" />
+    <Content Include="NoCache.aspx" />
+    <Content Include="packages.config" />
+    <Content Include="Party\Default.aspx" />
+    <Content Include="Party\Video.aspx" />
+    <Content Include="Party\Videos.aspx" />
+    <Content Include="Ping.aspx" />
+    <Content Include="Politician\AjaxImageUploader.aspx" />
+    <Content Include="Politician\Default.aspx" />
+    <Content Include="Politician\Main.aspx" />
+    <Content Include="Politician\Update.aspx" />
+    <Content Include="Politician\UpdateInfo.aspx" />
+    <Content Include="Politician\UpdateIntro.aspx" />
+    <Content Include="Politician\UpdateIssues.aspx" />
+    <Content Include="robots.txt" />
+    <Content Include="SignIn.aspx" />
+    <Content Include="SigninRedirect.aspx" />
+    <Content Include="xapp_offline.htm" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Admin\BulkEmail.aspx.cs">
+      <DependentUpon>BulkEmail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\BulkEmail.aspx.designer.cs">
+      <DependentUpon>BulkEmail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CountyJurisdictionsReport.aspx.cs">
+      <DependentUpon>CountyJurisdictionsReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CountyJurisdictionsReport.aspx.designer.cs">
+      <DependentUpon>CountyJurisdictionsReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\DownloadCountyOfficesCsv.aspx.cs">
+      <DependentUpon>DownloadCountyOfficesCsv.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\DownloadCountyOfficesCsv.aspx.designer.cs">
+      <DependentUpon>DownloadCountyOfficesCsv.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\DownloadLocalOfficesCsv.aspx.cs">
+      <DependentUpon>DownloadLocalOfficesCsv.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\DownloadLocalOfficesCsv.aspx.designer.cs">
+      <DependentUpon>DownloadLocalOfficesCsv.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\DownloadOfficesCsv.aspx.cs">
+      <DependentUpon>DownloadOfficesCsv.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\DownloadOfficesCsv.aspx.designer.cs">
+      <DependentUpon>DownloadOfficesCsv.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Election.aspx.cs">
+      <DependentUpon>Election.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Election.aspx.designer.cs">
+      <DependentUpon>Election.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\OfficesAndCandidatesReport.aspx.cs">
+      <DependentUpon>OfficesAndCandidatesReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\OfficesAndCandidatesReport.aspx.designer.cs">
+      <DependentUpon>OfficesAndCandidatesReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\OfficesAndCandidatesSelection.aspx.cs">
+      <DependentUpon>OfficesAndCandidatesSelection.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\OfficesAndCandidatesSelection.aspx.designer.cs">
+      <DependentUpon>OfficesAndCandidatesSelection.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\SetupBallotPageBannerAd.aspx.cs">
+      <DependentUpon>SetupBallotPageBannerAd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\SetupBallotPageBannerAd.aspx.designer.cs">
+      <DependentUpon>SetupBallotPageBannerAd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\SetUpComparePageBannerAd.aspx.cs">
+      <DependentUpon>SetUpComparePageBannerAd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\SetUpComparePageBannerAd.aspx.designer.cs">
+      <DependentUpon>SetUpComparePageBannerAd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\SetupElectedPageBannerAd.aspx.cs">
+      <DependentUpon>SetupElectedPageBannerAd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\SetupElectedPageBannerAd.aspx.designer.cs">
+      <DependentUpon>SetupElectedPageBannerAd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BannerAdInput.ascx.cs">
+      <DependentUpon>BannerAdInput.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\BannerAdInput.ascx.designer.cs">
+      <DependentUpon>BannerAdInput.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ManagePoliticians\SetupAdDialog .cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\AdRates.aspx.cs">
+      <DependentUpon>AdRates.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\AdRates.aspx.designer.cs">
+      <DependentUpon>AdRates.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\AjaxFileUploader.aspx.cs">
+      <DependentUpon>AjaxFileUploader.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\AjaxFileUploader.aspx.designer.cs">
+      <DependentUpon>AjaxFileUploader.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\DownloadOrganizationsCsv.aspx.cs">
+      <DependentUpon>DownloadOrganizationsCsv.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\DownloadOrganizationsCsv.aspx.designer.cs">
+      <DependentUpon>DownloadOrganizationsCsv.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\ElectionSpreadsheets.aspx.cs">
+      <DependentUpon>ElectionSpreadsheets.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\ElectionSpreadsheets.aspx.designer.cs">
+      <DependentUpon>ElectionSpreadsheets.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\LocalJurisdictionsReport.aspx.cs">
+      <DependentUpon>LocalJurisdictionsReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\LocalJurisdictionsReport.aspx.designer.cs">
+      <DependentUpon>LocalJurisdictionsReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CountiesReport.aspx.cs">
+      <DependentUpon>CountiesReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CountiesReport.aspx.designer.cs">
+      <DependentUpon>CountiesReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\DownloadVotersEdgeCsv.aspx.cs">
+      <DependentUpon>DownloadVotersEdgeCsv.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\DownloadVotersEdgeCsv.aspx.designer.cs">
+      <DependentUpon>DownloadVotersEdgeCsv.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Issues.aspx.cs">
+      <DependentUpon>Issues.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Issues.aspx.designer.cs">
+      <DependentUpon>Issues.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\IssuesReport.aspx.cs">
+      <DependentUpon>IssuesReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\IssuesReport.aspx.designer.cs">
+      <DependentUpon>IssuesReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\KeepAlive.aspx.cs">
+      <DependentUpon>KeepAlive.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\KeepAlive.aspx.designer.cs">
+      <DependentUpon>KeepAlive.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Offices.aspx.cs">
+      <DependentUpon>Offices.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Offices.aspx.designer.cs">
+      <DependentUpon>Offices.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Officials.aspx.cs">
+      <DependentUpon>Officials.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Officials.aspx.designer.cs">
+      <DependentUpon>Officials.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Parties.aspx.cs">
+      <DependentUpon>Parties.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Parties.aspx.designer.cs">
+      <DependentUpon>Parties.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Politicians.aspx.cs">
+      <DependentUpon>Politicians.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Politicians.aspx.designer.cs">
+      <DependentUpon>Politicians.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\QuestionAnswers.aspx.cs">
+      <DependentUpon>QuestionAnswers.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\QuestionAnswers.aspx.designer.cs">
+      <DependentUpon>QuestionAnswers.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Questions.aspx.cs">
+      <DependentUpon>Questions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Questions.aspx.designer.cs">
+      <DependentUpon>Questions.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\UpdateElections.aspx.cs">
+      <DependentUpon>UpdateElections.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateElections.aspx.designer.cs">
+      <DependentUpon>UpdateElections.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\UpdateElections\AddBallotMeasuresTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateElections\AddCandidatesTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateElections\AddElectionTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateElections\AddOfficesTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateElections\AdjustIncumbentsTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateElections\ChangeDeadlinesTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateElections\ChangeInfoTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateElections\IdentifyWinnersBetaTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateElections\IdentifyWinnersTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateElections\MasterOnlyTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateElections\SelectBallotMeasureControl.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateElections\SelectElectionControl.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateElections\StateDefaultsTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateIssues.aspx.cs">
+      <DependentUpon>UpdateIssues.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateIssues.aspx.designer.cs">
+      <DependentUpon>UpdateIssues.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\UpdateJurisdictions.aspx.cs">
+      <DependentUpon>UpdateJurisdictions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateJurisdictions.aspx.designer.cs">
+      <DependentUpon>UpdateJurisdictions.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\UpdateJurisdictions\SetupCityCouncil.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateJurisdictions\SetupSchoolDistrict.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateJurisdictions\SetupCountySupervisors.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateJurisdictions\RemoveMultiCountyDistricts.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateJurisdictions\IncludeMultiCountyDistricts.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateJurisdictions\TigerSettingsTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateJurisdictions\DeleteDistrictsTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateJurisdictions\BallotTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateJurisdictions\ElectionAuthorityTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateJurisdictions\AddDistrictsTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateJurisdictions\GeneralVoterInfoTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateJurisdictions\MasterOnlyTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateJurisdictions\VoterUrlsTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateOffices.aspx.cs">
+      <DependentUpon>UpdateOffices.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateOffices.aspx.designer.cs">
+      <DependentUpon>UpdateOffices.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\UpdateOffices\AddIncumbentsTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateOffices\AddOfficeTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateOffices\AddOfficeTemplateTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateOffices\EditOfficeDialog.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateOffices\MasterOnlyTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateParties.aspx.cs">
+      <DependentUpon>UpdateParties.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdateParties.aspx.designer.cs">
+      <DependentUpon>UpdateParties.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\UpdatePoliticians.aspx.cs">
+      <DependentUpon>UpdatePoliticians.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UpdatePoliticians.aspx.designer.cs">
+      <DependentUpon>UpdatePoliticians.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\UpdatePoliticians\AddPoliticianTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Video.aspx.cs">
+      <DependentUpon>Video.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Video.aspx.designer.cs">
+      <DependentUpon>Video.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Videos.aspx.cs">
+      <DependentUpon>Videos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Videos.aspx.designer.cs">
+      <DependentUpon>Videos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\WebService.asmx.cs">
+      <DependentUpon>WebService.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\AdminHeading.ascx.cs">
+      <DependentUpon>AdminHeading.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\AdminHeading.ascx.designer.cs">
+      <DependentUpon>AdminHeading.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AdminMenu.ascx.cs">
+      <DependentUpon>AdminMenu.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\AdminMenu.ascx.designer.cs">
+      <DependentUpon>AdminMenu.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CountiesMenu.ascx.cs">
+      <DependentUpon>CountiesMenu.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\CountiesMenu.ascx.designer.cs">
+      <DependentUpon>CountiesMenu.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ElectionControl.ascx.cs">
+      <DependentUpon>ElectionControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ElectionControl.ascx.designer.cs">
+      <DependentUpon>ElectionControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ElectionsOfficesCandidates.ascx.cs">
+      <DependentUpon>ElectionsOfficesCandidates.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ElectionsOfficesCandidates.ascx.designer.cs">
+      <DependentUpon>ElectionsOfficesCandidates.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\EmailTemplateDialogs.ascx.cs">
+      <DependentUpon>EmailTemplateDialogs.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\EmailTemplateDialogs.ascx.designer.cs">
+      <DependentUpon>EmailTemplateDialogs.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FeedbackContainer.ascx.cs">
+      <DependentUpon>FeedbackContainer.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\FeedbackContainer.ascx.designer.cs">
+      <DependentUpon>FeedbackContainer.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FindPolitician.ascx.cs">
+      <DependentUpon>FindPolitician.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\FindPolitician.ascx.designer.cs">
+      <DependentUpon>FindPolitician.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LocalsMenu.ascx.cs">
+      <DependentUpon>LocalsMenu.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\LocalsMenu.ascx.designer.cs">
+      <DependentUpon>LocalsMenu.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ManagePoliticiansPanel.ascx.cs">
+      <DependentUpon>ManagePoliticiansPanel.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ManagePoliticiansPanel.ascx.designer.cs">
+      <DependentUpon>ManagePoliticiansPanel.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ManagePoliticians\AddCandidateSubTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ManagePoliticians\ConsolidatePoliticiansDialog.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ManagePoliticians\EditPoliticianDialog.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\NavigateJurisdiction.ascx.cs">
+      <DependentUpon>NavigateJurisdiction.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\NavigateJurisdiction.ascx.designer.cs">
+      <DependentUpon>NavigateJurisdiction.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NoJurisdiction.ascx.cs">
+      <DependentUpon>NoJurisdiction.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\NoJurisdiction.ascx.designer.cs">
+      <DependentUpon>NoJurisdiction.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\OfficeControl.ascx.cs">
+      <DependentUpon>OfficeControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\OfficeControl.ascx.designer.cs">
+      <DependentUpon>OfficeControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SelectJurisdictionButton.ascx.cs">
+      <DependentUpon>SelectJurisdictionButton.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SelectJurisdictionButton.ascx.designer.cs">
+      <DependentUpon>SelectJurisdictionButton.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SelectJurisdictions.ascx.cs">
+      <DependentUpon>SelectJurisdictions.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SelectJurisdictions.ascx.designer.cs">
+      <DependentUpon>SelectJurisdictions.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\StatesMenu.ascx.cs">
+      <DependentUpon>StatesMenu.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\StatesMenu.ascx.designer.cs">
+      <DependentUpon>StatesMenu.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SubHeadingWithHelp.ascx.cs">
+      <DependentUpon>SubHeadingWithHelp.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SubHeadingWithHelp.ascx.designer.cs">
+      <DependentUpon>SubHeadingWithHelp.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="default.aspx.cs">
+      <DependentUpon>default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="default.aspx.designer.cs">
+      <DependentUpon>default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Image.aspx.cs">
+      <DependentUpon>Image.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Image.aspx.designer.cs">
+      <DependentUpon>Image.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\Admin.Master.cs">
+      <DependentUpon>Admin.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\Admin.Master.designer.cs">
+      <DependentUpon>Admin.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Master\AjaxCsvUploader.aspx.cs">
+      <DependentUpon>AjaxCsvUploader.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\AjaxCsvUploader.aspx.designer.cs">
+      <DependentUpon>AjaxCsvUploader.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\AuditShapeFiles.aspx.cs">
+      <DependentUpon>AuditShapeFiles.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\AuditShapeFiles.aspx.designer.cs">
+      <DependentUpon>AuditShapeFiles.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\BallotpediaCsvs.aspx.cs">
+      <DependentUpon>BallotpediaCsvs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\BallotpediaCsvs.aspx.designer.cs">
+      <DependentUpon>BallotpediaCsvs.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\CacheControl.aspx.cs">
+      <DependentUpon>CacheControl.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\CacheControl.aspx.designer.cs">
+      <DependentUpon>CacheControl.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\DatabaseStats.aspx.cs">
+      <DependentUpon>DatabaseStats.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\DatabaseStats.aspx.designer.cs">
+      <DependentUpon>DatabaseStats.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\DownloadCsv.aspx.cs">
+      <DependentUpon>DownloadCsv.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\DownloadCsv.aspx.designer.cs">
+      <DependentUpon>DownloadCsv.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\EmailBulkDelete.aspx.cs">
+      <DependentUpon>EmailBulkDelete.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\EmailBulkDelete.aspx.designer.cs">
+      <DependentUpon>EmailBulkDelete.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\ImagesHeadshots.aspx.cs">
+      <DependentUpon>ImagesHeadshots.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\ImagesHeadshots.aspx.designer.cs">
+      <DependentUpon>ImagesHeadshots.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\LatestLoggedImage.aspx.cs">
+      <DependentUpon>LatestLoggedImage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\LatestLoggedImage.aspx.designer.cs">
+      <DependentUpon>LatestLoggedImage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\LogDonations.aspx.cs">
+      <DependentUpon>LogDonations.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\LogDonations.aspx.designer.cs">
+      <DependentUpon>LogDonations.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\LogPaypalDonations.aspx.cs">
+      <DependentUpon>LogPaypalDonations.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\LogPaypalDonations.aspx.designer.cs">
+      <DependentUpon>LogPaypalDonations.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\Logs.aspx.cs">
+      <DependentUpon>Logs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\Logs.aspx.designer.cs">
+      <DependentUpon>Logs.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\Nags.aspx.cs">
+      <DependentUpon>Nags.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\Nags.aspx.designer.cs">
+      <DependentUpon>Nags.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\Nags2.aspx.cs">
+      <DependentUpon>Nags2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\Nags2.aspx.designer.cs">
+      <DependentUpon>Nags2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\ReviewYouTubeChannels.aspx.cs">
+      <DependentUpon>ReviewYouTubeChannels.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\ReviewYouTubeChannels.aspx.designer.cs">
+      <DependentUpon>ReviewYouTubeChannels.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\SetNoCache.aspx.cs">
+      <DependentUpon>SetNoCache.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\SetNoCache.aspx.designer.cs">
+      <DependentUpon>SetNoCache.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\SetStaging.aspx.cs">
+      <DependentUpon>SetStaging.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\SetStaging.aspx.designer.cs">
+      <DependentUpon>SetStaging.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\SetupHomePageBannerAd.aspx.cs">
+      <DependentUpon>SetupHomePageBannerAd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\SetupHomePageBannerAd.aspx.designer.cs">
+      <DependentUpon>SetupHomePageBannerAd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\SetupHomePageBannerAd2.aspx.cs">
+      <DependentUpon>SetupHomePageBannerAd2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\SetupHomePageBannerAd2.aspx.designer.cs">
+      <DependentUpon>SetupHomePageBannerAd2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\UpdateOrganizations.aspx.cs">
+      <DependentUpon>UpdateOrganizations.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\UpdateOrganizations.aspx.designer.cs">
+      <DependentUpon>UpdateOrganizations.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\UpdateUsers.aspx.cs">
+      <DependentUpon>UpdateUsers.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\UpdateUsers.aspx.designer.cs">
+      <DependentUpon>UpdateUsers.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\UpdateVolunteers.aspx.cs">
+      <DependentUpon>UpdateVolunteers.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\UpdateVolunteers.aspx.designer.cs">
+      <DependentUpon>UpdateVolunteers.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\UpdateVolunteers\AddVolunteerTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\UpdateVolunteers\EditVolunteerDialog.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\UploadImages.aspx.cs">
+      <DependentUpon>UploadImages.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\UploadImages.aspx.designer.cs">
+      <DependentUpon>UploadImages.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\Videos.aspx.cs">
+      <DependentUpon>Videos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\Videos.aspx.designer.cs">
+      <DependentUpon>Videos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NoCache.aspx.cs">
+      <DependentUpon>NoCache.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NoCache.aspx.designer.cs">
+      <DependentUpon>NoCache.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Party\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Party\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Party\Video.aspx.cs">
+      <DependentUpon>Video.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Party\Video.aspx.designer.cs">
+      <DependentUpon>Video.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Party\Videos.aspx.cs">
+      <DependentUpon>Videos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Party\Videos.aspx.designer.cs">
+      <DependentUpon>Videos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Ping.aspx.cs">
+      <DependentUpon>Ping.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Ping.aspx.designer.cs">
+      <DependentUpon>Ping.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Politician\AjaxImageUploader.aspx.cs">
+      <DependentUpon>AjaxImageUploader.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Politician\AjaxImageUploader.aspx.designer.cs">
+      <DependentUpon>AjaxImageUploader.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Politician\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Politician\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Politician\Main.aspx.cs">
+      <DependentUpon>Main.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Politician\Main.aspx.designer.cs">
+      <DependentUpon>Main.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Politician\Update.aspx.cs">
+      <DependentUpon>Update.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Politician\Update.aspx.designer.cs">
+      <DependentUpon>Update.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Politician\UpdateInfo.aspx.cs">
+      <DependentUpon>UpdateInfo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Politician\UpdateInfo.aspx.designer.cs">
+      <DependentUpon>UpdateInfo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Politician\UpdateIntro.aspx.cs">
+      <DependentUpon>UpdateIntro.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Politician\UpdateIntro.aspx.designer.cs">
+      <DependentUpon>UpdateIntro.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Politician\UpdateIntro\Bio2Tab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Politician\UpdateIntro\ContactTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Politician\UpdateIntro\ReasonsTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Politician\UpdateIntro\SocialTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Politician\UpdateIntro\UploadTab.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Politician\UpdateIssues.aspx.cs">
+      <DependentUpon>UpdateIssues.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Politician\UpdateIssues.aspx.designer.cs">
+      <DependentUpon>UpdateIssues.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SignIn.aspx.cs">
+      <DependentUpon>SignIn.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SignIn.aspx.designer.cs">
+      <DependentUpon>SignIn.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SigninRedirect.aspx.cs">
+      <DependentUpon>SigninRedirect.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SigninRedirect.aspx.designer.cs">
+      <DependentUpon>SigninRedirect.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Utility\DataItemBase.cs" />
+    <Compile Include="Utility\Jayrock\BooleanObject.cs" />
+    <Compile Include="Utility\Jayrock\Collections\KeyedCollection.cs" />
+    <Compile Include="Utility\Jayrock\Compat.cs" />
+    <Compile Include="Utility\Jayrock\Configuration\DictionarySectionHandler.cs" />
+    <Compile Include="Utility\Jayrock\Configuration\ListSectionHandler.cs" />
+    <Compile Include="Utility\Jayrock\Configuration\TypeListSectionHandler.cs" />
+    <Compile Include="Utility\Jayrock\Diagnostics\DebugString.cs" />
+    <Compile Include="Utility\Jayrock\IndentedTextWriter.cs" />
+    <Compile Include="Utility\Jayrock\InternetDate.cs" />
+    <Compile Include="Utility\Jayrock\Json\BufferedCharReader.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\AnyType.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\AnyImporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\ArrayImporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\BooleanExporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\BooleanImporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\ByteArrayExporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\ByteArrayImporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\ComponentExporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\ComponentImporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\ControlExporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\DataRowExporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\DataRowViewExporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\DataSetExporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\DataTableExporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\DataViewExporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\DateTimeExporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\DateTimeImporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\DictionaryExporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\DictionaryImporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\EnumerableExporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\EnumImporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\ExportAwareExporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\ExporterBase.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\GenericDictionaryImporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\GenericListImporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\GuidImporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\ImportAwareImporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\ImporterBase.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\ListImporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\NameValueCollectionExporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\NameValueCollectionImporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\NumberExporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\NumberImporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\StringExporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\Converters\StringImporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\CustomTypeDescriptor.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\ExportContext.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\ExporterCollection.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\ExporterListSectionHandler.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\IExporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\IImporter.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\IJsonExportable.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\IJsonImportable.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\ImportContext.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\ImporterCollection.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\ImporterListSectionHandler.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\JsonConvert.cs" />
+    <Compile Include="Utility\Jayrock\Json\Conversion\JsonIgnoreAttribute.cs" />
+    <Compile Include="Utility\Jayrock\Json\EmptyJsonWriter.cs" />
+    <Compile Include="Utility\Jayrock\Json\InvalidMemberException.cs" />
+    <Compile Include="Utility\Jayrock\Json\JsonArray.cs" />
+    <Compile Include="Utility\Jayrock\Json\JsonBoolean.cs" />
+    <Compile Include="Utility\Jayrock\Json\JsonException.cs" />
+    <Compile Include="Utility\Jayrock\Json\JsonNull.cs" />
+    <Compile Include="Utility\Jayrock\Json\JsonNumber.cs" />
+    <Compile Include="Utility\Jayrock\Json\JsonObject.cs" />
+    <Compile Include="Utility\Jayrock\Json\JsonReader.cs" />
+    <Compile Include="Utility\Jayrock\Json\JsonReaderBase.cs" />
+    <Compile Include="Utility\Jayrock\Json\JsonRecorder.cs" />
+    <Compile Include="Utility\Jayrock\Json\JsonString.cs" />
+    <Compile Include="Utility\Jayrock\Json\JsonTextReader.cs" />
+    <Compile Include="Utility\Jayrock\Json\JsonTextWriter.cs" />
+    <Compile Include="Utility\Jayrock\Json\JsonToken.cs" />
+    <Compile Include="Utility\Jayrock\Json\JsonTokenClass.cs" />
+    <Compile Include="Utility\Jayrock\Json\JsonWriter.cs" />
+    <Compile Include="Utility\Jayrock\Json\JsonWriterBase.cs" />
+    <Compile Include="Utility\Jayrock\Json\JsonWriterBracket.cs" />
+    <Compile Include="Utility\Jayrock\Mask.cs" />
+    <Compile Include="Utility\Jayrock\UnixTime.cs" />
+    <Compile Include="Utility\UpdateAnswer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Models\" />
+    <Folder Include="Properties\PublishProfiles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UtilityLibrary\UtilityLibrary.csproj">
+      <Project>{e05ceb40-9fbb-4013-9d18-400e610c8017}</Project>
+      <Name>UtilityLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VoteLibrary\VoteLibrary.csproj">
+      <Project>{c9e79074-c774-4d06-8ed3-c5472c4a9b82}</Project>
+      <Name>VoteLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Admin\Questions.aspx.resx">
+      <DependentUpon>Questions.aspx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Global.asax.resx">
+      <DependentUpon>Global.asax.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="js\ace\mode\xquery\JSONiqTokenizer.ebnf" />
+    <Content Include="js\ace\mode\xquery\Readme.md" />
+    <Content Include="js\ace\mode\xquery\XQueryParser.ebnf" />
+    <Content Include="js\ace\mode\xquery\XQueryTokenizer.ebnf" />
+    <Content Include="js\ace\mode\_test\package.json" />
+    <Content Include="js\ace\mode\_test\Readme.md" />
+    <Content Include="js\ace\mode\_test\tokens_abap.json" />
+    <Content Include="js\ace\mode\_test\tokens_actionscript.json" />
+    <Content Include="js\ace\mode\_test\tokens_asciidoc.json" />
+    <Content Include="js\ace\mode\_test\tokens_assembly_x86.json" />
+    <Content Include="js\ace\mode\_test\tokens_autohotkey.json" />
+    <Content Include="js\ace\mode\_test\tokens_batchfile.json" />
+    <Content Include="js\ace\mode\_test\tokens_c9search.json" />
+    <Content Include="js\ace\mode\_test\tokens_clojure.json" />
+    <Content Include="js\ace\mode\_test\tokens_coffee.json" />
+    <Content Include="js\ace\mode\_test\tokens_coldfusion.json" />
+    <Content Include="js\ace\mode\_test\tokens_csharp.json" />
+    <Content Include="js\ace\mode\_test\tokens_css.json" />
+    <Content Include="js\ace\mode\_test\tokens_curly.json" />
+    <Content Include="js\ace\mode\_test\tokens_c_cpp.json" />
+    <Content Include="js\ace\mode\_test\tokens_dart.json" />
+    <Content Include="js\ace\mode\_test\tokens_diff.json" />
+    <Content Include="js\ace\mode\_test\tokens_dot.json" />
+    <Content Include="js\ace\mode\_test\tokens_erlang.json" />
+    <Content Include="js\ace\mode\_test\tokens_forth.json" />
+    <Content Include="js\ace\mode\_test\tokens_ftl.json" />
+    <Content Include="js\ace\mode\_test\tokens_glsl.json" />
+    <Content Include="js\ace\mode\_test\tokens_golang.json" />
+    <Content Include="js\ace\mode\_test\tokens_groovy.json" />
+    <Content Include="js\ace\mode\_test\tokens_haml.json" />
+    <Content Include="js\ace\mode\_test\tokens_haskell.json" />
+    <Content Include="js\ace\mode\_test\tokens_haxe.json" />
+    <Content Include="js\ace\mode\_test\tokens_html.json" />
+    <Content Include="js\ace\mode\_test\tokens_html_ruby.json" />
+    <Content Include="js\ace\mode\_test\tokens_jade.json" />
+    <Content Include="js\ace\mode\_test\tokens_java.json" />
+    <Content Include="js\ace\mode\_test\tokens_javascript.json" />
+    <Content Include="js\ace\mode\_test\tokens_json.json" />
+    <Content Include="js\ace\mode\_test\tokens_jsp.json" />
+    <Content Include="js\ace\mode\_test\tokens_jsx.json" />
+    <Content Include="js\ace\mode\_test\tokens_julia.json" />
+    <Content Include="js\ace\mode\_test\tokens_latex.json" />
+    <Content Include="js\ace\mode\_test\tokens_less.json" />
+    <Content Include="js\ace\mode\_test\tokens_liquid.json" />
+    <Content Include="js\ace\mode\_test\tokens_lisp.json" />
+    <Content Include="js\ace\mode\_test\tokens_livescript.json" />
+    <Content Include="js\ace\mode\_test\tokens_logiql.json" />
+    <Content Include="js\ace\mode\_test\tokens_lsl.json" />
+    <Content Include="js\ace\mode\_test\tokens_lua.json" />
+    <Content Include="js\ace\mode\_test\tokens_luapage.json" />
+    <Content Include="js\ace\mode\_test\tokens_lucene.json" />
+    <Content Include="js\ace\mode\_test\tokens_markdown.json" />
+    <Content Include="js\ace\mode\_test\tokens_mushcode.json" />
+    <Content Include="js\ace\mode\_test\tokens_objectivec.json" />
+    <Content Include="js\ace\mode\_test\tokens_ocaml.json" />
+    <Content Include="js\ace\mode\_test\tokens_pascal.json" />
+    <Content Include="js\ace\mode\_test\tokens_perl.json" />
+    <Content Include="js\ace\mode\_test\tokens_pgsql.json" />
+    <Content Include="js\ace\mode\_test\tokens_php.json" />
+    <Content Include="js\ace\mode\_test\tokens_powershell.json" />
+    <Content Include="js\ace\mode\_test\tokens_prolog.json" />
+    <Content Include="js\ace\mode\_test\tokens_properties.json" />
+    <Content Include="js\ace\mode\_test\tokens_python.json" />
+    <Content Include="js\ace\mode\_test\tokens_r.json" />
+    <Content Include="js\ace\mode\_test\tokens_rdoc.json" />
+    <Content Include="js\ace\mode\_test\tokens_rhtml.json" />
+    <Content Include="js\ace\mode\_test\tokens_ruby.json" />
+    <Content Include="js\ace\mode\_test\tokens_rust.json" />
+    <Content Include="js\ace\mode\_test\tokens_sass.json" />
+    <Content Include="js\ace\mode\_test\tokens_scad.json" />
+    <Content Include="js\ace\mode\_test\tokens_scala.json" />
+    <Content Include="js\ace\mode\_test\tokens_scheme.json" />
+    <Content Include="js\ace\mode\_test\tokens_scss.json" />
+    <Content Include="js\ace\mode\_test\tokens_sh.json" />
+    <Content Include="js\ace\mode\_test\tokens_snippets.json" />
+    <Content Include="js\ace\mode\_test\tokens_sql.json" />
+    <Content Include="js\ace\mode\_test\tokens_stylus.json" />
+    <Content Include="js\ace\mode\_test\tokens_svg.json" />
+    <Content Include="js\ace\mode\_test\tokens_tcl.json" />
+    <Content Include="js\ace\mode\_test\tokens_tex.json" />
+    <Content Include="js\ace\mode\_test\tokens_text.json" />
+    <Content Include="js\ace\mode\_test\tokens_textile.json" />
+    <Content Include="js\ace\mode\_test\tokens_toml.json" />
+    <Content Include="js\ace\mode\_test\tokens_twig.json" />
+    <Content Include="js\ace\mode\_test\tokens_typescript.json" />
+    <Content Include="js\ace\mode\_test\tokens_vbscript.json" />
+    <Content Include="js\ace\mode\_test\tokens_velocity.json" />
+    <Content Include="js\ace\mode\_test\tokens_xml.json" />
+    <Content Include="js\ace\mode\_test\tokens_xquery.json" />
+    <Content Include="js\ace\mode\_test\tokens_yaml.json" />
+    <Content Include="js\ace\snippets\abap.snippets" />
+    <Content Include="js\ace\snippets\actionscript.snippets" />
+    <Content Include="js\ace\snippets\ada.snippets" />
+    <Content Include="js\ace\snippets\apache.snippets" />
+    <Content Include="js\ace\snippets\apache_conf.snippets" />
+    <Content Include="js\ace\snippets\asciidoc.snippets" />
+    <Content Include="js\ace\snippets\assembly_x86.snippets" />
+    <Content Include="js\ace\snippets\autohotkey.snippets" />
+    <Content Include="js\ace\snippets\autoit.snippets" />
+    <Content Include="js\ace\snippets\batchfile.snippets" />
+    <Content Include="js\ace\snippets\c.snippets" />
+    <Content Include="js\ace\snippets\c9search.snippets" />
+    <Content Include="js\ace\snippets\chef.snippets" />
+    <Content Include="js\ace\snippets\clojure.snippets" />
+    <Content Include="js\ace\snippets\cmake.snippets" />
+    <Content Include="js\ace\snippets\cobol.snippets" />
+    <Content Include="js\ace\snippets\coffee.snippets" />
+    <Content Include="js\ace\snippets\coldfusion.snippets" />
+    <Content Include="js\ace\snippets\cs.snippets" />
+    <Content Include="js\ace\snippets\csharp.snippets" />
+    <Content Include="js\ace\snippets\css.snippets" />
+    <Content Include="js\ace\snippets\curly.snippets" />
+    <Content Include="js\ace\snippets\c_cpp.snippets" />
+    <Content Include="js\ace\snippets\d.snippets" />
+    <Content Include="js\ace\snippets\dart.snippets" />
+    <Content Include="js\ace\snippets\diff.snippets" />
+    <Content Include="js\ace\snippets\django.snippets" />
+    <Content Include="js\ace\snippets\dot.snippets" />
+    <Content Include="js\ace\snippets\ejs.snippets" />
+    <Content Include="js\ace\snippets\erlang.snippets" />
+    <Content Include="js\ace\snippets\eruby.snippets" />
+    <Content Include="js\ace\snippets\falcon.snippets" />
+    <Content Include="js\ace\snippets\forth.snippets" />
+    <Content Include="js\ace\snippets\ftl.snippets" />
+    <Content Include="js\ace\snippets\glsl.snippets" />
+    <Content Include="js\ace\snippets\go.snippets" />
+    <Content Include="js\ace\snippets\golang.snippets" />
+    <Content Include="js\ace\snippets\groovy.snippets" />
+    <Content Include="js\ace\snippets\haml.snippets" />
+    <Content Include="js\ace\snippets\handlebars.snippets" />
+    <Content Include="js\ace\snippets\haskell.snippets" />
+    <Content Include="js\ace\snippets\haxe.snippets" />
+    <Content Include="js\ace\snippets\html.snippets" />
+    <Content Include="js\ace\snippets\htmldjango.snippets" />
+    <Content Include="js\ace\snippets\htmltornado.snippets" />
+    <Content Include="js\ace\snippets\html_ruby.snippets" />
+    <Content Include="js\ace\snippets\ini.snippets" />
+    <Content Include="js\ace\snippets\jade.snippets" />
+    <Content Include="js\ace\snippets\java.snippets" />
+    <Content Include="js\ace\snippets\javascript-jquery.snippets" />
+    <Content Include="js\ace\snippets\javascript.snippets" />
+    <Content Include="js\ace\snippets\json.snippets" />
+    <Content Include="js\ace\snippets\jsoniq.snippets" />
+    <Content Include="js\ace\snippets\jsp.snippets" />
+    <Content Include="js\ace\snippets\jsx.snippets" />
+    <Content Include="js\ace\snippets\julia.snippets" />
+    <Content Include="js\ace\snippets\latex.snippets" />
+    <Content Include="js\ace\snippets\ledger.snippets" />
+    <Content Include="js\ace\snippets\less.snippets" />
+    <Content Include="js\ace\snippets\liquid.snippets" />
+    <Content Include="js\ace\snippets\lisp.snippets" />
+    <Content Include="js\ace\snippets\livescript.snippets" />
+    <Content Include="js\ace\snippets\logiql.snippets" />
+    <Content Include="js\ace\snippets\lsl.snippets" />
+    <Content Include="js\ace\snippets\lua.snippets" />
+    <Content Include="js\ace\snippets\luapage.snippets" />
+    <Content Include="js\ace\snippets\lucene.snippets" />
+    <Content Include="js\ace\snippets\makefile.snippets" />
+    <Content Include="js\ace\snippets\mako.snippets" />
+    <Content Include="js\ace\snippets\markdown.snippets" />
+    <Content Include="js\ace\snippets\matlab.snippets" />
+    <Content Include="js\ace\snippets\mushcode.snippets" />
+    <Content Include="js\ace\snippets\mushcode_high_rules.snippets" />
+    <Content Include="js\ace\snippets\mysql.snippets" />
+    <Content Include="js\ace\snippets\nix.snippets" />
+    <Content Include="js\ace\snippets\objc.snippets" />
+    <Content Include="js\ace\snippets\objectivec.snippets" />
+    <Content Include="js\ace\snippets\ocaml.snippets" />
+    <Content Include="js\ace\snippets\pascal.snippets" />
+    <Content Include="js\ace\snippets\perl.snippets" />
+    <Content Include="js\ace\snippets\pgsql.snippets" />
+    <Content Include="js\ace\snippets\php.snippets" />
+    <Content Include="js\ace\snippets\powershell.snippets" />
+    <Content Include="js\ace\snippets\prolog.snippets" />
+    <Content Include="js\ace\snippets\properties.snippets" />
+    <Content Include="js\ace\snippets\python.snippets" />
+    <Content Include="js\ace\snippets\r.snippets" />
+    <Content Include="js\ace\snippets\rdoc.snippets" />
+    <Content Include="js\ace\snippets\rhtml.snippets" />
+    <Content Include="js\ace\snippets\rst.snippets" />
+    <Content Include="js\ace\snippets\ruby.snippets" />
+    <Content Include="js\ace\snippets\rust.snippets" />
+    <Content Include="js\ace\snippets\sass.snippets" />
+    <Content Include="js\ace\snippets\scad.snippets" />
+    <Content Include="js\ace\snippets\scala.snippets" />
+    <Content Include="js\ace\snippets\scheme.snippets" />
+    <Content Include="js\ace\snippets\scss.snippets" />
+    <Content Include="js\ace\snippets\sh.snippets" />
+    <Content Include="js\ace\snippets\snippets.snippets" />
+    <Content Include="js\ace\snippets\soy_template.snippets" />
+    <Content Include="js\ace\snippets\sql.snippets" />
+    <Content Include="js\ace\snippets\stylus.snippets" />
+    <Content Include="js\ace\snippets\svg.snippets" />
+    <Content Include="js\ace\snippets\tcl.snippets" />
+    <Content Include="js\ace\snippets\tex.snippets" />
+    <Content Include="js\ace\snippets\text.snippets" />
+    <Content Include="js\ace\snippets\textile.snippets" />
+    <Content Include="js\ace\snippets\tmsnippet.snippets" />
+    <Content Include="js\ace\snippets\toml.snippets" />
+    <Content Include="js\ace\snippets\twig.snippets" />
+    <Content Include="js\ace\snippets\typescript.snippets" />
+    <Content Include="js\ace\snippets\vbscript.snippets" />
+    <Content Include="js\ace\snippets\velocity.snippets" />
+    <Content Include="js\ace\snippets\verilog.snippets" />
+    <Content Include="js\ace\snippets\vhdl.snippets" />
+    <Content Include="js\ace\snippets\xml.snippets" />
+    <Content Include="js\ace\snippets\xquery.snippets" />
+    <Content Include="js\ace\snippets\xslt.snippets" />
+    <Content Include="js\ace\snippets\yaml.snippets" />
+    <Content Include="js\ace\snippets\_.snippets" />
+    <Content Include="js\jq\pie\PIE.php" />
+    <Content Include="Master\Admin.Master" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="AfterBuild">
+    <TransformXml Source="Web.config" Transform="$(ProjectConfigTransformFileName)" Destination="Web.Transformed.config" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>58516</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://admin.localhost-usa</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://admin.localhost-usa/</IISAppRootUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

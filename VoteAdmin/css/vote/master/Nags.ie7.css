@@ -1,0 +1,16 @@
+﻿#outer .nag-container td p
+{
+  padding: 5px 0 6px 3px;
+}
+
+#outer .nag-container table input
+{
+  padding: 2px 0 2px 2px;
+}
+
+#outer .nag-container .help .icon-text
+{
+  height: 19px;
+  margin-bottom: 6px;
+  width: 600px;
+}

@@ -1,0 +1,366 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using Vote;
+using Vote.Reports;
+
+namespace DB.Vote
+{
+  public enum PoliticianStatus
+  {
+    Unknown,
+    InFutureViewableElection,
+    InFutureNonviewableElection, // might not be used now
+    InFutureViewableElectionAsRunningMate,
+    InFutureNonviewableElectionAsRunningMate, // might not be used now
+    InFutureUncreatedElection,
+    Incumbent,
+    IncumbentRunningMate,
+    InPreviousElection,
+    InPreviousElectionAsRunningMate
+  }
+
+  public static class PoliticianStatusExtensions
+  {
+    #region Public
+
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable MemberCanBeProtected.Global
+    // ReSharper disable UnusedMember.Global
+    // ReSharper disable UnusedMethodReturnValue.Global
+    // ReSharper disable UnusedAutoPropertyAccessor.Global
+
+    public static bool IsInFutureViewableElection(
+      this PoliticianStatus politicianStatus)
+    {
+      return politicianStatus == PoliticianStatus.InFutureViewableElection ||
+        politicianStatus == PoliticianStatus.InFutureViewableElectionAsRunningMate;
+    }
+
+    public static PoliticianStatus ToPoliticianStatus(this object value)
+    {
+      try
+      {
+        return (PoliticianStatus) Convert.ToInt32(value);
+      }
+      catch (Exception)
+      {
+        return PoliticianStatus.Unknown;
+      }
+    }
+
+    public static PoliticianStatus ToPoliticianStatus(this string value)
+    {
+      PoliticianStatus result;
+      if (!Enum.TryParse(value, out result)) result = PoliticianStatus.Unknown;
+      return result;
+    }
+
+    // ReSharper restore UnusedAutoPropertyAccessor.Global
+    // ReSharper restore UnusedMethodReturnValue.Global
+    // ReSharper restore UnusedMember.Global
+    // ReSharper restore MemberCanBeProtected.Global
+    // ReSharper restore MemberCanBePrivate.Global
+
+    #endregion Public
+  }
+
+  public class PoliticianOfficeStatus
+  {
+    public PoliticianStatus PoliticianStatus;
+    public string OfficeKey;
+    public string ElectionKey;
+
+    public static PoliticianOfficeStatus FromLiveOfficeKeyAndStatus(
+      string liveOfficeKeyAndStatus)
+    {
+      var result = new PoliticianOfficeStatus();
+      var split = liveOfficeKeyAndStatus.Split('|');
+      if (split.Length >= 2)
+      {
+        result.OfficeKey = split[0];
+        if (!Enum.TryParse(split[1], out result.PoliticianStatus)) result.PoliticianStatus = PoliticianStatus.Unknown;
+        result.ElectionKey = split.Length > 2 ? split[2] : string.Empty;
+      }
+      else
+      {
+        result.OfficeKey = string.Empty;
+        result.ElectionKey = string.Empty;
+        result.PoliticianStatus = PoliticianStatus.Unknown;
+      }
+      return result;
+    }
+  }
+
+  public partial class Politicians
+  {
+    #region Public
+
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable MemberCanBeProtected.Global
+    // ReSharper disable UnusedMember.Global
+
+    public static string FormatName(PoliticiansRow row, bool includeAddOn = false,
+      int breakPosition = 0)
+    {
+      if (row == null) return string.Empty;
+      return FormatName(row.FirstName, row.MiddleName, row.Nickname, row.LastName,
+        row.Suffix, includeAddOn ? row.AddOn : null,
+        GetStateCodeFromKey(row.PoliticianKey), breakPosition);
+    }
+
+    public static string FormatName(DataRow row, bool includeAddOn = false,
+      int breakPosition = 0)
+    {
+      if (row == null) return string.Empty;
+      return FormatName(row.FirstName(), row.MiddleName(), row.Nickname(),
+        row.LastName(), row.Suffix(), includeAddOn ? row.AddOn() : null,
+        GetStateCodeFromKey(row.PoliticianKey()), breakPosition);
+    }
+
+    public static string FormatName(string firstName, string middleName,
+      string nickname, string lastName, string suffix, string addon = null,
+      string stateCode = null, int breakPosition = 0)
+    {
+      var formattedName = string.Empty;
+
+      if (!string.IsNullOrWhiteSpace(firstName)) formattedName += firstName;
+
+      if (!string.IsNullOrWhiteSpace(middleName)) formattedName += " " + middleName;
+
+      if (!string.IsNullOrWhiteSpace(nickname)) formattedName += " " + GetEnquotedNicknameForState(nickname, stateCode);
+
+      if (!string.IsNullOrWhiteSpace(lastName)) formattedName += " " + lastName;
+
+      if (!string.IsNullOrWhiteSpace(suffix)) formattedName += ", " + suffix;
+
+      if (!string.IsNullOrWhiteSpace(addon)) formattedName += " " + addon;
+
+      if (breakPosition > 0) formattedName = formattedName.SplitLinesWithBreakTags(breakPosition);
+      return formattedName;
+    }
+
+    public static string FormatOfficeAndStatus(DataRow politicianInfo)
+    {
+      var officeKey = politicianInfo.LiveOfficeKey();
+      if (string.IsNullOrWhiteSpace(officeKey)) return string.Empty;
+
+      var politicianStatus = politicianInfo.LivePoliticianStatus();
+      var officeName = Offices.GetLocalizedOfficeName(politicianInfo);
+      var nameElectoral =
+        Offices.GetElectoralClassDescriptionFromOfficeKey(officeKey);
+      if (!string.IsNullOrEmpty(nameElectoral) && !officeName.Contains(nameElectoral))
+        officeName += ", " + nameElectoral;
+
+      return politicianStatus.GetOfficeStatusDescription(officeName);
+    }
+
+    public static IEnumerable<DataRow> GetCandidateListRows(string name, string stateCode)
+    {
+      name = name.Trim();
+      if (name.Length < 2) return new List<DataRow>();
+
+      return GetSearchCandidates(name, null, new []{stateCode})
+        .Rows.Cast<DataRow>()
+        .OrderBy(row => row.LastName())
+        .ThenBy(row => row.FirstName())
+        .GroupBy(
+          row => GetCandidateList_MatchQuality(name.StripAccents(), name.StripVowels(), row))
+        .OrderBy(g => g.Key)
+        .SelectMany(g => g)
+        .ToList();
+    }
+
+    public static Control GetCandidateList(string partialName,
+      string selectedPolitician, string officeKeyOrStateCode,
+      string[] currentCandidates, bool fullAlphaNameOnly = false)
+    {
+      var placeHolder = new PlaceHolder();
+      var idPrefix = fullAlphaNameOnly ? "addpolitician-" : "searchpolitician-";
+      partialName = partialName.Trim();
+      if (partialName.Length < 2) return placeHolder;
+      var alphaName = partialName.StripAccents();
+      var vowelStrippedName = partialName.StripVowels();
+
+      // The officeKeyOrStateCode can be either empty/null, a single officeKey,
+      // a single stateCode, or a comma separated list of stateCodes
+      officeKeyOrStateCode = officeKeyOrStateCode ?? string.Empty;
+      var stateCodes = officeKeyOrStateCode.Split(new[] {','},
+        StringSplitOptions.RemoveEmptyEntries);
+      if (stateCodes.Length == 1) stateCodes[0] = Offices.GetStateCodeFromKey(stateCodes[0]);
+
+      var matches = GetSearchCandidates(partialName, currentCandidates, stateCodes,
+        fullAlphaNameOnly)
+        .Rows.Cast<DataRow>()
+        .OrderBy(row => row.LastName())
+        .ThenBy(row => row.FirstName())
+        .GroupBy(
+          row => GetCandidateList_MatchQuality(alphaName, vowelStrippedName, row))
+        .OrderBy(g => g.Key);
+      foreach (var group in matches)
+        foreach (var politician in group)
+        {
+          var className = "search-politician clearfix";
+          if (selectedPolitician.IsEqIgnoreCase(politician.PoliticianKey())) className += " selected";
+          var div =
+            new HtmlGenericControl("div")
+            {
+              ID = idPrefix + politician.PoliticianKey()
+            }.AddTo(placeHolder,
+              className);
+          div.Attributes.Add("sort-key",
+            (politician.LastName() + " " + politician.FirstName() + " " +
+              politician.MiddleName() + " " + politician.Nickname() + " " +
+              politician.Suffix()).StripRedundantSpaces()
+              .ToLowerInvariant());
+          Report.CreatePoliticianImageTag(politician.PoliticianKey(), 35).AddTo(div);
+          var text = FormatName(politician);
+          if (!string.IsNullOrWhiteSpace(politician.PartyCode())) text += " (" + politician.PartyCode() + ")";
+          new HtmlGenericControl("div") {InnerHtml = text}.AddTo(div, "name");
+          text = GetCandidateList_OfficeDescription(politician);
+          if (!string.IsNullOrWhiteSpace(text)) new HtmlGenericControl("div") {InnerHtml = text}.AddTo(div, "office");
+          text = GetCandidateList_AddressLine(politician);
+          if (!string.IsNullOrWhiteSpace(text)) new HtmlGenericControl("div") {InnerHtml = text}.AddTo(div, "address");
+        }
+      return placeHolder;
+    }
+
+    public static string GetCandidateListHtml(string partialName,
+      string selectedPolitician, string officeKeyOrStateCode,
+      string[] currentCandidates, bool fullAlphaNameOnly = false)
+    {
+      return
+        GetCandidateList(partialName, selectedPolitician, officeKeyOrStateCode,
+          currentCandidates, fullAlphaNameOnly)
+          .RenderToString();
+    }
+
+    private static int GetCandidateList_MatchQuality(string alphaName,
+      string vowelStrippedName, DataRow politician)
+    {
+      if (alphaName == politician.AlphaName()) return 1;
+      if (politician.AlphaName()
+        .StartsWith(alphaName, StringComparison.Ordinal)) return 2;
+      return vowelStrippedName == politician.VowelStrippedName() ? 3 : 4;
+    }
+
+    private static string GetCandidateList_OfficeDescription(DataRow politician)
+    {
+      var officeKey = politician.LiveOfficeKey();
+      if (string.IsNullOrWhiteSpace(officeKey)) return string.Empty;
+
+      var result = politician.OfficeLine1();
+      if (!string.IsNullOrWhiteSpace(politician.OfficeLine2()) &&
+        politician.OfficeClass() != OfficeClass.USPresident) result += " " + politician.OfficeLine2();
+      if (politician.OfficeClass() != OfficeClass.USPresident)
+      {
+        var stateCode = Offices.GetStateCodeFromKey(officeKey);
+        var countyCode = Offices.GetCountyCodeFromKey(officeKey);
+        var localCode = Offices.GetLocalCodeFromKey(officeKey);
+        if (String.IsNullOrWhiteSpace(countyCode)) result = StateCache.GetStateName(stateCode) + " " + result;
+        else if (String.IsNullOrWhiteSpace(localCode))
+          result = CountyCache.GetCountyName(stateCode, countyCode) + ", " +
+            StateCache.GetStateName(stateCode) + " " + result;
+        else
+          result = CountyCache.GetCountyName(stateCode, countyCode) + ", " +
+            StateCache.GetStateName(stateCode) + ", " +
+            politician.LocalDistrict() + " " + result;
+      }
+      return politician.LivePoliticianStatus()
+        .GetOfficeStatusDescription() + result;
+    }
+
+    private static string GetCandidateList_AddressLine(DataRow politician)
+    {
+      var result = politician.PublicAddress();
+      var cityStateZip = politician.PublicCityStateZip();
+      if (!string.IsNullOrWhiteSpace(result) &&
+        !string.IsNullOrWhiteSpace(cityStateZip)) result += ", ";
+      result += cityStateZip;
+      return result;
+    }
+
+    public static string GetFormattedName(string politicianKey,
+      bool includeAddOn = false, int breakAfterPosition = 0)
+    {
+      return VotePage.GetPageCache()
+        .Politicians.GetPoliticianName(politicianKey, includeAddOn,
+          breakAfterPosition);
+    }
+
+    public static string GetFormattedNameUncached(string politicianKey,
+      bool includeAddOn = false, int breakAfterPosition = 0)
+    {
+      return PageCache.GetTemporary()
+        .Politicians.GetPoliticianName(politicianKey, includeAddOn,
+          breakAfterPosition);
+    }
+
+    public static OfficeClass GetOfficeClass(string politicianKey)
+    {
+      var cache = VotePage.GetPageCache();
+      return Offices.GetOfficeClass(cache,
+        cache.Politicians.GetLiveOfficeKey(politicianKey));
+    }
+
+    public static string GetOfficeStatusDescription(
+      this PoliticianStatus officeStatus)
+    {
+      switch (officeStatus)
+      {
+        case PoliticianStatus.InFutureViewableElection:
+        case PoliticianStatus.InFutureNonviewableElection:
+        case PoliticianStatus.InFutureUncreatedElection:
+          return "Candidate for ";
+
+        case PoliticianStatus.InFutureViewableElectionAsRunningMate:
+        case PoliticianStatus.InFutureNonviewableElectionAsRunningMate:
+          return "Running Mate for ";
+
+        case PoliticianStatus.Incumbent:
+          return "Currently Elected ";
+
+        case PoliticianStatus.IncumbentRunningMate:
+          return "Currently Elected Running Mate for ";
+
+        case PoliticianStatus.InPreviousElection:
+          return "Previous Candidate for ";
+
+        case PoliticianStatus.InPreviousElectionAsRunningMate:
+          return "Previous Candidate Running Mate for ";
+
+        default:
+          return string.Empty;
+      }
+    }
+
+    public static string GetOfficeStatusDescription(
+      this PoliticianStatus officeStatus, string officeName)
+    {
+      return officeStatus.GetOfficeStatusDescription() + officeName;
+    }
+
+    public static string GetStateCodeFromKey(string politicianKey)
+    {
+      if (politicianKey == null || politicianKey.Length < 2) return string.Empty;
+      return politicianKey.Substring(0, 2)
+        .ToUpperInvariant();
+    }
+
+    public static bool IsValid(string politicianKey)
+    {
+      return VotePage.GetPageCache()
+        .Politicians.Exists(politicianKey);
+    }
+
+    // ReSharper restore UnusedMember.Global
+    // ReSharper restore MemberCanBeProtected.Global
+    // ReSharper restore MemberCanBePrivate.Global
+
+    #endregion Public
+  }
+}

@@ -1,0 +1,167 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Public.master.cs" Inherits="Vote.PublicMasterPage" %>
+
+<!DOCTYPE html>
+
+<html>
+<head id="Head" runat="server">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <asp:ContentPlaceHolder ID="MasterHeadTopContent" runat="server">
+    </asp:ContentPlaceHolder>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="/css/jq/slicknav.css" />
+    <link rel="stylesheet" href="/css/vote/public.css?177" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>    
+    <script type="text/javascript" src="/js/jq/jquery.slicknav.js"></script>
+    <script type="text/javascript" src="/js/vote/public.js?177"></script>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5571bc133e4f402f" async="async"></script>
+    <asp:ContentPlaceHolder ID="MasterHeadBottomContent" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body id="Body" class="no-js" runat="server">
+    <form id="form1" runat="server">
+    <div class="outer-page">
+      
+      <div class="donate-banner">
+        <a href="https://co.clickandpledge.com/sp/d1/default.aspx?wid=37518" target="donate"><img class="responsive" src="/images/donatebanner.jpg" alt="Donate to VoteUSA.org"/></a>
+      </div>
+
+      <div class="social-media-outer clearfix no-print">
+        <div class="social-media">
+          <div class="addthis_sharing_toolbox" id="AddThisButtons" runat="server"></div>          
+          <!-- AddThis Button END -->   
+          <div class="special-link" id="SpecialLink" runat="server">
+            <div class="one-link">
+              <a href="/CompareCandidates.aspx?State=US&Election=US20161108AR&Office=USPresident"><img src="/images/rep-logo.png" alt="" /></a>
+              <a class="link republican" href="/CompareCandidates.aspx?State=US&Election=US20161108AR&Office=USPresident">Compare the Republican Presidential Candidates</a>
+            </div>
+            <div class="one-link">
+              <a href="/CompareCandidates.aspx?State=US&Election=US20161108AD&Office=USPresident"><img src="/images/dem-logo.png" alt="" /></a>
+              <a class="link democrat" href="/CompareCandidates.aspx?State=US&Election=US20161108AD&Office=USPresident">Compare the Democratic Presidential Candidates</a>
+            </div>
+            <div class="one-link sample-ballot-link">
+              <a href="/forVoters.aspx" onclick="PUBLIC.getSampleBallot(); return false;"><img src="/images/sample-ballot-logo.png" alt="" /></a>
+              <a class="link" href="/forVoters.aspx" onclick="PUBLIC.getSampleBallot(); return false;">Get Your Enhanced Sample Ballot</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-banner-outer clearfix">
+        <div class="main-banner">
+          <div class="logo" runat="server" id="MainBannerLogo">
+            <a id="MainBannerHomeLink" href="/" title="" runat="server"><img runat="server" id="MainBannerImageTag" src="/images/homelogo.png" alt="Vote USA - Connecting voters and candidates"/></a>
+          </div>
+          <div id="MainBannerStateBanner" class="state-banner" runat="server">
+            <div>
+            </div>
+            <div class="states-menu">
+              <div class="base-menu">
+                <span class="base slicknav_menu slicknav_btn">
+                  <span id="StateTitle" runat="server" class="slicknav_menutxt">Select a state</span>
+                    <span class="slicknav_icon">
+                    <span class="slicknav_icon-bar"></span>
+                    <span class="slicknav_icon-bar"></span>
+                    <span class="slicknav_icon-bar"></span>
+                  </span>
+                </span>   
+                <div class="slicknav_menu">   
+                  <ul class="slicknav_nav">
+                    <li id="StateLinks" runat="server"></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div id="StateSite" runat="server" class="state-site min-large">
+              <a id="MainBannerStateSiteLink" class="state-site-link no-print" href="#" title="" target="stateSite" rel="nofollow" runat="server">Go to the Official Website →</a><br />
+              <span class="not-associated no-print">We are not associated with any election authority</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--<div style="clear:both"></div>-->
+
+      <div class="main-navigation clearfix no-print">
+        <span class="slicknav_menu no-js-menu"><span class="slicknav_btn"><span class="slicknav_menutxt">Main Menu</span><span class="slicknav_icon"><span class="slicknav_icon-bar"></span><span class="slicknav_icon-bar"></span><span class="slicknav_icon-bar"></span></span></span></span>
+        <ul class="main-menu min-large">
+          <li class="home"><a href="/">Home</a></li>
+          <li class="for-voters"><a href="/forVoters.aspx" title="Get your sample ballot or current elected officials">for Voters</a></li>
+          <li class="for-candidates"><a href="/forCandidates.aspx" title="How candidates can provide and update their information">for Candidates</a></li>
+          <li class="for-volunteers"><a href="/forVolunteers.aspx" title="How you can participate in the Vote USA project">for Volunteers</a></li>
+          <li class="donate"><a href="https://co.clickandpledge.com/sp/d1/default.aspx?wid=37518" class="donateLink" title="Help support this project with a donation" target="donate">Donate</a></li>
+        </ul>
+      </div>   
+      
+      <div class="content">
+        <asp:ContentPlaceHolder ID="MasterMainContent" runat="server">
+        </asp:ContentPlaceHolder>
+      </div>
+
+      <div class="main-footer clearfix">
+        <div class="one-stop clearfix">
+          <div class="header">
+            <span>One-Stop Shopping for Voters</span>
+          </div>
+          <div class="footer-links footer-links1 no-print">
+              <ul>
+                <li><a href="/" id="MainFooter1_HomeLink">Home</a></li>
+                <li><a href="/AboutUs.aspx" id="MainFooter1_AboutUsLink">About Us</a></li>
+                <li><a href="/ContactUs.aspx" id="MainFooter1_ContactUsLink">Contact Us</a></li>
+                <li><a href="/Privacy.aspx" id="MainFooter1_PrivacyLink">Privacy Policy</a></li>
+                <li><a href="/Donate.aspx" id="MainFooter1_DonateLink" title="Help support this project with a donation">Donate</a></li>
+                <li><a href="/forVoters.aspx" id="MainFooter1_ForVotersLink" title="Get your sample ballot or current elected officials">For Voters</a></li>
+              </ul> 
+          </div>
+          <div class="footer-links footer-links2 no-print">
+              <ul>
+                <li style="margin-left:0;padding-left:0"><a href="/forCandidates.aspx" id="MainFooter1_ForCandidatesLink" title="How candidates can provide and update their information">For Candidates</a></li>
+                <li><a href="/forVolunteers.aspx" id="MainFooter1_ForVolunteersLink" title="How you can participate in the Vote USA project">For Volunteers</a></li>
+                <li><a href="/forPartners.aspx" id="MainFooter1_ForPartersLink" title="How we can enhance other organizations’ websites with our tools and data">For Partners</a></li>
+                <li><a href="/forPoliticalParties.aspx" id="MainFooter1_ForPoliticalPartiesLink" title="How political parties can promote their candidates on our website">For Political Parties</a></li>
+                <li><a href="/forResearch.aspx" id="MainFooter1_ForResearchLink" title="Access to all Vote USA data and archives">For Research</a></li>
+                <li><a href="/forElectionAuthorities.aspx" id="MainFooter1_ForElectionAuthoritiesLink" title="How we can provide election authorities with our ballot creation capability and tools to insure accuracy of our data">For Election Authorities</a></li>
+              </ul>
+          </div>
+          <div class="footer-blurb">
+            <div>This website is not associated with any election authority.  It is hosted and 
+            maintained by Vote-USA. All information on this site was obtained from various 
+              state election authorities, the candidates themselves or from their staff or 
+              websites. Vote-USA is a 501(c)(3) charitable organization funded 
+            by contributions from private citizens.  All contributions are 100% tax-deductible.</div>
+          </div>  
+          <div class="extra">
+              <div class="video-link no-print">
+                <div><a class="view gradient-bg-1-hovering rounded-border shadow" href="https://vimeo.com/64616892" target="_blank" title="Harlan Johnson video"><span>►</span>View Video</a></div>
+                <div class="hj">compliments of<br><a href="http://www.communitytherapist.net/" target="_blank" rel="nofollow">Harlan Johnson</a></div>
+              </div>
+          </div>
+        </div>
+        <div class="header">
+          <span>Supporting Organizations</span>
+        </div>
+        <div class="supporting-orgs-for-partners clearfix no-print">
+          Please visit our <a href="/forPartners.aspx">For Partners</a> page to learn more about these organizations.
+        </div>
+        <div class="supporting-orgs">
+          <ul>
+            <li class="endpartisanship"><a href="http://www.endpartisanship.com/" target="_blank" title="Challenging closed partisan primaries and promoting non-partisan primaries to end to party control of elections"><img src="/images/end-partisanship-partner.png" alt=""></a></li>
+            <li class="nolabels"><a href="http://nolabels.org/" target="_blank" title="Break the stranglehold that extremes have on our political process"><img src="/images/no-labels-partner.png" alt=""></a></li>
+            <li class="ivn"><a href="http://ivn.us/" target="_blank" title="An online news platform for independent-minded voters, public officials, civic leaders, and journalists"><img src="/images/ivn-partner.png" alt=""></a></li>
+            <li class="procon"><a href="http://procon.org/" target="_blank" title="Promoting nonpartisan critical thinking of controversial issues"><img src="/images/ProCon.png" alt=""></a></li>
+            <li class="recoveringpol"><a href="http://therecoveringpolitician.com/" target="_blank" title="Former politicians’ write about their experiences"><img src="/images/recovering-politician-partner.png" alt=""></a></li>
+            <li class="infiniden"><a href="http://www.infiniden.com/" target="_blank" title="Providing web design"><img src="/images/infiniden-partner.png" alt=""></a></li>
+            <li class="google"><a href="http://google.com/" target="_blank" title="Providing a Google AdWord grant"><img src="/images/google-partner.png" alt=""></a></li>
+            <li class="aristotle"><a href="http://www.aristotle.com/" target="_blank" title="Providing legislative district data"><img src="/images/aristotle-partner.png" alt=""></a></li>
+            <li class="businessol"><a href="http://businessol.com/" target="_blank" title="Providing Internet expertise"><img src="/images/business-online-partner.png" alt=""></a></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+    <script type="text/javascript" src="/js/jq/scrolltotop.js"></script>
+    <asp:ContentPlaceHolder ID="MasterBottomContent" runat="server">
+    </asp:ContentPlaceHolder>
+   </form>
+</body>
+</html>

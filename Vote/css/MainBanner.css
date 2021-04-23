@@ -1,0 +1,180 @@
+﻿#mainBanner
+{
+  background: #fff;
+  overflow: auto; /* to clear floats */
+  width: 100%;
+}
+
+#mainBanner .logo
+{
+  float: left;
+  height: 80px;
+  margin: 38px 0 4px 0;
+}
+
+#mainBanner .get-sample-ballot-link
+{
+  float: left;
+  margin: 40px 0 0 50px;
+  text-align: center;
+}
+
+#mainBanner .get-sample-ballot-link a.get
+{
+  border: 1px solid #bf9241;
+  color: #25a;
+  display: block;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: bold;
+  margin-bottom: 5px;
+  padding: 6px 10px;
+  text-decoration: none;
+}
+ /*
+#mainBanner .get-sample-ballot-link a.get span.line1
+{
+  xfont-size: 12px;
+  xcolor: #888;
+}
+*/
+
+#mainBanner .get-sample-ballot-link a.get:hover
+{
+  border-color: #ffaf1e;
+  cursor: pointer;
+}
+
+#mainBanner .get-sample-ballot-link a.get span.arrow
+{
+  color: #bf9241;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+#mainBanner .get-sample-ballot-link .hj
+{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 7pt;
+}
+
+#mainBanner .get-sample-ballot-link .hj a
+{
+  color: #00c;
+}
+
+#mainBanner .get-sample-ballot-link .hj a:hover
+{
+  color: #c00;
+}
+
+#mainBanner .customlogo
+{
+  float: left;
+  margin: 10px 0 10px 0;
+}
+
+#mainBanner .stateBanner
+{
+  float: right;
+  font-family: Arial;
+  font-size: 8pt;
+  height: 118px;
+  padding-right: 10px;
+  text-align: right;
+  width: 400px;
+}
+
+#mainBanner .stateBanner .stateName
+{
+  margin-top: 23px;
+}
+
+#mainBanner .stateBanner .stateSite
+{
+  margin-top: 9px;
+  text-align: right;
+}
+
+#mainBanner .stateBanner .anotherState
+{
+  margin-top: 7px;
+}
+
+#mainBanner .stateBanner .notAssociated
+{
+  color: #666;
+  font-size: 7pt;
+  padding-right: 15px;
+}
+
+#mainBanner a.anotherStateButton
+{
+  background: url(/images/anotherstate.png);
+  cursor: pointer;
+  display: block;
+  float: right;
+  font-size: 0px;
+  height: 21px;
+  line-height: 0px;
+  margin-top: 7px;
+  overflow: hidden;
+  text-indent: -10000px;
+  width: 160px;
+}
+
+#mainBanner a:hover.anotherStateButton
+{
+  background-position: 0 -21px;
+}
+
+#mainBanner .stateBanner a.stateSiteLink
+{
+  color: #666666;
+  text-decoration: none;
+}
+
+#mainBanner .stateBanner a.stateSiteLink:hover
+{
+  /*color: #000000;*/
+  color: #A00000;
+}
+
+.gradient-bg-1,
+.gradient-bg-1-hovering
+{
+  background: #fff4d3;
+  background-image: -ms-linear-gradient(top, #FFFFEE 0, #FFE9B8 100%);
+  background-image: -moz-linear-gradient(top, #FFFFEE 0, #FFE9B8 100%);
+  background-image: -o-linear-gradient(top, #FFFFEE 0, #FFE9B8 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FFFFEE), color-stop(1, #FFE9B8));
+  background-image: -webkit-linear-gradient(top, #FFFFEE 0, #FFE9B8 100%);
+  background-image: linear-gradient(to bottom, #FFFFEE 0, #FFE9B8 100%);
+}
+
+.gradient-bg-1-hovering:hover
+{
+  background: #FFE9B8;
+  background-image: -ms-linear-gradient(bottom, #FFFFEE 0, #FFE9B8 100%);
+  background-image: -moz-linear-gradient(bottom, #FFFFEE 0, #FFE9B8 100%);
+  background-image: -o-linear-gradient(bottom, #FFFFEE 0, #FFE9B8 100%);
+  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #FFFFEE), color-stop(1, #FFE9B8));
+  background-image: -webkit-linear-gradient(bottom, #FFFFEE 0, #FFE9B8 100%);
+  background-image: linear-gradient(to top, #FFFFEE 0, #FFE9B8 100%);
+}
+
+.rounded-border
+{
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.shadow
+{
+  -moz-box-shadow: 3px 3px 4px #bbb;
+  -webkit-box-shadow: 3px 3px 4px #bbb;
+  box-shadow: 3px 3px 4px #bbb;
+}

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<generateDbClasses>
+  <databases 
+    supportMySql="true" 
+    supportMsSql="true"
+    secondary="true"
+    >
+    <database
+      mappedName="VoteTemp"
+      provider="MySql"
+      connectionString="Server=votesql.c3fj3t5d5d77.us-east-1.rds.amazonaws.com;Uid=ron;Pwd=p17134;Database=votetemp"
+      connectionStringKey="CnVoteTemp.MySql"
+      providerKey="VoteDbProvider"
+      >
+      <tables>
+        <table name="SitemapElectionsTemp" truncateTable="true" />
+        <table name="SitemapIssuesTemp" truncateTable="true" />
+        <table name="SitemapPoliticiansIssuesTemp" truncateTable="true">
+          <indexes>
+            <index add="true" columns="PoliticianKey" />
+          </indexes>
+        </table>
+        <table name="SitemapPoliticiansTemp" truncateTable="true" />
+        <table name="TempEmailAddresses" truncateTable="true" >
+          <columns>
+            <column name="EmailAddress" mappedName="Email" />
+            <column name="FName" mappedName="FirstName" />
+            <column name="LName" mappedName="LastName" />
+          </columns>
+        </table>
+      </tables>
+    </database>
+  </databases>
+</generateDbClasses>

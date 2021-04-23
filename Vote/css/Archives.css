@@ -1,0 +1,121 @@
+/*--Heading--*/
+.trArchivesTitle
+{
+}
+.tdArchivesTitle
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+font-weight: bold;
+color: #373737;
+margin: 0px;
+padding:2px 10px 0px 10px;
+}
+/*--Instruction--*/
+.trArchivesInstruction
+{
+}
+.tdArchivesInstruction
+/*
+,.tdArchivesInstruction a:link
+,.tdArchivesInstruction a:visited
+,.tdArchivesInstruction a:hover
+*/
+{
+vertical-align: top;
+font-family: Arial, Helvetica, sans-serif;
+line-height: 15px;
+font-size: 14px;
+color: #373737;
+}
+.tdArchivesInstruction
+{
+padding:10px 10px 10px 10px;
+}
+/*--Archives Report--*/
+.trReportGroupHeading
+{
+background-color: #E0E0E0;
+}
+.tdReportGroupHeading
+{
+border-right:solid 1px Gray;
+border-bottom:solid 1px Gray;
+padding: 7px 5px 7px 5px;
+text-align:left;
+}
+.tdReportGroupHeading
+/*
+,.tdReportGroupHeading a:link
+,.tdReportGroupHeading a:visited
+,.tdReportGroupHeading a:hover
+*/
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 14px;
+font-weight:bold;
+vertical-align: top;
+}
+.tdReportGroupHeading
+{
+color: #373737;
+}
+/*
+.tdReportGroupHeading a:link
+,.tdReportGroupHeading a:visited
+,.tdReportGroupHeading a:hover
+{
+color: #26466D;
+}
+*/
+.trReportDetailHeading
+{
+}
+.tdReportDetailHeading
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 12px;
+font-weight:bold;
+border-right:solid 1px Gray;
+border-bottom:solid 1px Gray;
+background-color: #F5F5F5;
+color: #373737;
+padding: 7px 5px 7px 5px;
+}
+.trReportDetail
+{
+}
+.tdReportDetail
+{
+border-right:solid 1px Gray;
+border-bottom:solid 1px Gray;
+padding: 7px 5px 7px 5px;
+}
+.tdReportDetail
+/*
+,.tdReportDetail a:link
+,.tdReportDetail a:visited
+,.tdReportDetail a:hover
+*/
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 12px;
+}
+.tdReportDetail
+{
+font-weight:normal;
+color: #373737;
+}
+/*
+.tdReportDetail a:link
+,.tdReportDetail a:visited
+,.tdReportDetail a:hover
+{
+font-weight:bold;
+color: #26466D;
+}
+*/
+.tdReportDetailHeadingLastCollumn
+{
+	width:100%
+}

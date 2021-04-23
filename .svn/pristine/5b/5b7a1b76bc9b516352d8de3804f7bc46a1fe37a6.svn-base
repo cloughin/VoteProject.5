@@ -1,0 +1,109 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using Vote;
+using Ionic.Zip;
+using LumenWorks.Framework.IO.Csv;
+using UtilityLibrary;
+
+namespace LoadZipDatabase
+{
+  public partial class CsvMainForm : Form
+  {
+    Common Common;
+
+    public CsvMainForm()
+    {
+      InitializeComponent();
+      Common = new Common(this.StatusTextBox);
+    }
+
+    private void ProcessAllStates()
+    {
+      Common.AppendStatusText("Starting...");
+
+      TextWriter writer = null;
+      try
+      {
+        DirectoryInfo directoryInfo = new DirectoryInfo(ZipPlus4PathTextBox.Text);
+        if (!directoryInfo.Exists)
+          throw new VoteException("Directory \"{0}\" does not exist.", directoryInfo.FullName);
+
+        writer = new StreamWriter(OutputFileTextBox.Text);
+
+        foreach (string stateCode in StateCache.All51StateCodes)
+          Common.ProcessOneState(directoryInfo, stateCode, writer);
+      }
+      finally
+      {
+        if (writer != null)
+          writer.Close();
+      }
+
+      Common.AppendStatusText("Completed.");
+    }
+
+    #region Event handlers
+
+    private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+    {
+      try
+      {
+        ProcessAllStates();
+      }
+      catch (VoteException ex)
+      {
+        Common.AppendStatusText(ex.Message);
+        Common.AppendStatusText("Terminated.");
+      }
+      catch (Exception ex)
+      {
+        Common.AppendStatusText(ex.ToString());
+        Common.AppendStatusText("Terminated.");
+      }
+    }
+
+    private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+    {
+      StartButton.Enabled = true;
+      BrowseZipPlus4PathButton.Enabled = true;
+      ZipPlus4PathTextBox.Enabled = true;
+      BrowseOutputFileButton.Enabled = true;
+      OutputFileTextBox.Enabled = true;
+    }
+
+    private void BrowseOutputFileButton_Click(object sender, EventArgs e)
+    {
+      OutputFileSaveFileDialog.FileName = OutputFileTextBox.Text;
+      if (OutputFileSaveFileDialog.ShowDialog() == DialogResult.OK)
+        OutputFileTextBox.Text = OutputFileSaveFileDialog.FileName;
+    }
+
+    private void BrowseZipPlus4PathButton_Click(object sender, EventArgs e)
+    {
+      ZipPlus4FolderBrowserDialog.SelectedPath = ZipPlus4PathTextBox.Text;
+      if (ZipPlus4FolderBrowserDialog.ShowDialog() == DialogResult.OK)
+        ZipPlus4PathTextBox.Text = ZipPlus4FolderBrowserDialog.SelectedPath;
+    }
+
+    private void StartButton_Click(object sender, EventArgs e)
+    {
+      StartButton.Enabled = false;
+      BrowseZipPlus4PathButton.Enabled = false;
+      ZipPlus4PathTextBox.Enabled = false;
+      BrowseOutputFileButton.Enabled = false;
+      OutputFileTextBox.Enabled = false;
+
+      StatusTextBox.Clear();
+      BackgroundWorker.RunWorkerAsync();
+    }
+
+    #endregion Event handlers
+  }
+}

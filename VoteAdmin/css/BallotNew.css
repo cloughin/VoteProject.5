@@ -1,0 +1,40 @@
+﻿/* Overrides needed due to doctype differences */
+
+.tdBallotSubTitle
+{
+  padding-top: 12px;
+}
+
+.tdBallotSubTitle .districtsHead
+{
+  font-style: italic;
+  color: #888;
+}
+
+.tdBallotInstruction
+{
+  /*line-height: 130%;*/
+  line-height: 120%;
+}
+
+.tdBallotOfficeHeading
+{
+  height : 45px;
+  text-align : center;
+  line-height: 16px;
+}
+
+.BallotOfficesVoteFor
+{
+  line-height: 14px;
+}
+
+.tdBallotCandidate
+{
+  font-size: 14px;
+}
+
+.tdBallotCandidate small
+{
+  font-size: 10px;
+}

@@ -1,0 +1,907 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Globalization;
+using System.Linq;
+using MySql.Data.MySqlClient;
+using Vote;
+
+namespace DB.Vote
+{
+  public partial class PoliticiansRow
+  {
+    #region Public
+
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable MemberCanBeProtected.Global
+    // ReSharper disable UnusedMember.Global
+
+    public string Age { get { return Politicians.GetAgeFromDateTime(DateOfBirth); } }
+
+    public string DateOfBirthAsString { get { return Politicians.GetDateOfBirthFromDateTime(DateOfBirth); } }
+
+    public string EnquotedNickname
+    {
+      get
+      {
+        return Politicians.GetEnquotedNicknameForState(Nickname,
+          Politicians.GetStateCodeFromKey((PoliticianKey)));
+      }
+    }
+
+    public bool HasCompleteLDSAddress
+    {
+      get
+      {
+        return !string.IsNullOrWhiteSpace(LDSAddress) &&
+          !string.IsNullOrWhiteSpace(LDSCityStateZip);
+      }
+    }
+
+    public bool HasCompleteStateAddress
+    {
+      get
+      {
+        return !string.IsNullOrWhiteSpace(StateAddress) &&
+          !string.IsNullOrWhiteSpace(StateCityStateZip);
+      }
+    }
+
+    public String PublicAddress
+    {
+      get
+      {
+        // if Address is non-null, it was explicitly entered and should be used
+        return Address ?? StateOrLDSAddress;
+      }
+    }
+
+    public String StateOrLDSAddress
+    {
+      get
+      {
+        if (HasCompleteStateAddress)
+          return StateAddress;
+        return HasCompleteLDSAddress ? LDSAddress : string.Empty;
+      }
+    }
+
+    public String PublicCityStateZip
+    {
+      get
+      {
+        // if CityStateZip is non-null, it was explicitly entered and should be used
+        return CityStateZip ?? StateOrLDSCityStateZip;
+      }
+    }
+
+    public String StateOrLDSCityStateZip
+    {
+      get
+      {
+        if (HasCompleteStateAddress)
+          return StateCityStateZip;
+        return HasCompleteLDSAddress ? LDSCityStateZip : string.Empty;
+      }
+    }
+
+    public String PublicEmail
+    {
+      get
+      {
+        // if Email is non-null, it was explicitly entered and should be used
+        //So empty strings could be returned
+        return Email ?? StateOrLDSEmail;
+      }
+    }
+
+    public String StateOrLDSEmail
+    {
+      get
+      {
+        var result = StateEmail;
+        if (string.IsNullOrWhiteSpace(result))
+          result = LDSEmail;
+        return result;
+      }
+    }
+
+    public String PublicPhone
+    {
+      get
+      {
+        // if Phone is non-null, it was explicitly entered and should be used
+        return Phone ?? StateOrLDSPhone;
+      }
+    }
+
+    public String StateOrLDSPhone
+    {
+      get
+      {
+        var result = StatePhone;
+        if (string.IsNullOrWhiteSpace(result))
+          result = LDSPhone;
+        return result;
+      }
+    }
+
+    public String PublicWebAddress
+    {
+      get
+      {
+        // if WebAddress is non-null, it was explicitly entered and should be used
+        return WebAddress ?? StateOrLDSWebAddress;
+      }
+    }
+
+    public String StateOrLDSWebAddress
+    {
+      get
+      {
+        var result = StateWebAddress;
+        if (string.IsNullOrWhiteSpace(result))
+          result = LDSWebAddress;
+        return result;
+      }
+    }
+
+    // ReSharper restore UnusedMember.Global
+    // ReSharper restore MemberCanBeProtected.Global
+    // ReSharper restore MemberCanBePrivate.Global
+
+    #endregion Public
+  }
+
+  public partial class Politicians
+  {
+    #region Private
+
+    private static bool? _GetHasCompleteLDSAddress(string politicianKey,
+      bool? defaultValue)
+    {
+      bool? result = null;
+
+      var table = GetAddressesData(politicianKey);
+      if (table.Count != 0)
+        result = table[0].HasCompleteLDSAddress;
+
+      return result ?? defaultValue;
+    }
+
+    private static bool? _GetHasCompleteStateAddress(string politicianKey,
+      bool? defaultValue)
+    {
+      bool? result = null;
+
+      var table = GetAddressesData(politicianKey);
+      if (table.Count != 0)
+        result = table[0].HasCompleteStateAddress;
+
+      return result ?? defaultValue;
+    }
+
+    #endregion Private
+
+    #region Public
+
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable MemberCanBeProtected.Global
+    // ReSharper disable UnusedMember.Global
+
+    public static string GetAge(string politicianKey)
+    {
+      return
+        GetAgeFromDateTime(GetDateOfBirth(politicianKey, VotePage.DefaultDbDate));
+    }
+
+    public static string GetAgeFromDateTime(DateTime dateTime)
+    {
+      if (dateTime == VotePage.DefaultDbDate)
+        return string.Empty;
+      var now = DateTime.UtcNow;
+      var years = now.Year - dateTime.Year;
+      if (dateTime.DayOfYear > now.DayOfYear) years--;
+      return years.ToString(CultureInfo.InvariantCulture);
+    }
+
+    public static string GetColumnExtended(string columnName, string politicianKey)
+    {
+      switch (columnName.ToLowerInvariant())
+      {
+        case "age":
+          return GetAge(politicianKey);
+
+        case "dateofbirth":
+          return GetDateOfBirthAsString(politicianKey);
+
+        case "publicaddress":
+          return GetPublicAddress(politicianKey);
+
+        case "publiccitystatezip":
+          return GetPublicCityStateZip(politicianKey);
+
+        case "publicemail":
+          return GetPublicEmail(politicianKey);
+
+        case "publicphone":
+          return GetPublicPhone(politicianKey);
+
+        case "publicwebaddress":
+          return GetPublicWebAddress(politicianKey);
+
+        default:
+          {
+            var result = GetColumn(GetColumn(columnName), politicianKey);
+            if (result is DateTime && ((DateTime) result) == VotePage.DefaultDbDate)
+              return string.Empty;
+            return result.ToString();
+          }
+      }
+    }
+
+    public static string GetDateOfBirthAsString(string politicianKey)
+    {
+      return
+        GetDateOfBirthFromDateTime(GetDateOfBirth(politicianKey,
+          VotePage.DefaultDbDate));
+    }
+
+    public static string GetDateOfBirthFromDateTime(DateTime dateTime)
+    {
+      return dateTime == VotePage.DefaultDbDate
+        ? string.Empty
+        : dateTime.ToShortDateString();
+    }
+
+    public static PoliticiansTable GetDuplicateNamesDataLikeLastNameStateCode(
+      String lastName, String stateCode, int commandTimeout = -1)
+    {
+      var cmdText = SelectDuplicateNamesCommandText;
+      if (stateCode == "US")
+      {
+        cmdText += "   WHERE (LName=@LastName";
+        cmdText += "     OR LName LIKE @Pattern1";
+        cmdText += "     OR LName LIKE @Pattern2";
+        cmdText += "     OR LName LIKE @Pattern3";
+        cmdText += "     OR LName LIKE @Pattern4)";
+        cmdText += " ORDER BY LName,FName,MName";
+      }
+      else
+      {
+        cmdText += " WHERE StateCode=@StateCode";
+        cmdText += "   AND (LName=@LastName";
+        cmdText += "     OR LName LIKE @Pattern1";
+        cmdText += "     OR LName LIKE @Pattern2";
+        cmdText += "     OR LName LIKE @Pattern3";
+        cmdText += "     OR LName LIKE @Pattern4)";
+        cmdText += " ORDER BY LName,FName,MName";
+      }
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+
+      VoteDb.AddCommandParameter(cmd, "LastName", lastName);
+      VoteDb.AddCommandParameter(cmd, "Pattern1", "% " + lastName);
+      VoteDb.AddCommandParameter(cmd, "Pattern2", "%-" + lastName);
+      VoteDb.AddCommandParameter(cmd, "Pattern3", lastName + " %");
+      VoteDb.AddCommandParameter(cmd, "Pattern4", lastName + "-%");
+      if (stateCode != "US")
+        VoteDb.AddCommandParameter(cmd, "StateCode", stateCode);
+
+      return FillTable(cmd, PoliticiansTable.ColumnSet.DuplicateNames);
+    }
+
+    public static string GetEnquotedNickname(string nickname, string quote1 = "\"",
+      string quote2 = null)
+    {
+      quote2 = quote2 ?? quote1;
+      return string.IsNullOrWhiteSpace(nickname)
+        ? string.Empty
+        : quote1 + nickname + quote2;
+    }
+
+    public static string GetEnquotedNicknameForState(string nickname,
+      string stateCode)
+    {
+      string quote1;
+      string quote2 = null;
+      switch (StateCache.GetEncloseNicknameCode(stateCode))
+      {
+        case "D":
+        case null:
+          quote1 = "\"";
+          break;
+
+        case "S":
+          quote1 = "'";
+          break;
+
+        case "P":
+          quote1 = "(";
+          quote2 = ")";
+          break;
+
+        default:
+          quote1 = string.Empty;
+          break;
+      }
+
+      return GetEnquotedNickname(nickname, quote1, quote2);
+    }
+
+    public static bool? GetHasCompleteLDSAddress(string politicianKey)
+    {
+      return _GetHasCompleteLDSAddress(politicianKey, null);
+    }
+
+    public static bool GetHasCompleteLDSAddress(string politicianKey,
+      bool defaultValue)
+    {
+      var hasCompleteLDSAddress = _GetHasCompleteLDSAddress(politicianKey,
+        defaultValue);
+      return hasCompleteLDSAddress != null && hasCompleteLDSAddress.Value;
+    }
+
+    public static bool? GetHasCompleteStateAddress(string politicianKey)
+    {
+      return _GetHasCompleteStateAddress(politicianKey, null);
+    }
+
+    public static bool GetHasCompleteStateAddress(string politicianKey,
+      bool defaultValue)
+    {
+      var hasCompleteStateAddress = _GetHasCompleteStateAddress(politicianKey,
+        defaultValue);
+      return hasCompleteStateAddress != null && hasCompleteStateAddress.Value;
+    }
+
+    public static PoliticianOfficeStatus GetOfficeStatus(String politicianKey)
+    {
+      const string cmdText = "CALL OfficeStatus(@PoliticianKey)";
+      var cmd = VoteDb.GetCommand(cmdText, -1);
+      VoteDb.AddCommandParameter(cmd, "PoliticianKey", politicianKey);
+      var table = new DataTable();
+      using (var cn = VoteDb.GetOpenConnection())
+      {
+        cmd.Connection = cn;
+        var adapter = VoteDb.GetDataAdapter(cmd);
+        adapter.Fill(table);
+      }
+
+      var status = table.Rows[0]["Status"].ToString();
+      PoliticianStatus policicianStatus;
+      if (!Enum.TryParse(status, out policicianStatus))
+        policicianStatus = PoliticianStatus.Unknown;
+
+      var result = new PoliticianOfficeStatus
+        {
+          OfficeKey = table.Rows[0]["OfficeKey"].ToString(),
+          PoliticianStatus = policicianStatus
+        };
+
+      return result;
+    }
+
+    public static DataRow GetPoliticianIntroReportData(string politiciankey,
+      int commandTimeout = -1)
+    {
+      const string cmdText =
+        "SELECT p.AddOn,p.Address,p.BallotPediaWebAddress,p.BloggerWebAddress,p.CityStateZip," +
+          "p.DateOfBirth," +
+          " p.EmailAddr AS Email,p.FacebookWebAddress,p.FlickrWebAddress," +
+          " p.FName AS FirstName,p.GooglePlusWebAddress,p.LDSAddress," +
+          " p.LDSCityStateZip,p.LDSEmailAddr AS LDSEmail,p.LDSPhone," +
+          " p.LDSWebAddr AS LDSWebAddress,p.LinkedInWebAddress," +
+          " p.LiveElectionKey,p.LiveOfficeKey,p.LiveOfficeStatus,p.LName AS LastName," +
+          " p.MName AS MiddleName,p.Nickname,p.PartyKey,p.Phone," +
+          " p.PinterestWebAddress,p.PoliticianKey,p.RSSFeedWebAddress," +
+          " p.StateAddress,p.StateCityStateZip,p.StateEmailAddr AS StateEmail," +
+          " p.StatePhone,p.StateWebAddr AS StateWebAddress,p.Suffix," +
+          " p.TwitterWebAddress,p.VimeoWebAddress,p.WebAddr AS WebAddress," +
+          " p.WebstagramWebAddress,p.WikipediaWebAddress,p.YouTubeWebAddress," +
+          " p.GeneralStatement,p.Personal,p.Education,p.Profession,p.Military," +
+          " p.Civic,p.Political,p.Religion,p.Accomplishments," +
+          " pt.PartyCode,pt.PartyName,pt.PartyUrl,o.OfficeLevel,o.OfficeLine1," +
+          " o.OfficeLine2,e.ElectionDesc FROM Politicians p" +
+          " LEFT JOIN Parties pt ON pt.PartyKey=p.PartyKey" +
+          " LEFT JOIN Offices o ON o.OfficeKey=p.LiveOfficeKey" +
+          " LEFT JOIN Elections e ON e.ElectionKey=p.LiveElectionKey" +
+          " WHERE p.PoliticianKey=@PoliticianKey";
+
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      using (var cn = VoteDb.GetOpenConnection())
+      {
+        cmd.Connection = cn;
+        VoteDb.AddCommandParameter(cmd, "PoliticianKey", politiciankey);
+        var table = new DataTable();
+        DbDataAdapter adapter = new MySqlDataAdapter(cmd as MySqlCommand);
+        adapter.Fill(table);
+        return table.Rows.Count == 1 ? table.Rows[0] : null;
+      }
+    }
+
+    public static DataRow GetPoliticianIssueReportData(string politiciankey,
+      int commandTimeout = -1)
+    {
+      const string cmdText =
+        "SELECT p.AddOn,p.Address,p.BallotPediaWebAddress,p.BloggerWebAddress,p.CityStateZip,p.DateOfBirth," +
+          " p.EmailAddr AS Email,p.FacebookWebAddress,p.FlickrWebAddress," +
+          " p.FName AS FirstName,p.GooglePlusWebAddress,p.LDSAddress," +
+          " p.LDSCityStateZip,p.LDSEmailAddr AS LDSEmail,p.LDSPhone," +
+          " p.LDSWebAddr AS LDSWebAddress,p.LinkedInWebAddress," +
+          " p.LiveElectionKey,p.LiveOfficeKey,p.LiveOfficeStatus,p.LName AS LastName," +
+          " p.MName AS MiddleName,p.Nickname,p.PartyKey,p.Phone," +
+          " p.PinterestWebAddress,p.PoliticianKey,p.RSSFeedWebAddress," +
+          " p.StateAddress,p.StateCityStateZip,p.StateEmailAddr AS StateEmail," +
+          " p.StatePhone,p.StateWebAddr AS StateWebAddress,p.Suffix," +
+          " p.TwitterWebAddress,p.VimeoWebAddress,p.WebAddr AS WebAddress," +
+          " p.WebstagramWebAddress,p.WikipediaWebAddress,p.YouTubeWebAddress," +
+          " pt.PartyCode,pt.PartyName,pt.PartyUrl,o.OfficeLevel,o.OfficeLine1," +
+          " o.OfficeLine2,e.ElectionDesc FROM Politicians p" +
+          " LEFT JOIN Parties pt ON pt.PartyKey=p.PartyKey" +
+          " LEFT JOIN Offices o ON o.OfficeKey=p.LiveOfficeKey" +
+          " LEFT JOIN Elections e ON e.ElectionKey=p.LiveElectionKey" +
+          " WHERE p.PoliticianKey=@PoliticianKey";
+
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      using (var cn = VoteDb.GetOpenConnection())
+      {
+        cmd.Connection = cn;
+        VoteDb.AddCommandParameter(cmd, "PoliticianKey", politiciankey);
+        var table = new DataTable();
+        DbDataAdapter adapter = new MySqlDataAdapter(cmd as MySqlCommand);
+        adapter.Fill(table);
+        return table.Rows.Count == 1 ? table.Rows[0] : null;
+      }
+    }
+
+    public static String GetPublicAddress(string politicianKey)
+    {
+      var table = GetAddressesData(politicianKey);
+      return table.Count == 0 ? string.Empty : table[0].PublicAddress;
+    }
+
+    public static String GetPublicCityStateZip(string politicianKey)
+    {
+      var table = GetAddressesData(politicianKey);
+      return table.Count == 0 ? string.Empty : table[0].PublicCityStateZip;
+    }
+
+    public static String GetPublicEmail(string politicianKey)
+    {
+      var table = GetEmailsData(politicianKey);
+      return table.Count == 0 ? string.Empty : table[0].PublicEmail;
+    }
+
+    public static String GetPublicPhone(string politicianKey)
+    {
+      var table = GetPhonesData(politicianKey);
+      return table.Count == 0 ? string.Empty : table[0].PublicPhone;
+    }
+
+    public static String GetPublicWebAddress(string politicianKey)
+    {
+      var table = GetWebAddressesData(politicianKey);
+      return table.Count == 0 ? string.Empty : table[0].PublicWebAddress;
+    }
+
+    public static DataRow GetCandidateData(string electionKey, string politicianKey, bool isRunningMate,
+      int commandTimeout = -1)
+    {
+      var cmdText =
+        string.Format(
+          "SELECT p.AddOn,p.Address,p.CityStateZip,p.EmailAddr AS Email," +
+            "p.FName AS FirstName,p.LDSAddress,p.LDSCityStateZip," +
+            "p.LDSEmailAddr AS LDSEmail,p.LDSPhone,p.LDSWebAddr AS LDSWebAddress," +
+            "p.MName as MiddleName,p.LName AS LName,p.Nickname,p.Phone," +
+            "p.PoliticianKey,p.StateAddress,p.StateCityStateZip," +
+            "p.StateEmailAddr AS StateEmail,p.StatePhone," +
+            "p.StateWebAddr AS StateWebAddress,p.Suffix,p.WebAddr AS WebAddress," +
+            "pt.PartyCode,pt.PartyName,pt.PartyUrl,ep.IsIncumbent," +
+            "{0} AS IsRunningMate FROM Politicians p" +
+            " LEFT JOIN ElectionsPoliticians ep ON ep.ElectionKey=@ElectionKey AND ep.PoliticianKey=@PoliticianKey" +
+            " LEFT JOIN Parties pt ON pt.PartyKey=p.PartyKey" +
+            " WHERE p.PoliticianKey=@PoliticianKey", isRunningMate ? 1 : 0);
+
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      VoteDb.AddCommandParameter(cmd, "ElectionKey", electionKey);
+      VoteDb.AddCommandParameter(cmd, "PoliticianKey", politicianKey);
+      using (var cn = VoteDb.GetOpenConnection())
+      {
+        cmd.Connection = cn;
+        var table = new DataTable();
+        DbDataAdapter adapter = new MySqlDataAdapter(cmd as MySqlCommand);
+        adapter.Fill(table);
+        return table.Rows.Count == 1 ? table.Rows[0] : null;
+      }
+    }
+
+    public static DataTable GetSearchCandidates(string lastname,
+      IList<string> keysToSkip, string stateCode = null,
+      bool fullAlphaNameOnly = false, int commandTimeout = -1)
+    {
+      // if stateCode is not supplied, do not search on VowelStrippedName --
+      // these are presidential candidates (or if it is a single character)
+      var haveStateCode = StateCache.IsValidStateCode(stateCode);
+      var alphaName = lastname.StripAccents();
+      if (!fullAlphaNameOnly) alphaName += "%";
+      var vowelStrippedName = lastname.StripVowels() + "%";
+
+      var stateCodeClause = haveStateCode
+        ? "p.StateCode=@StateCode AND"
+        : string.Empty;
+      var excludeClause = keysToSkip == null || keysToSkip.Count == 0
+        ? string.Empty
+        : "p.PoliticianKey NOT IN ('" + string.Join("','", keysToSkip) + "') AND";
+      var vowelStrippedClause = haveStateCode && vowelStrippedName.Length > 2 &&
+        !fullAlphaNameOnly
+        ? "OR p.VowelStrippedName LIKE @VowelStrippedName"
+        : string.Empty;
+
+      var cmdText =
+        string.Format(
+          "SELECT p.Address,p.CityStateZip,p.FName AS FirstName,p.LDSAddress," +
+            "p.LDSCityStateZip,p.MName as MiddleName,p.LiveOfficeKey," +
+            "p.LiveOfficeStatus,p.LName AS LName,p.Nickname,p.PoliticianKey," +
+            "p.StateAddress,p.StateCityStateZip,p.Suffix,p.AlphaName," +
+            "p.VowelStrippedName,pt.PartyCode,o.OfficeLine1," +
+            "o.OfficeLine2,o.OfficeLevel,l.LocalDistrict FROM Politicians p" +
+            " LEFT JOIN Parties pt ON pt.PartyKey=p.PartyKey" +
+            " LEFT JOIN Offices o ON o.OfficeKey=p.LiveOfficeKey" +
+            " LEFT JOIN LocalDistricts l ON l.StateCode=o.StateCode" +
+            "  AND l.CountyCode=o.CountyCode AND l.LocalCode=o.LocalCode" +
+            " WHERE {0} {1} (p.AlphaName LIKE @AlphaName {2})", stateCodeClause,
+          excludeClause, vowelStrippedClause);
+
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      VoteDb.AddCommandParameter(cmd, "AlphaName", alphaName);
+      if (haveStateCode)
+      {
+        VoteDb.AddCommandParameter(cmd, "StateCode", stateCode);
+        if (vowelStrippedName.Length > 1)
+          VoteDb.AddCommandParameter(cmd, "VowelStrippedName", vowelStrippedName);
+      }
+      using (var cn = VoteDb.GetOpenConnection())
+      {
+        cmd.Connection = cn;
+        var table = new DataTable();
+        DbDataAdapter adapter = new MySqlDataAdapter(cmd as MySqlCommand);
+        adapter.Fill(table);
+        return table;
+      }
+    }
+
+    public static DataTable GetSearchCandidates(string lastname,
+      IList<string> keysToSkip, string[] stateCodes,
+      bool fullAlphaNameOnly = false, int commandTimeout = -1)
+    {
+      // if stateCode is not supplied, do not search on VowelStrippedName --
+      // these are presidential candidates (or if it is a single character)
+      var validStateCodes = stateCodes.Where(StateCache.IsValidStateCode).ToArray();
+      var haveStateCode = validStateCodes.Length > 0;
+      var alphaName = lastname.StripAccents();
+      if (!fullAlphaNameOnly) alphaName += "%";
+      var vowelStrippedName = lastname.StripVowels() + "%";
+
+      var stateCodeClause = haveStateCode
+        ? "p.StateCode IN ('" + string.Join("','", validStateCodes) + "') AND"
+        : string.Empty;
+      var excludeClause = keysToSkip == null || keysToSkip.Count == 0
+        ? string.Empty
+        : "p.PoliticianKey NOT IN ('" + string.Join("','", keysToSkip) + "') AND";
+      var vowelStrippedClause = haveStateCode && vowelStrippedName.Length > 2 &&
+        !fullAlphaNameOnly
+        ? "OR p.VowelStrippedName LIKE @VowelStrippedName"
+        : string.Empty;
+
+      var cmdText =
+        string.Format(
+          "SELECT p.Address,p.CityStateZip,p.FName AS FirstName,p.LDSAddress," +
+            "p.LDSCityStateZip,p.MName as MiddleName,p.LiveOfficeKey," +
+            "p.LiveOfficeStatus,p.LName AS LName,p.Nickname,p.PoliticianKey," +
+            "p.StateAddress,p.StateCityStateZip,p.Suffix,p.AlphaName," +
+            "p.VowelStrippedName,pt.PartyCode,o.OfficeLine1," +
+            "o.OfficeLine2,o.OfficeLevel,l.LocalDistrict FROM Politicians p" +
+            " LEFT JOIN Parties pt ON pt.PartyKey=p.PartyKey" +
+            " LEFT JOIN Offices o ON o.OfficeKey=p.LiveOfficeKey" +
+            " LEFT JOIN LocalDistricts l ON l.StateCode=o.StateCode" +
+            "  AND l.CountyCode=o.CountyCode AND l.LocalCode=o.LocalCode" +
+            " WHERE {0} {1} (p.AlphaName LIKE @AlphaName {2})", stateCodeClause,
+          excludeClause, vowelStrippedClause);
+
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      VoteDb.AddCommandParameter(cmd, "AlphaName", alphaName);
+      if (haveStateCode && vowelStrippedName.Length > 2 && !fullAlphaNameOnly)
+        VoteDb.AddCommandParameter(cmd, "VowelStrippedName", vowelStrippedName);
+      using (var cn = VoteDb.GetOpenConnection())
+      {
+        cmd.Connection = cn;
+        var table = new DataTable();
+        DbDataAdapter adapter = new MySqlDataAdapter(cmd as MySqlCommand);
+        adapter.Fill(table);
+        return table;
+      }
+    }
+
+    public static String GetStateOrLDSAddress(string politicianKey)
+    {
+      string result = null;
+
+      var table = GetAddressesData(politicianKey);
+      if (table.Count != 0)
+        result = table[0].StateOrLDSAddress;
+
+      return result;
+    }
+
+    public static String GetStateOrLDSCityStateZip(string politicianKey)
+    {
+      string result = null;
+
+      var table = GetAddressesData(politicianKey);
+      if (table.Count != 0)
+        result = table[0].StateOrLDSCityStateZip;
+
+      return result;
+    }
+
+    public static String GetStateOrLDSEmail(string politicianKey)
+    {
+      string result = null;
+
+      var table = GetEmailsData(politicianKey);
+      if (table.Count != 0)
+        result = table[0].StateOrLDSEmail;
+
+      return result;
+    }
+
+    public static String GetStateOrLDSPhone(string politicianKey)
+    {
+      string result = null;
+
+      var table = GetPhonesData(politicianKey);
+      if (table.Count != 0)
+        result = table[0].StateOrLDSPhone;
+
+      return result;
+    }
+
+    public static String GetStateOrLDSWebAddress(string politicianKey)
+    {
+      string result = null;
+
+      var table = GetWebAddressesData(politicianKey);
+      if (table.Count != 0)
+        result = table[0].StateOrLDSWebAddress;
+
+      return result;
+    }
+
+    public static void IncrementDataUpdatedCount(string politicianKey)
+    {
+      var dataUpdatedCount = GetDataUpdatedCount(politicianKey, 0) + 1;
+      UpdateDataUpdatedCount(dataUpdatedCount, politicianKey);
+      UpdateDataLastUpdated(DateTime.UtcNow, politicianKey);
+    }
+
+    public static void UpdateColumnExtended(string columnName, object newValue,
+      string politicianKey)
+    {
+      var stringValue = (newValue as string).SafeString();
+      switch (columnName.ToLowerInvariant())
+      {
+        case "dateofbirth":
+        case "datelastupdated":
+        case "datepictureuploaded":
+        case "introlettersent":
+        case "isldsincumbent":
+        case "ldsupdatedate":
+          {
+            var value = VotePage.DefaultDbDate;
+            stringValue = stringValue.Trim();
+            if (!string.IsNullOrEmpty(stringValue))
+              value = DateTime.Parse(stringValue);
+            UpdateColumn(GetColumn(columnName), value, politicianKey);
+          }
+          break;
+
+        case "ishasbiodata":
+        case "isnotresponedeemailsent":
+          {
+            var value = false;
+            stringValue = stringValue.Trim();
+            if (!string.IsNullOrEmpty(stringValue))
+            {
+              int intValue;
+              if (int.TryParse(stringValue, out intValue))
+                value = intValue != 0;
+              else
+                value = bool.Parse(stringValue);
+            }
+            UpdateColumn(GetColumn(columnName), value, politicianKey);
+          }
+          break;
+
+        case "answers":
+        case "dataupdatedcount":
+          {
+            var value = 0;
+            stringValue = stringValue.Trim();
+            if (!string.IsNullOrEmpty(stringValue))
+              value = int.Parse(stringValue);
+            UpdateColumn(GetColumn(columnName), value, politicianKey);
+          }
+          break;
+
+        case "publicaddress":
+          UpdatePublicAddress(stringValue.Trim(), politicianKey);
+          break;
+
+        case "publiccitystatezip":
+          UpdatePublicCityStateZip(stringValue.Trim(), politicianKey);
+          break;
+
+        case "publicemail":
+          UpdatePublicEmail(stringValue.Trim(), politicianKey);
+          break;
+
+        case "publicphone":
+          UpdatePublicPhone(stringValue.Trim(), politicianKey);
+          break;
+
+        case "publicwebaddress":
+          UpdatePublicWebAddress(stringValue.Trim(), politicianKey);
+          break;
+
+        case "lname":
+          UpdateLastName(stringValue.Trim(), politicianKey);
+          UpdateSearchKeys(politicianKey);
+          break;
+
+        default:
+          UpdateColumn(GetColumn(columnName), newValue, politicianKey);
+          break;
+      }
+    }
+
+    public static void AddPolitician(string politicianKey, string firstName,
+      string middleName, string nickname, string lastName, string suffix,
+      string officeKey, string partyKey, string password)
+    {
+      Insert(politicianKey: politicianKey, password: password,
+        passwordHint: string.Empty, temporaryOfficeKey: officeKey,
+        liveOfficeKey: string.Empty, liveOfficeStatus: string.Empty,
+        liveElectionKey: string.Empty,
+        stateCode: GetStateCodeFromKey(politicianKey), firstName: firstName,
+        middleName: middleName, nickname: nickname, lastName: lastName,
+        alphaName: lastName.StripAccents(),
+        vowelStrippedName: lastName.StripVowels(), suffix: suffix,
+        addOn: string.Empty, emailVoteUSA: string.Empty, email: string.Empty,
+        stateEmail: string.Empty, lastEmailCode: string.Empty,
+        webAddress: string.Empty, stateWebAddress: string.Empty,
+        phone: string.Empty, statePhone: string.Empty, gender: string.Empty,
+        partyKey: partyKey, address: string.Empty, cityStateZip: string.Empty,
+        stateAddress: string.Empty, stateCityStateZip: string.Empty,
+        campaignName: string.Empty, campaignAddress: string.Empty,
+        campaignCityStateZip: string.Empty, campaignPhone: string.Empty,
+        campaignEmail: string.Empty, stateData: string.Empty,
+        LDSStateCode: string.Empty, LDSTypeCode: string.Empty,
+        LDSDistrictCode: string.Empty, LDSLegIDNum: string.Empty,
+        LDSPoliticianName: string.Empty, LDSEmail: string.Empty,
+        LDSWebAddress: string.Empty, LDSPhone: string.Empty,
+        LDSGender: string.Empty, LDSPartyCode: string.Empty,
+        LDSAddress: string.Empty, LDSCityStateZip: string.Empty,
+        LDSVersion: string.Empty, LDSUpdateDate: VotePage.DefaultDbDate,
+        introLetterSent: VotePage.DefaultDbDate, generalStatement: string.Empty,
+        personal: string.Empty, education: string.Empty, profession: string.Empty,
+        military: string.Empty, civic: string.Empty, political: string.Empty,
+        religion: string.Empty, accomplishments: string.Empty, isHasBioData: false,
+        isNotRespondedEmailSent: false, dataLastUpdated: DateTime.UtcNow,
+        dataUpdatedCount: 0, datePictureUploaded: VotePage.DefaultDbDate,
+        isLDSIncumbent: false, answers: 0, dateOfBirth: VotePage.DefaultDbDate,
+        facebookWebAddress: string.Empty, wikipediaWebAddress: string.Empty,
+        youTubeWebAddress: string.Empty, flickrWebAddress: string.Empty,
+        twitterWebAddress: string.Empty, RSSFeedWebAddress: string.Empty,
+        vimeoWebAddress: string.Empty, googlePlusWebAddress: string.Empty,
+        linkedInWebAddress: string.Empty, pinterestWebAddress: string.Empty,
+        bloggerWebAddress: string.Empty, webstagramWebAddress: string.Empty,
+        ballotPediaWebAddress: string.Empty);
+    }
+
+    public static string GetUniqueKey(string stateCode, string lastName,
+      string firstName, string middleName, string suffix)
+    {
+      stateCode = stateCode.ToUpperInvariant();
+      lastName = lastName.StripAccents(true);
+      firstName = firstName.StripAccents(true);
+      middleName = middleName.StripAccents(true);
+      suffix = suffix.StripAccents(true);
+      var politicianKey = stateCode + lastName + firstName + middleName + suffix;
+
+      // Get all existing keys that match
+      const string cmdText =
+        "SELECT PoliticianKey FROM Politicians WHERE PoliticianKey LIKE @PoliticianKey";
+      var cmd = VoteDb.GetCommand(cmdText);
+      VoteDb.AddCommandParameter(cmd, "PoliticianKey", politicianKey + "%");
+      var table = new DataTable();
+      using (var cn = VoteDb.GetOpenConnection())
+      {
+        cmd.Connection = cn;
+        DbDataAdapter adapter = new MySqlDataAdapter(cmd as MySqlCommand);
+        adapter.Fill(table);
+      }
+
+      // If there's no exact match, no adjustment is necessary
+      // Otherwise, append integers until it's unique
+      var sequence = 1;
+      var uniqueKey = politicianKey;
+      while (table.Rows.Cast<DataRow>()
+        .FirstOrDefault(row => row.PoliticianKey()
+          .IsEqIgnoreCase(uniqueKey)) != null)
+        uniqueKey = politicianKey + sequence++;
+
+      return uniqueKey;
+    }
+
+    public static void UpdatePublicAddress(string newValue, string politicianKey)
+    {
+      if (newValue == GetStateOrLDSAddress(politicianKey))
+        newValue = null;
+      UpdateAddress(newValue, politicianKey);
+    }
+
+    public static void UpdatePublicCityStateZip(string newValue,
+      string politicianKey)
+    {
+      if (newValue == GetStateOrLDSCityStateZip(politicianKey))
+        newValue = null;
+      UpdateCityStateZip(newValue, politicianKey);
+    }
+
+    public static void UpdatePublicEmail(string newValue, string politicianKey)
+    {
+      if (newValue == GetStateOrLDSEmail(politicianKey))
+        newValue = null;
+      UpdateEmail(newValue, politicianKey);
+    }
+
+    public static void UpdatePublicPhone(string newValue, string politicianKey)
+    {
+      if (newValue == GetStateOrLDSPhone(politicianKey))
+        newValue = null;
+      UpdatePhone(newValue, politicianKey);
+    }
+
+    public static void UpdatePublicWebAddress(string newValue, string politicianKey)
+    {
+      if (newValue == GetStateOrLDSWebAddress(politicianKey))
+        newValue = null;
+      UpdateWebAddress(newValue, politicianKey);
+    }
+
+    public static void UpdateSearchKeys(string politicianKey)
+    {
+      var table = GetSearchKeyUpdateData(politicianKey);
+      if (table.Count == 1)
+      {
+        var value = table[0].LastName.StripAccents();
+        // ReSharper disable RedundantCheckBeforeAssignment
+        if (table[0].AlphaName != value)
+          table[0].AlphaName = value;
+        value = table[0].LastName.StripVowels();
+        if (table[0].VowelStrippedName != value)
+          table[0].VowelStrippedName = value;
+        // ReSharper restore RedundantCheckBeforeAssignment
+        if (table.Rows[0].RowState == DataRowState.Modified)
+          UpdateTable(table, PoliticiansTable.ColumnSet.SearchKeyUpdate);
+      }
+    }
+
+    // ReSharper restore UnusedMember.Global
+    // ReSharper restore MemberCanBeProtected.Global
+    // ReSharper restore MemberCanBePrivate.Global
+
+    #endregion Public
+  }
+}

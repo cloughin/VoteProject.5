@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using DB.Vote;
+using Vote.Reports;
+
+namespace Vote.Admin
+{
+  public partial class CountiesReportPage : SecureAdminPage
+  {
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      H1.InnerHtml = Page.Title = "County Contacts Report for " + StateCache.GetStateName(StateCode);
+
+      if (!IsMasterUser) HandleSecurityException();
+
+      PlaceHolder.Controls.Add(CountiesReport.GetReport(StateCode));
+    }
+  }
+}

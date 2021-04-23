@@ -1,0 +1,172 @@
+﻿using System;
+using System.Web.UI.WebControls;
+using DB.Vote;
+using Vote.Reports;
+
+namespace Vote
+{
+  public partial class ElectionPage : CacheablePage
+  {
+    #region Caching support
+
+    protected override string GetCacheKey()
+    {
+      return UrlManager.GetStateCodeFromHostName() + "." + QueryState + "." +
+        QueryElection;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "Election";
+    }
+
+    #endregion Caching support
+
+    private readonly string _ElectionKey = QueryElection;
+    private string _ElectionDescription;
+    private string _StateCode;
+
+    private const string TitleTagAllStatesDomain = "{1}";
+
+    private const string MetaDescriptionAllStatesDomain =
+      "{1} candidates’ pictures, bios, social media and  positions on the issues; plus your customized sample ballot.";
+
+    private const string MetaKeywordsAllStatesDomain =
+      "sample ballot, sample ballots, vote, voter, ballot, election, voting, candidates";
+
+    private const string TitleTagSingleStateDomain = "{1}";
+
+    private const string MetaDescriptionSingleStateDomain =
+      "{1} candidates’ pictures, bios, social media and  positions on the issues; plus your customized sample ballot.";
+
+    private const string MetaKeywordsSingleStateDomain =
+      "{0} sample ballot, {0} sample ballots, {0} vote, {0} voter, {0} ballot, {0} election, {0} voting, {0} candidates";
+
+    private void PopulateMetaTags()
+    {
+      if (DomainData.IsValidStateCode)
+      {
+        Title = TitleTagSingleStateDomain;
+        MetaDescription = MetaDescriptionSingleStateDomain;
+        MetaKeywords = MetaKeywordsSingleStateDomain;
+      }
+      else
+      {
+        Title = TitleTagAllStatesDomain;
+        MetaDescription = MetaDescriptionAllStatesDomain;
+        MetaKeywords = MetaKeywordsAllStatesDomain;
+      }
+
+      Title = string.Format(Title, _StateCode, _ElectionDescription);
+      MetaDescription = string.Format(MetaDescription, _StateCode, _ElectionDescription);
+      MetaKeywords = string.Format(MetaKeywords, _StateCode, _ElectionDescription);
+    }
+
+    private void FillInReport()
+    {
+      var report = ElectionReportResponsive.GetReport(_ElectionKey);
+      var siteId = UrlManager.CurrentQuerySiteId;
+      if (siteId == "ivn")
+      {
+        var reportText = report.RenderToString();
+        reportText = UrlNormalizer.ApplySiteId(reportText, siteId);
+        report = new Literal { Text = reportText };
+      }
+      report.AddTo(ElectionPlaceHolder);
+    }
+
+    //private void FillInReportInstructions()
+    //{
+    //  switch (Elections.GetElectoralClass(_ElectionKey))
+    //  {
+    //    case ElectoralClass.USPresident:
+    //    case ElectoralClass.USHouse:
+    //    case ElectoralClass.State:
+    //      ReportInstructions.Text = "Click a Compare Button for side-by-side" +
+    //        " candidate comparisons, including pictures, bios, social media" +
+    //        " links and their positions and views on the issues.";
+    //      break;
+
+    //    case ElectoralClass.USSenate:
+    //      ReportInstructions.Text = "Click a Compare Button for side-by-side" +
+    //        " candidate comparisons, including pictures, bios, social media" +
+    //        " links and their positions and views on the issues. Some states" +
+    //        " have no candidates listed because there were no US Senate seats" +
+    //        " up for election.";
+    //      break;
+
+    //    case ElectoralClass.USGovernors:
+    //      ReportInstructions.Text = "Click the \"Candidate Comparisons\" link" +
+    //        " for a side-by-side comparison of all candidates for an office," +
+    //        " including bios and their views on the issues.";
+    //      break;
+
+    //    case ElectoralClass.County:
+    //    case ElectoralClass.Local:
+    //      ReportInstructions.Text = "Click a Compare Button for side-by-side" +
+    //        " candidate comparisons, including pictures, bios, social media" +
+    //        " links and their positions and views on the issues. If we have" +
+    //        " information about local elections, there will be <strong>Local" +
+    //        " District</strong> links at the bottom of this page.";
+    //      break;
+
+    //    default:
+    //      ReportInstructions.Text = string.Empty;
+    //      break;
+    //  }
+
+    //  ElectionInfoTable.Visible = ReportInstructions.Text != string.Empty;
+    //}
+
+    private void FillInAdditionalInfo()
+    {
+      var additionalInfo =
+        PageCache.Elections.GetElectionAdditionalInfo(_ElectionKey);
+
+      if (string.IsNullOrWhiteSpace(additionalInfo))
+        AdditionalInfo.Visible = false;
+      else
+      {
+        AdditionalInfo.InnerHtml = additionalInfo.ReplaceBreakTagsWithSpaces().ReplaceNewLinesWithParagraphs();
+        AdditionalInfo.Visible = true;
+      }
+    }
+
+    //private string GetHeadingText()
+    //{
+    //  if (!MemCache.IsValidElection(_ElectionKey))
+    //    return "No Data for this Election";
+    //  return StateCache.IsValidStateCode(_StateCode)
+    //    ? "Directory of Election Contests and Ballot Measures"
+    //    : "Directory of Election Contests ";
+    //}
+
+    private void FillInTitles()
+    {
+      //LabelTitle.Text = Elections.GetElectoralClassDescription(_ElectionKey);
+      //LabelDirectory.Text = GetHeadingText();
+      //LabelElection.Text = _ElectionDescription;
+      ElectionTitle.InnerText = _ElectionDescription;
+      if (StateCache.IsValidStateCode(_StateCode))
+        ElectionSubTitle.InnerText = Elections.GetElectoralClassDescription(_ElectionKey);
+      else ElectionSubTitle.Visible = false;
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (PageCache.Elections.GetElectionDate(_ElectionKey) < DateTime.Today)
+        NoIndex = true;
+      else
+        PastElectionWarning.Visible = false;
+
+      _ElectionDescription = PageCache.Elections.GetElectionDesc(_ElectionKey);
+      _StateCode = Elections.GetStateCodeFromKey(_ElectionKey);
+
+      PopulateMetaTags();
+      FillInTitles();
+      //FillInReportInstructions();
+      FillInAdditionalInfo();
+      FillInReport();
+    }
+  }
+}

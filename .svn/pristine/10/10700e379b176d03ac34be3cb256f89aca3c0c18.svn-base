@@ -1,0 +1,464 @@
+/*--Page Heading--*/
+/*
+#tableIssuePageHeading
+{
+margin:0px;
+padding:0px;
+}
+*/
+.trIssuePageHeading
+{
+margin:0px;
+padding:0px;
+}
+.tdIssuePageHeadingLeft
+{
+margin:0px;
+text-align:left;
+width:100%;
+padding:0px;
+}
+.trIssuePositionViews
+{
+}
+.tdIssuePositionViews
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 18px;
+margin: 0px;
+font-weight: bold;
+color: #373737;
+padding:10px 10px 0px 10px;
+}
+.trIssueOffice
+{
+}
+.tdIssueOffice
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+margin: 0px;
+font-weight: bold;
+color: #373737;
+padding:2px 10px 0px 10px;
+}
+.trIssueElection
+{
+}
+.tdIssueElection
+{
+font-family: Arial, Helvetica, sans-serif;
+margin: 0px;
+font-size: 14px;
+font-weight: bold;
+color: #373737;
+padding:2px 10px 10px 10px;
+}
+.tdIssuePageHeadingRight
+{
+margin:0px;
+text-align:right;
+padding:0px;
+}
+.trIssueNote
+{
+}
+.tdIssueNote
+{
+font-family: Arial, Helvetica, sans-serif;
+margin: 0px;
+font-size: 13px;
+font-weight: bold;
+text-align:right;
+color: #A00000;
+padding:0px 10px 0px 10px;
+}
+.trIssueTitle
+{
+}
+.tdIssueTitle
+{
+font-family: Arial, Helvetica, sans-serif;
+margin: 0px;
+font-size: 24px;
+font-weight: bold;
+text-align:right;
+color: #A00000;
+padding:0px 10px 0px 10px;
+}
+/*--Note above Other Issue Links--*/
+/*
+#tableIssueLinksNote
+,#tableIssueLinksNote2
+{
+background-color: #E3E3E3;
+}
+*/
+.trIssueLinksNoteHeading
+{
+background-color: #E3E3E3;
+}
+.tdIssueLinksNoteHeading
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+font-weight:normal;
+margin: 0px;
+font-weight: bold;
+color: #A00000;
+padding:5px 10px 0px 10px;
+background-color: #E3E3E3;
+}
+.trIssueLinksNote
+{
+}
+.tdIssueLinksNote
+{
+font-family: Arial, Helvetica, sans-serif;
+margin: 0px;
+/*font-size: 13px;*/
+font-size: 16px;
+line-height: 120%;
+font-weight: normal;
+color: #373737;
+padding:0px 10px 5px 10px;
+}
+/*--Other Issue Links--*/
+/*
+#tableIssueLinks
+{
+margin:0px;
+background-color: #26466D;
+border-width:10px;
+border-style:solid;
+border-color:#26466D;
+}
+*/
+.trIssueLinks
+{
+margin:0px;
+background-color: #365e77;
+border-width:10px;
+border-style:solid;
+border-color:#365e77;
+}
+.tdIssueLinks
+,.tdIssueLinks a:link
+,.tdIssueLinks a:visited
+,.tdIssueLinks a:hover
+{
+font-family: Arial, Helvetica, sans-serif;
+font-weight: bold;
+font-size: 14px; 
+line-height:18px;
+color: #fff;
+text-align:left;
+}
+
+
+.tdIssueLinks
+{
+padding:3px;
+}
+/*--Report of comparisons--*/
+/*--Politician Pictures--*/
+.trIssuePoliticiansHeading
+{
+background-color: #E3E3E3;
+}
+.tdIssueHeading
+{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  border-right:solid 1px Gray;
+  border-bottom:solid 2px Black;
+  text-align:center;
+  vertical-align: middle;
+  color: #A00000;
+  padding:15px 5px 11px 10px;
+}
+.tdIssuePoliticiansHeading
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+font-weight: bold;
+border-right:solid 1px Gray;
+border-bottom:solid 2px Black;
+text-align:center;
+vertical-align:top;
+color: #373737;
+padding:5px 10px 0px 10px;
+}
+.IssueCandidateLink
+,.IssueCandidateLink a:link
+,.IssueCandidateLink a:visited
+,.IssueCandidateLink a:hover
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+font-weight: bold;
+text-align:center;
+vertical-align: middle;
+color: #373737;
+}
+img
+{
+border-style:none;
+}
+/*--Table of Questions and Answers --*/
+.trIssueQuestion
+{
+}
+.tdIssueQuestion
+{
+font-family: Arial, Helvetica, sans-serif;
+vertical-align: top;
+font-size: 14px;
+font-weight: bold;
+border-right:solid 1px Gray;
+border-bottom:solid 1px Gray;
+text-align:left;
+vertical-align: top;
+color: #373737;
+padding:5px 10px 5px 10px;
+}
+/*--Table Isssues and Questions--*/
+.trIssueQuestionsHeading
+{
+background-color: #E3E3E3;
+}
+.tdIssueQuestionsHeading
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+font-weight: bold;
+border-top:solid 1px Gray;
+border-bottom:solid 1px Gray;
+border-right:solid 1px Gray;
+border-left:solid 1px Gray;
+text-align:left;
+vertical-align: middle;
+color: #A00000;
+/*width:80%;*/
+padding:5px 10px 0px 10px;
+}
+.trIssueIssueQuestion
+{
+}
+.tdIssueIssueQuestion
+{
+font-family: Arial, Helvetica, sans-serif;
+vertical-align: top;
+font-size: 14px;
+font-weight:bold;
+color: #373737;
+border-right:solid 1px Gray;
+border-bottom:solid 1px Gray;
+border-left:solid 1px Gray;
+vertical-align: top;
+padding:10px;
+}
+.tdIssueBlank
+{
+border-right:solid 1px Gray;
+border-bottom:solid 1px Gray;
+}
+.tdIssueAnswer
+{
+font-family: Arial, Helvetica, sans-serif;
+/*font-size: 13px;*/
+font-size: 10pt;
+font-weight:normal;
+border-right:solid 1px Gray;
+border-bottom:solid 1px Gray;
+text-align:left;
+vertical-align: top;
+color: #373737;
+padding:5px;
+}
+.tdIssueAnswer .last-name
+{
+  font-style: italic;
+}
+.tdIssueAnswer .source
+{
+  font-style: italic;
+}
+.tdIssueAnswer div
+{
+  max-height: 175px;
+  font-size: 10pt;
+  overflow-y: scroll;
+}
+.tdIssueAnswer div p
+{
+  margin-top: 5px;
+}
+.tdIssueAnswer div p:first-child
+{
+  margin-top: 0;
+}
+
+/*----*/
+
+.tdIssueIssuesHeading
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+font-weight: bold;
+border-top:solid 1px Gray;
+text-align:left;
+vertical-align: middle;
+color: #A00000;
+padding:15px 5px 11px 10px;
+}
+
+.trIssueIssue
+{
+}
+.tdIssueIssue
+{
+font-family: Arial, Helvetica, sans-serif;
+vertical-align: top;
+font-size: 14px;
+font-weight: bold;
+border-top:solid 1px Gray;
+border-right:solid 1px Gray;
+text-align:left;
+vertical-align: top;
+color: #373737;
+padding:5px 10px 5px 10px;
+}
+
+/* No Respones Heading */
+.trNoResponsesHeading
+{
+background-color: #E3E3E3;
+}
+.tdNoResponsesHeading
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+font-weight:normal;
+margin: 0px;
+font-weight: bold;
+border:solid 1px Gray;
+color: red;
+padding:5px 10px 0px 10px;
+background-color: #E3E3E3;
+}
+/*--Footer--*/
+.trIssueFooter
+{
+}
+.tdIssueFooter
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 11px;
+background-color: #f2f2f2;
+color: black;
+padding:10px 10px 3px 10px;
+}
+
+#mainContent .longHeader
+{
+  height: 76px;
+}
+#mainContent #ElectionHeading span,
+#mainContent .tdIssueOffice
+{
+  color: #666;
+}
+#mainContent .tdIssueLinks a
+{
+  font-weight: normal;
+  text-decoration: none;
+  border-bottom: 1px solid white;
+}
+#mainContent .tdIssueLinks a:visited
+{
+  color: #aaa;
+}
+#mainContent .tdIssueLinks a:first-child
+{
+  font-weight: bold;
+}
+#mainContent .tdIssueLinks a:hover
+{
+  text-decoration: none;
+  border-bottom: 3px solid white;
+  color: White;
+}
+#mainContent .tdIssueLinks
+{
+ padding-left: 10px;
+}
+#mainContent .tdIssueAnswer
+{
+  line-height: 120%;
+}
+#mainContent .lasttd
+{
+  border-right: none;
+}
+#mainContent .tdIssueHeading:first-child
+{
+  border-right:solid 1px Gray;
+}
+#mainContent .tdIssueHeading,
+#mainContent .tdIssueIssueQuestion
+{
+  border-left: none;
+  border-top: none;
+  border-bottom:solid 1px Black;
+  text-align: left;
+}
+#mainContent .tdIssueHeading
+{
+  border-right:none;
+}
+#mainContent .tdIssue,
+#mainContent .tdQuestion,
+#mainContent .tdBlank
+{
+  border-left: none;
+  border-right:none;
+}
+#mainContent .tdIssue:first-child,
+#mainContent .tdBlank:first-child
+{
+  border-right:solid 1px Gray;
+}
+#mainContent .tdQuestion
+{
+  font-weight: normal;
+}
+#mainContent .trIntroPoliticianName,
+#mainContent .trProfileHeading,
+#mainContent .trIssueLinksNoteHeading
+{
+  display: none;
+}
+#mainContent .tdNoResponsesHeading
+{
+  color: #A00000;
+  border-left: none;
+  border-right: none;
+}
+#mainContent .tdNoResponsesIssue
+{
+  border-left: none;
+  border-right: none;
+}
+#mainContent .tdIssuePoliticiansHeading
+{
+ border-bottom : solid 1px Black;
+}
+#mainContent .tdIssueAnswer .youtubedate
+{
+  display:inline-block;
+  position: relative;
+  top: -8px;
+  font-size: 80%;
+}

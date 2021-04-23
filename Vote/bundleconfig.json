@@ -1,0 +1,27 @@
+[
+  {
+    "outputFileName": "css/vote/public.min.css",
+    "inputFiles": [
+      "css/vote/public.css"
+    ]
+  },
+  {
+    "outputFileName": "js/scripts.min.js",
+    "inputFiles": [
+      "js/scripts.js"
+    ]
+  },
+  {
+    "outputFileName": "js/scripts.js",
+    "inputFiles": [
+      "js/jq/jquery.cookie.js",
+      "js/vote/public.js",
+      "js/vote/controls/GoogleAddressEntry.js",
+      "js/vote/publicutil.js",
+      "js/DonationRequestResponsive.js",
+      "js/EmailFormResponsive.js",
+      "js/SampleBallotEmailDialogResponsive.js",
+      "js/vote.js"
+    ]
+  }
+]

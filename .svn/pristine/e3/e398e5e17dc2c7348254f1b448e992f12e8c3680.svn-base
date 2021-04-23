@@ -1,0 +1,47 @@
+using System;
+
+namespace Vote
+{
+  public partial class ImagePage : VotePage
+  {
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      #region Curt's example
+
+      //int id = 0;
+      //int.TryParse(Request.QueryString["id"], out id);
+      //ServeImage(id);
+
+      #endregion Curt's example
+
+      var politicianKey = QueryId;
+      var column = GetQueryString("Col");
+      if (string.IsNullOrWhiteSpace(column)) column = "Profile300";
+      // Set &Def=ColumnName to show the NoPhoto if requested image is missing
+      // and to use the ColumnName for the size. If Def= is present but the
+      // column name is invalid, the columnName from Col= will be used
+      var defaultColumn = GetQueryString("Def");
+      // Include <NoCacheParameter>=1 (meaning nocache=true) to force the image to be be served
+      // from the common server to avoid cache invalidation latency. This should
+      // ONLY be used on master and admin maintenance forms.
+      // Use the NoCacheParameter property so we can change the value if need be.
+      var noCache = GetQueryString(NoCacheParameter);
+      int noCacheValue;
+      int.TryParse(noCache, out noCacheValue);
+
+      // Added 09/10/2012 to prevent serving an empty image
+      if (string.IsNullOrWhiteSpace(defaultColumn))
+        defaultColumn = column;
+
+      // Added 09/10/2012 -- we no longer serve Profile500 & Profile400
+
+      if (column == "Profile500" || column == "Profile400")
+        column = "Profile300";
+      if (defaultColumn == "Profile500" || defaultColumn == "Profile400")
+        defaultColumn = "Profile300";
+
+      ImageManager.ServePoliticianImage(
+        politicianKey, column, defaultColumn, noCacheValue == 1);
+    }
+  }
+}

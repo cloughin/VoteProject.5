@@ -1,0 +1,368 @@
+using System;
+using DB.Vote;
+using Vote.Reports;
+
+namespace Vote.Admin
+{
+  public partial class Officials : SecureAdminPage
+  {
+    private void Page_Title()
+    {
+      PageTitle.Text = string.Empty;
+      PageTitle.Text += Offices.GetElectoralClassDescription(ViewState["StateCode"].ToString(),
+        ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString());
+
+      PageTitle.Text += "<br>";
+      PageTitle.Text += "CURRENTLY ELECTED OFFICIALS (INCUMBENTS)";
+    }
+
+    //private void MsgReportMayNotBeCurrent()
+    //{
+    //  if (db.Is_Report_Current_Officials(ViewState["StateCode"].ToString(),
+    //    ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString()))
+    //    Msg.Text =
+    //      db.Msg(
+    //        "The report of currently elected officials (incumbents) is shown below. " +
+    //          " Use office and name links to edit offices and the incumbents respectively.");
+    //  else
+    //    Msg.Text =
+    //      db.Warn(
+    //        "The report of currently elected officials (incumbents) is NOT current. " +
+    //          " Click the Update Report Button to obtain an accurate report." +
+    //          " Use office and name links to edit offices and the incumbents respectively.");
+    //}
+
+    //private void ShowWhenReportLastUpdated()
+    //{
+    //  switch (
+    //    db.Electoral_Class(ViewState["StateCode"].ToString(),
+    //      ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString()))
+    //  {
+    //    case db.Electoral.USPresident:
+    //      LabelOfficialsReportLastUpdated.Text = db.ReportsOfficials_Date(
+    //        ViewState["StateCode"].ToString(), "ReportLastUpdated")
+    //        .ToString(CultureInfo.InvariantCulture);
+    //      break;
+    //    case db.Electoral.USSenate:
+    //      LabelOfficialsReportLastUpdated.Text = db.ReportsOfficials_Date(
+    //        ViewState["StateCode"].ToString(), "ReportLastUpdated")
+    //        .ToString(CultureInfo.InvariantCulture);
+    //      break;
+    //    case db.Electoral.USHouse:
+    //      LabelOfficialsReportLastUpdated.Text = db.ReportsOfficials_Date(
+    //        ViewState["StateCode"].ToString(), "ReportLastUpdated")
+    //        .ToString(CultureInfo.InvariantCulture);
+    //      break;
+    //    case db.Electoral.USGovernors:
+    //      LabelOfficialsReportLastUpdated.Text = db.ReportsOfficials_Date(
+    //        ViewState["StateCode"].ToString(), "ReportLastUpdated")
+    //        .ToString(CultureInfo.InvariantCulture);
+    //      break;
+    //    case db.Electoral.State:
+    //      LabelOfficialsReportLastUpdated.Text = db.ReportsOfficials_Date(
+    //        ViewState["StateCode"].ToString(), "ReportLastUpdated")
+    //        .ToString(CultureInfo.InvariantCulture);
+    //      break;
+    //    case db.Electoral.County:
+    //      LabelOfficialsReportLastUpdated.Text = db.ReportsOfficials_Date(
+    //        ViewState["StateCode"].ToString(), ViewState["CountyCode"].ToString(),
+    //        "ReportLastUpdated")
+    //        .ToString(CultureInfo.InvariantCulture);
+    //      break;
+    //    case db.Electoral.Local:
+    //      LabelOfficialsReportLastUpdated.Text = db.ReportsOfficials_Date(
+    //        ViewState["StateCode"].ToString(), ViewState["CountyCode"].ToString(),
+    //        ViewState["LocalCode"].ToString(), "ReportLastUpdated")
+    //        .ToString(CultureInfo.InvariantCulture);
+    //      break;
+    //  }
+    //}
+
+    private void Visible_Controls()
+    {
+      //if (
+      //  /*!db.Is_Report_Current_Officials(ViewState["StateCode"].ToString(),
+      //    ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString()) ||*/
+      //    SecurePage.IsMasterUser)
+      //{
+      //  UpdateReportTable.Visible = true;
+      //  RefreshReportTable.Visible = false;
+      //}
+      //else
+      //{
+      //  UpdateReportTable.Visible = false;
+      //  RefreshReportTable.Visible = true;
+      //}
+
+      //LabelUpdateButtonMsg.Visible = SecurePage.IsMasterUser;
+
+      TableIncumbentStatusRadioButtons.Visible =
+        db.Is_Electoral_Class_State_County_Local(ViewState["StateCode"].ToString(),
+          ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString());
+
+      TablePoliticianData.Visible = SecurePage.IsMasterUser;
+    }
+
+    private void ShowOfficialsReport()
+    {
+      //LableOfficialsReport.Text = db.Report_Officials_Get(PageCache,
+      //  ViewState["StateCode"].ToString(), ViewState["CountyCode"].ToString(),
+      //  ViewState["LocalCode"].ToString());
+
+      OfficialsReport.GetReport(Report.SignedInReportUser,
+        ViewState["StateCode"].ToString(), ViewState["CountyCode"].ToString(),
+        ViewState["LocalCode"].ToString()).AddTo(ReportPlaceHolder);
+
+      //ShowWhenReportLastUpdated();
+
+      //MsgReportMayNotBeCurrent();
+    }
+
+    //private void Report_Officials_Update_Local(string stateCode, string countyCode,
+    //  string localCode)
+    //{
+    //  db.Report_Officials_Update(PageCache, stateCode, countyCode, localCode);
+    //}
+
+    //private void Report_Officials_Update_County(string stateCode, string countyCode)
+    //{
+    //  db.Report_Officials_Update(PageCache, stateCode, countyCode, string.Empty);
+
+    //  var tableLocals = db.Table(sql.LocalDistricts(stateCode, countyCode));
+    //  foreach (DataRow rowLocal in tableLocals.Rows)
+    //    Report_Officials_Update_Local(stateCode, countyCode,
+    //      rowLocal["LocalCode"].ToString());
+    //}
+
+    //private void Report_Officials_Update_State(string stateCode)
+    //{
+    //  db.Report_Officials_Update(PageCache, stateCode, string.Empty, string.Empty);
+
+    //  var tableCounties = db.Table(sql.Counties(ViewState["StateCode"].ToString()));
+    //  foreach (DataRow rowCounty in tableCounties.Rows)
+
+    //    Report_Officials_Update_County(stateCode, rowCounty["CountyCode"].ToString());
+    //}
+
+    //protected void ButtonUpdateReport_Click1(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    Server.ScriptTimeout = 6000; //6000 sec = 100 min
+
+    //    if (db.Is_Electoral_Class_State(ViewState["StateCode"].ToString(),
+    //      ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString()))
+
+    //      Report_Officials_Update_State(ViewState["StateCode"].ToString());
+
+    //    else if (db.Is_Electoral_Class_County(ViewState["StateCode"].ToString(),
+    //      ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString()))
+
+    //      Report_Officials_Update_County(ViewState["StateCode"].ToString(),
+    //        ViewState["CountyCode"].ToString());
+
+    //    else if (db.Is_Electoral_Class_Local(ViewState["StateCode"].ToString(),
+    //      ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString()))
+
+    //      Report_Officials_Update_Local(ViewState["StateCode"].ToString(),
+    //        ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString());
+
+    //    else if (db.Is_Electoral_Class_Federal(ViewState["StateCode"].ToString(),
+    //      ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString()))
+
+    //      Report_Officials_Update_State(ViewState["StateCode"].ToString());
+
+    //    ShowOfficialsReport();
+
+    //    Visible_Controls();
+
+    //    Msg.Text =
+    //      db.Ok(
+    //        "The report of elected officials has been updated and is now current.");
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //  }
+    //}
+
+    //protected void ButtonRefreshReport_Click(object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    ShowOfficialsReport();
+
+    //    Visible_Controls();
+
+    //    if (db.Is_Report_Current_Officials(ViewState["StateCode"].ToString(),
+    //      ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString()))
+    //      Msg.Text =
+    //        db.Msg(
+    //          "The elected officials report is current and reflects the current data," +
+    //            " unless you made data changes since you last clicked the Refresh Report Button. Click again when in doubt.");
+    //    else
+    //      Msg.Text =
+    //        db.Warn(
+    //          "The election report is not current. Click the Update Report Button to reflect the current data.");
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    //LableOfficialsReport.Text = "An error was encountered: " + ex.Message;
+    //    db.Log_Error_Admin(ex);
+    //  }
+    //}
+
+    private void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        Page.Title = "Officials";
+        //Use db.Domain_DesignCode_This() to set a DesignCode
+        //Session[UserDesignCode] has been eliminated
+
+        //The Session UserStateCode, UserCountyCode, UserLocalCode can be changed
+        //by a higher administration level using query strings
+        //This is done in db.State_Code(), db.County_Code(), db.Local_Code()
+        //
+        //Using ViewState variables insures these values won't
+        //change on any postbacks or in different tab or browser Sessions.
+        //
+        //ViewState["StateCode"] can be a StateCode or U1, u2, u3 for FederalCode
+
+        ViewState["StateCode"] = db.State_Code();
+        ViewState["CountyCode"] = db.County_Code();
+        ViewState["LocalCode"] = db.Local_Code();
+        if (!db.Is_User_Security_Ok())
+          SecurePage.HandleSecurityException();
+
+        try
+        {
+          Visible_Controls();
+
+          var stateCode = db.State_Code();
+          HyperLink_View_Public_Report.NavigateUrl =
+            UrlManager.GetOfficialsPageUri(stateCode)
+              .ToString();
+
+          Page_Title();
+
+          Label_Report_Elections_Winners_Identified.Text =
+            db.Elections_Winners_Identified(ViewState["StateCode"].ToString());
+
+          ShowOfficialsReport();
+        }
+        catch (Exception ex)
+        {
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+        }
+      }
+    }
+
+    protected void Page_PreRender(object sender, EventArgs e)
+    {
+      try
+      {
+        if (Session["ErrNavBarAdmin"].ToString() != string.Empty)
+          Msg.Text = db.Fail(Session["ErrNavBarAdmin"].ToString());
+      }
+      catch /*(Exception ex)*/ {}
+    }
+
+    #region Dead code
+
+    //#region SQL
+    //protected string sqlElectionsPreviousNonPrimary4State()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " ,IsViewable ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+    //  SQL += " AND CountyCode = '' ";
+    //  SQL += " AND ((ElectionType = 'G') OR (ElectionType = 'O') OR (ElectionType = 'S')) ";
+    //  SQL += " AND ElectionDate < " + db.SQLLit(Db.DbToday);
+    //  SQL += " ORDER BY ElectionDate DESC,Elections.NationalPartyCode ASC";
+    //  return SQL;
+    //}
+    //protected string sqlElectionsPreviousNonPrimary4County()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " ,IsViewable ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+    //  SQL += " AND Elections.CountyCode = " + db.SQLLit(ViewState["CountyCode"].ToString());
+    //  SQL += " AND ((ElectionType = 'G') OR (ElectionType = 'O') OR (ElectionType = 'S')) ";
+    //  SQL += " AND ElectionDate < " + db.SQLLit(Db.DbToday);
+    //  SQL += " ORDER BY ElectionDate DESC,Elections.NationalPartyCode ASC";
+    //  return SQL;
+    //}
+    //protected string sqlElectionsPreviousNonPrimary4LocalDistrict()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " ,IsViewable ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+    //  SQL += " AND Elections.CountyCode = " + db.SQLLit(ViewState["CountyCode"].ToString());
+    //  SQL += " AND Elections.LocalCode = " + db.SQLLit(ViewState["LocalCode"].ToString());
+    //  SQL += " AND ((ElectionType = 'G') OR (ElectionType = 'O') OR (ElectionType = 'S')) ";
+    //  SQL += " AND ElectionDate < " + db.SQLLit(Db.DbToday);
+    //  SQL += " ORDER BY ElectionDate DESC,Elections.NationalPartyCode ASC";
+    //  return SQL;
+    //}
+    //#endregion SQL
+
+    //private void xElections_Winners_Identified()
+    //{
+    //  #region date of last General Election
+    //  string sql = " SELECT ElectionDate";
+    //  sql += " FROM Elections";
+    //  sql += " WHERE StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+    //  sql += " AND ElectionType = 'G'";
+    //  sql += " AND ElectionDate < " + db.SQLLit(Db.DbToday);
+    //  sql += " ORDER BY ElectionDate DESC";
+
+    //  DataRow rowGeneralElection = db.Row_First(sql);
+    //  DateTime Date_Last_General_Election = Convert.ToDateTime(rowGeneralElection["ElectionDate"].ToString());
+    //  #endregion date of last General Election
+
+    //  #region List Elections since last General Election
+    //  sql = " SELECT ElectionDesc,IsWinnersIdentified";
+    //  sql += " FROM Elections";
+    //  sql += " WHERE StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+    //  sql += " AND ElectionDate >= '" + Date_Last_General_Election.ToString("yyyy/MM/dd") + "'";
+    //  DataTable tableElections = db.Table(sql);
+    //  Label_Report_Elections_Winners_Identified.Text = string.Empty;
+    //  foreach (DataRow rowElection in tableElections.Rows)
+    //  {
+    //    Label_Report_Elections_Winners_Identified.Text += "<br>" + rowElection["ElectionDesc"].ToString();
+    //    if (Convert.ToBoolean(rowElection["IsWinnersIdentified"]))
+    //    {
+    //      Label_Report_Elections_Winners_Identified.Text += " - Winners HAVE been Identified";
+    //    }
+    //    else
+    //    {
+    //      Label_Report_Elections_Winners_Identified.Text += " - Winners HAVE NOT been Identified";
+    //    }
+    //  }
+    //  #endregion List Elections since last General Election
+    //}
+
+    #endregion Dead code
+  }
+}

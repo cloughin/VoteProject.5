@@ -1,0 +1,1317 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8A2AF8BE-DADA-4BF6-8F4D-28B93D6E3CBC}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Vote</RootNamespace>
+    <AssemblyName>Vote</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <UseIISExpress>false</UseIISExpress>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <TargetFrameworkProfile />
+    <Use64BitIISExpress />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TypeScriptToolsVersion>2.5</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;xUseBugLog,xNoEmail</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>
+    </NoWarn>
+    <PublishDatabases>false</PublishDatabases>
+    <ExcludeGeneratedDebugSymbol>true</ExcludeGeneratedDebugSymbol>
+    <DeployIisAppPath>Default Web Site</DeployIisAppPath>
+    <CodeAnalysisRuleSet>ExtendedDesignGuidelineRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;UseCommonDbLayer,xUseBugLog</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PublishDatabases>false</PublishDatabases>
+    <DeployIisAppPath>Default Web Site/</DeployIisAppPath>
+    <ExcludeGeneratedDebugSymbol>true</ExcludeGeneratedDebugSymbol>
+    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BotDetect">
+      <HintPath>C:\Program Files (x86)\Lanapsoft\BotDetect 3 CAPTCHA Component\Asp.Net\v4.0\BotDetect.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="MySql.Data, Version=6.3.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\MySQL\MySQL Connector Net 6.3.6\Assemblies\v4.0\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="404.aspx" />
+    <Content Include="500.aspx" />
+    <Content Include="adimage\default.aspx" />
+    <Content Include="AdTest.aspx" />
+    <Content Include="api\v1.asmx" />
+    <Content Include="Ballot.aspx" />
+    <Content Include="Ballot2.aspx" />
+    <Content Include="banneradimage\default.aspx" />
+    <Content Include="CompareCandidates.aspx" />
+    <Content Include="AjaxContent.aspx" />
+    <Content Include="CompareCandidates2.aspx" />
+    <Content Include="Controls\Disqus.ascx" />
+    <Content Include="Controls\DonationRequestNew.ascx" />
+    <Content Include="Controls\GoogleAddressEntry.ascx" />
+    <Content Include="Controls\SampleBallotEmailDialogResponsive.ascx" />
+    <Content Include="css\vote\public.css" />
+    <Content Include="css\vote\public.min.css">
+      <DependentUpon>public.css</DependentUpon>
+    </Content>
+    <Content Include="default.aspx" />
+    <Content Include="default2.aspx" />
+    <Content Include="DSTTest.aspx" />
+    <Content Include="Elected.aspx" />
+    <Content Include="Election.aspx" />
+    <Content Include="Election2.aspx" />
+    <Content Include="FacebookShare.aspx" />
+    <Content Include="googlea5f3f2f63085d238.html" />
+    <Content Include="images\AdSamples.png" />
+    <Content Include="images\ajax-loader64.gif" />
+    <Content Include="images\ballot-buttons-sprite.png" />
+    <Content Include="images\ballotpedia.2.png" />
+    <Content Include="images\blogger.2.png" />
+    <Content Include="images\checkboxoff.png" />
+    <Content Include="images\checkboxon.png" />
+    <Content Include="images\clear-icon-20.png" />
+    <Content Include="images\close-box.png" />
+    <Content Include="images\compare-buttons-sprite.png" />
+    <Content Include="images\connect-sprite.png" />
+    <Content Include="images\crowdpac.png" />
+    <Content Include="images\crowdpac.sm.png" />
+    <Content Include="images\dem-logo.png" />
+    <Content Include="images\Designs\VOTE-USA\fbbanner.png" />
+    <Content Include="images\Designs\VOTE-USA\fbbanner2.png" />
+    <Content Include="images\Designs\VOTE-USA\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-USA\lgbanner2.png" />
+    <Content Include="images\Designs\VOTE-USA\smbanner.png" />
+    <Content Include="images\dollar-logo-2.png" />
+    <Content Include="images\dollar-logo.png" />
+    <Content Include="images\email.2.png" />
+    <Content Include="images\embanner.png" />
+    <Content Include="images\facebook-sq-32.png" />
+    <Content Include="images\facebook.2.png" />
+    <Content Include="images\fb-play-button.png" />
+    <Content Include="images\fb-video-icon.png" />
+    <Content Include="images\fbshare.png" />
+    <Content Include="images\flickr.2.png" />
+    <Content Include="images\gofundme.png" />
+    <Content Include="images\gofundme.sm.png" />
+    <Content Include="images\googleplus.2.png" />
+    <Content Include="images\informed-logo.png" />
+    <Content Include="images\instagram.2.png" />
+    <Content Include="images\linkedin.2.png" />
+    <Content Include="images\logo-2019-48h.png" />
+    <Content Include="images\logo-2019-full.png" />
+    <Content Include="images\logo-buttons-sprite.png" />
+    <Content Include="images\logo-checkbox.png" />
+    <Content Include="images\more-ajax.gif" />
+    <Content Include="images\more-text.gif" />
+    <Content Include="images\PayPal-Donate-Button-2.png" />
+    <Content Include="images\PayPal-Donate-Button.png" />
+    <Content Include="images\pinterest.2.png" />
+    <Content Include="images\play-button.png" />
+    <Content Include="images\podcast-icon-2.png" />
+    <Content Include="images\podcasts-icon.sm.png" />
+    <Content Include="images\predelection-partner.png" />
+    <Content Include="images\predelection.png" />
+    <Content Include="images\rep-logo.png" />
+    <Content Include="images\rss.2.png" />
+    <Content Include="images\sample-ballot-logo.png" />
+    <Content Include="images\tnca.png" />
+    <Content Include="images\topcontrol.png" />
+    <Content Include="images\topcontrol2.png" />
+    <Content Include="images\topcontrolblue.png" />
+    <Content Include="images\twitter-sq-32.png" />
+    <Content Include="images\twitter.2.png" />
+    <Content Include="images\twitter32.png" />
+    <Content Include="images\us-seal.png" />
+    <Content Include="images\usvotefoundation-partner.png" />
+    <Content Include="images\usvotefoundation.jpg" />
+    <Content Include="images\vimeo.2.png" />
+    <Content Include="images\VoteUSASampleBallotBtn.png" />
+    <Content Include="images\wikipedia.2.png" />
+    <Content Include="images\you-tube-sq-32.png" />
+    <Content Include="images\youtube-logo.png" />
+    <Content Include="images\youtube.2.new.png" />
+    <Content Include="images\youtube.2.png" />
+    <Content Include="images\yt-icon-new.png" />
+    <Content Include="images\yt-icon.png" />
+    <Content Include="images\yt-play-button.png" />
+    <Content Include="images\yt-play-button2.png" />
+    <Content Include="images\yt_logo_rgb_light.png" />
+    <Content Include="Intro.aspx" />
+    <Content Include="Intro2.aspx" />
+    <Content Include="IssueList.aspx" />
+    <Content Include="js\ballot - Copy.js" />
+    <Content Include="js\ballot.js" />
+    <Content Include="js\iframeResizer.contentWindow.js" />
+    <Content Include="js\iframeResizer.contentWindow.min.js" />
+    <Content Include="js\iframeResizer.js" />
+    <Content Include="js\iframeResizer.min.js" />
+    <Content Include="js\jq\jquery.cookie.js" />
+    <Content Include="js\jq\kalypto.mod.js" />
+    <Content Include="js\patchballot.js" />
+    <Content Include="js\patchreferendum.js" />
+    <Content Include="js\patchintro.js" />
+    <Content Include="js\patchcompare.js" />
+    <Content Include="js\patchdefault.js" />
+    <Content Include="js\SampleBallotEmailDialogResponsive.js" />
+    <Content Include="js\jq\scrolltotop.js" />
+    <Content Include="Donate.aspx" />
+    <Content Include="forResearch.aspx" />
+    <Content Include="forVoters.aspx" />
+    <Content Include="js\scripts.js" />
+    <Content Include="js\scripts.min.js">
+      <DependentUpon>scripts.js</DependentUpon>
+    </Content>
+    <Content Include="js\vote\controls\GoogleAddressEntry.js" />
+    <Content Include="js\vote\public.js" />
+    <Content Include="js\vote\publicutil.js" />
+    <Content Include="latlng.aspx" />
+    <Content Include="lookup.aspx" />
+    <Content Include="Lookup2.aspx" />
+    <Content Include="NoCache.aspx" />
+    <Content Include="Officials.aspx" />
+    <Content Include="orgadimage\default.aspx" />
+    <Content Include="Payments.aspx" />
+    <Content Include="PaymentsTest.html" />
+    <Content Include="PublicInterestOrganizations.aspx" />
+    <Content Include="Referendum.aspx" />
+    <Content Include="Referendum2.aspx" />
+    <Content Include="robots.txt" />
+    <Content Include="SampleBallotButtons.aspx" />
+    <Content Include="SampleBallotEnrolled.aspx" />
+    <Content Include="SampleBallotEnrollment.aspx" />
+    <Content Include="Subscribe.aspx" />
+    <Content Include="Controls\EmailFormResponsive.ascx" />
+    <Content Include="Controls\VoteUsaAddressResponsive.ascx" />
+    <Content Include="forCandidates.aspx" />
+    <Content Include="forElectionAuthorities.aspx" />
+    <Content Include="forPartners.aspx" />
+    <Content Include="forPoliticalParties.aspx" />
+    <Content Include="forVolunteers.aspx" />
+    <Content Include="js\EmailFormResponsive.js" />
+    <Content Include="AboutUs.aspx" />
+    <Content Include="ContactUs.aspx" />
+    <Content Include="Controls\PageHeadingResponsive.ascx" />
+    <Content Include="Controls\DonationRequestResponsive.ascx" />
+    <Content Include="images\a0a0a0.1.png" />
+    <Content Include="images\Designs\VOTE-AK\name2.png" />
+    <Content Include="images\Designs\VOTE-AL\name2.png" />
+    <Content Include="images\Designs\VOTE-AR\name2.png" />
+    <Content Include="images\Designs\VOTE-AZ\name2.png" />
+    <Content Include="images\Designs\VOTE-CA\name2.png" />
+    <Content Include="images\Designs\VOTE-CO\name2.png" />
+    <Content Include="images\Designs\VOTE-CT\name2.png" />
+    <Content Include="images\Designs\VOTE-DC\name2.png" />
+    <Content Include="images\Designs\VOTE-DE\name2.png" />
+    <Content Include="images\Designs\VOTE-FL\name2.png" />
+    <Content Include="images\Designs\VOTE-HI\name2.png" />
+    <Content Include="images\Designs\VOTE-IL\name2.png" />
+    <Content Include="images\Designs\VOTE-IN\name2.png" />
+    <Content Include="images\Designs\VOTE-KS\name2.png" />
+    <Content Include="images\Designs\VOTE-KY\name2.png" />
+    <Content Include="images\Designs\VOTE-LA\name2.png" />
+    <Content Include="images\Designs\VOTE-MA\name2.png" />
+    <Content Include="images\Designs\VOTE-ME\name2.png" />
+    <Content Include="images\Designs\VOTE-MI\name2.png" />
+    <Content Include="images\Designs\VOTE-MN\name2.png" />
+    <Content Include="images\Designs\VOTE-MO\name2.png" />
+    <Content Include="images\Designs\VOTE-MS\name2.png" />
+    <Content Include="images\Designs\VOTE-MT\name2.png" />
+    <Content Include="images\Designs\VOTE-NC\name2.png" />
+    <Content Include="images\Designs\VOTE-ND\name2.png" />
+    <Content Include="images\Designs\VOTE-NE\name2.png" />
+    <Content Include="images\Designs\VOTE-NH\name2.png" />
+    <Content Include="images\Designs\VOTE-NJ\name2.png" />
+    <Content Include="images\Designs\VOTE-NM\name2.png" />
+    <Content Include="images\Designs\VOTE-NV\name2.png" />
+    <Content Include="images\Designs\VOTE-NY\name2.png" />
+    <Content Include="images\Designs\VOTE-OH\name2.png" />
+    <Content Include="images\Designs\VOTE-OK\name2.png" />
+    <Content Include="images\Designs\VOTE-OR\name2.png" />
+    <Content Include="images\Designs\VOTE-PA\name2.png" />
+    <Content Include="images\Designs\VOTE-RI\name2.png" />
+    <Content Include="images\Designs\VOTE-SC\name2.png" />
+    <Content Include="images\Designs\VOTE-SD\name2.png" />
+    <Content Include="images\Designs\VOTE-TN\name2.png" />
+    <Content Include="images\Designs\VOTE-TX\name2.png" />
+    <Content Include="images\Designs\VOTE-USA\name2.png" />
+    <Content Include="images\Designs\VOTE-UT\name2.png" />
+    <Content Include="images\Designs\VOTE-VA\name2.png" />
+    <Content Include="images\Designs\VOTE-VT\name2.png" />
+    <Content Include="images\Designs\VOTE-WA\name2.png" />
+    <Content Include="images\Designs\VOTE-WI\name2.png" />
+    <Content Include="images\Designs\VOTE-WV\name2.png" />
+    <Content Include="images\Designs\VOTE-WY\name2.png" />
+    <Content Include="images\nav-candidates-h.png" />
+    <Content Include="images\nav-candidates.png" />
+    <Content Include="images\nav-donate-h.png" />
+    <Content Include="images\nav-donate.png" />
+    <Content Include="images\nav-home-h.png" />
+    <Content Include="images\nav-home.png" />
+    <Content Include="images\nav-volunteers-h.png" />
+    <Content Include="images\nav-volunteers.png" />
+    <Content Include="images\nav-voters-h.png" />
+    <Content Include="images\nav-voters.png" />
+    <Content Include="images\peoplevoting-lite.jpg" />
+    <Content Include="Controls\SampleBallotButton9.ascx" />
+    <Content Include="Controls\SampleBallotButton8.ascx" />
+    <Content Include="Controls\SampleBallotButton7.ascx" />
+    <Content Include="images\Ballotpedia.png" />
+    <Content Include="images\checkboxes.png" />
+    <Content Include="images\end-partisanship-partner.png" />
+    <Content Include="images\end-partisanship.png" />
+    <Content Include="images\info.png" />
+    <Content Include="images\VoteLogoBtns.png" />
+    <Content Include="js\DonationRequestResponsive.js" />
+    <Content Include="js\jq\ajaxfileupload.js" />
+    <Content Include="js\jq\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="js\jq\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="js\jq\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="js\jq\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="js\jq\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="js\jq\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="js\jq\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="js\jq\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="js\jq\images\ui-icons_222222_256x240.png" />
+    <Content Include="js\jq\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="js\jq\images\ui-icons_454545_256x240.png" />
+    <Content Include="js\jq\images\ui-icons_888888_256x240.png" />
+    <Content Include="js\jq\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="js\jq\jquery.cookie.new.js" />
+    <Content Include="js\jq\jquery.scrollintoview.js" />
+    <Content Include="js\jq\kalypto.js" />
+    <Content Include="js\jq\kalypto.min.js" />
+    <Content Include="js\vote\sandbox\dateTest.js" />
+    <Content Include="js\vote\init.js" />
+    <Content Include="js\vote\util.js" />
+    <Content Include="Privacy.aspx" />
+    <Content Include="xapp_offline.htm" />
+    <Content Include="BingSiteAuth.xml" />
+    <Content Include="Controls\AddSampleBallotButtons.ascx" />
+    <Content Include="Controls\SampleBallotButton1.ascx" />
+    <Content Include="Controls\SampleBallotButton2.ascx" />
+    <Content Include="Controls\SampleBallotButton3.ascx" />
+    <Content Include="Controls\SampleBallotButton4.ascx" />
+    <Content Include="Controls\SampleBallotButton5.ascx" />
+    <Content Include="Controls\SampleBallotButton6.ascx" />
+    <Content Include="Controls\SiteVerification.ascx" />
+    <Content Include="css\All.css" />
+    <Content Include="css\MainCommon.css" />
+    <Content Include="css\Officials.css" />
+    <Content Include="css\SecondaryCommon.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="google30040e86419b3149XXX.html" />
+    <Content Include="googlea0fbe02c482f6067.html" />
+    <Content Include="xGoogleAnalytics.ascx" />
+    <Content Include="Image.aspx" />
+    <Content Include="images\ajax-loader32.gif" />
+    <Content Include="images\ajax-loader16.gif" />
+    <Content Include="images\aristotle-partner.png" />
+    <Content Include="images\Aristotle.png" />
+    <Content Include="images\Blogger.jpg" />
+    <Content Include="images\business-online-partner.png" />
+    <Content Include="images\businessonlinelogosmall.png" />
+    <Content Include="images\compareButtons.png" />
+    <Content Include="images\Designs\America\Banner.jpg" />
+    <Content Include="images\Designs\America\BannerAdmin.jpg" />
+    <Content Include="images\Designs\America\Banner~.jpg" />
+    <Content Include="images\Designs\DCDEMS\tagline.gif" />
+    <Content Include="images\Designs\LWV\Banner.gif" />
+    <Content Include="images\Designs\LWV\tagline.gif" />
+    <Content Include="images\Designs\MOVEON\Banner.jpg" />
+    <Content Include="images\Designs\MOVEON\tagline.gif" />
+    <Content Include="images\Designs\SUNLIGHT\Banner.jpg" />
+    <Content Include="images\Designs\SUNLIGHT\SUNLIGHT.jpg" />
+    <Content Include="images\Designs\SUNLIGHT\tagline.gif" />
+    <Content Include="images\Designs\VOTE-AK\Banner.gif" />
+    <Content Include="images\Designs\VOTE-AK\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-AK\name.png" />
+    <Content Include="images\Designs\VOTE-AK\smbanner.png" />
+    <Content Include="images\Designs\VOTE-AK\tagline.gif" />
+    <Content Include="images\Designs\VOTE-AL\Banner.gif" />
+    <Content Include="images\Designs\VOTE-AL\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-AL\name.png" />
+    <Content Include="images\Designs\VOTE-AL\smbanner.png" />
+    <Content Include="images\Designs\VOTE-AL\tagline.gif" />
+    <Content Include="images\Designs\VOTE-AR\Banner.gif" />
+    <Content Include="images\Designs\VOTE-AR\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-AR\name.png" />
+    <Content Include="images\Designs\VOTE-AR\smbanner.png" />
+    <Content Include="images\Designs\VOTE-AR\tagline.gif" />
+    <Content Include="images\Designs\VOTE-AZ\Banner.gif" />
+    <Content Include="images\Designs\VOTE-AZ\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-AZ\name.png" />
+    <Content Include="images\Designs\VOTE-AZ\smbanner.png" />
+    <Content Include="images\Designs\VOTE-AZ\tagline.gif" />
+    <Content Include="images\Designs\VOTE-CA\Banner.gif" />
+    <Content Include="images\Designs\VOTE-CA\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-CA\name.png" />
+    <Content Include="images\Designs\VOTE-CA\smbanner.png" />
+    <Content Include="images\Designs\VOTE-CA\tagline.gif" />
+    <Content Include="images\Designs\VOTE-CO\Banner.gif" />
+    <Content Include="images\Designs\VOTE-CO\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-CO\name.png" />
+    <Content Include="images\Designs\VOTE-CO\smbanner.png" />
+    <Content Include="images\Designs\VOTE-CO\tagline.gif" />
+    <Content Include="images\Designs\VOTE-CT\Banner.gif" />
+    <Content Include="images\Designs\VOTE-CT\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-CT\name.png" />
+    <Content Include="images\Designs\VOTE-CT\smbanner.png" />
+    <Content Include="images\Designs\VOTE-CT\tagline.gif" />
+    <Content Include="images\Designs\VOTE-DC\Banner.gif" />
+    <Content Include="images\Designs\VOTE-DC\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-DC\name.png" />
+    <Content Include="images\Designs\VOTE-DC\smbanner.png" />
+    <Content Include="images\Designs\VOTE-DC\tagline.gif" />
+    <Content Include="images\Designs\VOTE-DE\Banner.gif" />
+    <Content Include="images\Designs\VOTE-DE\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-DE\name.png" />
+    <Content Include="images\Designs\VOTE-DE\smbanner.png" />
+    <Content Include="images\Designs\VOTE-DE\tagline.gif" />
+    <Content Include="images\Designs\VOTE-FL\Banner.gif" />
+    <Content Include="images\Designs\VOTE-FL\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-FL\name.png" />
+    <Content Include="images\Designs\VOTE-FL\smbanner.png" />
+    <Content Include="images\Designs\VOTE-FL\tagline.gif" />
+    <Content Include="images\Designs\VOTE-GA\Banner.gif" />
+    <Content Include="images\Designs\VOTE-GA\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-GA\name.png" />
+    <Content Include="images\Designs\VOTE-GA\smbanner.png" />
+    <Content Include="images\Designs\VOTE-GA\tagline.gif" />
+    <Content Include="images\Designs\VOTE-HI\Banner.gif" />
+    <Content Include="images\Designs\VOTE-HI\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-HI\name.png" />
+    <Content Include="images\Designs\VOTE-HI\smbanner.png" />
+    <Content Include="images\Designs\VOTE-HI\tagline.gif" />
+    <Content Include="images\Designs\VOTE-IA\Banner.gif" />
+    <Content Include="images\Designs\VOTE-IA\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-IA\name.png" />
+    <Content Include="images\Designs\VOTE-IA\smbanner.png" />
+    <Content Include="images\Designs\VOTE-IA\tagline.gif" />
+    <Content Include="images\Designs\VOTE-ID\Banner.gif" />
+    <Content Include="images\Designs\VOTE-ID\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-ID\name.png" />
+    <Content Include="images\Designs\VOTE-ID\smbanner.png" />
+    <Content Include="images\Designs\VOTE-ID\tagline.gif" />
+    <Content Include="images\Designs\VOTE-IL\Banner.gif" />
+    <Content Include="images\Designs\VOTE-IL\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-IL\name.png" />
+    <Content Include="images\Designs\VOTE-IL\smbanner.png" />
+    <Content Include="images\Designs\VOTE-IL\tagline.gif" />
+    <Content Include="images\Designs\VOTE-IN\Banner.gif" />
+    <Content Include="images\Designs\VOTE-IN\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-IN\name.png" />
+    <Content Include="images\Designs\VOTE-IN\smbanner.png" />
+    <Content Include="images\Designs\VOTE-IN\tagline.gif" />
+    <Content Include="images\Designs\VOTE-KS\Banner.gif" />
+    <Content Include="images\Designs\VOTE-KS\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-KS\name.png" />
+    <Content Include="images\Designs\VOTE-KS\smbanner.png" />
+    <Content Include="images\Designs\VOTE-KS\tagline.gif" />
+    <Content Include="images\Designs\VOTE-KY\Banner.gif" />
+    <Content Include="images\Designs\VOTE-KY\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-KY\name.png" />
+    <Content Include="images\Designs\VOTE-KY\smbanner.png" />
+    <Content Include="images\Designs\VOTE-KY\tagline.gif" />
+    <Content Include="images\Designs\VOTE-LA\Banner.gif" />
+    <Content Include="images\Designs\VOTE-LA\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-LA\name.png" />
+    <Content Include="images\Designs\VOTE-LA\smbanner.png" />
+    <Content Include="images\Designs\VOTE-LA\tagline.gif" />
+    <Content Include="images\Designs\VOTE-MA\Banner.gif" />
+    <Content Include="images\Designs\VOTE-MA\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-MA\name.png" />
+    <Content Include="images\Designs\VOTE-MA\smbanner.png" />
+    <Content Include="images\Designs\VOTE-MA\tagline.gif" />
+    <Content Include="images\Designs\VOTE-MD\Banner.gif" />
+    <Content Include="images\Designs\VOTE-MD\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-MD\name.png" />
+    <Content Include="images\Designs\VOTE-MD\smbanner.png" />
+    <Content Include="images\Designs\VOTE-MD\tagline.gif" />
+    <Content Include="images\Designs\VOTE-ME\Banner.gif" />
+    <Content Include="images\Designs\VOTE-ME\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-ME\name.png" />
+    <Content Include="images\Designs\VOTE-ME\smbanner.png" />
+    <Content Include="images\Designs\VOTE-ME\tagline.gif" />
+    <Content Include="images\Designs\VOTE-MI\Banner.gif" />
+    <Content Include="images\Designs\VOTE-MI\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-MI\name.png" />
+    <Content Include="images\Designs\VOTE-MI\smbanner.png" />
+    <Content Include="images\Designs\VOTE-MI\tagline.gif" />
+    <Content Include="images\Designs\VOTE-MN\Banner.gif" />
+    <Content Include="images\Designs\VOTE-MN\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-MN\name.png" />
+    <Content Include="images\Designs\VOTE-MN\smbanner.png" />
+    <Content Include="images\Designs\VOTE-MN\tagline.gif" />
+    <Content Include="images\Designs\VOTE-MO\Banner.gif" />
+    <Content Include="images\Designs\VOTE-MO\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-MO\name.png" />
+    <Content Include="images\Designs\VOTE-MO\smbanner.png" />
+    <Content Include="images\Designs\VOTE-MO\tagline.gif" />
+    <Content Include="images\Designs\VOTE-MS\Banner.gif" />
+    <Content Include="images\Designs\VOTE-MS\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-MS\name.png" />
+    <Content Include="images\Designs\VOTE-MS\smbanner.png" />
+    <Content Include="images\Designs\VOTE-MS\tagline.gif" />
+    <Content Include="images\Designs\VOTE-MT\Banner.gif" />
+    <Content Include="images\Designs\VOTE-MT\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-MT\name.png" />
+    <Content Include="images\Designs\VOTE-MT\smbanner.png" />
+    <Content Include="images\Designs\VOTE-MT\tagline.gif" />
+    <Content Include="images\Designs\VOTE-NC\Banner.gif" />
+    <Content Include="images\Designs\VOTE-NC\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-NC\name.png" />
+    <Content Include="images\Designs\VOTE-NC\smbanner.png" />
+    <Content Include="images\Designs\VOTE-NC\tagline.gif" />
+    <Content Include="images\Designs\VOTE-ND\Banner.gif" />
+    <Content Include="images\Designs\VOTE-ND\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-ND\name.png" />
+    <Content Include="images\Designs\VOTE-ND\smbanner.png" />
+    <Content Include="images\Designs\VOTE-ND\tagline.gif" />
+    <Content Include="images\Designs\VOTE-NE\Banner.gif" />
+    <Content Include="images\Designs\VOTE-NE\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-NE\name.png" />
+    <Content Include="images\Designs\VOTE-NE\smbanner.png" />
+    <Content Include="images\Designs\VOTE-NE\tagline.gif" />
+    <Content Include="images\Designs\VOTE-NH\Banner.gif" />
+    <Content Include="images\Designs\VOTE-NH\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-NH\name.png" />
+    <Content Include="images\Designs\VOTE-NH\smbanner.png" />
+    <Content Include="images\Designs\VOTE-NH\tagline.gif" />
+    <Content Include="images\Designs\VOTE-NJ\Banner.gif" />
+    <Content Include="images\Designs\VOTE-NJ\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-NJ\name.png" />
+    <Content Include="images\Designs\VOTE-NJ\smbanner.png" />
+    <Content Include="images\Designs\VOTE-NJ\tagline.gif" />
+    <Content Include="images\Designs\VOTE-NM\Banner.gif" />
+    <Content Include="images\Designs\VOTE-NM\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-NM\name.png" />
+    <Content Include="images\Designs\VOTE-NM\smbanner.png" />
+    <Content Include="images\Designs\VOTE-NM\tagline.gif" />
+    <Content Include="images\Designs\VOTE-NV\Banner.gif" />
+    <Content Include="images\Designs\VOTE-NV\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-NV\name.png" />
+    <Content Include="images\Designs\VOTE-NV\smbanner.png" />
+    <Content Include="images\Designs\VOTE-NV\tagline.gif" />
+    <Content Include="images\Designs\VOTE-NY\Banner.gif" />
+    <Content Include="images\Designs\VOTE-NY\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-NY\name.png" />
+    <Content Include="images\Designs\VOTE-NY\smbanner.png" />
+    <Content Include="images\Designs\VOTE-NY\tagline.gif" />
+    <Content Include="images\Designs\VOTE-OH\Banner.gif" />
+    <Content Include="images\Designs\VOTE-OH\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-OH\name.png" />
+    <Content Include="images\Designs\VOTE-OH\smbanner.png" />
+    <Content Include="images\Designs\VOTE-OH\tagline.gif" />
+    <Content Include="images\Designs\VOTE-OK\Banner.gif" />
+    <Content Include="images\Designs\VOTE-OK\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-OK\name.png" />
+    <Content Include="images\Designs\VOTE-OK\smbanner.png" />
+    <Content Include="images\Designs\VOTE-OK\tagline.gif" />
+    <Content Include="images\Designs\VOTE-OR\Banner.gif" />
+    <Content Include="images\Designs\VOTE-OR\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-OR\name.png" />
+    <Content Include="images\Designs\VOTE-OR\smbanner.png" />
+    <Content Include="images\Designs\VOTE-OR\tagline.gif" />
+    <Content Include="images\Designs\VOTE-PA\Banner.gif" />
+    <Content Include="images\Designs\VOTE-PA\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-PA\name.png" />
+    <Content Include="images\Designs\VOTE-PA\smbanner.png" />
+    <Content Include="images\Designs\VOTE-PA\tagline.gif" />
+    <Content Include="images\Designs\VOTE-RI\Banner.gif" />
+    <Content Include="images\Designs\VOTE-RI\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-RI\name.png" />
+    <Content Include="images\Designs\VOTE-RI\smbanner.png" />
+    <Content Include="images\Designs\VOTE-RI\tagline.gif" />
+    <Content Include="images\Designs\VOTE-SC\Banner.gif" />
+    <Content Include="images\Designs\VOTE-SC\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-SC\name.png" />
+    <Content Include="images\Designs\VOTE-SC\smbanner.png" />
+    <Content Include="images\Designs\VOTE-SC\tagline.gif" />
+    <Content Include="images\Designs\VOTE-SD\Banner.gif" />
+    <Content Include="images\Designs\VOTE-SD\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-SD\name.png" />
+    <Content Include="images\Designs\VOTE-SD\smbanner.png" />
+    <Content Include="images\Designs\VOTE-SD\tagline.gif" />
+    <Content Include="images\Designs\VOTE-TN\Banner.gif" />
+    <Content Include="images\Designs\VOTE-TN\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-TN\name.png" />
+    <Content Include="images\Designs\VOTE-TN\smbanner.png" />
+    <Content Include="images\Designs\VOTE-TN\tagline.gif" />
+    <Content Include="images\Designs\VOTE-TX\Banner.gif" />
+    <Content Include="images\Designs\VOTE-TX\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-TX\name.png" />
+    <Content Include="images\Designs\VOTE-TX\smbanner.png" />
+    <Content Include="images\Designs\VOTE-TX\tagline.gif" />
+    <Content Include="images\Designs\VOTE-USA\AddressEntry.gif" />
+    <Content Include="images\Designs\VOTE-USA\AKGianoutsosTed.jpg" />
+    <Content Include="images\Designs\VOTE-USA\Banner.gif" />
+    <Content Include="images\Designs\VOTE-USA\BannerAdmin.gif" />
+    <Content Include="images\Designs\VOTE-USA\Banner~.jpg" />
+    <Content Include="images\Designs\VOTE-USA\Donate-Now.jpg" />
+    <Content Include="images\Designs\VOTE-USA\Donate-Now~.jpg" />
+    <Content Include="images\Designs\VOTE-USA\lgbanner-old.png" />
+    <Content Include="images\Designs\VOTE-USA\name.png" />
+    <Content Include="images\Designs\VOTE-USA\smbanner-old.png" />
+    <Content Include="images\Designs\VOTE-USA\TagLine.gif" />
+    <Content Include="images\Designs\VOTE-USA\TagLine~.jpg" />
+    <Content Include="images\Designs\VOTE-UT\Banner.gif" />
+    <Content Include="images\Designs\VOTE-UT\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-UT\name.png" />
+    <Content Include="images\Designs\VOTE-UT\smbanner.png" />
+    <Content Include="images\Designs\VOTE-UT\tagline.gif" />
+    <Content Include="images\Designs\VOTE-VA\Banner.gif" />
+    <Content Include="images\Designs\VOTE-VA\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-VA\name.png" />
+    <Content Include="images\Designs\VOTE-VA\smbanner.png" />
+    <Content Include="images\Designs\VOTE-VA\tagline.gif" />
+    <Content Include="images\Designs\VOTE-VT\Banner.gif" />
+    <Content Include="images\Designs\VOTE-VT\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-VT\name.png" />
+    <Content Include="images\Designs\VOTE-VT\smbanner.png" />
+    <Content Include="images\Designs\VOTE-VT\tagline.gif" />
+    <Content Include="images\Designs\VOTE-WA\Banner.gif" />
+    <Content Include="images\Designs\VOTE-WA\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-WA\name.png" />
+    <Content Include="images\Designs\VOTE-WA\smbanner.png" />
+    <Content Include="images\Designs\VOTE-WA\tagline.gif" />
+    <Content Include="images\Designs\VOTE-WI\Banner.gif" />
+    <Content Include="images\Designs\VOTE-WI\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-WI\name.png" />
+    <Content Include="images\Designs\VOTE-WI\smbanner.png" />
+    <Content Include="images\Designs\VOTE-WI\tagline.gif" />
+    <Content Include="images\Designs\VOTE-WV\Banner.gif" />
+    <Content Include="images\Designs\VOTE-WV\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-WV\name.png" />
+    <Content Include="images\Designs\VOTE-WV\smbanner.png" />
+    <Content Include="images\Designs\VOTE-WV\tagline.gif" />
+    <Content Include="images\Designs\VOTE-WY\Banner.gif" />
+    <Content Include="images\Designs\VOTE-WY\lgbanner.png" />
+    <Content Include="images\Designs\VOTE-WY\name.png" />
+    <Content Include="images\Designs\VOTE-WY\smbanner.png" />
+    <Content Include="images\Designs\VOTE-WY\tagline.gif" />
+    <Content Include="images\donatebox.png" />
+    <Content Include="images\donateboxemail.png" />
+    <Content Include="images\donatetoday.png" />
+    <Content Include="images\Email.png" />
+    <Content Include="images\entertext.png" />
+    <Content Include="images\Facebook.png" />
+    <Content Include="images\flagbg.jpg" />
+    <Content Include="images\Flicker.png" />
+    <Content Include="images\google-partner.png" />
+    <Content Include="images\googlelogosmall.gif" />
+    <Content Include="images\GooglePlus.jpg" />
+    <Content Include="images\heading-donate.png" />
+    <Content Include="images\homelogo.png" />
+    <Content Include="images\I-Already-Donated.png" />
+    <Content Include="images\infiniden-partner.png" />
+    <Content Include="images\infiniden.gif" />
+    <Content Include="images\Instagram.jpg" />
+    <Content Include="images\ivn-main.png" />
+    <Content Include="images\ivn-partner.png" />
+    <Content Include="images\LinkedIn.jpg" />
+    <Content Include="images\newbg.gif" />
+    <Content Include="images\no-labels-partner.png" />
+    <Content Include="images\NoLabels.gif" />
+    <Content Include="images\nothanks.png" />
+    <Content Include="images\OK-Ill-Donate.png" />
+    <Content Include="images\Pinterest.jpg" />
+    <Content Include="images\ProCon.png" />
+    <Content Include="images\pullbg.png" />
+    <Content Include="images\recovering-politician-partner.png" />
+    <Content Include="images\RecoveringPolitician.jpg" />
+    <Content Include="images\Rss.png" />
+    <Content Include="images\secondarybg.gif" />
+    <Content Include="images\small-ajax-loader.gif" />
+    <Content Include="images\Sorry-Ill-Pass.png" />
+    <Content Include="images\Twitter.png" />
+    <Content Include="images\vimeo.jpg" />
+    <Content Include="images\donatebanner.jpg" />
+    <Content Include="images\VoteUSACompareCandidatesBtn.jpg" />
+    <Content Include="images\VoteUSASampleBallotBtn.jpg" />
+    <Content Include="images\Wikipedia.png" />
+    <Content Include="images\YouTube.png" />
+    <Content Include="images\youTubeWide.jpg" />
+    <Content Include="js\Legacy.js" />
+    <Content Include="js\SampleBallotButtons.js" />
+    <Content Include="js\vote.js" />
+    <Content Include="Ping.aspx" />
+    <Content Include="SetCookies.aspx" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="WebService.asmx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="404.aspx.cs">
+      <DependentUpon>404.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="404.aspx.designer.cs">
+      <DependentUpon>404.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="500.aspx.cs">
+      <DependentUpon>500.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="500.aspx.designer.cs">
+      <DependentUpon>500.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="adimage\default.aspx.cs">
+      <DependentUpon>default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="adimage\default.aspx.designer.cs">
+      <DependentUpon>default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AdTest.aspx.cs">
+      <DependentUpon>AdTest.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AdTest.aspx.designer.cs">
+      <DependentUpon>AdTest.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="api\v1.asmx.cs">
+      <DependentUpon>v1.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Ballot.aspx.cs">
+      <DependentUpon>Ballot.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Ballot.aspx.designer.cs">
+      <DependentUpon>Ballot.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Ballot2.aspx.cs">
+      <DependentUpon>Ballot2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Ballot2.aspx.designer.cs">
+      <DependentUpon>Ballot2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="banneradimage\default.aspx.cs">
+      <DependentUpon>default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="banneradimage\default.aspx.designer.cs">
+      <DependentUpon>default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompareCandidates.aspx.cs">
+      <DependentUpon>CompareCandidates.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompareCandidates.aspx.designer.cs">
+      <DependentUpon>CompareCandidates.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AjaxContent.aspx.cs">
+      <DependentUpon>AjaxContent.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AjaxContent.aspx.designer.cs">
+      <DependentUpon>AjaxContent.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompareCandidates2.aspx.cs">
+      <DependentUpon>CompareCandidates2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompareCandidates2.aspx.designer.cs">
+      <DependentUpon>CompareCandidates2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Disqus.ascx.cs">
+      <DependentUpon>Disqus.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\Disqus.ascx.designer.cs">
+      <DependentUpon>Disqus.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DonationRequestNew.ascx.cs">
+      <DependentUpon>DonationRequestNew.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\DonationRequestNew.ascx.designer.cs">
+      <DependentUpon>DonationRequestNew.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\GoogleAddressEntry.ascx.cs">
+      <DependentUpon>GoogleAddressEntry.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\GoogleAddressEntry.ascx.designer.cs">
+      <DependentUpon>GoogleAddressEntry.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SampleBallotEmailDialogResponsive.ascx.cs">
+      <DependentUpon>SampleBallotEmailDialogResponsive.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SampleBallotEmailDialogResponsive.ascx.designer.cs">
+      <DependentUpon>SampleBallotEmailDialogResponsive.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="default.aspx.cs">
+      <DependentUpon>default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="default.aspx.designer.cs">
+      <DependentUpon>default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="default2.aspx.cs">
+      <DependentUpon>default2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="default2.aspx.designer.cs">
+      <DependentUpon>default2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Donate.aspx.cs">
+      <DependentUpon>Donate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Donate.aspx.designer.cs">
+      <DependentUpon>Donate.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DSTTest.aspx.cs">
+      <DependentUpon>DSTTest.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DSTTest.aspx.designer.cs">
+      <DependentUpon>DSTTest.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Elected.aspx.cs">
+      <DependentUpon>Elected.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Elected.aspx.designer.cs">
+      <DependentUpon>Elected.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Election.aspx.cs">
+      <DependentUpon>Election.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Election.aspx.designer.cs">
+      <DependentUpon>Election.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Election2.aspx.cs">
+      <DependentUpon>Election2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Election2.aspx.designer.cs">
+      <DependentUpon>Election2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FacebookShare.aspx.cs">
+      <DependentUpon>FacebookShare.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FacebookShare.aspx.designer.cs">
+      <DependentUpon>FacebookShare.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="forResearch.aspx.cs">
+      <DependentUpon>forResearch.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="forResearch.aspx.designer.cs">
+      <DependentUpon>forResearch.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="forVoters.aspx.cs">
+      <DependentUpon>forVoters.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="forVoters.aspx.designer.cs">
+      <DependentUpon>forVoters.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Intro.aspx.cs">
+      <DependentUpon>Intro.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Intro.aspx.designer.cs">
+      <DependentUpon>Intro.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Intro2.aspx.cs">
+      <DependentUpon>Intro2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Intro2.aspx.designer.cs">
+      <DependentUpon>Intro2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="IssueList.aspx.cs">
+      <DependentUpon>IssueList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="IssueList.aspx.designer.cs">
+      <DependentUpon>IssueList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="latlng.aspx.cs">
+      <DependentUpon>latlng.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="latlng.aspx.designer.cs">
+      <DependentUpon>latlng.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="lookup.aspx.cs">
+      <DependentUpon>lookup.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="lookup.aspx.designer.cs">
+      <DependentUpon>lookup.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Lookup2.aspx.cs">
+      <DependentUpon>Lookup2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Lookup2.aspx.designer.cs">
+      <DependentUpon>Lookup2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NoCache.aspx.cs">
+      <DependentUpon>NoCache.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NoCache.aspx.designer.cs">
+      <DependentUpon>NoCache.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Officials.aspx.cs">
+      <DependentUpon>Officials.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Officials.aspx.designer.cs">
+      <DependentUpon>Officials.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="orgadimage\default.aspx.cs">
+      <DependentUpon>default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="orgadimage\default.aspx.designer.cs">
+      <DependentUpon>default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Payments.aspx.cs">
+      <DependentUpon>Payments.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Payments.aspx.designer.cs">
+      <DependentUpon>Payments.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Public.Master.cs">
+      <DependentUpon>Public.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Public.Master.designer.cs">
+      <DependentUpon>Public.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Public2.Master.cs">
+      <DependentUpon>Public2.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Public2.Master.designer.cs">
+      <DependentUpon>Public2.Master</DependentUpon>
+    </Compile>
+    <Compile Include="PublicInterestOrganizations.aspx.cs">
+      <DependentUpon>PublicInterestOrganizations.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PublicInterestOrganizations.aspx.designer.cs">
+      <DependentUpon>PublicInterestOrganizations.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Referendum.aspx.cs">
+      <DependentUpon>Referendum.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Referendum.aspx.designer.cs">
+      <DependentUpon>Referendum.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Referendum2.aspx.cs">
+      <DependentUpon>Referendum2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Referendum2.aspx.designer.cs">
+      <DependentUpon>Referendum2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SampleBallotButtons.aspx.cs">
+      <DependentUpon>SampleBallotButtons.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SampleBallotButtons.aspx.designer.cs">
+      <DependentUpon>SampleBallotButtons.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SampleBallotEnrolled.aspx.cs">
+      <DependentUpon>SampleBallotEnrolled.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SampleBallotEnrolled.aspx.designer.cs">
+      <DependentUpon>SampleBallotEnrolled.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SampleBallotEnrollment.aspx.cs">
+      <DependentUpon>SampleBallotEnrollment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SampleBallotEnrollment.aspx.designer.cs">
+      <DependentUpon>SampleBallotEnrollment.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Subscribe.aspx.cs">
+      <DependentUpon>Subscribe.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Subscribe.aspx.designer.cs">
+      <DependentUpon>Subscribe.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\EmailFormResponsive.ascx.cs">
+      <DependentUpon>EmailFormResponsive.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\EmailFormResponsive.ascx.designer.cs">
+      <DependentUpon>EmailFormResponsive.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\VoteUsaAddressResponsive.ascx.cs">
+      <DependentUpon>VoteUsaAddressResponsive.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\VoteUsaAddressResponsive.ascx.designer.cs">
+      <DependentUpon>VoteUsaAddressResponsive.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="forCandidates.aspx.cs">
+      <DependentUpon>forCandidates.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="forCandidates.aspx.designer.cs">
+      <DependentUpon>forCandidates.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="forElectionAuthorities.aspx.cs">
+      <DependentUpon>forElectionAuthorities.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="forElectionAuthorities.aspx.designer.cs">
+      <DependentUpon>forElectionAuthorities.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="forPartners.aspx.cs">
+      <DependentUpon>forPartners.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="forPartners.aspx.designer.cs">
+      <DependentUpon>forPartners.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="forPoliticalParties.aspx.cs">
+      <DependentUpon>forPoliticalParties.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="forPoliticalParties.aspx.designer.cs">
+      <DependentUpon>forPoliticalParties.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="forVolunteers.aspx.cs">
+      <DependentUpon>forVolunteers.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="forVolunteers.aspx.designer.cs">
+      <DependentUpon>forVolunteers.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AboutUs.aspx.cs">
+      <DependentUpon>AboutUs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AboutUs.aspx.designer.cs">
+      <DependentUpon>AboutUs.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ContactUs.aspx.cs">
+      <DependentUpon>ContactUs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ContactUs.aspx.designer.cs">
+      <DependentUpon>ContactUs.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PageHeadingResponsive.ascx.cs">
+      <DependentUpon>PageHeadingResponsive.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\PageHeadingResponsive.ascx.designer.cs">
+      <DependentUpon>PageHeadingResponsive.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DonationRequestResponsive.ascx.cs">
+      <DependentUpon>DonationRequestResponsive.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\DonationRequestResponsive.ascx.designer.cs">
+      <DependentUpon>DonationRequestResponsive.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AddSampleBallotButtons.ascx.cs">
+      <DependentUpon>AddSampleBallotButtons.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\AddSampleBallotButtons.ascx.designer.cs">
+      <DependentUpon>AddSampleBallotButtons.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton9.ascx.cs">
+      <DependentUpon>SampleBallotButton9.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton9.ascx.designer.cs">
+      <DependentUpon>SampleBallotButton9.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton8.ascx.cs">
+      <DependentUpon>SampleBallotButton8.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton8.ascx.designer.cs">
+      <DependentUpon>SampleBallotButton8.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton7.ascx.cs">
+      <DependentUpon>SampleBallotButton7.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton7.ascx.designer.cs">
+      <DependentUpon>SampleBallotButton7.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton1.ascx.cs">
+      <DependentUpon>SampleBallotButton1.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton1.ascx.designer.cs">
+      <DependentUpon>SampleBallotButton1.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton2.ascx.cs">
+      <DependentUpon>SampleBallotButton2.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton2.ascx.designer.cs">
+      <DependentUpon>SampleBallotButton2.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton3.ascx.cs">
+      <DependentUpon>SampleBallotButton3.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton3.ascx.designer.cs">
+      <DependentUpon>SampleBallotButton3.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton4.ascx.cs">
+      <DependentUpon>SampleBallotButton4.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton4.ascx.designer.cs">
+      <DependentUpon>SampleBallotButton4.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton5.ascx.cs">
+      <DependentUpon>SampleBallotButton5.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton5.ascx.designer.cs">
+      <DependentUpon>SampleBallotButton5.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton6.ascx.cs">
+      <DependentUpon>SampleBallotButton6.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SampleBallotButton6.ascx.designer.cs">
+      <DependentUpon>SampleBallotButton6.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SiteVerification.ascx.cs">
+      <DependentUpon>SiteVerification.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SiteVerification.ascx.designer.cs">
+      <DependentUpon>SiteVerification.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Privacy.aspx.cs">
+      <DependentUpon>Privacy.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Privacy.aspx.designer.cs">
+      <DependentUpon>Privacy.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Ping.aspx.cs">
+      <DependentUpon>Ping.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Ping.aspx.designer.cs">
+      <DependentUpon>Ping.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SetCookies.aspx.cs">
+      <DependentUpon>SetCookies.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SetCookies.aspx.designer.cs">
+      <DependentUpon>SetCookies.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Utility\DomainData.cs" />
+    <Compile Include="Utility\DomainDesign.cs" />
+    <Compile Include="Utility\LocationCookies.cs" />
+    <Compile Include="Utility\PageClasses\CacheablePage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Utility\PageClasses\PublicPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Image.aspx.cs">
+      <DependentUpon>Image.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Image.aspx.designer.cs">
+      <DependentUpon>Image.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebService.asmx.cs">
+      <DependentUpon>WebService.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Global.asax.resx">
+      <DependentUpon>Global.asax.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UtilityLibrary\UtilityLibrary.csproj">
+      <Project>{E05CEB40-9FBB-4013-9D18-400E610C8017}</Project>
+      <Name>UtilityLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VoteLibrary\VoteLibrary.csproj">
+      <Project>{c9e79074-c774-4d06-8ed3-c5472c4a9b82}</Project>
+      <Name>VoteLibrary</Name>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Public.Master" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bundleconfig.json" />
+    <Content Include="Public2.Master" />
+    <None Include="Web.Staging.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;UseCommonDbLayer,xUseBugLog</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.1</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <ExcludeGeneratedDebugSymbol>true</ExcludeGeneratedDebugSymbol>
+    <PublishDatabases>false</PublishDatabases>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="AfterBuild">
+    <TransformXml Source="Web.config" Transform="$(ProjectConfigTransformFileName)" Destination="Web.Transformed.config" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>53589</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://vote.localhost-usa</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://vote.localhost-usa/</IISAppRootUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

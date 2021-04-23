@@ -1,0 +1,96 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace Vote
+{
+  // We make this an immutable object because it goes in a Dictionary.
+  // We also override the equality operators and GetHashCode for the
+  // same reason.
+  public class ZipPlus4
+  {
+    string _Zip5;
+    string _Zip4;
+
+    public ZipPlus4(string zip5, string zip4)
+    {
+      if (zip5 == null || zip4 == null)
+        throw new ArgumentNullException();
+
+      if (zip5.Length != 5 || zip4.Length != 4)
+        throw new ArgumentException();
+
+      _Zip5 = zip5;
+      _Zip4 = zip4;
+    }
+
+    public string Zip4
+    {
+      get { return _Zip4; }
+    }
+
+    public string Zip5
+    {
+      get { return _Zip5; }
+    }
+
+    #region Override GetHashCode and equality methods
+
+    public override int GetHashCode()
+    {
+      return
+        _Zip5.GetHashCode() ^
+        _Zip4.GetHashCode();
+    }
+
+    public static bool Equals(ZipPlus4 x, ZipPlus4 y)
+    {
+      return
+        x._Zip5 == y._Zip5 &&
+        x._Zip4 == y._Zip4;
+    }
+
+    public override bool Equals(System.Object obj)
+    {
+      // If parameter is null return false.
+      if (obj == null) return false;
+
+      // If parameter cannot be cast to ZipPlus4Info return false.
+      ZipPlus4 other = obj as ZipPlus4;
+      if ((object) other == null) return false;
+
+      // Return true if the fields match:
+      return Equals(this, other);
+    }
+
+    //public bool Equals(ZipPlus4 other)
+    //{
+    //  // If parameter is null return false:
+    //  if ((object) other == null) return false;
+
+    //  // Return true if the fields match:
+    //  return Equals(this, other);
+    //}
+
+    public static bool operator ==(ZipPlus4 a, ZipPlus4 b)
+    {
+      // If both are null, or both are same instance, return true.
+      if (System.Object.ReferenceEquals(a, b)) return true;
+
+      // If one is null, but not both, return false.
+      if (((object) a == null) || ((object) b == null))
+        return false;
+
+      // Return true if the fields match:
+      return Equals(a, b);
+    }
+
+    public static bool operator !=(ZipPlus4 a, ZipPlus4 b)
+    {
+      return !(a == b);
+    }
+
+    #endregion Override GetHashCode and equality methods
+  }
+}

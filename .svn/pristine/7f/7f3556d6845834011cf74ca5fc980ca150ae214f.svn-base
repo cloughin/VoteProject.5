@@ -1,0 +1,156 @@
+﻿
+var PUBLIC = (function ($) {
+
+  var getUpcomingElectionsCalled;
+
+  function accordionActivate(event, ui) {
+    // make sure heading is visible
+    var offset = ui.newHeader.offset();
+    if (offset) {
+      offset = ui.newHeader.offset().top - $(window).scrollTop();
+      if (offset < 0 || offset > window.innerHeight) {
+        // Not in view so scroll to it
+        $('html,body').animate({ scrollTop: ui.newHeader.offset().top }, 200);
+      }
+    }
+  }
+
+  function getSampleBallot() {
+    var state = $.cookie('State');
+    var congress = $.cookie('Congress');
+    var stateSenate = $.cookie('StateSenate');
+    var stateHouse = $.cookie('StateHouse');
+    var county = $.cookie('County');
+
+    if (state && congress && stateSenate && stateHouse && county) {
+      if (!getUpcomingElectionsCalled) {
+        $.ajax({
+          type: "POST",
+          url: "/WebService.asmx/GetUpcomingElections",
+          data: "{" +
+          "'stateCode': '" + state +
+          "','congress': '" + congress +
+          "','stateSenate': '" + stateSenate +
+          "','stateHouse': '" + stateHouse +
+          "','county': '" + county +
+          "'}",
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function (result) {
+            var upcomingElections = result.d;
+            if (upcomingElections.length === 1) {
+              document.location.href = upcomingElections[0].Href;
+            }
+            else {
+              redirectToVoters();
+            }
+          },
+          error: function getUpcomingElectionsFailed(result) {
+            alert(result.status + ' ' + result.statusText);
+            getUpcomingElectionsCalled = false;
+          }
+        });
+        getUpcomingElectionsCalled = true;
+      }
+    }
+    else
+      redirectToVoters();
+  }
+
+  function redirectToVoters() {
+    document.location.pathname = '/forVoters.aspx';
+  }
+
+  $(function () {
+    //return; // to simulate no-js
+
+    var isIe11 = Object.hasOwnProperty.call(window, "ActiveXObject") && !window.ActiveXObject;
+    if (isIe11 || Function('/*@cc_on return document.documentMode===10@*/')())
+      document.documentElement.className += ' ie10';
+    if (isIe11) document.documentElement.className += ' ie11';
+
+    $("body").removeClass("no-js").addClass("js")
+      .on("click", "span.more-text", function () {
+        var $span = $(this);
+        var key = $span.removeClass("more-text").addClass("more-ajax").data("key");
+        $.ajax({
+          type: "POST",
+          url: "/WebService.asmx/GetMoreText",
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          data: '{"key":"' + key + '"}',
+          success: function (result) {
+            var $parent = $span.parent();
+            $span.remove();
+            var inx = result.d.indexOf("</p>");
+            if (inx === -1)
+              $parent.append(result.d);
+            else {
+              $parent.append(result.d.substr(0, inx));
+              $parent.after(result.d.substr(inx + 4) + "</p>");
+            }
+          },
+          error: function () {
+            $span.removeClass("more-ajax").addClass("more-text");
+          }
+        });
+      })
+      .on("click", ".answer-youtube .yt-icon", function (event) {
+        var $answer = $(this).closest(".answer-youtube");
+        var $video = $(".video-wrapper", $answer);
+        if ($video.length) {
+          event.preventDefault();
+          $video.show(0);
+        }
+      })
+      .on("accordionbeforeactivate", ".ui-accordion", function (event, ui) {
+        if (ui.newHeader.hasClass("loading")) return false;
+        if (ui.newHeader.length && !ui.newHeader.hasClass("loaded")) {
+          // expanding an ajax panel
+          var ajaxData = ui.newPanel.data("ajax");
+          if (ajaxData) {
+            var $accordion = $(this);
+            var index = ui.newHeader.index() / 2;
+            ui.newHeader.addClass("loading");
+            $.ajax({
+              type: "GET",
+              url: "/AjaxContent.aspx?" + ajaxData,
+              dataType: "html",
+              success: function (result) {
+                ui.newPanel.html(result);
+                ui.newHeader.addClass("loaded");
+                setTimeout(function() {
+                  ui.newHeader.removeClass("loading");
+                  $accordion.accordion("option", "active", index);
+                 }, 200);
+                ui.newPanel.data("ajax", null);
+              },
+              error: function () {
+                ui.newHeader.removeClass("loading");
+              }
+            });
+            return false;
+          }
+        }
+      });
+
+    $('.main-menu').slicknav({
+      prependTo: '.main-navigation',
+      label: "Main Menu"
+    });
+
+    $('.states-menu ul').slicknav({
+      prependTo: '.states-menu',
+      label: "Select a state",
+      duplicate: false
+    });
+
+    $(".main-banner .states-menu .slicknav_menutxt").text($(".main-banner .base-menu .slicknav_menutxt").text());
+  });
+
+  return {
+    accordionActivate: accordionActivate,
+    getSampleBallot: getSampleBallot
+  };
+
+})(jQuery);

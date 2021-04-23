@@ -1,0 +1,100 @@
+﻿using System;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB.VoteZipNew;
+using Vote.Reports;
+
+namespace Vote
+{
+  public partial class ElectedPage : CacheablePage
+  {
+    protected ElectedPage()
+    {
+      NoIndex = true;
+    }
+
+    #region Caching support
+
+    protected override string GetCacheKey()
+    {
+      return UrlManager.GetStateCodeFromHostName() + "." + QueryState + "." +
+        QueryCongress + "." + QueryStateSenate + "." + QueryStateHouse + "." +
+        QueryCounty;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "Elected";
+    }
+
+    #endregion Caching support
+
+    #region Private
+
+    private string _ZipQueryError;
+
+    private const string TitleTag = "Elected Representatives for {0} | {1}";
+
+    private void FillInHeading()
+    {
+      LocationInfo.InnerHtml = FormatLegislativeDistrictsFromQueryStringForHeading(true);
+    }
+
+    #endregion Private
+
+    #region Event handlers and overrides
+
+    protected override void OnPreInit(EventArgs e)
+    {
+      var zip = Request.QueryString["zip"];
+      if (!string.IsNullOrEmpty(zip))
+        try
+        {
+          // handle zip based queries
+          zip = zip.Replace("-", "");
+          if (zip.Length != 9) throw new VoteException("The zip must be nine digits");
+          var zip5 = zip.Substring(0, 5);
+          var zip4 = zip.Substring(5, 4);
+          var table = Uszd.GetDataByZip5Zip4(zip5, zip4);
+          if (table.Count == 0) throw new VoteException("Could not find this zip code");
+          var row = table[0];
+          var redirect =
+            string.Format(
+              "/elected.aspx?State={0}&" +
+                "Congress={1}&StateSenate={2}&StateHouse={3}&County={4}",
+              StateCache.StateCodeFromLdsStateCode(row.LdsStateCode),
+              row.Congress.ZeroPad(3), row.StateSenate.ZeroPad(3),
+              row.StateHouse.ZeroPad(3), row.County.ZeroPad(3));
+          //redirect = UrlManager.ApplySiteIdToUrl(redirect);
+          Response.Redirect(redirect);
+        }
+        catch (VoteException ex)
+        {
+          _ZipQueryError = ex.Message;
+        }
+      else // classic mode
+        base.OnPreInit(e);
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      Master.MenuPage = "forVoters.aspx";
+      Title = string.Format(TitleTag, FormatLegislativeDistrictsFromQueryString(", "), Master.SiteName);
+
+      if (_ZipQueryError != null)
+      {
+        InnerContent.Controls.Clear();
+        var p = new HtmlP().AddTo(InnerContent, "not-found-error");
+        new LiteralControl(_ZipQueryError).AddTo(p);
+        return;
+      }
+
+      FillInHeading();
+      ElectedReportResponsive.GetReport(QueryState, QueryCounty, QueryCongress,
+        QueryStateSenate, QueryStateHouse, true, true)
+        .AddTo(ReportPlaceHolder);
+    }
+
+    #endregion Event handlers and overrides
+  }
+}

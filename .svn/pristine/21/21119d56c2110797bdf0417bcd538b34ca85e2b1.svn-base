@@ -1,0 +1,63 @@
+﻿using System;
+using System.Diagnostics;
+using System.Web;
+using System.Web.UI;
+
+namespace Vote
+{
+  public partial class SetCookiesPage : Page
+  {
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      var congress = Request.QueryString["Congress"];
+      var stateSenate = Request.QueryString["StateSenate"];
+      var stateHouse = Request.QueryString["StateHouse"];
+      var county = Request.QueryString["County"];
+      var page = Request.QueryString["Page"];
+      if (!string.IsNullOrWhiteSpace(congress) &&
+        !string.IsNullOrWhiteSpace(stateSenate) &&
+        !string.IsNullOrWhiteSpace(stateHouse) && !string.IsNullOrWhiteSpace(county) &&
+        !string.IsNullOrWhiteSpace(page))
+      {
+        var expiration = DateTime.UtcNow.AddYears(1);
+
+        var cookie = new HttpCookie("State", DomainData.FromQueryStringOrDomain);
+        cookie.Expires = expiration;
+        Response.Cookies.Add(cookie);
+
+        cookie = new HttpCookie("Congress", congress);
+        cookie.Expires = expiration;
+        Response.Cookies.Add(cookie);
+
+        cookie = new HttpCookie("StateSenate", stateSenate);
+        cookie.Expires = expiration;
+        Response.Cookies.Add(cookie);
+
+        cookie = new HttpCookie("StateHouse", stateHouse);
+        cookie.Expires = expiration;
+        Response.Cookies.Add(cookie);
+
+        cookie = new HttpCookie("County", county);
+        cookie.Expires = expiration;
+        Response.Cookies.Add(cookie);
+
+        var siteId = UrlManager.CurrentQuerySiteId;
+        page = HttpUtility.UrlDecode(page);
+        Debug.Assert(page != null, "page != null");
+        if (siteId == "ivn")
+        {
+          var siteParameter = (page.Contains("?") ? '&' : '?') + "Site=" + siteId;
+          page += siteParameter;
+
+          // This header overcomes some over zealous IE security
+          Response.AddHeader(
+            "p3p",
+            "CP=\"IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT\"");
+        }
+        Response.Redirect(page);
+      }
+      else
+        Response.Redirect("/404.aspx");
+    }
+  }
+}

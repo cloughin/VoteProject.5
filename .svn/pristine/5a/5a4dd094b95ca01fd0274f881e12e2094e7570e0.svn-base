@@ -1,0 +1,80 @@
+﻿using System;
+
+namespace DB.Vote
+{
+  public partial class Sitemap
+  {
+    public static SitemapTable GetDomainDataSorted(int commandTimeout = -1)
+    {
+      const string cmdText = "SELECT DomainDataCode,DomainName FROM Sitemap" +
+        " ORDER BY DomainDataCode";
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      return FillTable(cmd, SitemapTable.ColumnSet.Domain);
+    }
+
+    public static int UpdateColumnAllRows(Column column, object newValue)
+    {
+      var cmdText = "UPDATE Sitemap SET {0}=@newValue";
+      cmdText = string.Format(cmdText, GetColumnName(column));
+      var cmd = VoteDb.GetCommand(cmdText, -1);
+      VoteDb.AddCommandParameter(cmd, "newValue", newValue);
+      return VoteDb.ExecuteNonQuery(cmd);
+    }
+
+    public static int UpdateElectionDirectoriesAllRows(String newValue)
+    {
+      const string cmdText = "UPDATE Sitemap SET ElectionDirectories=@newValue";
+      var cmd = VoteDb.GetCommand(cmdText, -1);
+      VoteDb.AddCommandParameter(cmd, "newValue", newValue);
+      return VoteDb.ExecuteNonQuery(cmd);
+    }
+
+    public static int UpdateFactorIssueAllRows(Int32 newValue)
+    {
+      const string cmdText = "UPDATE Sitemap SET FactorIssue=@newValue";
+      var cmd = VoteDb.GetCommand(cmdText, -1);
+      VoteDb.AddCommandParameter(cmd, "newValue", newValue);
+      return VoteDb.ExecuteNonQuery(cmd);
+    }
+
+    public static int UpdateMinimumAnswersAllRows(Int32 newValue)
+    {
+      const string cmdText = "UPDATE Sitemap SET MinimumAnswers=@newValue";
+      var cmd = VoteDb.GetCommand(cmdText, -1);
+      VoteDb.AddCommandParameter(cmd, "newValue", newValue);
+      return VoteDb.ExecuteNonQuery(cmd);
+    }
+
+    public static int UpdateMinimumCandidatesAllRows(Int32 newValue)
+    {
+      const string cmdText = "UPDATE Sitemap SET MinimumCandidates=@newValue";
+      var cmd = VoteDb.GetCommand(cmdText, -1);
+      VoteDb.AddCommandParameter(cmd, "newValue", newValue);
+      return VoteDb.ExecuteNonQuery(cmd);
+    }
+
+    public static int UpdateMustHavePictureAllRows(Boolean newValue)
+    {
+      const string cmdText = "UPDATE Sitemap SET MustHavePicture=@newValue";
+      var cmd = VoteDb.GetCommand(cmdText, -1);
+      VoteDb.AddCommandParameter(cmd, "newValue", newValue);
+      return VoteDb.ExecuteNonQuery(cmd);
+    }
+
+    public static int UpdateMustHaveStatementAllRows(Boolean newValue)
+    {
+      const string cmdText = "UPDATE Sitemap SET MustHaveStatement=@newValue";
+      var cmd = VoteDb.GetCommand(cmdText, -1);
+      VoteDb.AddCommandParameter(cmd, "newValue", newValue);
+      return VoteDb.ExecuteNonQuery(cmd);
+    }
+
+    public static int UpdatePoliticianElectionsAllRows(String newValue)
+    {
+      const string cmdText = "UPDATE Sitemap SET PoliticianElections=@newValue";
+      var cmd = VoteDb.GetCommand(cmdText, -1);
+      VoteDb.AddCommandParameter(cmd, "newValue", newValue);
+      return VoteDb.ExecuteNonQuery(cmd);
+    }
+  }
+}

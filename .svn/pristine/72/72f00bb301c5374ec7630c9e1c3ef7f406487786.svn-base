@@ -1,0 +1,687 @@
+body
+{
+  margin: 0;
+}
+
+/* ------------Generic Anchors----------------------------- */
+
+a img
+{
+  border: none;
+}
+
+a:link
+{
+  color: #26466D; /*gray blue*/
+  text-decoration: underline;
+}
+
+a:visited
+{
+  color: #990099; /*purple*/
+  text-decoration: underline;
+}
+
+a:hover
+{
+  color: red;
+  text-decoration: none;
+}
+
+a:active
+{
+  color: red;
+  text-decoration: underline;
+}
+
+/* --HTML Page Tables-- */
+
+.tablePage
+{
+  margin: 0;
+  width: 940px; /* 1000px*/
+}
+
+.trBanner
+{
+  margin: 0;
+}
+
+.tdLeftBanner
+{
+  text-align: left;
+}
+
+.tdRightBanner
+{
+  text-align: right;
+}
+/* -- text -- */
+
+.tdText
+{
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  padding: 2px 10px 2px 10px;
+}
+
+/* --Support Us-- */
+
+.tdLeftSupportUs
+{
+  text-align: left;
+}
+
+.tdCenterSupportUs,
+.tdCenterSupportUs a:link,
+.tdCenterSupportUs a:visited,
+.tdCenterSupportUs a:hover
+{
+  color: #8E2323;
+  color: red; /*#8E2323 same color as Donate Us*/
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: underline;
+}
+
+.tdRightSupportUs
+{
+  text-align: right;
+}
+
+/* --Default NavBar-- */
+
+.trNavBarDefault
+{
+  background: #26466D;
+}
+
+.trNavBarDefault2
+{
+  background: #104E8B;
+}
+
+.tdNavBarDefault,
+.tdNavBarDefault2
+{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  padding-bottom: 7px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 7px;
+}
+
+.tdNavBarDefault
+{
+  background: #26466D;
+}
+
+.tdNavBarDefault2
+{
+  background: #104E8B;
+}
+
+.tdNavBarDefault a:link,
+.tdNavBarDefault a:visited,
+.tdNavBarDefault2 a:link,
+.tdNavBarDefault2 a:visited
+{
+  color: #fff;
+  text-decoration: none;
+}
+
+.tdNavBarDefault a:hover,
+.tdNavBarDefault2 a:hover
+{
+  color: Red;
+  text-decoration: none;
+}
+
+/* --State NavBar-- */
+
+.trNavBarState
+{
+  background: #3063A5;
+}
+
+.trNavBarState2
+{
+  background: #6396D8;
+}
+
+.tdNavBarState
+{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  padding-bottom: 7px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 7px;
+}
+
+.tdNavBarState3Left
+{
+  text-align: left;
+}
+
+.tdNavBarState3Right
+{
+  text-align: right;
+  width: 100%;
+}
+
+.tdNavBarState3Left a:link,
+.tdNavBarState3Left a:visited,
+.tdNavBarState3Right a:link,
+.tdNavBarState3Right a:visited
+{
+  text-decoration: none;
+}
+
+.tdNavBarState a:link,
+.tdNavBarState a:visited
+/*
+,.tdNavBarState a:hover
+*/
+{
+  color: #fff;
+  text-decoration: none;
+}
+
+.tdNavBarState a:hover
+{
+  color: red;
+  text-decoration: none;
+}
+
+/* --First Footer -- */
+
+.tdFooterFirst
+{
+  color: #898989;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+  padding-bottom: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 0;
+  text-align: left;
+}
+
+.tdFooterFirst a:link,
+.tdFooterFirst a:visited
+{
+  color: #898989;
+}
+
+.tdFooterFirst a:hover
+{
+  color: Red;
+}
+/* --Second Footer Information Row-- */
+
+.tdFooterSecond
+{
+  color: #898989;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+  padding-bottom: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 0;
+  text-align: left;
+}
+
+.tdFooterSecond a:link,
+.tdFooterSecond a:visited
+{
+  color: #898989;
+}
+
+.tdFooterSecond a:hover
+{
+  color: Red;
+}
+/* --Email Us and Powered By Row-- */
+
+.tdLeftEmail
+{
+  color: #898989;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: normal;
+  padding-bottom: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 0;
+  text-align: left;
+  text-align: left;
+}
+
+.tdLeftEmail a:link,
+.tdLeftEmail a:visited
+/*
+*/
+{
+  color: #898989;
+}
+
+.tdLeftEmail a:hover
+{
+  color: Red;
+}
+
+.tdRightEmail
+{
+  text-align: right;
+}
+
+
+/*---- Reports--*/
+
+.tableReport
+{
+  border: solid 1px Gray;
+  margin-left: 0;
+}
+/*---- trReportHeading--*/
+
+.trReportHeading,
+.trReportHeadingLeft,
+.trReportHeadingColor,
+.trReportHeadingLeftColor
+{
+  background-color: #6396D8; /*medium blue*/
+  padding: 10px 0 10px 0; /*background-color: #E0E0E0; light gray*/
+  vertical-align: top;
+  width: 100%;
+}
+
+.trReportHeading,
+.tdReportHeadingLeft
+{
+  /*padding: 7px 5px 7px 5px;*/
+  padding: 10px 0 10px 0;
+}
+
+/*---- tdReportHeading--*/
+
+.tdReportHeading,
+.tdReportHeadingLeft,
+.tdReportHeadingColor,
+.tdReportHeadingLeftColor
+{
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+}
+
+.tdReportHeading,
+.tdReportHeadingLeft
+{
+  color: #373737;
+}
+
+.tdReportHeadingColor,
+.tdReportHeadingLeftColor
+{
+  color: red;
+}
+
+.tdReportHeading
+{
+  text-align: center;
+}
+
+.tdReportHeadingLeft
+{
+  text-align: left;
+}
+
+.tdReportHeading,
+.tdReportHeadingLeft
+{
+  color: #373737;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 0;
+  padding: 5px;
+  vertical-align: top;
+}
+
+/*---- trReportGroupHeading--*/
+
+.trReportGroupHeading,
+.trReportGroupHeadingLeft,
+.trReportGroupHeadingColor,
+.trReportGroupHeadingLeftColor
+{
+  background-color: #CAE1FF; /* light blue */
+  padding: 10px 0 10px 0;
+  vertical-align: top;
+  width: 100%;
+}
+
+.trReportGroupHeading,
+.tdReportGroupHeadingLeft
+{
+  padding: 10px 0 10px 0;
+}
+
+/*---- tdReportGroupHeading--*/
+
+.tdReportGroupHeading,
+.tdReportGroupHeadingLeft,
+.tdReportGroupHeadingColor,
+.tdReportGroupHeadingLeftColor
+{
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+}
+
+.tdReportGroupHeading,
+.tdReportGroupHeadingLeft
+{
+  color: #373737;
+}
+
+.tdReportGroupHeadingColor,
+.tdReportGroupHeadingLeftColor
+{
+  color: red;
+}
+
+.tdReportGroupHeading
+{
+  text-align: center;
+}
+
+.tdReportGroupHeadingLeft
+{
+  text-align: left;
+}
+
+.tdReportGroupHeading,
+.tdReportGroupHeadingLeft
+{
+  color: #373737;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: bold; /*color: Black;*/
+  margin-bottom: 0;
+  padding: 6px;
+  vertical-align: top;
+}
+
+/* -- trReportIncumbentKeyHeading --*/
+
+.tdReportIncumbentKeyHeading
+{
+  background-color: #F5F5F5;
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 5px 2px 5px;
+}
+
+.trReportDetailHeading
+{
+  background-color: #F5F5F5;
+}
+
+.tdReportDetailHeading,
+.tdReportDetailHeadingLeft
+{
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px;
+}
+
+.tdReportDetailHeading
+{
+  text-align: center;
+}
+
+.trReportDetail
+{
+  text-align: left;
+}
+
+/* Reports */
+
+.tdReportImage
+{
+  background-color: #FFFFFF; /* WHITE */
+  border-bottom: solid 1px Gray;
+  padding: 5px 5px 5px 5px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.tdReportDetail,
+.tdReportDetailBold,
+.tdReportDetailLarge,
+.tdReportDetailLargeBold,
+.tdReportDetailColor
+{
+  background-color: #FFFFFF; /* WHITE */
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  color: #373737;
+  padding: 10px 5px 2px 5px;
+  text-align: left;
+  vertical-align: top;
+  width: 900px; /* 900px 210px*/
+}
+
+.tdReportDetail,
+.tdReportDetailColor,
+.tdReportDetailBold
+{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+.tdReportDetail,
+.tdReportDetailColor
+{
+  font-weight: normal;
+}
+
+.tdReportDetailBold
+{
+  font-weight: bold;
+}
+
+.tdReportDetailLarge,
+.tdReportDetailLargeBold
+{
+  font-family: Verdana, Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+.tdReportDetailLarge
+{
+  font-weight: normal;
+}
+
+.tdReportDetailLargeBold
+{
+  font-weight: Bold;
+}
+
+.tdReportDetail,
+.tdReportDetailBold,
+.tdReportDetailLarge,
+.tdReportDetailLargeBold
+{
+  /*color: #373737;*/
+  color: #26466D;
+}
+
+.tdReportDetailColor
+{
+  color: red;
+}
+
+.tdLinks
+{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  font-weight: normal;
+  padding-left: 5px;
+}
+
+/*Anchors for County and Local Pages */
+
+.tdCountyLocalLinks
+{
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  color: #373737;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 6px 10px 6px 10px;
+}
+
+/*--Table Isssues and Questions--*/
+
+.trIssueHeading
+{
+  background-color: #E3E3E3;
+}
+
+.tdIssueHeading
+{
+  border-bottom: solid 1px Gray;
+  border-left: solid 1px Gray;
+  border-right: solid 1px Gray;
+  border-top: solid 1px Gray;
+  color: Red;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: bold; /*width:80%;*/
+  padding: 5px 10px 0 10px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.tdIssue
+{
+  border-bottom: solid 1px Gray;
+  border-left: solid 1px Gray;
+  border-right: solid 1px Gray;
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px;
+  vertical-align: top;
+  vertical-align: top;
+}
+
+.tdBlank
+{
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+}
+
+.tdQuestion
+{
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px;
+  text-align: left;
+  vertical-align: top;
+}
+/*-- Politician Cells on Reports---*/
+
+.TName
+{
+  color: #26466D; /*gray blue*/
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 110%;
+  text-align: left;
+  vertical-align: top;
+}
+
+.TName
+{
+  font-size: 15px;
+  font-weight: bold;
+  height: 16px;
+}
+
+.TWebsite
+{
+  color: #26466D; /*gray blue*/
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  vertical-align: top;
+}
+
+.TWebsite
+{
+  font-size: 12px;
+  font-weight: bold;
+  height: 13px;
+}
+
+.image-anchors img
+{
+  padding-top: 6px;
+}
+
+.TAddress
+{
+  color: #26466D; /*gray blue*/
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  vertical-align: top;
+  font-size: 9px;
+  font-weight: normal;
+  line-height: 130%;
+}
+
+.TPhone
+{
+  color: #26466D; /*gray blue*/
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  vertical-align: top;
+  font-size: 9px;
+  font-weight: normal;;
+  line-height: 130%;
+}
+
+.TAge
+{
+  color: #26466D; /*gray blue*/
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  vertical-align: top;
+  font-size: 9px;
+  font-weight: bold;
+  line-height: 130%;
+}

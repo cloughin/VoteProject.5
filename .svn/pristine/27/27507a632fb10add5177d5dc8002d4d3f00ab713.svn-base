@@ -1,0 +1,278 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB;
+using DB.Vote;
+
+namespace Vote.Reports
+{
+  internal sealed class CompareCandidatesReportResponsive : ResponsiveReport
+  {
+    #region Private
+
+    private class CandidateFilter : ReportDataManager<DataRow>.FilterBy
+    {
+      private readonly string _PoliticianKey;
+
+      public CandidateFilter(string politicianKey)
+      {
+        _PoliticianKey = politicianKey;
+      }
+
+      public override bool Filter(DataRow row)
+      {
+        return string.Compare(row.PoliticianKey(), _PoliticianKey, StringComparison.OrdinalIgnoreCase) == 0;
+      }
+    }
+
+    private class RunningMateFilter : ReportDataManager<DataRow>.FilterBy
+    {
+      public override bool Filter(DataRow row)
+      {
+        return !row.IsRunningMate();
+      }
+    }
+
+    private readonly CandidatesDataManager _CandidatesDataManager =
+      new CandidatesDataManager();
+
+    private readonly IssuesDataManager _IssuesDataManager =
+      new IssuesDataManager();
+
+    #region Private classes
+
+    private sealed class CandidatesDataManager : RunningMateDataManager
+    {
+      public void GetData(string electionKey, string officeKey)
+      {
+        DataTable = Elections.GetCompareCandidatesReportData(electionKey, officeKey);
+      }
+    }
+
+    private sealed class IssuesDataManager : ReportDataManager<DataRow>
+    {
+      public void GetData(string electionKey, string officeKey)
+      {
+        DataTable = ElectionsPoliticians.GetCompareCandidateIssues(electionKey, officeKey); 
+      }
+    }
+
+    public sealed class QuestionAndAnswer
+    {
+      public string PoliticianKey;
+      public string QuestionKey;
+      public string Question;
+      public string Answer;
+    }
+
+    #endregion Private classes
+
+    private static void ReportAnswer(Control container, DataRow candidate, QuestionAndAnswer qa)
+    {
+      var content = new HtmlGenericControl("div").AddTo(container, "answer-cell");
+      content = new HtmlGenericControl("div").AddTo(content, "answer-cell-inner clearfix");
+
+      if (candidate != null)
+      {
+        var nameContainer = new HtmlGenericControl("div").AddTo(content, "answer-name");
+        FormatCandidateNameAndParty(nameContainer, candidate, false, false);
+
+        var imageContainer = new HtmlGenericControl("div").AddTo(content, "answer-image");
+        CreatePoliticianImageTag(candidate.PoliticianKey(), ImageSize100, string.Empty).AddTo(imageContainer);
+      }
+
+      var answer = qa != null && !string.IsNullOrWhiteSpace(qa.Answer) 
+        ? qa.Answer.ReplaceNewLinesWithParagraphs() 
+        : "<em>No response</em>";
+      new HtmlGenericControl("div") { InnerHtml = TruncateAnswer(answer) }.AddTo(content, "answer-answer");
+    }
+
+    private static void ReportIssue(Control container, bool isRunningMateOffice,
+      string issue, IEnumerable<QuestionAndAnswer> qAndAs, List<DataRow> keys)
+    {
+      new HtmlGenericControl("div") {InnerHtml = issue}.AddTo(container, "issue-header accordion-header");
+      var content = new HtmlGenericControl("div").AddTo(container, "issues-content accordion-content");
+      var questions = qAndAs.GroupBy(qa => qa.QuestionKey);
+      foreach (var question in questions)
+      {
+        var answers = question.ToList();
+        var q = answers.First();
+        new HtmlGenericControl("div") { InnerHtml = q.Question }.AddTo(content, "question-header accordion-header");
+        var answerContainer = new HtmlGenericControl("div").AddTo(content, "question-content accordion-content");
+        foreach (var candidate in keys.Where(k => k != null && !k.IsRunningMate()))
+        {
+          var c = candidate;
+          var cont = answerContainer;
+          if (isRunningMateOffice)
+            cont = new HtmlGenericControl("div").AddTo(cont, "answer-ticket");
+          ReportAnswer(cont, c, answers.FirstOrDefault(a => a.PoliticianKey.IsEqIgnoreCase(c.PoliticianKey())));
+          if (isRunningMateOffice)
+          {
+            var runningMate = keys.FirstOrDefault(k => k != null && k.PoliticianKey().IsEqIgnoreCase(c.RunningMateKey()));
+            ReportAnswer(cont, runningMate, answers.FirstOrDefault(a => a.PoliticianKey.IsEqIgnoreCase(c.RunningMateKey())));
+          }
+        }
+      }
+    }
+
+    private static void ReportOneIssue(Control container, bool isRunningMateOffice,
+      IGrouping<string, DataRow> issue, List<DataRow> keys)
+    {
+      ReportIssue(container, isRunningMateOffice, issue.First().Issue(), 
+        issue.Select(i => new QuestionAndAnswer
+      {
+        PoliticianKey = i.PoliticianKey(),
+        QuestionKey = i.QuestionKey(),
+        Question = i.Question(),
+        Answer = i.Answer()
+      }), keys);
+    }
+
+    public static QuestionAndAnswer[] GetBioQuestionaAndAnswers(DataRow r = null)
+    {
+      return new[]
+      {
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_General",
+          Question = "General (political statement of goals, objectives, views, philosophies)",
+          Answer = r == null ? null : r.GeneralStatement()
+        },
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_Personal",
+          Question =
+            "Personal (gender, age, marital status, spouse's name and age, children's name and ages, home town, current residence)",
+          Answer = r == null ? null : r.Personal()
+        },
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_Education",
+          Question = "Education (times and places of schools, colleges, major, degrees, activities, sports)",
+          Answer = r == null ? null : r.Education()
+        },
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_Profession",
+          Question = "Profession (professional and work experience outside politics)",
+          Answer = r == null ? null : r.Profession()
+        },
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_Military",
+          Question =
+            "Military (branch, years of service, active duty experience, highest rank, medals, honors, type and date of discharge)",
+          Answer = r == null ? null : r.Military()
+        },
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_Civic",
+          Question = "Civic (past and present organizations, charities involvement)",
+          Answer = r == null ? null : r.Civic()
+        },
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_Political",
+          Question = "Political (dates and titles of previously held political offices)",
+          Answer = r == null ? null : r.Political()
+        },
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_Religion",
+          Question = "Religion (current and past religious affiliations, beliefs)",
+          Answer = r == null ? null : r.Religion()
+        },
+        new QuestionAndAnswer
+        {
+          PoliticianKey = r == null ? null : r.PoliticianKey(),
+          QuestionKey = "ALLBio_Accomplishments",
+          Question = "Accomplishments (significant accomplishments, awards, achievements)",
+          Answer = r == null ? null : r.Accomplishments()
+        }
+      };
+    }
+
+    private static bool ReportBiographical(Control container, bool isRunningMateOffice, 
+      List<DataRow> keys)
+    {
+      var answers = keys.SelectMany(r => r == null ? new QuestionAndAnswer[0] : GetBioQuestionaAndAnswers(r))
+      .Where(qa => !string.IsNullOrWhiteSpace(qa.Answer))
+      .ToList();
+      if (answers.Any())
+        ReportIssue(container, isRunningMateOffice, "Biographical", answers, keys);
+      return answers.Any();
+    }
+
+    private Control GenerateReport(string electionKey, string officeKey)
+    {
+      _CandidatesDataManager.GetData(electionKey, officeKey);
+      var candidates = _CandidatesDataManager.GetDataSubset(new RunningMateFilter());
+
+      if (candidates.Count > 0)
+      {
+        var isRunningMateOffice = candidates[0].IsRunningMateOffice() &&
+          !Elections.IsPrimaryElection(electionKey);
+        var candidatesContainer = new HtmlGenericControl("div")
+          .AddTo(ReportContainer, "candidates-container");
+        ReportOffice(candidatesContainer, isRunningMateOffice, candidates, _CandidatesDataManager);
+
+        var issueListLink = new HtmlGenericControl("div").AddTo(ReportContainer, "issue-list-link");
+        new HtmlAnchor
+        {
+          HRef = UrlManager.GetIssueListPageUri(Offices.GetStateCodeFromKey(officeKey)).ToString(),
+          InnerText = "View a list of all questions available to the candidates"
+        }.AddTo(issueListLink);
+        new LiteralControl(". Questions are included below only if at least one candidate responded.").AddTo(
+          issueListLink);
+
+
+        // create a list of politicians to reproduce order and create empty cells when 
+        // reporting issues
+        var keys = (isRunningMateOffice  
+          ? candidates.SelectMany(c => new[] { c.PoliticianKey(), c.RunningMateKey() })
+            .Distinct(StringComparer.OrdinalIgnoreCase).ToList()
+          : candidates.Select(c => c.PoliticianKey()).Distinct(StringComparer.OrdinalIgnoreCase))
+          .Select(k => _CandidatesDataManager.GetDataSubset(new CandidateFilter(k)).FirstOrDefault())
+          .ToList();
+
+        var issuesContainer = new HtmlGenericControl("div");
+
+         _IssuesDataManager.GetData(electionKey, officeKey);
+        var issues = _IssuesDataManager.GetDataSubset().GroupBy(r => r.IssueKey()).ToList();
+        if (!ReportBiographical(issuesContainer, isRunningMateOffice, keys))
+        {
+          var messageContainer = new HtmlGenericControl("div").AddTo(ReportContainer,
+            "issues-message") as HtmlGenericControl;
+          messageContainer.InnerHtml = issues.Any()
+            ? "There was no biographical information for any of the candidates."
+            : "There was no biographical information or issue responses for any of the candidates.";
+        }
+        else
+          issuesContainer.AddTo(ReportContainer, "issues-container candidates-" + candidates.Count);
+        foreach (var issue in issues)
+          ReportOneIssue(issuesContainer, isRunningMateOffice, issue, keys);
+      }
+
+      return ReportContainer.AddCssClasses("compare-candidates-report");
+    }
+
+    #endregion Private
+
+    public static Control GetReport(string electionKey, string officeKey)
+    {
+      var reportObject = new CompareCandidatesReportResponsive();
+      return reportObject.GenerateReport(electionKey, officeKey);
+    }
+  }
+}

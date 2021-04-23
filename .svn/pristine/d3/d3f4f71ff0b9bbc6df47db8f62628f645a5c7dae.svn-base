@@ -1,0 +1,182 @@
+﻿using System;
+using DB.Vote;
+using DB.VoteLog;
+using Vote.Politician;
+
+namespace Vote.Admin
+{
+  public partial class UpdateElectionsPage
+  {
+    #region Private
+
+    #region DataItem object
+
+    [PageInitializer]
+    private class AddNewCandidateSubTabItem : ElectionsDataItem
+    {
+      private const string GroupName = "AddNewCandidate";
+
+      private AddNewCandidateSubTabItem(UpdateElectionsPage page)
+        : base(page, GroupName) {}
+
+      protected override string GetCurrentValue()
+      {
+        return GetControlValue();
+      }
+
+      private static AddNewCandidateSubTabItem[] GetSubTabInfo(
+        UpdateElectionsPage page)
+      {
+        var addNewCandidateTabInfo = new[]
+          {
+            new AddNewCandidateSubTabItem(page)
+              {
+                Column = "FName",
+                Description = "First Name",
+                Validator = ValidateFirstName
+              },
+            new AddNewCandidateSubTabItem(page)
+              {
+                Column = "MName",
+                Description = "Middle Name",
+                Validator = ValidateMiddleName
+              },
+            new AddNewCandidateSubTabItem(page)
+              {
+                Column = "Nickname",
+                Description = "Nickname",
+                Validator = ValidateNickname
+              },
+            new AddNewCandidateSubTabItem(page)
+              {
+                Column = "LName",
+                Description = "Last Name",
+                Validator = ValidateLastName
+              },
+            new AddNewCandidateSubTabItem(page)
+              {
+                Column = "Suffix",
+                Description = "Suffix",
+                Validator = ValidateSuffix
+              },
+            new AddNewCandidateSubTabItem(page)
+              {
+                Column = "StateCode",
+                Description = "State Code",
+                Validator = ValidateRequired
+              }
+          };
+
+        foreach (var item in addNewCandidateTabInfo)
+          item.InitializeItem(page);
+
+        InitializeGroup(page, GroupName);
+
+        return addNewCandidateTabInfo;
+      }
+
+      // ReSharper disable UnusedMember.Local
+      // Invoked via Reflection
+      internal static void Initialize(UpdateElectionsPage page)
+        // ReSharper restore UnusedMember.Local
+      {
+        page._AddNewCandidateSubTabInfo = GetSubTabInfo(page);
+      }
+
+      protected override void Log(string oldValue, string newValue)
+      {
+        // no logging
+      }
+
+      protected override bool Update(object newValue)
+      {
+        // no updating
+        return false;
+      }
+    }
+
+    private AddNewCandidateSubTabItem[] _AddNewCandidateSubTabInfo;
+
+    #endregion DataItem object
+
+    private void ClearAddNewCandidate()
+    {
+      ControlAddNewCandidateFName.SetValue(String.Empty);
+      ControlAddNewCandidateMName.SetValue(String.Empty);
+      ControlAddNewCandidateNickname.SetValue(String.Empty);
+      ControlAddNewCandidateLName.SetValue(String.Empty);
+      ControlAddNewCandidateSuffix.SetValue(String.Empty);
+      var stateCode = Offices.GetValidatedStateCodeFromKey(GetOfficeKey());
+      ControlAddNewCandidateStateCode.SetValue(stateCode);
+      ControlAddNewCandidateStateCode.Enabled =
+        !StateCache.IsValidStateCode(stateCode);
+    }
+
+    #endregion Private
+
+    #region Event handlers and overrides
+
+    protected void ButtonAddNewCandidate_OnClick(object sender, EventArgs e)
+    {
+      bool validateDuplicates;
+      Boolean.TryParse(AddCandidateValidateDuplicates.GetValue(),
+        out validateDuplicates);
+
+      AddCandidateDuplicatesHtml.Controls.Clear();
+      _AddNewCandidateSubTabInfo.ClearValidationErrors();
+      AddCandidateNewId.SetValue(String.Empty);
+
+      // No actual updating here, just validation and reformatting
+      _AddNewCandidateSubTabInfo.Update(FeedbackAddNewCandidate, false);
+      if (FeedbackAddNewCandidate.ValidationErrorCount > 0) return;
+
+      var stateCode = ControlAddNewCandidateStateCode.GetValue();
+      var firstName = ControlAddNewCandidateFName.GetValue();
+      var middleName = ControlAddNewCandidateMName.GetValue();
+      var nickname = ControlAddNewCandidateNickname.GetValue();
+      var lastName = ControlAddNewCandidateLName.GetValue();
+      var suffix = ControlAddNewCandidateSuffix.GetValue();
+
+      var formattedName = Politicians.FormatName(firstName, middleName, nickname,
+        lastName, suffix);
+
+      if (validateDuplicates)
+      {
+        var duplicatesHtml = Politicians.GetCandidateList(lastName, null, stateCode,
+          null, true);
+        AddCandidateDuplicatesHtml.Controls.Add(duplicatesHtml);
+        if (duplicatesHtml.Controls.Count > 0)
+        {
+          // Set up the duplicates dialog
+          AddCandidateFormattedName.SetValue(formattedName);
+          AddCandidateStateName.SetValue(StateCache.GetStateName(stateCode));
+          FeedbackAddNewCandidate.PostValidationError(ControlAddNewCandidateLName,
+            "Potential duplicate candidate");
+          return;
+        }
+      }
+
+      var newPoliticianKey = Politicians.GetUniqueKey(stateCode, lastName,
+        firstName, middleName, suffix);
+      AddCandidateNewId.SetValue(newPoliticianKey);
+
+      // If it's a primary, get the party key from the election
+      var partyKey = "X";
+      var electionKey = GetElectionKey();
+      if (Elections.IsPrimaryElection(electionKey))
+        partyKey = stateCode + Elections.GetNationalPartyCodeFromKey(electionKey);
+
+      Politicians.AddPolitician(newPoliticianKey, firstName, middleName, nickname,
+        lastName, suffix, GetOfficeKey(), partyKey, CreateUniquePassword());
+
+      LogDataChange.LogInsert(Politicians.TableName, UserName, UserSecurityClass,
+        DateTime.UtcNow, newPoliticianKey);
+
+      ClearAddNewCandidate();
+
+      FeedbackAddNewCandidate.AddInfo("Politician " + formattedName + " was added.");
+    }
+
+    #endregion Event handlers and overrides
+  }
+}

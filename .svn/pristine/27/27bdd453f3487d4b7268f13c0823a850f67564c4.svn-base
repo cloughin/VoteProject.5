@@ -1,0 +1,2 @@
+<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="DesignTextOrHtml.ascx.cs" Inherits="Vote.DesignTextOrHtml" %>
+Content may be entered as Text or HTML. Content is considered HTML if and opening or closing tag is present (&lt; or /&gt;).

@@ -1,0 +1,44 @@
+﻿table.stats-table
+{
+  font-size: 12pt;
+  margin: 30px 0 0 200px;
+}
+
+table.stats-table tr.odd
+{
+  background-color: #eee;
+}
+
+table.stats-table td
+{
+  border: 1px solid #ddd;
+  padding: 6px;
+}
+
+  table.stats-table td.label {
+    width: 300px;
+    font-weight: bold;
+  }
+
+  table.stats-table td.year {
+    width: 260px;
+    padding-left: 40px;
+  }
+
+
+table.stats-table td.value
+{
+  width: 100px;
+}
+
+.not-expandable
+{
+  visibility: hidden;
+}
+
+.office-contests-year,
+.elections-year,
+.office-candidates-year {
+  display: none;
+}
+

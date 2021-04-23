@@ -1,0 +1,32 @@
+/*--Page Title--*/
+.trContactUsPageTitle
+{
+}
+.tdContactUsPageTitle
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+font-weight:bold;
+color: #373737;
+padding:10px 10px 3px 10px;
+}
+/*--Page Content--*/
+.trContactUsPageContent
+{
+}
+.tdContactUsPageContent
+/*
+,.tdContactUsPageContent a:link
+,.tdContactUsPageContent a:visited
+,.tdContactUsPageContent a:hover
+*/
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 12px;
+font-weight:normal;
+color: #373737;
+}
+.tdContactUsPageContent
+{
+padding:2px 10px 2px 10px;
+}

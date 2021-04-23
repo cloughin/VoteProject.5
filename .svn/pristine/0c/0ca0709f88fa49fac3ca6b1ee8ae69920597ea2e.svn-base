@@ -1,0 +1,70 @@
+﻿using System;
+using DB.Vote;
+
+namespace Vote.Controls
+{
+  public partial class ManagePoliticiansPanel
+  {
+    #region DataItem objects
+
+    private class ConsolidateDialogItem : DataItemBase
+    {
+      private const string GroupName = "Consolidate";
+      protected readonly ManagePoliticiansPanel ThisControl;
+
+      protected ConsolidateDialogItem(ManagePoliticiansPanel thisControl)
+        : base(GroupName)
+      {
+        ThisControl = thisControl;
+      }
+
+      public static ConsolidateDialogItem[] GetDialogInfo(ManagePoliticiansPanel control)
+      {
+        var consolidateInfo = new ConsolidateDialogItem[] 
+          {
+          };
+
+        foreach (var item in consolidateInfo)
+          item.InitializeItem(control);
+
+        InitializeGroup(control, GroupName);
+
+        return consolidateInfo;
+      }
+    }
+
+    private ConsolidateDialogItem[] _ConsolidateDialogInfo;
+
+    #endregion DataItem objects
+
+    #region Event handlers and overrides
+
+    protected void ButtonConsolidate_OnClick(object sender, EventArgs e)
+    {
+
+      switch (ConsolidateReloading.Value)
+      {
+        case "reloading":
+          {
+            var politician1 = Politicians.GetListItemData(ConsolidateKey1.Value);
+            var politician2 = Politicians.GetListItemData(ConsolidateKey2.Value);
+            Politicians.GetCandidateListItem(politician1).AddTo(ConsolidateItem1);
+            Politicians.GetCandidateListItem(politician2).AddTo(ConsolidateItem2);
+          }
+          break;
+
+        case "":
+          {
+            // normal update
+          }
+          break;
+
+        default:
+          throw new VoteException("Unknown reloading option");
+      }
+    }
+
+    #endregion Event handlers and overrides
+
+  }
+}

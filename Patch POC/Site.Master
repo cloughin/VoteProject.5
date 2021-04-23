@@ -1,0 +1,33 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" 
+Inherits="PatchPOC.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Any Page - Patch POC</title>
+  <asp:ContentPlaceHolder ID="MasterHeadTopContent" runat="server">
+  </asp:ContentPlaceHolder>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+  <style>
+    body
+    {
+      margin: 0;
+    }
+  </style>
+  <asp:ContentPlaceHolder ID="MasterHeadBottomContent" runat="server">
+  </asp:ContentPlaceHolder>
+</head>
+<body>
+<form runat="server">
+  <div class="container body-content">
+    <asp:ContentPlaceHolder ID="MainContent" runat="server">
+    </asp:ContentPlaceHolder>
+  </div>
+</form>
+</body>
+</html>

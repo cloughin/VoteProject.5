@@ -1,0 +1,633 @@
+using System;
+using System.Data;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB.VoteLog;
+
+namespace Vote.Logs
+{
+  public partial class Logs : VotePage
+  {
+    private class DateCount
+    {
+      public DateTime DateStamp;
+      public int Count;
+    }
+
+    private static HtmlTable Report(IEnumerable<DateCount> dateList, string reportHeading, 
+      int centsPerTransaction)
+    {
+      var htmlTable = new HtmlTable();
+
+      #region Heading
+      var htmlTr = db.Add_Tr_To_Table_Return_Tr(htmlTable, "HTMLTr");
+      db.Add_Td_To_Tr(htmlTr, "Date", "tdReportDetailHeading", "center");
+      db.Add_Td_To_Tr(htmlTr, reportHeading, "tdReportDetailHeading", "center");
+      #endregion
+
+      #region Report Rows of Day / Transactions
+      var totalTransactions = 0;
+ 
+      foreach (var dateCount in dateList)
+      {
+        htmlTr = db.Add_Tr_To_Table_Return_Tr(htmlTable, "HTMLTr");
+        db.Add_Td_To_Tr(htmlTr, dateCount.DateStamp.ToString("MM/dd/yyyy"), "tdReportDetail");
+        db.Add_Td_To_Tr(htmlTr, dateCount.Count.ToString(CultureInfo.InvariantCulture), "tdReportDetail");
+        totalTransactions += dateCount.Count;
+      }
+
+      //totals
+      var total = totalTransactions * centsPerTransaction;
+      htmlTr = db.Add_Tr_To_Table_Return_Tr(htmlTable, "HTMLTr");
+      db.Add_Td_To_Tr(htmlTr, "Total", "tdReportDetail");
+      db.Add_Td_To_Tr(htmlTr
+        , totalTransactions + " * ." + centsPerTransaction + " = " + total + " cents"
+        , "tdReportDetail");
+      #endregion
+
+      return htmlTable;
+    }
+
+    protected void ButtonRunReport_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region Textbox Checks
+
+        if (TextBoxLoginUser.Text.Trim() == string.Empty)
+          throw new ApplicationException("The Login Username is empty.");
+        if (!db.Is_Valid_Date(TextBoxFrom.Text.Trim()))
+          throw new ApplicationException("The From Date is not valid.");
+        if (!db.Is_Valid_Date(TextBoxTo.Text.Trim()))
+          throw new ApplicationException("The To Date is not valid.");
+
+        #endregion
+
+        #region Login Username
+
+        LabelUserName.Text = "Login User Name: " + TextBoxLoginUser.Text.Trim() +
+          " From:" + TextBoxFrom.Text.Trim() + " To: " + TextBoxTo.Text.Trim();
+
+        #endregion
+
+        var userName = TextBoxLoginUser.Text.Trim();
+
+        if (CheckBoxListLogs.Items[0].Selected) //LogLogins
+        {
+          TableLogins.Visible = true;
+
+          #region LogLogins
+
+          var htmlTable = new HtmlTable();
+
+          var tr = new HtmlTableRow().AddTo(htmlTable, "trReportDetail");
+          new HtmlTableCell { Align = "center", InnerHtml = "First Login" }.AddTo(
+            tr, "tdReportDetailHeading");
+          new HtmlTableCell { Align = "center", InnerHtml = "Last Login" }.AddTo(
+            tr, "tdReportDetailHeading");
+          new HtmlTableCell { Align = "center", InnerHtml = "Hours" }.AddTo(
+            tr, "tdReportDetailHeading");
+
+          var date = Convert.ToDateTime(TextBoxFrom.Text.Trim());
+          var dateEnd = Convert.ToDateTime(TextBoxTo.Text.Trim());
+          var totalDuration = TimeSpan.MinValue;
+          var days = 0;
+          var totalHours = 0;
+          while (dateEnd >= date)
+          {
+            var lowDate = date;
+            var highDate = date.AddDays(1);
+            var loginTable = LogLogins.GetDataByUserNameDateStampRange(userName,
+              lowDate, highDate);
+            if (loginTable.Count > 0)
+            {
+              var firstLogin = loginTable[0].DateStamp;
+              var lastLogin = loginTable[loginTable.Count - 1].DateStamp;
+              var duration = lastLogin - firstLogin;
+              var hours = duration.Hours;
+              tr = new HtmlTableRow().AddTo(htmlTable, "trReportDetail");
+              db.Add_Td_To_Tr(tr, firstLogin.ToString(CultureInfo.InvariantCulture), "tdReportDetail");
+              db.Add_Td_To_Tr(tr, lastLogin.ToString(CultureInfo.InvariantCulture), "tdReportDetail");
+              db.Add_Td_To_Tr(tr, duration.Hours.ToString(CultureInfo.InvariantCulture), "tdReportDetail");
+              totalDuration = totalDuration + duration;
+              days++;
+              totalHours += hours;
+            }
+            date = date.AddDays(1);
+          }
+
+          tr = db.Add_Tr_To_Table_Return_Tr(htmlTable, "trReportDetail");
+          db.Add_Td_To_Tr(tr, "Total", "tdReportDetail");
+          db.Add_Td_To_Tr(tr, "Days: " + days, "tdReportDetail");
+          db.Add_Td_To_Tr(tr, totalHours.ToString(CultureInfo.InvariantCulture), "tdReportDetail");
+
+          LabelLogins.Text = db.RenderToString(htmlTable);
+
+          #endregion
+        }
+
+        var beginDate = Convert.ToDateTime(TextBoxFrom.Text.Trim());
+        var endDate = Convert.ToDateTime(TextBoxTo.Text.Trim());
+        endDate = endDate.AddDays(1);
+
+        if (CheckBoxListLogs.Items[1].Selected) //LogPoliticianAnswers
+        {
+          var table1 =
+            LogPoliticianAnswers.GetBillingDataByUserNameDateStampRange(userName,
+              beginDate, endDate);
+          var table2 =
+            LogDataChange.GetBillingDataByUserNameTableNameDateStampRange(
+              userName, "Answers", beginDate, endDate);
+
+          var dateList = table1.Select(row => row.DateStamp.Date)
+            .Concat(table2.Select(row => row.DateStamp.Date))
+            .GroupBy(date => date)
+            .Select(g => new DateCount { DateStamp = g.Key, Count = g.Count() });
+
+          TablePoliticianAnswers.Visible = true;
+          //Control report = Report(dateList, "Answers", 40);
+          Control report = Report(dateList, "Answers", 30);
+          LabelPoliticianAnswers.Text = db.RenderToString(report);
+        }
+
+        if (CheckBoxListLogs.Items[2].Selected) //LogPoliticianAdds
+        {
+          var table =
+            LogPoliticianAdds.GetBillingDataByUserNameDateStampRange(userName,
+              beginDate, endDate);
+          var dateList = table.GroupBy(row => row.DateStamp.Date)
+            .Select(
+              group => new DateCount {DateStamp = group.Key, Count = group.Count()});
+          TablePoliticianAdds.Visible = true;
+          Control report = Report(dateList, "Politician Adds", 20);
+          LabelPoliticianAdds.Text = db.RenderToString(report);
+        }
+
+        if (CheckBoxListLogs.Items[3].Selected) //LogPoliticianChanges
+        {
+          var table1 =
+            LogPoliticianChanges.GetBillingDataByUserNameDateStampRange(userName,
+              beginDate, endDate);
+          var table2 =
+            LogDataChange.GetBillingDataByUserNameTableNameDateStampRange(
+              userName, "Politicians", beginDate, endDate);
+
+          var dateList = table1.Select(row => row.DateStamp.Date)
+            .Concat(table2.Select(row => row.DateStamp.Date))
+            .GroupBy(date => date)
+            .Select(g => new DateCount { DateStamp = g.Key, Count = g.Count() });
+
+          TablePoliticianChanges.Visible = true;
+          //Control report = Report(dateList, "Politician Changes", 8);
+          Control report = Report(dateList, "Politician Changes", 10);
+          LabelPoliticianChanges.Text = db.RenderToString(report);
+        }
+
+        if (CheckBoxListLogs.Items[4].Selected) //LogElectionPoliticianAddsDeletes
+        {
+          var table =
+            LogElectionPoliticianAddsDeletes.GetBillingDataByUserNameDateStampRange
+              (userName, beginDate, endDate);
+          var dateList = table.GroupBy(row => row.DateStamp.Date)
+            .Select(
+              group => new DateCount {DateStamp = group.Key, Count = group.Count()});
+          TableElectionPoliticianAddsDeletes.Visible = true;
+          Control report = Report(dateList, "Election Politician Adds Deletes", 15);
+          LabelElectionPoliticianAddsDeletes.Text = db.RenderToString(report);
+        }
+
+        if (CheckBoxListLogs.Items[6].Selected) //LogElectionOfficeChanges
+        {
+          var table =
+            LogElectionOfficeChanges.GetBillingDataByUserNameDateStampRange(
+              userName, beginDate, endDate);
+          var dateList = table.GroupBy(row => row.DateStamp.Date)
+            .Select(
+              group => new DateCount {DateStamp = group.Key, Count = group.Count()});
+          TableElectionOfficeChanges.Visible = true;
+          Control report = Report(dateList, "Election Office Changes", 15);
+          LabelElectionOfficeChanges.Text = db.RenderToString(report);
+        }
+
+        if (CheckBoxListLogs.Items[7].Selected) //LogOfficeChanges
+        {
+          var table =
+            LogOfficeChanges.GetBillingDataByUserNameDateStampRange(userName,
+              beginDate, endDate);
+          var dateList = table.GroupBy(row => row.DateStamp.Date)
+            .Select(
+              group => new DateCount {DateStamp = group.Key, Count = group.Count()});
+          TableOfficeChanges.Visible = true;
+          //Control report = Report(dateList, "Office Changes", 8);
+          Control report = Report(dateList, "Office Changes", 10);
+          LabelOfficeChanges.Text = db.RenderToString(report);
+        }
+
+        if (CheckBoxListLogs.Items[8].Selected) //LogOfficeOfficialAddsDeletes
+        {
+          var table =
+            LogOfficeOfficialAddsDeletes.GetBillingDataByUserNameDateStampRange(
+              userName, beginDate, endDate);
+          var dateList = table.GroupBy(row => row.DateStamp.Date)
+            .Select(
+              group => new DateCount {DateStamp = group.Key, Count = group.Count()});
+          TableOfficeOfficialsAdds.Visible = true;
+          Control report = Report(dateList, "Office Official Adds Deletes", 15);
+          LabelOfficeOfficialsAdds.Text = db.RenderToString(report);
+        }
+
+        if (CheckBoxListLogs.Items[9].Selected) //LogOfficeOfficialChanges
+        {
+          var table =
+            LogOfficeOfficialChanges.GetBillingDataByUserNameDateStampRange(
+              userName, beginDate, endDate);
+          var dateList = table.GroupBy(row => row.DateStamp.Date)
+            .Select(
+              group => new DateCount {DateStamp = group.Key, Count = group.Count()});
+          TableOfficeOfficialsChanges.Visible = true;
+          Control report = Report(dateList, "Office Official Changes", 15);
+          LabelOfficeOfficialsChanges.Text = db.RenderToString(report);
+        }
+
+        if (CheckBoxListLogs.Items[10].Selected) //LogPoliticiansImagesOriginal
+        {
+          var table1 =
+            LogPoliticiansImagesOriginal.GetBillingDataByUserNameDateStampRange(
+              userName, beginDate, endDate);
+          var table2 =
+            LogDataChange.GetBillingDataByUserNameTableNameDateStampRange(
+              userName, "PoliticiansImagesBlobs", beginDate, endDate);
+
+          var dateList = table1.Select(row => row.ProfileOriginalDate.Date)
+            .Concat(table2.Select(row => row.DateStamp.Date))
+            .GroupBy(date => date)
+            .Select(g => new DateCount {DateStamp = g.Key, Count = g.Count()});
+
+          TablePictureUploads.Visible = true;
+          Control report = Report(dateList, "Picture Uploads", 60);
+          LabelPictureUploads.Text = db.RenderToString(report);
+        }
+
+        if (CheckBoxListLogs.Items[11].Selected) //LogAdminData
+        {
+          var table = LogAdminData.GetBillingDataByUserNameDateStampRange(
+            userName, beginDate, endDate);
+          var dateList = table.GroupBy(row => row.DateStamp.Date)
+            .Select(
+              group => new DateCount {DateStamp = group.Key, Count = group.Count()});
+          TableAdminDataUpdates.Visible = true;
+          Control report = Report(dateList, "Admin Data Updates", 20);
+          LabelAdminDataUpdates.Text = db.RenderToString(report);
+        }
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        if (!SecurePage.IsMasterUser)
+          SecurePage.HandleSecurityException();
+
+        try
+        {
+          TableLogins.Visible = false;
+          TablePoliticianAnswers.Visible = false;
+          TablePoliticianAdds.Visible = false;
+          TablePoliticianChanges.Visible = false;
+          TableElectionPoliticianAddsDeletes.Visible = false;
+          TableElectionPoliticianChanges.Visible = false;
+          TableElectionOfficeChanges.Visible = false;
+          TableOfficeChanges.Visible = false;
+          TableOfficeOfficialsAdds.Visible = false;
+          TableOfficeOfficialsChanges.Visible = false;
+          TablePictureUploads.Visible = false;
+          TableAdminDataUpdates.Visible = false;
+        }
+        catch (Exception ex)
+        {
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+        }
+      }
+
+    }
+
+    protected void ButtonCheckAll_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        for (var i = 0; i <= 11; i++)
+        {
+          CheckBoxListLogs.Items[i].Selected = true;
+        }
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+
+    }
+
+    #region Dead code
+
+
+    //protected HtmlTable Report(string LogTable, string Data_Col, string ReportHeading, int Cents_Per_Transaction)
+    //{
+    //  #region HTML Controls
+    //  HtmlTable HTMLTable = new HtmlTable();
+    //  HtmlTableRow HTMLTr = new HtmlTableRow();
+    //  #endregion
+
+    //  #region Heading
+    //  //<tr Class="HTMLTr">
+    //  HTMLTr = db.Add_Tr_To_Table_Return_Tr(HTMLTable, "HTMLTr");
+    //  //<td Class="tdReportDetailHeading" align="center">
+    //  db.Add_Td_To_Tr(HTMLTr, "Date", "tdReportDetailHeading", "center");
+    //  db.Add_Td_To_Tr(HTMLTr, ReportHeading, "tdReportDetailHeading", "center");
+    //  #endregion
+
+    //  #region Report Rows of Day / Transactions
+    //  DateTime Date = Convert.ToDateTime(TextBoxFrom.Text.ToString().Trim());
+    //  DateTime DateEnd = Convert.ToDateTime(TextBoxTo.Text.ToString().Trim());
+    //  int Total_Transactions = 0;
+    //  while (DateEnd >= Date)
+    //  {
+    //    DateTime Day = Convert.ToDateTime(Date);
+    //    DateTime NextDay = Day.AddDays(1);
+    //    string SQL = string.Empty;
+    //    SQL = "SELECT ";
+    //    SQL += " " + Data_Col;
+    //    SQL += " ,UserName";
+    //    SQL += " FROM " + LogTable;
+    //    SQL += " WHERE UserName = " + db.SQLLit(TextBoxLoginUser.Text.ToString().Trim());
+    //    //SQL += " AND " + Data_Col + " >= " + db.SQLLit(Date.ToString());
+    //    SQL += " AND " + Data_Col + " >= " + db.SQLLit(Date.ToString("yyyy-MM-dd"));
+    //    //SQL += " AND " + Data_Col + " <= DATEADD(Day,1," + db.SQLLit(Date.ToString()) + ")";
+    //    //int Transactions = db.Rows(sql.Logs4LoginUserName(LogTable
+    //    //  , TextBoxLoginUser.Text.ToString().Trim()
+    //    //  , Date.ToString()));
+
+    //    //SQL += " AND " + Data_Col + " <= DATEADD(Day,1," + db.SQLLit(Date.ToString()) + ")";
+    //    //MySQL does not recognize DATEADD
+    //    SQL += " AND " + Data_Col + " <= "
+    //      + db.SQLLit(NextDay.ToString("yyyy-MM-dd"));
+    //    int Transactions = db.Rows(SQL);
+    //    if (Transactions > 0)
+    //    {
+    //      //<td Class="tdReportDetail" align="left">
+    //      HTMLTr = db.Add_Tr_To_Table_Return_Tr(HTMLTable, "HTMLTr");
+    //      db.Add_Td_To_Tr(HTMLTr, Date.ToString("MM/dd/yyyy"), "tdReportDetail");
+    //      db.Add_Td_To_Tr(HTMLTr, Transactions.ToString(), "tdReportDetail");
+    //      Total_Transactions += Transactions;
+    //    }
+    //    Date = Date.AddDays(1);
+    //  }
+    //  //totals
+    //  //<td Class="tdReportDetail" align="left">
+    //  int Total = Total_Transactions * Cents_Per_Transaction;
+    //  HTMLTr = db.Add_Tr_To_Table_Return_Tr(HTMLTable, "HTMLTr");
+    //  db.Add_Td_To_Tr(HTMLTr, "Total", "tdReportDetail");
+    //  db.Add_Td_To_Tr(HTMLTr
+    //    , Total_Transactions.ToString() + " * ." + Cents_Per_Transaction.ToString() + " = " + Total.ToString() + " cents"
+    //    , "tdReportDetail");
+    //  #endregion
+
+    //  return HTMLTable;
+    //}
+
+    //    protected void ButtonRunReport_Click(object sender, EventArgs e)
+    //    {
+    //      try
+    //      {
+    //        #region Textbox Checks
+    //        if (TextBoxLoginUser.Text.Trim() == string.Empty)
+    //          throw new ApplicationException("The Login Username is empty.");
+    //        if (!db.Is_Valid_Date(TextBoxFrom.Text.ToString().Trim()))
+    //          throw new ApplicationException("The From Date is not valid.");
+    //        if (!db.Is_Valid_Date(TextBoxTo.Text.ToString().Trim()))
+    //          throw new ApplicationException("The To Date is not valid.");
+    //        #endregion
+
+    //        #region Login Username
+    //        LabelUserName.Text = "Login User Name: " + TextBoxLoginUser.Text.Trim()
+    //        + " From:" + TextBoxFrom.Text.ToString().Trim()
+    //        + " To: " + TextBoxTo.Text.ToString().Trim();
+    //        #endregion
+
+    //        if (CheckBoxListLogs.Items[0].Selected)//LogLogins
+    //        {
+    //          TableLogins.Visible = true;
+
+    //          #region LogLogins
+
+    //          #region HTML Controls
+    //          HtmlTable HTMLTable = new HtmlTable();
+    //          HtmlTableRow HTMLTd = new HtmlTableRow();
+    //          #endregion
+
+    //          #region Heading
+    //          //<tr Class="trReportDetail">
+    //          HTMLTd = db.Add_Tr_To_Table_Return_Tr(HTMLTable, "trReportDetail");
+    //          //<td Class="tdReportDetailHeading" align="center">
+    //          db.Add_Td_To_Tr(HTMLTd, "First Login", "tdReportDetailHeading", "center");
+    //          db.Add_Td_To_Tr(HTMLTd, "Last Login", "tdReportDetailHeading", "center");
+    //          db.Add_Td_To_Tr(HTMLTd, "Hours", "tdReportDetailHeading", "center");
+    //          #endregion
+
+    //          #region Report Rows of Logins
+    //          DateTime Date = Convert.ToDateTime(TextBoxFrom.Text.ToString().Trim());
+    //          DateTime DateEnd = Convert.ToDateTime(TextBoxTo.Text.ToString().Trim());
+    //          TimeSpan TotalDuration = TimeSpan.MinValue;
+    //          int Days = 0;
+    //          int TotalHours = 0;
+    //          while (DateEnd >= Date)
+    //          {
+    //            DataTable LoginTable = db.Table(sql.LogLogins4LoginUserName(
+    //              TextBoxLoginUser.Text.ToString().Trim()
+    //              , Date.ToString()));
+    //            if (LoginTable.Rows.Count > 0)
+    //            {
+    //              DateTime FirstLogin = Convert.ToDateTime(LoginTable.Rows[0]["DateStamp"].ToString());
+    //              DateTime LastLogin = Convert.ToDateTime(LoginTable.Rows[LoginTable.Rows.Count - 1]["DateStamp"].ToString());
+    //              TimeSpan Duration = LastLogin - FirstLogin;
+    //              int Hours = Duration.Hours;
+    //              //<td Class="tdReportDetail" align="left">
+    //              HTMLTd = db.Add_Tr_To_Table_Return_Tr(HTMLTable, "trReportDetail");
+    //              db.Add_Td_To_Tr(HTMLTd, FirstLogin.ToString(), "tdReportDetail");
+    //              db.Add_Td_To_Tr(HTMLTd, LastLogin.ToString(), "tdReportDetail");
+    //              db.Add_Td_To_Tr(HTMLTd, Duration.Hours.ToString(), "tdReportDetail");
+    //              TotalDuration = TotalDuration + Duration;
+    //              Days++;
+    //              TotalHours += Hours;
+    //            }
+    //            Date = Date.AddDays(1);
+    //          }
+    //          //totals
+    //          //<td Class="tdReportDetail" align="left">
+    //          HTMLTd = db.Add_Tr_To_Table_Return_Tr(HTMLTable, "trReportDetail");
+    //          db.Add_Td_To_Tr(HTMLTd, "Total", "tdReportDetail");
+    //          db.Add_Td_To_Tr(HTMLTd, "Days: " + Days.ToString(), "tdReportDetail");
+    //          db.Add_Td_To_Tr(HTMLTd, TotalHours.ToString(), "tdReportDetail");
+    //          #endregion
+
+    //          LabelLogins.Text = db.RenderToString(HTMLTable);
+    //          #endregion
+    //        }
+
+    //        if (CheckBoxListLogs.Items[1].Selected)//LogPoliticianAnswers
+    //        {
+    //          #region LogPoliticianAnswers
+
+    //          TablePoliticianAnswers.Visible = true;
+
+    //          LabelPoliticianAnswers.Text = db.RenderToString(Report(
+    //            "LogPoliticianAnswers"
+    //            , "DateStamp"
+    //            , "Answers"
+    //            //,80
+    //            , 40 //cents per answer
+    //            ));
+    //          #endregion
+    //        }
+    //        if (CheckBoxListLogs.Items[2].Selected)//LogPoliticianAdds
+    //        {
+    //          #region LogPoliticianAdds
+
+    //          TablePoliticianAdds.Visible = true;
+
+    //          LabelPoliticianAdds.Text = db.RenderToString(Report(
+    //            "LogPoliticianAdds"
+    //            , "DateStamp"
+    //            , "Politician Adds"
+    //            , 30));
+    //          #endregion
+    //        }
+    //        if (CheckBoxListLogs.Items[3].Selected)//LogPoliticianChanges
+    //        {
+    //          #region LogPoliticianChanges
+
+    //          TablePoliticianChanges.Visible = true;
+
+    //          LabelPoliticianChanges.Text = db.RenderToString(Report(
+    //            "LogPoliticianChanges"
+    //            , "DateStamp"
+    //            , "Politician Changes"
+    //            , 10));
+    //          #endregion
+    //        }
+    //        if (CheckBoxListLogs.Items[4].Selected)//LogElectionPoliticianAddsDeletes
+    //        {
+    //          #region LogElectionPoliticianAddsDeletes
+
+    //          TableElectionPoliticianAddsDeletes.Visible = true;
+
+    //          LabelElectionPoliticianAddsDeletes.Text = db.RenderToString(Report(
+    //            "LogElectionPoliticianAddsDeletes"
+    //            , "DateStamp"
+    //            , "Election Politician Adds Deletes"
+    //            , 20));
+    //          #endregion
+    //        }
+    //#if false
+    //        if (CheckBoxListLogs.Items[5].Selected)//LogElectionPoliticianAddsDeletes
+    //          {
+    //        #region LogElectionPoliticianAddsDeletes
+
+    //            TableElectionPoliticianChanges.Visible = true;
+
+    //            LabelElectionPoliticianChanges.Text = db.RenderToString(Report(
+    //              "LogElectionPoliticianAddsDeletes"
+    //              , "DateStamp"
+    //              , "Election Politician Changes"
+    //              ,20));
+    //            #endregion
+    //          }
+    //#endif
+    //        if (CheckBoxListLogs.Items[6].Selected)//LogElectionOfficeChanges
+    //        {
+    //          #region LogElectionOfficeChanges
+
+    //          TableElectionOfficeChanges.Visible = true;
+
+    //          LabelElectionOfficeChanges.Text = db.RenderToString(Report(
+    //            "LogElectionOfficeChanges"
+    //            , "DateStamp"
+    //            , "Election Office Changes"
+    //            , 20));
+    //          #endregion
+    //        }
+    //        if (CheckBoxListLogs.Items[7].Selected)//LogOfficeChanges
+    //        {
+    //          #region LogOfficeChanges
+
+    //          TableOfficeChanges.Visible = true;
+
+    //          LabelOfficeChanges.Text = db.RenderToString(Report(
+    //            "LogOfficeChanges"
+    //            , "DateStamp"
+    //            , "Office Changes"
+    //            , 10));
+    //          #endregion
+    //        }
+    //        if (CheckBoxListLogs.Items[8].Selected)//LogOfficeOfficialAddsDeletes
+    //        {
+    //          #region LogOfficeOfficialAddsDeletes
+
+    //          TableOfficeOfficialsAdds.Visible = true;
+
+    //          LabelOfficeOfficialsAdds.Text = db.RenderToString(Report(
+    //            "LogOfficeOfficialAddsDeletes"
+    //            , "DateStamp"
+    //            , "Office Official Adds Deletes"
+    //            , 20));
+    //          #endregion
+    //        }
+    //        if (CheckBoxListLogs.Items[9].Selected)//LogOfficeOfficialChanges
+    //        {
+    //          #region LogOfficeOfficialChanges
+
+    //          TableOfficeOfficialsChanges.Visible = true;
+
+    //          LabelOfficeOfficialsChanges.Text = db.RenderToString(Report(
+    //            "LogOfficeOfficialChanges"
+    //            , "DateStamp"
+    //            , "Office Official Changes"
+    //            , 20));
+    //          #endregion
+    //        }
+    //        if (CheckBoxListLogs.Items[10].Selected)//LogPoliticiansImagesOriginal
+    //        {
+    //          #region LogPoliticiansImagesOriginal
+
+    //          TablePictureUploads.Visible = true;
+
+    //          LabelPictureUploads.Text = db.RenderToString(Report(
+    //            "LogPoliticiansImagesOriginal"
+    //            , "ProfileOriginalDate"
+    //            , "Picture Uploads"
+    //            //,40));
+    //            , 60));
+    //          #endregion LogPoliticiansImagesOriginal
+    //        }
+    //      }
+    //      catch (Exception ex)
+    //      {
+    //        Msg.Text = db.Fail(ex.Message);
+    //        db.Log_Error_Admin(ex);
+    //      }
+    //    }
+
+    #endregion Dead code
+
+  }
+}

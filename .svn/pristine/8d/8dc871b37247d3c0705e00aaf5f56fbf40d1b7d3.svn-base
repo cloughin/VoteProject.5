@@ -1,0 +1,1352 @@
+﻿define([
+    "jquery", "vote/adminMaster", "vote/util", "monitor", "store",
+    "vote/controls/navigateJurisdiction", 
+    //"vote/controls/emailTemplateOpenDialog", "vote/controls/emailTemplateSaveAsDialog",
+    //"ace/ace", "ace/mode/html_votetemplate_highlight_rules", 
+    "jqueryui", "slimscroll", "dynatree", "resizablecolumns"
+  ],
+  function($, master, util, monitor, store, navigateJurisdiction//,
+    //openDialog, saveAsDialog, 
+    //ace, voteTemplateRules
+    ) {
+
+    var $$ = util.$$;
+
+    //
+    // Monitor callbacks
+    //
+
+    var afterUpdateContainer = function (group) {
+      if (!group) return;
+
+      switch (group.group) {
+        case "mc-group-electionauthority":
+          afterUpdateContainerElectionAuthority();
+          break;
+
+        case "mc-group-masteronly":
+          afterUpdateContainerMasterOnly();
+          break;
+      }
+    };
+
+    //
+    // Election Authority
+    //
+
+    var afterUpdateContainerElectionAuthority = function() {
+      util.safeBind($("#tab-electionauthority .swap-button"), "click", onClickSwapContacts);
+      util.safeBind($("#tab-electionauthority .move-to-notes-button"), "click", onClickMoveNotes);
+    };
+
+    var onClickSwapContacts = function() {
+      var mainName = $("#tab-electionauthority .contact input[type=text]").val();
+      var mainTitle = $("#tab-electionauthority .contacttitle input[type=text]").val();
+      var mainPhone = $("#tab-electionauthority .phone input[type=text]").val();
+      var mainEmail = $("#tab-electionauthority .contactemail input[type=text]").val();
+      $("#tab-electionauthority .contact input[type=text]").val($("#tab-electionauthority .altcontact input[type=text]").val());
+      $("#tab-electionauthority .contacttitle input[type=text]").val($("#tab-electionauthority .altcontacttitle input[type=text]").val());
+      $("#tab-electionauthority .phone input[type=text]").val($("#tab-electionauthority .altphone input[type=text]").val());
+      $("#tab-electionauthority .contactemail input[type=text]").val($("#tab-electionauthority .altemail input[type=text]").val());
+      $("#tab-electionauthority .altcontact input[type=text]").val(mainName);
+      $("#tab-electionauthority .altcontacttitle input[type=text]").val(mainTitle);
+      $("#tab-electionauthority .altphone input[type=text]").val(mainPhone);
+      $("#tab-electionauthority .altemail input[type=text]").val(mainEmail);
+    };
+
+    var onClickMoveNotes = function (event) {
+      var $button = $(event.target);
+      var $context = $("#tab-electionauthority");
+      var $notes = $(".notes textarea", $context);
+      var head;
+      var prefix;
+      if ($button.hasClass("move-main-to-notes-button")) {
+        head = "Moved from Main Contact:";
+        prefix = "";
+      }
+      else if ($button.hasClass("move-alt-to-notes-button")) {
+        head = "Moved from Alternate Contact:";
+        prefix = "alt";
+      }
+      else return;
+
+      var $name = $("." + prefix + "contact input[type=text]", $context);
+      var $title =$("." + prefix + "contacttitle input[type=text]", $context);
+      var $phone = $("." + prefix + "contactphone input[type=text]", $context);
+      var $email = $("." + prefix + "contactemail input[type=text]", $context);
+
+      var name = $.trim($name.val());
+      var title = $.trim($title.val());
+      var phone = $.trim($phone.val());
+      var email = $.trim($email.val());
+
+      $name.val("");
+      $title.val("");
+      $phone.val("");
+      $email.val("");
+
+      var lines = [];
+      if (name) lines.push("Name: " + name);
+      if (title) lines.push("Title: " + title);
+      if (phone) lines.push("Phone: " + phone);
+      if (email) lines.push("Email: " + email);
+
+      if (!lines.length) return;
+      lines.splice(0, 0, head);
+
+      var notes = $notes.val();
+      if ($.trim(notes)) {
+        lines.push("____________________________________________________________");
+        lines.push("");
+        lines.push("");
+      }
+      $notes.val(lines.join("\n") + notes);
+    };
+
+    //
+    // Bulk Email
+    //
+
+//    var initBulkEmail = function() {
+//      initEditTemplate();
+//      initAvailableSubstitutions();
+//      initSelectRecipients();
+//      initViewRecipients();
+//      initPreviewSample();
+//      initEmailOptions();
+//      initSendEmails();
+
+//      $$('bulk-email-tabs')
+//        .safeBind("tabsactivate", onBulkEmailTabsActivate);
+//    };
+
+//    var onBulkEmailTabsActivate = function(event, ui) {
+//      var newPanelId = ui.newPanel[0].id;
+//      switch (newPanelId) {
+//      case "tab-bulkemail-edittemplate":
+//        onTabActivateEditTemplate();
+//        break;
+
+//      case "tab-bulkemail-previewsample":
+//        break;
+//      }
+//    };
+
+//    var activateBulkEmailSubTab = function(subTabName) {
+//      $("#bulk-email-tabs").tabs("option", "active",
+//        util.getTabIndex("bulk-email-tabs", "tab-bulkemail-" + subTabName));
+//    };
+
+    // Edit Template
+
+//    var maxTemplateNameLength = 255;
+
+//    var subjectEditor;
+//    var bodyEditor;
+//    var focusedEditor;
+//    var templateName;
+//    var templateIsPublic;
+//    var isNewTemplate;
+
+//    var savedSubject;
+//    var savedBody;
+
+//    var initEditTemplate = function() {
+//      subjectEditor = ace.edit("subject-editor");
+//      subjectEditor.setShowPrintMargin(false);
+//      subjectEditor.setTheme("ace/theme/votetemplate");
+//      subjectEditor.session.setMode("ace/mode/html_votetemplate");
+//      subjectEditor.on("focus", function() { focusedEditor = subjectEditor; });
+
+//      bodyEditor = ace.edit("body-editor");
+//      bodyEditor.setShowPrintMargin(false);
+//      bodyEditor.setTheme("ace/theme/votetemplate");
+//      bodyEditor.session.setMode("ace/mode/html_votetemplate");
+//      focusedEditor = bodyEditor;
+//      bodyEditor.on("focus", function() { focusedEditor = bodyEditor; });
+
+//      setSubstitutions();
+//      resetEditors();
+
+//      $("#tab-bulkemail-edittemplate .code-edit-heading .undo-redo div")
+//        .safeBind("click", onClickUndoRedo);
+//      $("#tab-bulkemail-edittemplate .edit-template-new-button")
+//        .safeBind("click", onClickNewTemplate);
+//      $("#tab-bulkemail-edittemplate .edit-template-open-button")
+//        .safeBind("click", onClickOpenTemplate);
+//      $("#tab-bulkemail-edittemplate .edit-template-save-button")
+//        .safeBind("click", onClickSaveTemplate);
+//      $("#tab-bulkemail-edittemplate .edit-template-save-as-button")
+//        .safeBind("click", onClickSaveAsTemplate);
+
+//      setTimeout(checkUndoRedo, 200);
+//    };
+
+//    var onTabActivateEditTemplate = function() {
+//      focusedEditor.focus();
+//    };
+
+//    var resetEditors = function (options) {
+//      options = options || {};
+//      setTemplateName(options.name || "New Template");
+//      templateIsPublic = !!options.isPublic;
+//      isNewTemplate = options.isNewTemplate !== false;
+//      subjectEditor.setValue(options.subject || "");
+//      subjectEditor.getSelection().selectFileStart();
+//      bodyEditor.setValue(options.body || "");
+//      bodyEditor.getSelection().selectFileStart();
+//      if (isNewTemplate) {
+//        savedSubject = "";
+//        savedBody = "";
+//      } else
+//        updateSavedTemplate();
+//      subjectEditor.session.setUndoManager(new ace.UndoManager());
+//      bodyEditor.session.setUndoManager(new ace.UndoManager());
+//    };
+
+//    var setTemplateName = function(name) {
+//      templateName = name;
+//      $("#edittemplate-name").html(util.htmlEscape(name));
+//    };
+
+//    var checkUndoRedo = function() {
+//      // we have to do this periodically because onChange fires before the undoManager
+//      // updates
+//      var subjectUndoManager = subjectEditor.session.getUndoManager();
+//      $("#tab-bulkemail-edittemplate .subject-edit-heading .undo")
+//        .toggleClass("disabled", !subjectUndoManager.hasUndo());
+//      $("#tab-bulkemail-edittemplate .subject-edit-heading .redo")
+//        .toggleClass("disabled", !subjectUndoManager.hasRedo());
+//      var bodyUndoManager = bodyEditor.session.getUndoManager();
+//      $("#tab-bulkemail-edittemplate .body-edit-heading .undo")
+//        .toggleClass("disabled", !bodyUndoManager.hasUndo());
+//      $("#tab-bulkemail-edittemplate .body-edit-heading .redo")
+//        .toggleClass("disabled", !bodyUndoManager.hasRedo());
+//      var dirty = templateIsDirty();
+//      $("#tab-bulkemail-edittemplate .edit-template-save-button")
+//        .toggleClass("disabled", !dirty);
+//      $("#bulk-email-tabs li.edit-template .tab-ast")
+//        .toggleClass("hidden", !dirty);
+//      setTimeout(checkUndoRedo, 200);
+//    };
+
+//    var templateIsDirty = function() {
+//      return savedSubject !== subjectEditor.getValue() ||
+//        savedBody !== bodyEditor.getValue();
+//    };
+
+//    var onClickUndoRedo = function(event) {
+//      var $target = $(event.target);
+//      if ($target.hasClass("disabled")) return;
+//      var editor = $target.closest(".code-edit-heading").hasClass("body-edit-heading") ?
+//        bodyEditor : subjectEditor;
+//      var undoManager = editor.session.getUndoManager();
+//      $target.hasClass("undo") ? undoManager.undo() : undoManager.redo();
+//      editor.focus();
+//    };
+
+//    var onClickNewTemplate = function () {
+//      newTemplate(false);
+//    };
+
+//    var newTemplate = function (force) {
+//      if (!force && templateIsDirty()) {
+//        openDialog.confirmOpen({
+//          templateName: templateName,
+//          save: function() {
+//            saveTemplate("new");
+//          },
+//          dontSave: function() {
+//            newTemplate(true);
+//          },
+//          cancel: function() {
+//            focusedEditor.focus();
+//          }
+//        });
+//      } else {
+//        resetEditors();
+//      }
+//    };
+
+//    var onClickOpenTemplate = function() {
+//      openTemplate(false);
+//    };
+
+//    var openTemplate = function(force) {
+//      if (!force && templateIsDirty()) {
+//        openDialog.confirmOpen({
+//          templateName: templateName,
+//          save: function(result, options) {
+//            saveTemplate("open");
+//          },
+//          dontSave: function(result, options) {
+//            openTemplate(true);
+//          },
+//          cancel: function() {
+//            focusedEditor.focus();
+//          }
+//        });
+//      } else {
+//        openDialog.open({
+//          success: openTemplateSucceeded,
+//          error: function(result) {
+//            util.alert(util.formatAjaxError(result,
+//             "Could not open the requested template"),
+//             function() {
+//               focusedEditor.focus();
+//             });
+//          },
+//          cancel: function() {
+//            focusedEditor.focus();
+//          }
+//        });
+//      }
+//    };
+
+//    var openTemplateSucceeded = function(result, options) {
+//      var resetOptions = {};
+//      var d = result.d;
+//      resetOptions.isNewTemplate = !d.IsOwner;
+//      resetOptions.subject = d.Subject;
+//      resetOptions.body = d.Body;
+//      if (d.IsOwner) {
+//        resetOptions.name = d.Name;
+//        resetOptions.isPublic = d.isPublic;
+//      } else {
+//        resetOptions.name = "Copy of " + d.Name;
+//        if (resetOptions.name.length > maxTemplateNameLength)
+//          resetOptions.name = resetOptions.name.substr(0, maxTemplateNameLength);
+//        resetOptions.isPublic = false;
+//      }
+//      resetEditors(resetOptions);
+//      bodyEditor.focus();
+//    };
+
+//    var onClickSaveTemplate = function() {
+//      if ($("#tab-bulkemail-edittemplate .edit-template-save-button").hasClass("disabled")) return;
+//      saveTemplate();
+//    };
+
+//    var saveTemplate = function(followAction) {
+//      if (isNewTemplate) {
+//        saveAsTemplate(followAction);
+//        return;
+//      };
+
+//      util.openAjaxDialog("Saving " + util.htmlEscape(templateName));
+//      util.ajax({
+//        url: "/Admin/WebService.asmx/SaveEmailTemplate",
+//        data: {
+//          name: templateName,
+//          subject: subjectEditor.getValue(),
+//          body: bodyEditor.getValue(),
+//          followAction: followAction || ""
+//        },
+
+//        success: function(result) {
+//          updateSavedTemplate();
+//          util.closeAjaxDialog();
+//          isNewTemplate = false;
+//          focusedEditor.focus();
+//          switch (result.d) {
+//            case "open":
+//              openTemplate(true);
+//              break;
+
+//            case "new":
+//              newTemplate(true);
+//              break;
+//          };
+//        },
+
+//        error: function(result) {
+//          util.alert(util.formatAjaxError(result,
+//           "Could not save \"" + templateName + "\""),
+//           function () {
+//             util.closeAjaxDialog();
+//             focusedEditor.focus();
+//           });
+//        }
+//      });
+//    };
+
+//    var onClickSaveAsTemplate = function() {
+//      saveAsTemplate();
+//    };
+
+//    var saveAsTemplate = function(followAction) {
+//      saveAsDialog.open({
+//        body: bodyEditor.getValue(),
+//        isPublic: templateIsPublic,
+//        name: templateName,
+//        subject: subjectEditor.getValue(),
+//        followAction: followAction || "",
+//        success: function(result, options) {
+//          setTemplateName(options.name);
+//          templateIsPublic = options.isPublic;
+//          savedSubject = options.subject;
+//          savedBody = options.body;
+//          isNewTemplate = false;
+//          focusedEditor.focus();
+//          switch (options.followAction) {
+//            case "open":
+//              openTemplate(true);
+//              break;
+
+//            case "new":
+//              newTemplate(true);
+//              break;
+//          }
+//        },
+//        error: function(result, options) {
+//          util.alert(util.formatAjaxError(result,
+//           "Could not save \"" + options.name + "\""),
+//           function () {
+//             focusedEditor.focus();
+//           });
+//        },
+//        cancel: function() {
+//          focusedEditor.focus();
+//        }
+//      });
+//    };
+
+//    var setSubstitutions = function() {
+//      // ReSharper disable once UseOfImplicitGlobalInFunctionScope
+//      voteTemplateRules.setSubstitutions(availableSubstitutions);
+//    };
+
+//    var updateSavedTemplate = function() {
+//      savedSubject = subjectEditor.getValue();
+//      savedBody = bodyEditor.getValue();
+//    };
+
+    // Available Substitutions
+
+//    var initAvailableSubstitutions = function() {
+//      $(".elseif-spinner").spinner({ min: 0, max: 9 });
+//      $(".substitution-table td.name").safeBind("dblclick", onDblClickSubstitutionName);
+//      $(".insert-conditional-button").safeBind("click", onClickInsertConditional);
+//    };
+
+//    var onDblClickSubstitutionName = function(event) {
+//      var $target = $(event.target).closest("td");
+//      var text;
+//      var pos = 0;
+//      if ($target.html().toLowerCase().indexOf("<i>") >= 0) {
+//        // it's an immediate tag
+//        text = $target.text().substr(0, 2);
+//        text += text;
+//        pos = -2;
+//      } else {
+//        // normal tag
+//        text = $target.text();
+//      }
+//      focusedEditor.insert(text);
+//      if (pos) focusedEditor.getSelection().moveCursorBy(0, pos);
+//      activateBulkEmailSubTab("edittemplate");
+//      focusedEditor.focus();
+//    };
+
+//    var onClickInsertConditional = function(event) {
+//      var elseifs = parseInt($(".elseif-spinner").val());
+//      var includeElse = $(".else-checkbox").prop("checked");
+//      var text = "{{if }} {{then}}\n";
+//      for (var i = 0; i < elseifs; i++)
+//        text += "{{elseif }} {{then}}\n";
+//      if (includeElse)
+//        text += "{{else}}\n";
+//      text += "{{endif}}";
+//      var oldLead = focusedEditor.getSelection().lead;
+//      var oldRow = oldLead.row;
+//      var oldColumn = oldLead.column;
+//      focusedEditor.insert(text);
+//      focusedEditor.getSelection().moveCursorTo(oldRow, oldColumn + 5);
+//      activateBulkEmailSubTab("edittemplate");
+//      focusedEditor.focus();
+//    };
+
+    // Select Recipients
+
+//    var getRecipientsResults = null;
+//    var pendingRecipientBatchId = 0;
+//    var postEmailBatchStatusInterval = 500;
+
+//    var initSelectRecipients = function() {
+//      $(".recipient-buttons input[type=radio]").safeBind("change", onRecipientTypeChange);
+//      $(".jurisdiction .all").safeBind("change", onRecipientsAllChange);
+//      $(".jurisdiction .checkbox-list").safeBind("change", onRecipientsListChange);
+//      $(".jurisdiction.counties .get-list-button").safeBind("click", onRecipientsCountiesGetListClick);
+//      $(".jurisdiction.locals .get-list-button").safeBind("click", onRecipientsLocalsGetListClick);
+//      $(".get-recipients-button").safeBind("click", onRecipientsCreateRecipientsList);
+//    };
+
+//    var onRecipientTypeChange = function() {
+//      switch ($(".recipient-buttons input[type=radio]:checked").val()) {
+//      case "State":
+//        $(".jurisdiction.counties").addClass("hidden");
+//        $(".jurisdiction.locals").addClass("hidden");
+//        break;
+
+//      case "County":
+//        if ($(".jurisdiction.counties").hasClass("hidden"))
+//          setJurisdictionList($(".jurisdiction.counties").removeClass("hidden"));
+//        $(".jurisdiction.locals").addClass("hidden");
+//        break;
+
+//      case "Local":
+//        if ($(".jurisdiction.counties").hasClass("hidden"))
+//          setJurisdictionList($(".jurisdiction.counties").removeClass("hidden"));
+//        setJurisdictionList($(".jurisdiction.locals").removeClass("hidden"));
+//        break;
+//      }
+//    };
+
+//    var onRecipientsAllChange = function(event) {
+//      var $context = $(event.target).closest(".jurisdiction");
+//      var checked = $(".all", $context).prop("checked");
+//      $.each($(".checkbox-list input[type=checkbox]", $context), function() {
+//        $(this).prop("checked", checked);
+//      });
+//      setJurisdictionList($context.next(".jurisdiction"));
+//    };
+
+//    var getJurisdictionCodes = function($context) {
+//      if ($(".all", $context).prop("checked"))
+//        return ["all"];
+//      var codes = [];
+//      $.each($(".checkbox-list input[type=checkbox]:checked", $context), function() {
+//        codes.push($(this).val());
+//      });
+//      return codes;
+//    };
+
+//    var createRecipientsError = function(result) {
+//      var msg = util.formatAjaxError(result,
+//            "An error occurred while retrieving the recipient list").replace("\n", "<br />");
+//      $("#tab-bulkemail-viewrecipients .current-list-results")
+//            .html("<p>" + msg + "</p>");
+//      activateBulkEmailSubTab("viewrecipients");
+//      getRecipientsResults = null;
+//      $(".preview-selected-recipient input").prop("disabled", true);
+//      pendingRecipientBatchId = 0;
+//      util.closeAjaxDialog();
+//    };
+
+//    var postEmailBatchStatus = function () {
+//      if (!pendingRecipientBatchId) return;
+
+//      util.ajax({
+//        url: "/Admin/WebService.asmx/GetEmailBatchStatus",
+//        data: {
+//          batchId: pendingRecipientBatchId
+//        },
+
+//        success: function (result) {
+//          util.setAjaxDialogStatus(result.d + " recipients found");
+//          if (pendingRecipientBatchId) {
+//            setTimeout(postEmailBatchStatus, postEmailBatchStatusInterval);
+//          }
+//        },
+
+//        error: function () {
+//          if (pendingRecipientBatchId) {
+//            setTimeout(postEmailBatchStatus, postEmailBatchStatusInterval);
+//          }
+//        }
+//      });
+//    };
+
+//    var onRecipientsCreateRecipientsList = function() {
+//      util.openAjaxDialog("Creating Recipient List...");
+//      util.ajax({
+//        url: "/Admin/WebService.asmx/GetEmailBatchId",
+
+//        success: function(result) {
+//          pendingRecipientBatchId = result.d;
+//          postEmailBatchStatus();
+//          doRecipientsList();
+//        },
+
+//        error: function (result) {
+//          createRecipientsError(result);
+//        }
+//      });
+//    };
+
+//    var doRecipientsList = function() {
+//      util.ajax({
+//        url: "/Admin/WebService.asmx/GetEmailBatchForJurisdictions",
+//        data: {
+//          batchId: pendingRecipientBatchId,
+//          type: $(".recipient-buttons input[type=radio]:checked").val(),
+//          stateCodes: getJurisdictionCodes($(".jurisdiction.states")),
+//          countyCodes: getJurisdictionCodes($(".jurisdiction.counties")),
+//          localCodes: getJurisdictionCodes($(".jurisdiction.locals")),
+//          useBothContacts: $(".use-both-contacts input").prop("checked")
+//        },
+
+//        success: function(result) {
+//          var html;
+//          pendingRecipientBatchId = 0;
+//          if (result.d.Items.length === 0) {
+//            html = '<p>There were no qualifying email recipients found.</p>';
+//            getRecipientsResults = null;
+//            $(".preview-selected-recipient input").prop("disabled", true);
+//          } else {
+//            getRecipientsResults = result.d;
+//            $(".preview-selected-recipient input").prop("disabled", false);
+//            var head = '<p class="heading"></p>';
+//            var lines = [];
+//            var evenOdd = "odd";
+//            $.each(getRecipientsResults.Items, function() {
+//              lines.push('<tr class="' + evenOdd + '"><td><div class="css-checkbox"/>' + this.Email +
+//                '</td><td>' + this.Contact + '</td><td>' +
+//                this.Title + '</td><td>' + this.Jurisdiction + '</td></tr>');
+//              evenOdd = evenOdd === "even" ? "odd" : "even";
+//            });
+//            html = head + '<table data-resizable-columns-id="jurisdiction-email-recipients">' +
+//              '<thead><tr class="head"><th data-resizable-column-id="email"><div class="css-checkbox"/>Email</th>' +
+//              '<th data-resizable-column-id="contact">Contact</th>' +
+//              '<th data-resizable-column-id="title">Title</th>' +
+//              '<th data-resizable-column-id="jurisdiction">Jurisdiction</th></tr></thead><tbody>' +
+//              lines.join("") + '</tbody></table>';
+//          }
+//          var $container = $("#tab-bulkemail-viewrecipients .current-list-results");
+//          $container.html(html);
+//          util.closeAjaxDialog();
+//          activateBulkEmailSubTab("viewrecipients");
+//          setPreviewKeysToSelectedRecipient();
+//          $('table', $container).resizableColumns({ store: store });
+//          $('tbody .css-checkbox', $container).addClass("checked");
+//          setRecipientsHeaderCheckbox();
+//        },
+
+//        error: function (result) {
+//          createRecipientsError(result);
+//        }
+//      });
+//    };
+
+//    var setJurisdictionList = function($context) {
+//      var enable = $(".checkbox-list input[type=checkbox]:checked", $context.prev(".jurisdiction")).length === 1;
+//      $context.toggleClass("disabled", !enable);
+//      $(".all", $context).prop("disabled", true).prop("checked", true);
+//      $(".get-list", $context).removeClass("hidden");
+//      $(".get-list-button", $context).prop("disabled", !enable);
+//      $(".checkbox-list", $context).addClass("hidden").html("");
+//    };
+
+//    var onRecipientsListChange = function(event) {
+//      var $context = $(event.target).closest(".jurisdiction");
+//      // analyze list
+//      var checked = $(".checkbox-list input[type=checkbox]:checked", $context).length;
+//      var unchecked = $(".checkbox-list input[type=checkbox]:not(:checked)", $context).length;
+
+//      // update the all checkbox
+//      var $all = $(".all", $context);
+//      $all.prop("checked", unchecked === 0);
+
+//      // if exactly one selection, then enable next sibling selection
+//      // otherwise, clear any next sibling selection
+//      while (($context = $context.next(".jurisdiction")).length) {
+//        setJurisdictionList($context);
+//        if (checked === 1) break; // only continue if disabling
+//      }
+//    };
+
+//    var populateRecipientList = function($list, listitems) {
+//      var options = [];
+//      $.each(listitems, function(index, item) {
+//        options.push('<p class="sublabel" title="' + util.htmlEscape(item.Text) +
+//          '"><input type="checkbox" checked="checked" value="'
+//          + util.htmlEscape(item.Value) + '"/>' + util.htmlEscape(item.Text) + '</p>');
+//      });
+//      $list.html(options.join(''));
+//    };
+
+//    var onRecipientsCountiesGetListClick = function() {
+//      var $checkedBox = $(".jurisdiction.states .checkbox-list input:checked");
+//      if ($checkedBox.length === 1) {
+//        $(".jurisdiction.counties .get-list").addClass("hidden");
+//        util.ajax({
+//          url: "/Admin/WebService.asmx/GetCounties",
+//          data: {
+//             stateCode: $checkedBox.val()
+//          },
+
+//          success: function(result) {
+//            var $list = $(".jurisdiction.counties .checkbox-list");
+//            if (result.d.length) {
+//              populateRecipientList($list, result.d);
+//              $(".jurisdiction.counties .all").prop("disabled", false);
+//            } else {
+//              $list.html('<em>No county information is available</em>');
+//            }
+//            $list.removeClass("hidden");
+//          }
+//        });
+//      }
+//    };
+
+//    var onRecipientsLocalsGetListClick = function() {
+//      var $checkedBoxState = $(".jurisdiction.states .checkbox-list input:checked");
+//      var $checkedBoxCounty = $(".jurisdiction.counties .checkbox-list input:checked");
+//      if ($checkedBoxState.length === 1 && $checkedBoxCounty.length === 1) {
+//        $(".jurisdiction.locals .get-list").addClass("hidden");
+//        util.ajax({
+//          url: "/Admin/WebService.asmx/GetLocals",
+//          data: {
+//            stateCode: $checkedBoxState.val(),
+//            countyCode: $checkedBoxCounty.val()
+//          },
+
+//          success: function (result) {
+//            var $list = $(".jurisdiction.locals .checkbox-list");
+//            if (result.d.length) {
+//              populateRecipientList($list, result.d);
+//              $(".jurisdiction.locals .all").prop("disabled", false);
+//            } else {
+//              $list.html('<em>No local district information is available</em>');
+//            }
+//            $list.removeClass("hidden");
+//          }
+//        });
+//      }
+//    };
+
+    // View Recipients
+
+//    var initViewRecipients = function() {
+//      $("#tab-bulkemail-viewrecipients .current-list-results").safeBind("click", onClickListResults);
+//      $("#tab-bulkemail-viewrecipients .current-list-results").safeBind("dblclick", onDblClickListResults);
+//    };
+
+//    var getSelectedRecipientResult = function() {
+//      if (getRecipientsResults === null || getRecipientsResults.length === 0)
+//        return null;
+//      var selected = $("#tab-bulkemail-viewrecipients .current-list-results tr.selected");
+//      if (selected.length)
+//        return getRecipientsResults.Items[selected.index()];
+//      return getRecipientsResults.Items[0];
+//    };
+
+//    var getUnselectedRecipientIds = function () {
+//      var ids = [];
+//      $("#tab-bulkemail-viewrecipients .current-list-results tbody .css-checkbox").each(function (inx) {
+//        if (!$(this).hasClass("checked")) {
+//          ids.push(getRecipientsResults.Items[inx].Id);
+//        }
+//      });
+//      return ids;
+//    };
+
+//    var getSelectedRecipientCount = function () {
+//      return $("#tab-bulkemail-viewrecipients .current-list-results tbody .css-checkbox.checked").length;
+//    };
+
+//    var setRecipientsHeaderCheckbox = function () {
+//      var $context = $("#tab-bulkemail-viewrecipients .current-list-results");
+//      var $all = $("tbody .css-checkbox", $context);
+//      var $checked = $all.filter(".checked");
+//      var head = '<em>' + $checked.length + '</em> of <em>' + $all.length + '</em> email recipients are selected.';
+//      if (getRecipientsResults.Duplicates)
+//        head += ' <em>' + getRecipientsResults.Duplicates + '</em> duplicate emails were skipped.';
+//      $("thead .css-checkbox", $context).toggleClass("checked", $all.length === $checked.length);
+//      $("p.heading", $context).html(head);
+//    };
+
+//    var onClickListResults = function(event) {
+//      var $target = $(event.target);
+//      var $tr = $target.closest(".current-list-results tr");
+//      if ($tr.length)
+//        if (!$tr.hasClass("head")) {
+//          if ($target.hasClass("css-checkbox")) {
+//            $target.toggleClass("checked");
+//            setRecipientsHeaderCheckbox();
+//          } else {
+//            if ($tr.hasClass("selected"))
+//              $tr.removeClass("selected");
+//            else {
+//              $("tr.selected", $tr.closest("table")).removeClass("selected");
+//              $tr.addClass("selected");
+//            }
+//            setPreviewKeysToSelectedRecipient();
+//          }
+//        } else if ($target.hasClass("css-checkbox")) {
+//          $("tbody .css-checkbox").toggleClass("checked", !$target.hasClass("checked"));
+//          setRecipientsHeaderCheckbox();
+//        }
+//    };
+
+//    var onDblClickListResults = function(event) {
+//      var $tr = $(event.target).closest(".current-list-results tr");
+//      var $target = $(event.target);
+//      if ($tr.length && !$tr.hasClass("head") && !$target.hasClass("css-checkbox")) {
+//        $("tr.selected", $tr.closest("table")).removeClass("selected");
+//        $tr.addClass("selected");
+//        // Post the results to the preview page and go to it
+//        $("#tab-bulkemail-previewsample .preview-selected-recipient input[type=radio]").prop("checked", true);
+//        setPreviewKeysToSelectedRecipient();
+//        activateBulkEmailSubTab("previewsample");
+//      }
+//      util.clearSelection();
+//    };
+
+    // Preview Sample
+
+//    var previewEditor;
+
+//    var initPreviewSample = function() {
+//      var $context = $("#tab-bulkemail-previewsample");
+//      $(".preview-selected-recipient input", $context).prop("disabled", true);
+
+//      $(".state-dropdown", $context).safeBind("change",
+//        previewSampleStateDropdownChange);
+//      $(".county-dropdown", $context).safeBind("change",
+//        previewSampleCountyDropdownChange);
+//      $(".preview-source input", $context).safeBind("change",
+//        onChangePreviewSampleSource);
+//      $(".generate-preview-button", $context).safeBind("click",
+//        generateEmailPreview);
+
+//      previewEditor = ace.edit("preview-html");
+//      previewEditor.setPrintMarginColumn(-1);
+//      previewEditor.setTheme("ace/theme/votetemplate");
+//      previewEditor.setReadOnly(true);
+//      previewEditor.setShowPrintMargin(false);
+//      previewEditor.session.setMode("ace/mode/html");
+//      previewEditor.renderer.setShowGutter(false);
+//    };
+
+//    var onChangePreviewSampleSource = function() {
+//      setPreviewKeysToSelectedRecipient();
+//    };
+
+//    var setPreviewKeysToSelectedRecipient = function() {
+//      var $context = $("#tab-bulkemail-previewsample");
+//      if ($(".preview-source input[type=radio]:checked", $context).val() === "Selected") {
+//        var selected = getSelectedRecipientResult();
+//        if (selected) {
+//          $(".state-dropdown", $context).val(selected.StateCode);
+//          $(".county-dropdown", $context).val(selected.CountyCode);
+//          $(".local-dropdown", $context).val(selected.LocalCode);
+//          $(".contact-textbox", $context).val(selected.Contact).attr('title', selected.Contact);
+//          $(".email-textbox", $context).val(selected.Email).attr('title', selected.Email);
+//          $(".title-textbox", $context).val(selected.Title).attr('title', selected.Title);
+//          $(".phone-textbox", $context).val(selected.Phone).attr('title', selected.Phone);
+//        }
+//      }
+//    };
+
+//    var previewSampleStateDropdownChange = function() {
+//      var $context = $("#tab-bulkemail-previewsample");
+//      // remove entries from county & local
+//      var emptyList = '<option selected="selected" value="">&lt;none&gt;</option>';
+//      $(".county-dropdown", $context).html(emptyList);
+//      $(".local-dropdown", $context).html(emptyList);
+
+//      // populate the county dropdown
+//      util.ajax({
+//        url: "/Admin/WebService.asmx/GetCounties",
+//        data: {
+//          stateCode: $(".state-dropdown", $context).val()
+//        },
+
+//        success: function(result) {
+//          util.populateDropdown($('.county-dropdown', $context), result.d,
+//            '<none>', '', '');
+//        }
+//      });
+//    };
+
+//    var previewSampleCountyDropdownChange = function() {
+//      var $context = $("#tab-bulkemail-previewsample");
+//      // remove entries from local
+//      var emptyList = '<option selected="selected" value="">&lt;none&gt;</option>';
+//      $(".local-dropdown", $context).html(emptyList);
+
+//      // populate the local dropdown
+//      var data = {
+//        stateCode: $(".state-dropdown", $context).val(),
+//        countyCode: $(".county-dropdown", $context).val()
+//      };
+//      if (!data.countyCode) return;
+//      util.ajax({
+//        url: "/Admin/WebService.asmx/GetLocals",
+//        data: data,
+
+//        success: function(result) {
+//          util.populateDropdown($('.local-dropdown', $context), result.d,
+//            '<none>', '', '');
+//        }
+//      });
+//    };
+
+//    var generateEmailPreview = function() {
+//      var $context = $("#tab-bulkemail-previewsample");
+
+//      var data = {
+//        subjectTemplate: subjectEditor.getValue(),
+//        bodyTemplate: bodyEditor.getValue(),
+//        stateCode: $(".state-dropdown", $context).val(),
+//        countyCode: $(".county-dropdown", $context).val(),
+//        localCode: $(".local-dropdown", $context).val(),
+//        contact: $(".contact-textbox", $context).val(),
+//        email: $(".email-textbox", $context).val(),
+//        title: $(".title-textbox", $context).val(),
+//        phone: $(".phone-textbox", $context).val()
+//      };
+
+//      if (!$.trim(data.subjectTemplate) && !$.trim(data.bodyTemplate)) {
+//        util.alert("Both the subject and body templates are empty.");
+//        return;
+//      }
+
+//      util.openAjaxDialog("Creating preview...");
+//      util.ajax({
+//        url: "/Admin/WebService.asmx/SubtituteEmailTemplate",
+//        data: data,
+
+//        success: function(result) {
+//          // there could be a parse error
+//          if (result.d.ErrorMessage) {
+//            setPreviewError(result.d.ErrorMessage);
+//          } else {
+//            setPreviewSubject(result.d.Subject);
+//            setPreviewBody(result.d.Body);
+//          }
+//          util.closeAjaxDialog();
+//        },
+
+//        error: function(result) {
+//          util.alert(util.formatAjaxError(result, "Could not create preview"));
+//          util.closeAjaxDialog();
+//        }
+//      });
+//    };
+
+//    var setPreviewError = function(message) {
+//      var $context = $("#tab-bulkemail-previewsample");
+//      var html = '<p class="error-head">There was a problem parsing your template:</p>' +
+//        '<p class="error-message">' + util.htmlEscape(message) + '</p>';
+//      $(".error", $context).html(html).show();
+//      $(".sample-subject", $context).html(util.htmlEscape("<template parsing error>"));
+//      $("#tab-bulkemail-preview-rendered iframe", $context).contents().find('body').html("&nbsp;");
+//      previewEditor.setValue("");
+//      $("#preview-html", $context).hide();
+//    };
+
+//    var setPreviewBody = function(val) {
+//      var $context = $("#tab-bulkemail-previewsample");
+//      var iframeBody = $("#tab-bulkemail-preview-rendered iframe", $context).contents().find('body');
+//      iframeBody.html(val);
+//      $('a', iframeBody).attr("target", "_blank");
+//      $(".error", $context).hide();
+//      previewEditor.setValue(val);
+//      previewEditor.getSelection().selectFileStart();
+//      previewEditor.session.setUndoManager(new ace.UndoManager());
+//      $("#preview-html", $context).show();
+//    };
+
+//    var setPreviewSubject = function(val) {
+//      var $context = $("#tab-bulkemail-previewsample");
+//      val = util.htmlEscape($.trim(val) || "<none>");
+//      $(".sample-subject", $context).html(val);
+//    };
+
+    // Email Options
+
+//    var initEmailOptions = function () {
+//      $(".email-add-button").safeBind("click", onClickEmailAddButton);
+//    };
+
+//    var onClickEmailAddButton = function (event) {
+//      var $list = $(event.target).closest(".email-list");
+//      var $scroller = $(".scrolling-list", $list);
+//      var isRadio = $list.hasClass("radio");
+//      var name = util.getServerIdFromClientId($scroller[0].id);
+//      var $email = $("input[type=text]", $list);
+//      var email = $.trim($email.val());
+//      if (!email) return;
+//      if (!util.isValidEmail(email)) {
+//        $email.select();
+//        util.alert(email + " is not a valid email address",
+//        function() { $email.focus(); });
+//        return;
+//      }
+//      var labels = $("label", $scroller);
+//      var dup = false;
+//      var lctext = email.toLowerCase();
+//      $.each(labels, function () {
+//        if ($(this).text().toLowerCase() === lctext) {
+//          dup = true;
+//          return false;
+//        }
+//      });
+//      if (dup) {
+//        $email.select();
+//        util.alert(email + " is a duplicate email address",
+//        function () { $email.focus(); });
+//        return;
+//      }
+//      var currentCount = labels.length;
+
+//      var type = isRadio ? "radio" : "checkbox";
+//      var id = name + (currentCount + 1);
+//      var html = '<div class="tiptip" title="' + email + '">';
+//      html += '<input type="' + type + '" checked="checked" id="' + id + '" value="' + email + '"';
+//      if (isRadio) {
+//        name = $("input[type=radio]", $scroller).attr("name") || name;
+//        html += ' name="' + name + '"';
+//      }
+//      html += '/><label for="' + id + '">' + email + '</label>';
+//      html += '</div>';
+//      $scroller.append(html);
+//      $email.val("");
+//      util.initTipTip($(".scrolling-list", $list).children().last());
+//    };
+
+//    var getSelectedEmailsFromList = function($emailList) {
+//      var list = [];
+//      $('input:checked', $emailList).each(function () { list.push($(this).val()); });
+//      return list;
+//    };
+
+    //
+    // Send Emails
+    //
+
+//    var initSendEmails = function () {
+//      var $context = $("#tab-bulkemail-sendemails");
+//      $(".send-test-email-button", $context).safeBind("click", onClickSendTestEmailButton);
+//      $(".send-all-emails-button", $context).safeBind("click", onClickSendAllEmailsButton);
+//    };
+
+//    var onClickSendTestEmailButton = function () {
+//      switch ($("#tab-bulkemail-sendemails .test-email input[type=radio]:checked").val()) {
+//        case "Single":
+//          sendSingleTestEmail();
+//          break;
+
+//        case "All":
+//          sendAllTestEmails();
+//          break;
+//      }
+//    };
+
+//    var getBodyTemplate = function (data) {
+//      data.bodyTemplate = bodyEditor.getValue();
+//      if (!$.trim(data.bodyTemplate)) {
+//        util.alert('The template for the email body is empty.',
+//        function () {
+//          bodyEditor.focus();
+//        });
+//        activateBulkEmailSubTab("edittemplate");
+//        return false;
+//      }
+//      return true;
+//    };
+
+//    var getSubjectTemplate = function (data, restartFn, restartAt) {
+//      data.subjectTemplate = subjectEditor.getValue();
+
+//      if (!$.trim(data.subjectTemplate)) {
+//        util.confirm('The template for the email subject is empty.' +
+//          ' Do you want to continue?',
+//          function (button) {
+//            if (button === "Ok") {
+//              restartFn(data, restartAt);
+//            } else {
+//              activateBulkEmailSubTab("edittemplate");
+//              subjectEditor.focus();
+//            } 
+//          });
+//        return false;
+//      }
+
+//      return true;
+//    };
+
+//    var getPreviewOptions = function (data, restartFn, restartAt) {
+//      var $previewOptions = $('#tab-bulkemail-previewsample .options');
+//      data.stateCode = $('.state-dropdown', $previewOptions).val();
+//      data.countyCode = $('.county-dropdown', $previewOptions).val();
+//      data.localCode = $('.local-dropdown', $previewOptions).val();
+//      data.contact = $.trim($('.contact-textbox', $previewOptions).val());
+//      data.email = $.trim($('.email-textbox', $previewOptions).val());
+//      data.title = $.trim($('.title-textbox', $previewOptions).val());
+//      data.phone = $.trim($('.phone-textbox', $previewOptions).val());
+
+//      var missing = [];
+//      if (!data.contact) missing.push("no Contact Name");
+//      if (!data.email) missing.push("no Contact Email");
+
+//      if (missing.length > 0) {
+//        util.confirm("There is " + missing.join(" and ") +
+//          " in the Preview Sample. Do you want to continue?",
+//          function (button) {
+//            if (button === "Ok") {
+//              restartFn(data, restartAt);
+//            } else {
+//              activateBulkEmailSubTab("previewsample");
+//            } 
+//          });
+//        return false;
+//      }
+//      return true;
+//    };
+
+//    var getEmailOptions = function (data) {
+//      var from = getSelectedEmailsFromList($(".bulk-email-options-from"));
+//      if (!from.length) {
+//        util.alert('There is no "From" address selected.');
+//        activateBulkEmailSubTab("emailoptions");
+//        return false;
+//      }
+//      data.from = from[0];
+//      data.cc = getSelectedEmailsFromList($(".bulk-email-options-cc"));
+//      data.bcc = getSelectedEmailsFromList($(".bulk-email-options-bcc"));
+//      return true;
+//    };
+
+//    var getTestEmail = function (data, restartFn, restartAt) {
+//      data.to = getSelectedEmailsFromList($(".bulk-email-options-test-to"));
+
+//      if (!data.to.length) {
+//        util.confirm('There are no "Send Test To" addresses selected.' +
+//          ' Do you want to run the test with no emails sent?',
+//          function (button) {
+//            if (button === "Ok") {
+//              restartFn(data, restartAt);
+//            }
+//          });
+//        return false;
+//      }
+//      return true;
+//    };
+
+//    var getEmailBatchId = function (data) {
+//      if (!getRecipientsResults || !getSelectedRecipientCount()) {
+//        util.alert('No email recipients have been selected.');
+//        activateBulkEmailSubTab("selectrecipients");
+//        return false;
+//      }
+//      data.batchId = getRecipientsResults.BatchId;
+//      data.skip = getUnselectedRecipientIds();
+//      return true;
+//    };
+
+//    var sendSingleTestEmail = function(data, resume) {
+
+//      data = data || {};
+
+//      switch (resume || "") {
+//        case "":
+//          if (!getBodyTemplate(data)) return;
+//          if (!getSubjectTemplate(data, sendSingleTestEmail, "afterSubjectTemplate")) return;
+//        case "afterSubjectTemplate":
+//          if (!getPreviewOptions(data, sendSingleTestEmail, "afterPreviewOptions")) return;
+//        case "afterPreviewOptions":
+//          if (!getEmailOptions(data)) return;
+//          if (!getTestEmail(data, sendSingleTestEmail, "afterTestEmail")) return;
+//        case "afterTestEmail":
+//      }
+
+//      util.openAjaxDialog("Sending test email...");
+//      util.ajax({
+//        url: "/Admin/WebService.asmx/SendSingleTestEmailForJurisdictions",
+//        data: data,
+
+//        success: function (result) {
+//          util.closeAjaxDialog();
+//          // there could be a parse error
+//          if (result.d)
+//            util.alert('There was a problem parsing your template:\n' +
+//             util.htmlEscape(result.d));
+//          else {
+//            util.alert('The test email was sent.', 'Success');
+//          }
+//        },
+
+//        error: function (result) {
+//          util.closeAjaxDialog();
+//          util.alert(util.formatAjaxError(result, "The test email could not be sent"));
+//        }
+//      });
+//    };
+
+//    var sendAllTestEmails = function (data, resume) {
+
+//      data = data || {};
+
+//      switch (resume || "") {
+//        case "":
+//          if (!getEmailBatchId(data)) return;
+//          if (!getBodyTemplate(data)) return;
+//          if (!getSubjectTemplate(data, sendAllTestEmails, "afterSubjectTemplate")) return;
+//        case "afterSubjectTemplate":
+//          if (!getEmailOptions(data)) return;
+//          if (!getTestEmail(data, sendAllTestEmails, "afterTestEmail")) return;
+//        case "afterTestEmail":
+//      }
+
+//      util.openAjaxDialog("Sending test email batch...");
+//      util.ajax({
+//        url: "/Admin/WebService.asmx/SendTestEmailBatchForJurisdictions",
+//        data: data,
+
+//        success: function (result) {
+//          util.closeAjaxDialog();
+//          util.alert('The test email batch was processed:\n' + result.d.Sent +
+//           " sent\n" + result.d.Failed + " failed", result.d.Failed 
+//           ? "Partial Success" : "Success");
+//        },
+
+//        error: function (result) {
+//          util.closeAjaxDialog();
+//          util.alert(util.formatAjaxError(result, "The test email batch could not be sent"));
+//        }
+//      });
+//    };
+
+
+//    var onClickSendAllEmailsButton = function() {
+//      sendAllEmails();
+//    };
+
+//    var sendAllEmails = function (data, resume) {
+
+//      data = data || {};
+
+//      switch (resume || "") {
+//        case "":
+//          if (!getEmailBatchId(data)) return;
+//          if (!getBodyTemplate(data)) return;
+//          if (!getSubjectTemplate(data, sendAllEmails, "afterSubjectTemplate")) return;
+//        case "afterSubjectTemplate":
+//          if (!getEmailOptions(data)) return;
+//      }
+
+//      util.openAjaxDialog("Sending email batch...");
+//      util.ajax({
+//        url: "/Admin/WebService.asmx/SendEmailBatchForJurisdictions",
+//        data: data,
+
+//        success: function (result) {
+//          util.closeAjaxDialog();
+//          util.alert('The email batch was processed:\n' + result.d.Sent +
+//           " sent\n" + result.d.Failed + " failed", result.d.Failed
+//           ? "Partial Success" : "Success");
+//        },
+
+//        error: function (result) {
+//          util.closeAjaxDialog();
+//          util.alert(util.formatAjaxError(result, "The email batch could not be sent"));
+//        }
+//      });
+//    };
+
+    //
+    // Master only
+    //
+
+    var afterUpdateContainerMasterOnly = function() {
+      var active = $("#tab-masteronly .sub-tab-index").val() || 0;
+      $("#master-only-tabs").tabs(
+      {
+        show: 400,
+        active: active,
+        beforeActivate: onTabsBeforeActivateMasterOnlySubTab,
+        activate: function(event, ui) {
+          // save the current tab index to restore after update
+          $("#tab-masteronly .sub-tab-index")
+            .val($("#master-only-tabs").tabs("option", "active"));
+        }
+      });
+    };
+
+    var onTabsBeforeActivateMasterOnlySubTab = function (event, ui) {
+//      var oldContainer = $("#tab-masteronly .mc-container");
+//      var isChanged = monitor.isPanelsChanged(oldContainer);
+//      if (isChanged) {
+//        util.confirm("There are unsaved changes on the panel you are leaving.\n\n" +
+//          "Click OK to discard the changes and continue.\n" +
+//          "Click Cancel to return to the changed panel.",
+//          function (button) {
+//            if (button === "Ok") {
+//              monitor.undoPanels(oldContainer);
+//              $("#master-only-tabs").tabs("option", "active",
+//                util.getTabIndex("master-only-tabs", ui.newPanel[0].id));
+//            }
+//          });
+//        return false;
+//      }
+//      monitor.undoPanels(oldContainer);
+    };
+
+    //
+    // Misc
+    //
+
+    var initPage = function() {
+      monitor.registerCallback("afterUpdateContainer", afterUpdateContainer);
+      monitor.init();
+
+      util.safeBind($(".jurisdiction-change-button"), "click",
+        navigateJurisdiction.changeJurisdictionButtonClicked);
+
+      //initBulkEmail();
+
+      window.onbeforeunload = function() {
+        var changedGroups = monitor.getChangedGroupNames(true);
+        if (changedGroups.length > 0)
+          return "There are entries on your form that have not been submitted";
+        //else if (templateIsDirty())
+        //  return "There are unsaved changed to the bulk email template";
+      };
+
+      $$('main-tabs')
+        .safeBind("tabsbeforeactivate", onTabsBeforeActivate)
+        .safeBind("tabsactivate", onTabsActivate);
+
+      reloadPanel(util.getCurrentTabId("main-tabs"));
+    };
+
+    var onTabsActivate = function (event, ui) {
+      var newPanelId = ui.newPanel[0].id;
+      switch (newPanelId) {
+//        case "tab-bulkemail":
+//          if (util.getCurrentTabId("bulk-email-tabs") === "tab-bulkemail-edittemplate")
+//            focusedEditor.focus();
+//          break;
+
+        default:
+          reloadPanel(newPanelId);
+          break;
+      }
+    };
+
+    var onTabsBeforeActivate = function (event, ui) {
+      return monitor.tabsBeforeActivate(event, ui, "main-tabs");
+    };
+
+    var reloadPanel = function (id, option) {
+      if (!option) option = "reloading";
+      switch (id) {
+        case "tab-generalvoterinfo":
+        case "tab-primaryvoterinfo":
+        case "tab-electionauthority":
+        case "tab-masteronly":
+          $$(id + ' .reloading').val(option);
+          $$(id + ' input.update-button').addClass("reloading").click();
+          break;
+      }
+    };
+
+    // I N I T I A L I Z E
+
+    master.inititializePage({
+      callback: initPage
+    });
+  });

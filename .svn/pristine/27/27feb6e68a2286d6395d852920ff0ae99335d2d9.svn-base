@@ -1,0 +1,3751 @@
+using DB.Vote;
+
+namespace Vote
+{
+  /// <summary>
+  /// Summary description for sql.
+  /// </summary>
+  public static class sql
+  {
+    #region Domains Table
+
+    public static string Domains()
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " Domains.DomainServerName ";
+      sql += ",Domains.DomainDesignCode ";
+      sql += ",Domains.DomainDataCode ";
+      sql += ",Domains.DomainOrganizationCode ";
+      sql += " FROM Domains ";
+      sql += " ORDER BY Domains.DomainServerName";
+      return sql;
+    }
+
+    public static string Domains(string domainServerName)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " Domains.DomainServerName ";
+      sql += ",Domains.DomainDesignCode ";
+      sql += ",Domains.DomainDataCode ";
+      sql += ",Domains.DomainOrganizationCode ";
+      sql += " FROM Domains ";
+      sql += " WHERE Domains.DomainServerName = " + db.SQLLit(domainServerName);
+      return sql;
+    }
+
+    #endregion
+
+    #region Organizations Table
+
+    public static string OrganizationCodes()
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " Organizations.OrganizationCode ";
+      sql += ",Organizations.Organization ";
+      sql += ",Organizations.OrganizationURL ";
+      sql += ",Organizations.OrganizationEmail ";
+      sql += " FROM Organizations ";
+      sql += " ORDER BY Organizations.OrganizationCode";
+      return sql;
+    }
+
+    #endregion
+
+    #region Parties Table
+
+    public static string Parties()
+    {
+      var sql = string.Empty;
+      sql += "SELECT * FROM Parties ";
+      sql += " ORDER BY StateCode, PartyOrder,PartyName";
+      return sql;
+    }
+
+    public static string PartyKeyCheck(string partyKey)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " Parties.PartyKey ";
+      sql += " FROM Parties ";
+      sql += " WHERE Parties.PartyKey = " + db.SQLLit(partyKey);
+      return sql;
+    }
+
+    #endregion
+
+    #region States Table
+
+    public static string States_51()
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " StateCode ";
+      sql += " ,State ";
+      sql += " FROM States ";
+      sql += " WHERE StateCode != 'US' ";
+      sql += " AND StateCode != 'U1' ";
+      sql += " AND StateCode != 'U2' ";
+      sql += " AND StateCode != 'U3' ";
+      sql += " AND StateCode != 'U4' ";
+      sql += " AND StateCode != 'AS' ";
+      sql += " AND StateCode != 'GU' ";
+      sql += " AND StateCode != 'VI' ";
+      sql += " AND StateCode != 'PR' ";
+      sql += " AND StateCode != 'PP' ";
+      sql += " ORDER BY State";
+      return sql;
+    }
+
+    public static string States51Letters()
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " StateCode ";
+      sql += " ,State ";
+      sql += " ,Contact ";
+      sql += " ,ContactTitle ";
+      sql += " ,ElectionsAuthority ";
+      sql += " ,AddressLine1 ";
+      sql += " ,AddressLine2 ";
+      sql += " ,CityStateZip ";
+      sql += " FROM States ";
+      sql += " WHERE StateCode != 'US' ";
+      sql += " AND StateCode != 'U1' ";
+      sql += " AND StateCode != 'U2' ";
+      sql += " AND StateCode != 'U3' ";
+      sql += " AND StateCode != 'AS' ";
+      sql += " AND StateCode != 'GU' ";
+      sql += " AND StateCode != 'VI' ";
+      sql += " AND StateCode != 'PR' ";
+      sql += " AND StateCode != 'PP' ";
+      sql += " ORDER BY State";
+      return sql;
+    }
+
+    #endregion
+
+    #region Counties Table
+
+    public static string Counties(string stateCode)
+    {
+      var sql = string.Empty;
+      sql += " SELECT";
+      sql += " County";
+      sql += ",StateCode";
+      sql += ",CountyCode";
+      sql += " FROM Counties";
+      sql += " WHERE StateCode = " + db.SQLLit(stateCode);
+      sql += " ORDER BY County";
+      return sql;
+    }
+
+    #endregion
+
+    #region LocalDistricts Table
+
+    public static string LocalDistricts(string stateCode, string countyCode)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " LocalDistrict ";
+      sql += " ,StateCode ";
+      sql += " ,CountyCode ";
+      sql += " ,LocalCode ";
+      sql += " ,IsLocalDistrictTagForDeletion ";
+      sql += " FROM LocalDistricts ";
+      sql += " WHERE StateCode = " + db.SQLLit(stateCode);
+      sql += " AND CountyCode = " + db.SQLLit(countyCode);
+      sql += " AND LocalCode != '00'";
+      sql += " ORDER BY LocalDistrict ";
+      return sql;
+    }
+
+    #endregion
+
+    #region MultiCountyDistricts Table
+
+    public static string MultiCountyDistricts(string stateCode)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " StateCode ";
+      sql += " ,DistrictCode ";
+      sql += " ,DistrictCodeAlpha";
+      sql += " ,District ";
+      sql += " FROM MultiCountyDistricts ";
+      sql += " WHERE StateCode = " + db.SQLLit(stateCode);
+      sql += " ORDER BY DistrictCode";
+      return sql;
+    }
+
+    public static string MultiCountyDistricts(string stateCode, string districtCode,
+      string districtCodeAlpha)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " StateCode ";
+      sql += " ,DistrictCode ";
+      sql += " ,DistrictCodeAlpha";
+      sql += " ,District ";
+      sql += " FROM MultiCountyDistricts ";
+      sql += " WHERE StateCode = " + db.SQLLit(stateCode);
+      sql += " AND DistrictCode = " + db.SQLLit(districtCode);
+      sql += " AND DistrictCodeAlpha = " + db.SQLLit(districtCodeAlpha);
+      return sql;
+    }
+
+    #endregion
+
+    #region MultiCountyDistrictCounties Table
+
+    public static string
+      MultiCountyDistrictCounties4StateCodeMultiCountyDistrictCode(
+      string stateCode, string districtCode, string districtCodeAlpha)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " StateCode ";
+      sql += " ,DistrictCode ";
+      sql += " ,DistrictCodeAlpha ";
+      sql += " ,District";
+      sql += " ,CountyCode ";
+      sql += " FROM MultiCountyDistrictCounties ";
+      sql += " WHERE StateCode = " + db.SQLLit(stateCode);
+      sql += " AND DistrictCode = " + db.SQLLit(districtCode);
+      sql += " AND DistrictCodeAlpha = " + db.SQLLit(districtCodeAlpha);
+      return sql;
+    }
+
+    public static string MultiCountyDistrictCountiesDelete(string stateCode,
+      string districtCode, string districtCodeAlpha)
+    {
+      var sql = string.Empty;
+      sql += "DELETE FROM MultiCountyDistrictCounties";
+      sql += " WHERE StateCode = " + db.SQLLit(stateCode);
+      sql += " AND DistrictCode = " + db.SQLLit(districtCode);
+      sql += " AND DistrictCodeAlpha = " + db.SQLLit(districtCodeAlpha);
+      return sql;
+    }
+
+    #endregion
+
+    #region JudicialDistricts Table
+
+    public static string JudicialDistricts(string stateCode)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " StateCode ";
+      sql += " ,DistrictCode ";
+      sql += " ,DistrictCodeAlpha";
+      sql += " ,District ";
+      sql += " FROM JudicialDistricts ";
+      sql += " WHERE StateCode = " + db.SQLLit(stateCode);
+      sql += " ORDER BY DistrictCode,DistrictCodeAlpha";
+      return sql;
+    }
+
+    public static string JudicialDistricts(string stateCode, string districtCode,
+      string districtCodeAlpha)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " StateCode ";
+      sql += " ,DistrictCode ";
+      sql += " ,DistrictCodeAlpha";
+      sql += " ,District ";
+      sql += " FROM JudicialDistricts ";
+      sql += " WHERE StateCode = " + db.SQLLit(stateCode);
+      sql += " AND DistrictCode = " + db.SQLLit(districtCode);
+      sql += " AND DistrictCodeAlpha = " + db.SQLLit(districtCodeAlpha);
+      return sql;
+    }
+
+    #endregion
+
+    #region JudicialDistrictCounties
+
+    public static string JudicialDistrictCounties(string stateCode,
+      string districtCode, string districtCodeAlpha)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " StateCode";
+      sql += " ,DistrictCode";
+      sql += " ,DistrictCodeAlpha";
+      sql += " ,CountyCode ";
+      sql += " FROM JudicialDistrictCounties ";
+      sql += " WHERE StateCode = " + db.SQLLit(stateCode);
+      sql += " AND DistrictCode = " + db.SQLLit(districtCode);
+      sql += " AND DistrictCodeAlpha = " + db.SQLLit(districtCodeAlpha);
+      return sql;
+    }
+
+    public static string JudicialDistrictCounties_DELETE(string stateCode,
+      string judicialDistrictCode)
+    {
+      var sql = string.Empty;
+      sql += "DELETE FROM JudicialDistrictCounties";
+      sql += " WHERE StateCode = " + db.SQLLit(stateCode);
+      sql += " AND DistrictCode = " + db.SQLLit(judicialDistrictCode);
+      return sql;
+    }
+
+    #endregion
+
+    #region OfficesOfficials
+
+    public static string OfficesOfficials_Office_Politician(string officeKey,
+      string politicianKey)
+    {
+      var sql = string.Empty;
+      sql += "SELECT ";
+      sql += " OfficesOfficials.PoliticianKey";
+      sql += " ,OfficesOfficials.OfficeKey";
+      sql += " ,OfficesOfficials.RunningMateKey";
+      sql += " ,Politicians.PartyKey";
+      sql += " FROM OfficesOfficials,Politicians";
+      sql += " WHERE OfficesOfficials.OfficeKey = " + db.SQLLit(officeKey);
+      sql += " AND OfficesOfficials.PoliticianKey = " + db.SQLLit(politicianKey);
+      sql += " AND OfficesOfficials.PoliticianKey = Politicians.PoliticianKey";
+      sql += " ORDER BY OfficesOfficials.PoliticianKey";
+      return sql;
+    }
+
+    public static string OfficesOfficials_Select(string officeKey)
+    {
+      var sql = string.Empty;
+      sql += "SELECT ";
+      sql += " OfficesOfficials.PoliticianKey";
+      sql += " ,OfficesOfficials.OfficeKey";
+      sql += " ,OfficesOfficials.RunningMateKey";
+      sql += " ,Politicians.PartyKey";
+      sql += " FROM OfficesOfficials,Politicians";
+      sql += " WHERE OfficesOfficials.OfficeKey = " + db.SQLLit(officeKey);
+      sql += " AND OfficesOfficials.PoliticianKey = Politicians.PoliticianKey";
+      sql += " ORDER BY OfficesOfficials.PoliticianKey";
+      return sql;
+    }
+
+    #endregion
+
+    #region Elections Table
+
+    public static string Elections_Upcoming_Viewable_G_O_S_P(string stateCode)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " ElectionKey";
+      sql += " ,StateCode ";
+      sql += " ,ElectionDate ";
+      sql += " ,ElectionDesc ";
+      sql += " ,IsViewable ";
+      sql += " FROM Elections ";
+      sql += " WHERE StateCode = " + db.SQLLit(stateCode);
+      sql +=
+        " AND ((ElectionType = 'G') OR (ElectionType = 'O') OR (ElectionType = 'S') OR (ElectionType = 'P'))";
+      sql += " AND CountyCode = '' ";
+      sql += " AND IsViewable = 1";
+      //sql += " AND ElectionDate >= '" + DateTime.Today.Date + "'";
+      sql += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+      sql += " ORDER BY ElectionDate ASC,Elections.NationalPartyCode ASC";
+      return sql;
+    }
+
+    #endregion
+
+    #region ElectionsOffices, Offices Tables
+
+    public static string Elections_Offices_Text_File(string electionKey)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " ElectionsOffices.ElectionKey ";
+      sql += " ,Offices.OfficeKey ";
+      sql += " ,Offices.StateCode ";
+      sql += " ,Offices.OfficeLine1 ";
+      sql += " ,Offices.OfficeLine2 ";
+      sql += " ,Offices.OfficeLevel ";
+      sql += " ,Offices.IsRunningMateOffice ";
+      sql += " FROM ElectionsOffices,Offices ";
+      sql += " WHERE ElectionsOffices.OfficeKey = Offices.OfficeKey";
+      sql += " AND ElectionsOffices.ElectionKey = " + db.SQLLit(electionKey);
+      sql += " AND Offices.OfficeLevel <= " +
+        OfficeClass.StateDistrictMultiCounties.ToInt();
+      sql += " ORDER BY Offices.OfficeLevel";
+      sql += ",Offices.DistrictCode";
+      sql += ",Offices.DistrictCodeAlpha";
+      sql += ",Offices.OfficeOrderWithinLevel";
+      return sql;
+    }
+
+    #endregion
+
+    #region ElectionsPoliticians SELECT
+
+    public static string Elections_Politicians_Office_DESC(string electionKey,
+      string officeKey)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      //sql += " ElectionsPoliticians.Election";
+      sql += " ElectionsPoliticians.ElectionKey";
+      sql += " ,ElectionsPoliticians.ElectionKeyState";
+      sql += " ,ElectionsPoliticians.ElectionKeyFederal";
+      sql += " ,ElectionsPoliticians.PoliticianKey";
+      sql += " ,ElectionsPoliticians.RunningMateKey";
+      sql += " ,ElectionsPoliticians.StateCode";
+      sql += " ,ElectionsPoliticians.OfficeKey";
+      sql += " ,ElectionsPoliticians.OrderOnBallot";
+      sql += " FROM ElectionsPoliticians ";
+      sql += " WHERE ElectionsPoliticians.ElectionKey = " + db.SQLLit(electionKey);
+      sql += " AND ElectionsPoliticians.OfficeKey = " + db.SQLLit(officeKey);
+      sql += " ORDER BY OrderOnBallot DESC";
+      return sql;
+    }
+
+    #endregion
+
+    #region Election Reports
+
+    public static string Candidates4Letters(string electionKey, string officeKey)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " ElectionsPoliticians.PoliticianKey ";
+      sql += " ,ElectionsPoliticians.RunningMateKey ";
+      //sql += " ,ElectionsPoliticians.IsIncumbent ";
+      sql += " ,ElectionsPoliticians.OrderOnBallot ";
+      sql += " ,ElectionsPoliticians.StateCode ";
+      sql += " ,ElectionsPoliticians.OfficeKey ";
+      sql += " ,Politicians.Password ";
+      //sql += " ,Politicians.PoliticianName ";
+      sql += " ,Politicians.FName ";
+      sql += " ,Politicians.MName ";
+      sql += " ,Politicians.LName ";
+      sql += " ,Politicians.Suffix ";
+      sql += " ,Politicians.AddOn ";
+      sql += " ,Politicians.Nickname ";
+      sql += " ,Politicians.PartyKey ";
+      sql += " ,Politicians.LDSPartyCode ";
+      sql += " ,Politicians.EmailAddr ";
+      sql += " ,Politicians.StateEmailAddr ";
+      sql += " ,Politicians.LDSEmailAddr ";
+      sql += " ,Politicians.WebAddr ";
+      sql += " ,Politicians.StateWebAddr ";
+      sql += " ,Politicians.LDSWebAddr ";
+      sql += " ,Politicians.Phone ";
+      sql += " ,Politicians.StatePhone ";
+      sql += " ,Politicians.LDSPhone ";
+      sql += " ,Politicians.Address ";
+      sql += " ,Politicians.CityStateZip ";
+      sql += " ,Politicians.StateAddress ";
+      sql += " ,Politicians.StateCityStateZip ";
+      sql += " ,Politicians.LDSAddress ";
+      sql += " ,Politicians.LDSCityStateZip ";
+      sql += " ,Politicians.CampaignName ";
+      sql += " ,Politicians.CampaignAddr ";
+      sql += " ,Politicians.CampaignCityStateZip ";
+      sql += " ,Politicians.DataUpdatedCount ";
+      sql += " FROM ElectionsPoliticians,Politicians ";
+      sql +=
+        " WHERE ElectionsPoliticians.PoliticianKey = Politicians.PoliticianKey ";
+      //			sql += " AND Politicians.OfficeKey = ElectionsPoliticians.OfficeKey ";
+      sql += " AND ElectionsPoliticians.ElectionKey = " + db.SQLLit(electionKey);
+      sql += " AND ElectionsPoliticians.OfficeKey = " + db.SQLLit(officeKey);
+      sql += " ORDER BY ElectionsPoliticians.OrderOnBallot";
+      sql += " ,Politicians.LName";
+      sql += " ,Politicians.FName";
+      return sql;
+    }
+
+    #endregion
+
+    #region Issues Table
+
+    public static string Issue(string issueKey)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " IssueKey ";
+      sql += " ,Issue ";
+      sql += " ,IssueOrder ";
+      sql += " ,IsIssueOmit ";
+      //sql += " ,IsIssueTagForDeletion ";
+      sql += " FROM Issues ";
+      sql += " WHERE IssueKey = " + db.SQLLit(issueKey);
+      return sql;
+    }
+
+    public static string IssuesAtLevelAll(string issueLevel, string stateCode)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " IssueKey ";
+      sql += " ,Issue ";
+      sql += " ,IssueOrder ";
+      sql += " ,IsIssueOmit ";
+      //sql += " ,xIsIssueTagForDeletion ";
+      sql += " FROM Issues ";
+      sql += " WHERE StateCode = " + db.SQLLit(stateCode);
+      sql += " AND IssueLevel = " + db.SQLLit(issueLevel);
+      sql += " ORDER BY IssueOrder";
+      return sql;
+    }
+
+    #endregion
+
+    #region Questions Table
+
+    public static string Questions4IssueAnyStatus(string issueKey)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " Questions.QuestionKey ";
+      sql += " ,Questions.Question ";
+      sql += " ,Questions.QuestionOrder ";
+      sql += " ,Questions.IsQuestionOmit ";
+      //sql += " ,Questions.xIsQuestionTagForDeletion ";
+      sql += " FROM Questions ";
+      sql += " WHERE Questions.IssueKey = " + db.SQLLit(issueKey);
+      sql += " ORDER BY Questions.QuestionOrder";
+      return sql;
+    }
+
+    public static string CandidateQuestions4IssueAll(string issueKey)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " Questions.QuestionKey ";
+      sql += " ,Questions.Question ";
+      sql += " ,Questions.IsQuestionOmit ";
+      //sql += " ,Questions.xIsQuestionTagForDeletion ";
+      sql += " FROM Questions ";
+      sql += " WHERE Questions.IssueKey = " + db.SQLLit(issueKey);
+      sql += " ORDER BY Questions.QuestionOrder";
+      return sql;
+    }
+
+    public static string Question4Issue2Delete(string issueKey)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " QuestionKey ";
+      sql += " ,Question ";
+      //sql += " ,xIsQuestionTagForDeletion ";
+      sql += " FROM Questions ";
+      sql += " WHERE IssueKey = " + db.SQLLit(issueKey);
+      //sql += " AND xIsQuestionTagForDeletion = 1";
+      sql += " ORDER BY QuestionOrder";
+      return sql;
+    }
+
+    #endregion
+
+    #region Answers Tables
+
+    public static string Answers4Politician(string politicianKey)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " Answers.PoliticianKey ";
+      sql += " ,Answers.QuestionKey ";
+      sql += " ,Answers.StateCode ";
+      sql += " ,Answers.IssueKey ";
+      sql += " ,Answers.Answer ";
+      //sql += " ,Answers.AnswerLength ";
+      sql += " ,Answers.Source ";
+      sql += " ,Answers.DateStamp ";
+      sql += " ,Answers.UserName ";
+      sql += " FROM Answers";
+      sql += " WHERE PoliticianKey = " + db.SQLLit(politicianKey);
+      sql += " ORDER BY DateStamp DESC";
+      return sql;
+    }
+
+    public static string Answers4Question(string questionKey)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " Answers.QuestionKey ";
+      sql += ",Answers.PoliticianKey ";
+      sql += " FROM Answers ";
+      sql += " WHERE Answers.QuestionKey = " + db.SQLLit(questionKey);
+      return sql;
+    }
+
+    #endregion
+
+    #region ELECTED OFFICIALS for 1 Office (for both Ballots and Reports)
+
+    public static string Politicians1Office(string officeKey)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " Politicians.PoliticianKey ";
+      //sql += " ,Politicians.PoliticianName ";
+      sql += " ,Politicians.FName ";
+      sql += " ,Politicians.MName ";
+      sql += " ,Politicians.Nickname ";
+      sql += " ,Politicians.LName ";
+      sql += " ,Politicians.Suffix ";
+      sql += " ,Politicians.AddOn ";
+      sql += " ,Politicians.PartyKey ";
+      sql += " ,Politicians.LDSPartyCode ";
+      sql += " ,Politicians.EmailAddr ";
+      sql += " ,Politicians.StateEmailAddr ";
+      sql += " ,Politicians.LDSEmailAddr ";
+      sql += " ,Politicians.WebAddr ";
+      sql += " ,Politicians.StateWebAddr ";
+      sql += " ,Politicians.LDSWebAddr ";
+      sql += " ,Politicians.Phone ";
+      sql += " ,Politicians.StatePhone ";
+      sql += " ,Politicians.LDSPhone ";
+      sql += " ,Politicians.Address ";
+      sql += " ,Politicians.CityStateZip ";
+      sql += " ,Politicians.StateAddress ";
+      sql += " ,Politicians.StateCityStateZip ";
+      sql += " ,Politicians.LDSAddress ";
+      sql += " ,Politicians.LDSCityStateZip ";
+      sql += " ,Offices.OfficeKey ";
+      sql += " ,Offices.StateCode ";
+      sql += " ,Offices.OfficeLine1 ";
+      sql += " ,Offices.OfficeLine2 ";
+      sql += " ,Offices.OfficeLevel ";
+      sql += " ,Offices.IsRunningMateOffice ";
+      sql += " ,OfficesOfficials.RunningMateKey ";
+      sql += " ,States.State ";
+      sql += " FROM OfficesOfficials,Politicians,Offices,States ";
+      sql += " WHERE OfficesOfficials.OfficeKey = " + db.SQLLit(officeKey);
+      sql += " AND OfficesOfficials.PoliticianKey = Politicians.PoliticianKey ";
+      sql += " AND OfficesOfficials.OfficeKey = Offices.OfficeKey ";
+      sql += " AND OfficesOfficials.StateCode = States.StateCode ";
+      sql += " ORDER BY AddOn,Politicians.LName,Politicians.FName";
+      return sql;
+    }
+
+    #endregion
+
+    #region Table Row
+
+    //=========================================================
+    // State Politicians List Reports BELOW
+    //=========================================================
+
+    public static string RowPolitician(string politicianKey)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " Politicians.PoliticianKey ";
+      sql += " ,Politicians.Password ";
+      sql += " ,Politicians.PasswordHint ";
+      sql += " ,Politicians.TemporaryOfficeKey ";
+      sql += " ,Politicians.StateCode ";
+      sql += " ,Politicians.FName ";
+      sql += " ,Politicians.MName ";
+      sql += " ,Politicians.LName ";
+      sql += " ,Politicians.Suffix ";
+      sql += " ,Politicians.AddOn ";
+      sql += " ,Politicians.Nickname ";
+      sql += " ,Politicians.EmailAddr ";
+      sql += " ,Politicians.StateEmailAddr ";
+      sql += " ,Politicians.LastEmailCode ";
+      sql += " ,Politicians.WebAddr ";
+      sql += " ,Politicians.StateWebAddr ";
+      sql += " ,Politicians.Phone ";
+      sql += " ,Politicians.StatePhone ";
+      sql += " ,Politicians.Gender ";
+      sql += " ,Politicians.PartyKey ";
+      sql += " ,Politicians.Address ";
+      sql += " ,Politicians.CityStateZip ";
+      sql += " ,Politicians.StateAddress ";
+      sql += " ,Politicians.StateCityStateZip ";
+      sql += " ,Politicians.CampaignAddr ";
+      sql += " ,Politicians.CampaignPhone ";
+      sql += " ,Politicians.LDSStateCode ";
+      sql += " ,Politicians.LDSTypeCode ";
+      sql += " ,Politicians.LDSDistrictCode ";
+      sql += " ,Politicians.LDSLegIDNum ";
+      sql += " ,Politicians.LDSPoliticianName ";
+      sql += " ,Politicians.LDSEmailAddr ";
+      sql += " ,Politicians.LDSWebAddr ";
+      sql += " ,Politicians.LDSPhone ";
+      sql += " ,Politicians.LDSGender ";
+      sql += " ,Politicians.LDSPartyCode ";
+      sql += " ,Politicians.LDSAddress ";
+      sql += " ,Politicians.LDSCityStateZip ";
+      sql += " ,Politicians.LDSVersion ";
+      sql += " FROM Politicians ";
+      sql += " WHERE Politicians.PoliticianKey = " + db.SQLLit(politicianKey);
+      return sql;
+    }
+
+    #endregion
+
+    #region /Master/USDefault.aspx  /Master/NationalElections.aspx /Admin/Default.aspx - /Admin/Election.aspx
+
+    public static string ElectionsUpcoming(string federalCodeOrStateCode)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " Elections.ElectionKey ";
+      sql += " ,Elections.StateCode ";
+      sql += " ,Elections.ElectionDate ";
+      sql += " ,Elections.ElectionDesc ";
+      sql += " ,Elections.IsViewable ";
+      sql += " FROM Elections ";
+      sql += " WHERE Elections.ElectionDate >= " + db.SQLLit(Db.DbToday);
+      sql += " AND Elections.StateCode = " + db.SQLLit(federalCodeOrStateCode);
+      sql += " ORDER BY Elections.ElectionDate DESC";
+      return sql;
+    }
+
+    public static string ElectionsUpcomingCountyLocal(string stateCode,
+      string countyCode)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " Elections.ElectionKey ";
+      sql += " ,Elections.StateCode ";
+      sql += " ,Elections.ElectionDate ";
+      sql += " ,Elections.ElectionDesc ";
+      sql += " ,Elections.IsViewable ";
+      sql += " FROM Elections ";
+      sql += " WHERE Elections.ElectionDate >= " + db.SQLLit(Db.DbToday);
+      sql += " AND Elections.StateCode = " + db.SQLLit(stateCode);
+      sql += " AND Elections.CountyCode = " + db.SQLLit(countyCode);
+      sql += " ORDER BY Elections.ElectionDate DESC";
+      return sql;
+    }
+
+    #endregion
+
+    #region /Master/MgtReports.aspx (needs to be modified to eliminate Politicians.OfficeKey)
+
+    public static string ElectedRepresentatives(int officeClass)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " Offices.StateCode";
+      sql += ",Offices.OfficeLine1";
+      sql += ",Offices.OfficeLine2";
+      sql += ",Politicians.FName";
+      sql += ",Politicians.MName";
+      sql += ",Politicians.LName";
+      sql += ",Politicians.Suffix";
+      sql += ",Politicians.AddOn";
+      sql += ",Politicians.Nickname";
+      sql += ",Politicians.PoliticianKey";
+      sql += " FROM Offices,Politicians";
+      sql += " WHERE Offices.OfficeKey = Politicians.TemporaryOfficeKey";
+      sql += " AND Offices.Officelevel = " + officeClass;
+      sql += " ORDER BY Offices.StateCode";
+      //sql += ",CONVERT(int,Offices.DistrictCode)";
+      sql += "Offices.DistrictCode";
+      return sql;
+    }
+
+    public static string ElectionPoliticians(string electionKey)
+      //(needs to be modified to eliminate Politicians.TemporaryOfficeKey)
+    {
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " Offices.StateCode";
+      sql += ",Offices.OfficeLine1";
+      sql += ",Offices.OfficeLine2";
+      sql += ",Politicians.FName";
+      sql += ",Politicians.MName";
+      sql += ",Politicians.LName";
+      sql += ",Politicians.Suffix";
+      sql += ",Politicians.AddOn";
+      sql += ",Politicians.Nickname";
+      sql += ",Politicians.GeneralStatement";
+      sql += ",Politicians.Personal";
+      sql += ",Politicians.Education";
+      sql += ",Politicians.Profession";
+      sql += ",Politicians.Military";
+      sql += ",Politicians.Civic";
+      sql += ",Politicians.Political";
+      sql += ",Politicians.Religion";
+      sql += ",Politicians.Accomplishments";
+      sql += ",Politicians.DataLastUpdated";
+      sql += ",Politicians.DatePictureUploaded";
+      sql += ",ElectionsPoliticians.PoliticianKey";
+      sql += " FROM ElectionsPoliticians,Politicians,Offices";
+      sql += " WHERE ElectionsPoliticians.ElectionKey = " + db.SQLLit(electionKey);
+      sql += " AND Politicians.PoliticianKey = ElectionsPoliticians.PoliticianKey";
+      sql += " AND Offices.OfficeKey = Politicians.TemporaryOfficeKey";
+      sql += " ORDER BY ElectionsPoliticians.PoliticianKey";
+      return sql;
+    }
+
+    public static string MasterUsers()
+    {
+      const string sql = " SELECT UserName" + " FROM Security" +
+        " WHERE UserSecurity = 'MASTER'" + " ORDER BY UserName";
+      return sql;
+    }
+
+    #endregion
+
+    #region Dead code
+
+    //public static string ElectionsUpcomingTemp()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionDate";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,PartyCode ";
+    //  SQL += " FROM ElectionsUpcomingTemp ";
+    //  SQL += " ORDER BY ElectionDate,StateCode ASC";
+    //  return SQL;
+    //}
+    //public static string ElectionsUpcomingByStateTemp()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionDate";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,PartyCode ";
+    //  SQL += " FROM ElectionsUpcomingTemp ";
+    //  SQL += " ORDER BY StateCode ASC,PartyCode ";
+    //  return SQL;
+    //}
+    //#region /Admin/TownsLocalsDefault.asp
+    //public static string xLocalDistrictsInCounty(
+    //  string StateCode
+    //  , string CountyCode
+    //  )
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " LocalDistrict ";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,CountyCode ";
+    //  SQL += " ,LocalCode ";
+    //  SQL += " ,IsLocalDistrictTagForDeletion ";
+    //  SQL += " FROM LocalDistricts ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = " + db.SQLLit(CountyCode);
+    //  SQL += " ORDER BY LocalDistrict ";
+    //  return SQL;
+    //}
+    //#endregion
+
+    //public static string xInsertTimingLog(int Milliseconds, string Task)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "INSERT INTO LogTimings (";
+    //  SQL += "DateStamp";
+    //  SQL += ",Milliseconds";
+    //  SQL += ",Task";
+    //  SQL += ")";
+    //  SQL += " VALUES(";
+    //  SQL += db.SQLLit(Db.DbNow);
+    //  SQL += "," + Milliseconds.ToString();
+    //  SQL += "," + db.SQLLit(Task);
+    //  SQL += ")";
+    //  return SQL;
+    //}
+    //#region DateTime
+    ////DateTime date1 = DateTime.Today;
+    ////DateTime date2 = DateTime.Today.Date;
+    ////DateTime date3 = DateTime.Today.AddHours(5);
+    ////DateTime date4 = DateTime.Today.AddDays(-30);
+    ////private static int DaysAfterUpcomingElection2KeepShowing = -30;//needs to be negative because AddDays is used
+    //#endregion
+
+    //#region templates
+    //public static string Template1(string xxxx, int yyyyy)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Table1.Col ";
+    //  SQL += " ,Table1.Col ";
+    //  SQL += " ,Table1.Col ";
+    //  SQL += " FROM Table1 ";
+    //  SQL += " WHERE Table1.Col = " + db.SQLLit("zzzz");
+    //  SQL += " AND Table1.Col = " + db.SQLLit("zzzz");
+    //  SQL += " ORDER BY Table1.Col";
+    //  SQL += " ,Table1.Col";
+    //  return SQL;
+    //}
+    //public static string Template2(string xxxx, int yyyyy)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Table1.Col,Table2.Col ";
+    //  SQL += " ,Table1.Col,Table2.Col ";
+    //  SQL += " ,Table1.Col,Table2.Col ";
+    //  SQL += " FROM Table1,Table2 ";
+    //  SQL += " WHERE Table1.Col = " + db.SQLLit("zzzz");
+    //  SQL += " AND Table1.Col = Table2.Col ";
+    //  SQL += " AND Table1.Col = Table2.Col ";
+    //  SQL += " AND Table1.Col = Table2.Col ";
+    //  SQL += " ORDER BY Table1.Col";
+    //  SQL += " ,Table1.Col";
+    //  return SQL;
+    //}
+    //#endregion
+
+    //#region NavBar
+    //public static string NavBarStateElections(string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,ElectionDate";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " AND CountyCode = ''";
+    //  SQL += " ORDER BY ElectionDate DESC";
+    //  return SQL;
+    //}
+    //#endregion
+
+    //#region Cache Table
+    //#endregion
+
+    //#region Ballots Table
+    //public static string Ballot(string StateCode, string USHouseCode, string StateSenateCode, string StateHouseCode, string CountyCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " StateCode";
+    //  SQL += ",USHouseCode";
+    //  SQL += ",StateSenateCode";
+    //  SQL += ",StateHouseCode";
+    //  SQL += ",CountyCode";
+    //  SQL += " FROM Ballots ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND USHouseCode = " + db.SQLLit(USHouseCode);
+    //  SQL += " AND StateSenateCode = " + db.SQLLit(StateSenateCode);
+    //  SQL += " AND StateHouseCode = " + db.SQLLit(StateHouseCode);
+    //  SQL += " AND CountyCode = " + db.SQLLit(CountyCode);
+    //  return SQL;
+    //}
+    //public static string Ballots4All()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT";
+    //  SQL += " StateCode";
+    //  SQL += ",USHouseCode";
+    //  SQL += ",StateSenateCode";
+    //  SQL += ",StateHouseCode";
+    //  SQL += ",CountyCode";
+    //  SQL += " FROM Ballots ";
+    //  SQL += " ORDER BY USHouseCode,StateSenateCode,StateHouseCode,CountyCode";
+    //  return SQL;
+    //}
+    //#endregion
+    //public static string DomainDataCode4DomainDesignCode(string DomainDesignCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Domains.DomainDataCode ";
+    //  SQL += " FROM Domains ";
+    //  SQL += " WHERE Domains.DomainDesignCode = " + db.SQLLit(DomainDesignCode);
+    //  SQL += " ORDER BY Domains.DomainServerName DESC ";
+    //  return SQL;
+    //}
+
+    //#region Security Table
+    //#endregion Security Table
+
+    //#region DomainDesigns Table
+    //public static string DesignCodes()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " DomainDesignCode ";
+    //  SQL += " FROM DomainDesigns ";
+    //  SQL += " ORDER BY DomainDesignCode";
+    //  return SQL;
+    //}
+    //#endregion
+
+    //public static string States_StateCodes()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT";
+    //  SQL += " StateCode";
+    //  SQL += " FROM States ";
+    //  SQL += " WHERE StateCode != 'US'";
+    //  SQL += " AND StateCode != 'U1'";
+    //  SQL += " AND StateCode != 'U2'";
+    //  SQL += " AND StateCode != 'U3'";
+    //  SQL += " AND StateCode != 'AS'";
+    //  SQL += " AND StateCode != 'GU'";
+    //  SQL += " AND StateCode != 'VI'";
+    //  SQL += " AND StateCode != 'PR'";
+    //  SQL += " ORDER BY State";
+    //  return SQL;
+    //}
+
+    //public static DataTable Table_States_StateCodes()
+    //{
+    //  return db.Table(sql.States_StateCodes());
+    //}
+
+    //public static string States514BOELinks()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " URL ";
+    //  SQL += " ,State ";
+    //  SQL += " FROM States ";
+    //  SQL += " WHERE StateCode != 'US' ";
+    //  SQL += " AND StateCode != 'U1' ";
+    //  SQL += " AND StateCode != 'U2' ";
+    //  SQL += " AND StateCode != 'U3' ";
+    //  SQL += " AND StateCode != 'AS' ";
+    //  SQL += " AND StateCode != 'GU' ";
+    //  SQL += " AND StateCode != 'VI' ";
+    //  SQL += " AND StateCode != 'PR' ";
+    //  SQL += " ORDER BY State";
+    //  return SQL;
+    //}
+    //public static string States514Emails()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " StateCode ";
+    //  SQL += " ,State ";
+    //  SQL += " ,Contact ";
+    //  SQL += " ,ContactEmail ";
+    //  SQL += " ,AltContact ";
+    //  SQL += " ,AltEMail ";
+    //  SQL += " FROM States ";
+    //  SQL += " WHERE StateCode != 'US' ";
+    //  SQL += " AND StateCode != 'U1' ";
+    //  SQL += " AND StateCode != 'U2' ";
+    //  SQL += " AND StateCode != 'U3' ";
+    //  SQL += " AND StateCode != 'AS' ";
+    //  SQL += " AND StateCode != 'GU' ";
+    //  SQL += " AND StateCode != 'VI' ";
+    //  SQL += " AND StateCode != 'PR' ";
+    //  SQL += " ORDER BY State";
+    //  return SQL;
+    //}
+
+    //public static string State(string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " StateCode ";
+    //  SQL += " ,State ";
+    //  SQL += " FROM States ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  return SQL;
+    //}
+    ////LDSStateCode
+    //public static string States_LDS(string LDSStateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " StateCode ";
+    //  SQL += " ,State ";
+    //  SQL += " FROM States ";
+    //  SQL += " WHERE LDSStateCode = " + db.SQLLit(LDSStateCode);
+    //  return SQL;
+    //}
+
+    //public static string Counties(string StateCode, string County)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " County ";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,CountyCode ";
+    //  SQL += " FROM Counties ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND County = " + db.SQLLit(County);
+    //  return SQL;
+    //}
+
+    //public static string xReReferendums(string ElectionKey, string ReferendumKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Referendums.ReferendumKey ";
+    //  SQL += " FROM Referendums ";
+    //  SQL += " WHERE Referendums.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND Referendums.OfficeKey = " + db.SQLLit(ReferendumKey);
+    //  return SQL;
+    //}
+
+    //public static string xReferendums4ElectionKeyShowAll(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Referendums.ElectionKey ";
+    //  SQL += " ,Referendums.ReferendumKey";
+    //  SQL += " ,Referendums.ReferendumTitle ";
+    //  SQL += " ,Referendums.ReferendumDesc ";
+    //  SQL += " ,Referendums.OrderOnBallot";
+    //  SQL += " ,Referendums.IsReferendumTagForDeletion";
+    //  SQL += " FROM Referendums ";
+    //  SQL += " WHERE Referendums.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " ORDER BY OrderOnBallot ASC";
+    //  return SQL;
+    //}
+
+    //public static string xReferendums4ElectionKey(string ElectionKey, string Order)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Referendums.ElectionKey ";
+    //  SQL += " ,Referendums.ReferendumKey";
+    //  SQL += " ,Referendums.ReferendumTitle ";
+    //  SQL += " ,Referendums.ReferendumDesc ";
+    //  SQL += " ,Referendums.OrderOnBallot";
+    //  SQL += " ,Referendums.IsReferendumTagForDeletion";
+    //  SQL += " FROM Referendums ";
+    //  SQL += " WHERE Referendums.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " ORDER BY OrderOnBallot " + Order;
+    //  return SQL;
+    //}
+    //public static string ReferendumsDelete(string ElectionKey, string ReferendumKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "DELETE FROM Referendums";
+    //  SQL += " WHERE ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ReferendumKey = " + db.SQLLit(ReferendumKey);
+    //  return SQL;
+    //}
+    //public static string Referendums4Ballot(string ElectionKey, int Office_Class)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Referendums.ElectionKey ";
+    //  SQL += " ,Referendums.ReferendumKey ";
+    //  SQL += " ,Referendums.ReferendumTitle ";
+    //  SQL += " ,Referendums.ReferendumDesc ";
+    //  SQL += " FROM Referendums";
+    //  SQL += " WHERE Referendums.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND Referendums.OfficeLevel = " + Office_Class.ToString();
+    //  SQL += " AND Referendums.IsReferendumTagForDeletion = 0";
+    //  SQL += " ORDER BY Referendums.OrderOnBallot";
+    //  return SQL;
+    //}
+
+    //public static string PoliticianKey(string PoliticianKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Politicians.PoliticianKey ";
+    //  SQL += " FROM Politicians ";
+    //  SQL += " WHERE PoliticianKey =" + db.SQLLit(PoliticianKey);
+    //  return SQL;
+    //}
+
+    //public static string Politicians()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Politicians.PoliticianKey ";
+    //  SQL += " FROM Politicians ";
+    //  SQL += " ORDER BY PoliticianKey ";
+    //  return SQL;
+    //}
+
+    //public static string PoliticianName(string PoliticianKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Politicians.PoliticianKey ";
+    //  SQL += " ,Politicians.FName ";
+    //  SQL += " ,Politicians.MName ";
+    //  SQL += " ,Politicians.LName ";
+    //  SQL += " ,Politicians.Suffix ";
+    //  SQL += " ,Politicians.Nickname ";
+    //  SQL += " ,Politicians.AddOn ";
+    //  SQL += " FROM Politicians ";
+    //  SQL += " WHERE Politicians.PoliticianKey = " + db.SQLLit(PoliticianKey);
+    //  return SQL;
+    //}
+    //public static string xPolitician4Security(string PoliticianKey, string Password)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Politicians.PoliticianKey ";
+    //  SQL += " ,Politicians.Password ";
+    //  SQL += " ,Politicians.OfficeKey ";
+    //  SQL += " FROM Politicians";
+    //  SQL += " WHERE Politicians.PoliticianKey = " + db.SQLLit(PoliticianKey);
+    //  SQL += " AND Politicians.Password = " + db.SQLLit(Password);
+    //  return SQL;
+    //}
+    //public static string Politicians4OfficeLevel(int Office_Class)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Politicians.OfficeKey";
+    //  SQL += " FROM Politicians,Offices";
+    //  SQL += " WHERE Offices.OfficeLevel = " + Office_Class.ToString();
+    //  SQL += " AND Offices.OfficeKey = Politicians.OfficeKey";
+    //  return SQL;
+    //}
+    //public static string Politicians4StateCodeOfficeLevel(string StateCode, int Office_Class)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Politicians.OfficeKey";
+    //  SQL += " FROM Politicians,Offices";
+    //  SQL += " WHERE Offices.OfficeLevel = " + Office_Class.ToString();
+    //  SQL += " AND Politicians.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND Offices.OfficeKey = Politicians.OfficeKey";
+    //  return SQL;
+    //}
+    //public static string Politicians4StateCode(string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Politicians.OfficeKey";
+    //  SQL += " FROM Politicians,Offices";
+    //  SQL += " WHERE Politicians.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND Offices.OfficeKey = Politicians.OfficeKey";
+    //  return SQL;
+    //}
+    //public static string Politicians4USPresident()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Politicians.OfficeKey";
+    //  SQL += " FROM Politicians,Offices";
+    //  SQL += " WHERE Offices.OfficeLevel = " + db.Office_US_President.ToString();
+    //  SQL += " AND Offices.OfficeKey = Politicians.OfficeKey";
+    //  return SQL;
+    //}
+    //public static string Politicians4StateCodeOfficeLevels(string StateCode, int OfficeLevelFrom, int OfficeLevelTo)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Politicians.OfficeKey";
+    //  SQL += " FROM Politicians,Offices";
+    //  SQL += " WHERE Politicians.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND Offices.OfficeLevel >= " + OfficeLevelFrom.ToString();
+    //  SQL += " AND Offices.OfficeLevel <= " + OfficeLevelTo.ToString();
+    //  SQL += " AND Offices.OfficeKey = Politicians.OfficeKey";
+    //  return SQL;
+    //}
+
+    //public static string Politicians_ByOffice(string StateCode, int Office_Class)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT ";
+    //  SQL += " Politicians.PoliticianKey";
+    //  SQL += ",Politicians.LName";
+    //  SQL += ",Politicians.PartyKey ";
+    //  SQL += ",Offices.OfficeKey";
+    //  SQL += ",Offices.OfficeLevel";
+    //  SQL += ",Offices.OfficeLine1";
+    //  SQL += ",Offices.OfficeLine2";
+    //  SQL += ",Offices.StateCode";
+    //  SQL += ",Offices.CountyCode";
+    //  SQL += ",Offices.LocalCode";
+    //  SQL += " FROM Politicians,Offices ";
+    //  SQL += " WHERE Politicians.OfficeKey = Offices.OfficeKey";
+    //  if (Office_Class != 0)
+    //    SQL += " AND Offices.OfficeLevel = " + Office_Class.ToString();
+    //  SQL += " AND Politicians.StateCode = " + db.SQLLit(StateCode);
+    //  //SQL += " ORDER BY Offices.OfficeLine1,CONVERT(int,DistrictCode)";
+    //  SQL += " ORDER BY Offices.OfficeLine1,DistrictCode";
+    //  SQL += " ,Politicians.LName,Politicians.FName,Politicians.MName";
+    //  return SQL;
+    //}
+
+    //public static string OfficesOfficials_Politician(string PoliticianKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT ";
+    //  SQL += " OfficesOfficials.PoliticianKey";
+    //  SQL += ",OfficesOfficials.OfficeKey";
+    //  SQL += ",OfficesOfficials.StateCode";
+    //  SQL += ",OfficesOfficials.CountyCode";
+    //  SQL += ",OfficesOfficials.LocalCode";
+    //  SQL += " FROM OfficesOfficials";
+    //  SQL += " WHERE OfficesOfficials.PoliticianKey = " + db.SQLLit(PoliticianKey);
+    //  return SQL;
+    //}
+
+    //public static string OfficesOfficials4OfficeKeyLDS(string OfficeKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT * ";
+    //  SQL += " FROM OfficesOfficials ";
+    //  SQL += " WHERE OfficesOfficials.OfficeKey = " + db.SQLLit(OfficeKey);
+    //  SQL += " ORDER BY OfficesOfficials.DataLastUpdated DESC";
+    //  return SQL;
+    //}
+
+    //public static string OfficesOfficials4County(string StateCode, string CountyCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " CountyCode";
+    //  SQL += " FROM OfficesOfficials ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = " + db.SQLLit(CountyCode);
+    //  return SQL;
+    //}
+    ////public static string OfficeKey_Politician(string PoliticianKey)
+    //public static string OfficesOfficials4PoliticianKey(string PoliticianKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " OfficeKey";
+    //  SQL += " FROM OfficesOfficials ";
+    //  SQL += " WHERE PoliticianKey = " + db.SQLLit(PoliticianKey);
+    //  return SQL;
+    //}
+    ////public static string OfficeKey4RunningMateKey(string RunningMateKey)
+    //public static string xOfficesOfficials4RunningMateKey(string RunningMateKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " OfficeKey";
+    //  SQL += " FROM OfficesOfficials ";
+    //  SQL += " WHERE RunningMateKey = " + db.SQLLit(RunningMateKey);
+    //  return SQL;
+    //}
+    //public static string OfficesOfficials4Counties4StateCode(string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " StateCode";
+    //  SQL += " ,CountyCode";
+    //  SQL += " FROM OfficesOfficials ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode != ''";
+    //  return SQL;
+    //}
+    //public static string xIncumbents(string OfficeKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Politicians.PoliticianKey ";
+    //  SQL += " ,Politicians.PartyKey ";
+    //  SQL += " ,OfficesOfficials.RunningMateKey ";
+    //  SQL += " FROM Politicians,OfficesOfficials ";
+    //  SQL += " WHERE OfficesOfficials.OfficeKey = " + db.SQLLit(OfficeKey);
+    //  //SQL += " AND Politicians.OfficeKey = OfficesOfficials.OfficeKey ";
+    //  SQL += " AND Politicians.PoliticianKey = OfficesOfficials.PoliticianKey ";
+    //  SQL += " ORDER BY Politicians.LName";
+    //  return SQL;
+    //}
+
+    //public static string xOfficesOfficials_Insert(string OfficeKey, string PoliticianKey)//ok
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " INSERT INTO OfficesOfficials ";
+    //  SQL += "(";
+    //  SQL += "OfficeKey";
+    //  SQL += ",StateCode";
+    //  SQL += ",PoliticianKey";
+    //  SQL += ",DataLastUpdated";
+    //  SQL += ")";
+    //  SQL += " VALUES ";
+    //  SQL += "(";
+    //  SQL += db.SQLLit(OfficeKey);
+    //  SQL += "," + db.SQLLit(db.StateCode_In_OfficeKey(OfficeKey));
+    //  SQL += "," + db.SQLLit(PoliticianKey);
+    //  SQL += "," + db.SQLLit(Db.DbNow);
+    //  SQL += ")";
+    //  return SQL;
+    //}
+    //public static string OfficesOfficials_Insert_LDS(string OfficeKey, string PoliticianKey, string LDSVersion, DateTime LDSUpdateDate)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " INSERT INTO OfficesOfficials ";
+    //  SQL += "(";
+    //  SQL += "OfficeKey";
+    //  SQL += ",StateCode";
+    //  SQL += ",PoliticianKey";
+    //  SQL += ",LDSVersion";
+    //  SQL += ",LDSUpdateDate";
+    //  SQL += ",UserSecurity";
+    //  SQL += ",UserName";
+    //  SQL += ")";
+    //  SQL += " VALUES ";
+    //  SQL += "(";
+    //  SQL += db.SQLLit(OfficeKey);
+    //  SQL += "," + db.SQLLit(db.StateCode4OfficeKey(OfficeKey));
+    //  SQL += "," + db.SQLLit(PoliticianKey);
+    //  SQL += "," + db.SQLLit(LDSVersion);
+    //  SQL += "," + db.SQLLit(LDSUpdateDate.ToString());
+    //  SQL += ",'MASTER'";
+    //  SQL += ",'LDSUpdate'";
+    //  SQL += ")";
+    //  return SQL;
+    //}
+
+    //#region Offices Tables for Offices.aspx and Office.aspx
+    //public static string Offices_State_County_LocalDistrict(string StateCode, string CountyCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " LocalDistrict ";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,CountyCode ";
+    //  SQL += " ,LocalCode ";
+    //  SQL += " ,IsLocalDistrictTagForDeletion ";
+    //  SQL += " FROM LocalDistricts ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = " + db.SQLLit(CountyCode);
+    //  SQL += " ORDER BY LocalDistrict ";
+    //  return SQL;
+    //}
+
+    //#endregion Offices Tables for Offices.aspx and Office.aspx
+
+    //public static string Elections_Upcoming(string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " ,IsViewable ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE Elections.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = '' ";
+    //  SQL += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+    //  SQL += " ORDER BY ElectionDate DESC";
+    //  return SQL;
+    //}
+    //public static string Elections_Upcoming(string StateCode, string NationalPartyCode, string ElectionType)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionType ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE Elections.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = '' ";
+    //  SQL += " AND NationalPartyCode = " + db.SQLLit(NationalPartyCode);
+    //  SQL += " AND ElectionType = " + db.SQLLit(ElectionType);
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+    //  SQL += " ORDER BY ElectionDate ASC";
+    //  return SQL;
+    //}
+    //public static string Elections_Upcoming_Not_R_Or_D(string StateCode, string ElectionType)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionType ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE Elections.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = '' ";
+    //  SQL += " AND NationalPartyCode != 'D'";
+    //  SQL += " AND NationalPartyCode != 'R'";
+    //  SQL += " AND ElectionType = " + db.SQLLit(ElectionType);
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+    //  SQL += " ORDER BY NationalPartyCode ASC,ElectionDate ASC";
+    //  return SQL;
+    //}
+    //public static string Elections_Upcoming_Not_Primary(string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionType ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE Elections.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = '' ";
+    //  SQL += " AND ((ElectionType = 'G') OR (ElectionType = 'O') OR (ElectionType = 'S'))";
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+    //  SQL += " ORDER BY ElectionDate ASC";
+    //  return SQL;
+    //}
+    //public static string Elections_Upcoming_Party(string NationalParyCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE StateCode = 'U1'";
+    //  SQL += " AND NationalPartyCode = " + db.SQLLit(NationalParyCode);
+    //  SQL += " AND ElectionType = 'A'";
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+    //  SQL += " ORDER BY ElectionDate DESC";
+    //  return SQL;
+    //}
+    //public static string Elections_Upcoming_Presidential()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE StateCode = 'U1'";
+    //  SQL += " AND ElectionType = 'C'";
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+    //  SQL += " ORDER BY ElectionDate DESC";
+    //  return SQL;
+    //}
+    //public static string Elections_Upcoming_Party_National(string StateCode, string NationalPartyCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND NationalPartyCode = " + db.SQLLit(NationalPartyCode);
+    //  SQL += " AND ElectionType = 'B'";
+    //  SQL += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " AND CountyCode = '' ";
+    //  SQL += " ORDER BY ElectionDate DESC";
+    //  return SQL;
+    //}
+    //public static string Elections_Party_National(string StateCode, string NationalPartyCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND NationalPartyCode = " + db.SQLLit(NationalPartyCode);
+    //  SQL += " AND ElectionType = 'B'";
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " AND CountyCode = '' ";
+    //  SQL += " ORDER BY ElectionDate DESC";
+    //  return SQL;
+    //}
+    //public static string Elections_Previous(string StateCode, string NationalPartyCode, string ElectionType)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND NationalPartyCode = " + db.SQLLit(NationalPartyCode);
+    //  SQL += " AND ElectionType = " + db.SQLLit(ElectionType);
+    //  SQL += " AND ElectionDate < " + db.SQLLit(Db.DbToday);
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " AND CountyCode = '' ";
+    //  SQL += " ORDER BY ElectionDate DESC";
+    //  return SQL;
+    //}
+    //public static string Elections_Upcoming_Viewable(string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += ",StateCode";
+    //  SQL += ",ElectionDate";
+    //  SQL += ",ElectionDesc";
+    //  SQL += ",IsViewable";
+    //  SQL += " FROM Elections";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = '' ";
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+    //  SQL += " ORDER BY ElectionDate ASC,Elections.NationalPartyCode ASC";
+    //  return SQL;
+    //}
+
+    //public static string Elections_Viewable_Federal(string FederalCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " ,IsViewable ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(FederalCode);
+    //  SQL += " AND ElectionType = 'G'";
+    //  SQL += " AND CountyCode = '' ";
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " ORDER BY ElectionDate DESC";
+    //  return SQL;
+    //}
+    //public static string Elections_Previous_Viewable(string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " ,IsViewable ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = '' ";
+    //  SQL += " AND ElectionDate < " + db.SQLLit(Db.DbToday);
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " ORDER BY ElectionDate DESC, NationalPartyCode ASC";
+    //  return SQL;
+    //}
+    //public static string Elections_Previous_Viewable_G_O_S_P(string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " ,IsViewable ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND ((ElectionType = 'G') OR (ElectionType = 'O') OR (ElectionType = 'S') OR (ElectionType = 'P'))";
+    //  SQL += " AND CountyCode = '' ";
+    //  SQL += " AND ElectionDate < " + db.SQLLit(Db.DbToday);
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " ORDER BY ElectionDate DESC, NationalPartyCode ASC";
+    //  return SQL;
+    //}
+    //public static string Elections_Upcoming_Politician(string PoliticianKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Elections.ElectionKey";
+    //  SQL += " ,Elections.ElectionDesc ";
+    //  SQL += " ,ElectionsPoliticians.OfficeKey ";
+    //  SQL += " ,ElectionsPoliticians.PoliticianKey ";
+    //  SQL += " ,ElectionsPoliticians.RunningMateKey ";
+    //  SQL += " FROM Elections,ElectionsPoliticians";
+    //  SQL += " WHERE ElectionsPoliticians.PoliticianKey = " + db.SQLLit(PoliticianKey);
+    //  SQL += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+    //  SQL += " AND Elections.ElectionKey = ElectionsPoliticians.ElectionKey ";
+    //  SQL += " ORDER BY ElectionDate DESC";
+    //  return SQL;
+    //}
+    ////public static string ElectionsUpcomingViewable4Navbar(string StateCode)
+    //public static string xElectionsUpcomingViewable4StateCode(string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " ,IsViewable ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE Elections.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = '' ";
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+    //  SQL += " AND ElectionType != 'A'";//National Presidential Primary
+    //  SQL += " AND ElectionType != 'B'";//State Presidential Primary
+    //  SQL += " ORDER BY ElectionDate ASC,Elections.NationalPartyCode ASC";
+    //  return SQL;
+    //}
+    //public static string Elections_Upcoming_Viewable_G_O_S_P()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " ,IsViewable ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE CountyCode = '' ";
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+    //  SQL += " AND ElectionType != 'A'";//National Presidential Primary
+    //  SQL += " AND ElectionType != 'B'";//State Presidential Primary
+    //  SQL += " ORDER BY ElectionDate ASC,Elections.NationalPartyCode ASC";
+    //  return SQL;
+    //}
+    //public static string xElectionsPreviousViewable4Navbar(string StateCode, string ElectionType)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " ,IsViewable ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE Elections.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = '' ";
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " AND ElectionDate < " + db.SQLLit(Db.DbToday);
+    //  SQL += " AND ElectionType = " + db.SQLLit(ElectionType);
+    //  SQL += " ORDER BY ElectionDate DESC";
+    //  return SQL;
+    //}
+    //public static string Elections_Viewable(string StateCode, string ElectionType)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE Elections.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND Elections.ElectionType = " + db.SQLLit(ElectionType);
+    //  SQL += " AND CountyCode = '' ";
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " ORDER BY ElectionDate DESC";
+    //  return SQL;
+    //}
+    //public static string Elections_Viewable_Party(string StateCode, string PartyCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " ,IsViewable ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE Elections.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND PartyCode = " + db.SQLLit(PartyCode);
+    //  SQL += " AND CountyCode = '' ";
+    //  //SQL += " AND LocalCode = '' ";
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+    //  SQL += " ORDER BY ElectionDate ASC,Elections.NationalPartyCode ASC";
+    //  return SQL;
+    //}
+
+    //public static string Elections_Counties(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey ";
+    //  SQL += " FROM Elections ";
+    //  //SQL += " WHERE SUBSTRING(ElectionKey,1,11) = " + db.SQLLit(ElectionKey.Substring(0, 11));
+    //  SQL += " WHERE ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND CountyCode != ''";
+    //  return SQL;
+    //}
+    ////-------------------------
+    //public static string Elections_Previous_Viewable_All(string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE Elections.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = '' ";
+    //  SQL += " AND IsViewable = 1";
+    //  SQL += " AND ElectionDate < " + db.SQLLit(Db.DbToday);
+    //  SQL += " ORDER BY ElectionDate DESC";
+    //  return SQL;
+    //}
+    //public static string Elections_Previous(string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,ElectionDate ";
+    //  SQL += " ,ElectionDesc ";
+    //  SQL += " ,IsViewable ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = '' ";
+    //  SQL += " AND ElectionDate < " + db.SQLLit(Db.DbToday);
+    //  SQL += " ORDER BY ElectionDate DESC,Elections.NationalPartyCode ASC";
+    //  return SQL;
+    //}
+    ////-------------------------
+    //public static DataTable XTable_Elections_Previous(string StateCode, string CountyCode, string LocalCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += ",StateCode";
+    //  SQL += ",CountyCode";
+    //  SQL += ",LocalCode";
+    //  SQL += ",ElectionYYYYMMDD";
+    //  SQL += ",ElectionType";
+    //  SQL += ",NationalPartyCode";
+    //  SQL += ",ElectionDate";
+    //  SQL += ",PartyCode";
+    //  SQL += ",ElectionStatus";
+    //  SQL += ",ElectionDesc";
+    //  SQL += ",ElectionAdditionalInfo";
+    //  SQL += ",ElectionResultsSource";
+    //  SQL += ",ElectionResultsDate";
+    //  SQL += ",BallotInstructions";
+    //  SQL += ",IsViewable";
+    //  SQL += " FROM Elections";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = " + db.SQLLit(CountyCode);
+    //  SQL += " AND LocalCode = " + db.SQLLit(LocalCode);
+    //  SQL += " AND ElectionDate < " + db.SQLLit(Db.DbToday);
+    //  SQL += " ORDER BY ElectionDate DESC,Elections.NationalPartyCode ASC";
+
+    //  return db.Table(SQL);
+    //}
+    //public static DataTable xTable_Elections_Upcoming(string StateCode, string CountyCode, string LocalCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += ",StateCode";
+    //  SQL += ",CountyCode";
+    //  SQL += ",LocalCode";
+    //  SQL += ",ElectionYYYYMMDD";
+    //  SQL += ",ElectionType";
+    //  SQL += ",NationalPartyCode";
+    //  SQL += ",ElectionDate";
+    //  SQL += ",PartyCode";
+    //  SQL += ",ElectionStatus";
+    //  SQL += ",ElectionDesc";
+    //  SQL += ",ElectionAdditionalInfo";
+    //  SQL += ",ElectionResultsSource";
+    //  SQL += ",ElectionResultsDate";
+    //  SQL += ",BallotInstructions";
+    //  SQL += ",IsViewable";
+    //  SQL += " FROM Elections";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = " + db.SQLLit(CountyCode);
+    //  SQL += " AND LocalCode = " + db.SQLLit(LocalCode);
+    //  SQL += " AND Elections.ElectionDate >= " + db.SQLLit(Db.DbToday);
+    //  SQL += " ORDER BY ElectionDate DESC,Elections.NationalPartyCode ASC";
+
+    //  return db.Table(SQL);
+    //}
+
+    //public static DataTable Table_ElectionsFuture()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT ";
+    //  SQL += " StateCode";
+    //  SQL += ",CountyCode";
+    //  SQL += ",LocalCode";
+    //  SQL += ",ElectionDate";
+    //  SQL += ",ElectionDesc";
+    //  SQL += " FROM ElectionsFuture";
+    //  SQL += " ORDER BY StateCode,CountyCode,LocalCode,ElectionDate ASC";
+    //  return db.Table(SQL);
+    //}
+
+    //public static DataTable xTable_ElectionsFuture(string StateCode, string CountyCode)
+    //{
+    //  return sql.xTable_ElectionsFuture(StateCode, CountyCode, string.Empty);
+    //}
+
+    //public static void Table_xElectionsFuture_Delete(string StateCode, string CountyCode, string LocalCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "DELETE FROM ElectionsFuture";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = " + db.SQLLit(CountyCode);
+    //  SQL += " AND LocalCode = " + db.SQLLit(LocalCode);
+    //  db.ExecuteSQL(SQL);
+    //}
+
+    //#region Elections DELETE
+
+    //public static string ElectionsDelete4AllStates(string ElectionKeySubstring)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "DELETE FROM Elections";
+    //  SQL += " WHERE SUBSTRING(ElectionKey,1,9) = " + db.SQLLit(ElectionKeySubstring);
+    //  return SQL;
+    //}
+    //public static string ElectionsDeleteCounties(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "DELETE FROM Elections";
+    //  //SQL += " WHERE SUBSTRING(ElectionKey,1,11) = " + db.SQLLit(ElectionKey.Substring(0, 11));
+    //  SQL += " WHERE ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND CountyCode != ''";
+    //  return SQL;
+    //}
+    //public static string ElectionsDeleteState(string ElectionKeySubstring)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "DELETE FROM Elections";
+    //  SQL += " WHERE SUBSTRING(ElectionKey,1,11) = " + db.SQLLit(ElectionKeySubstring);
+    //  return SQL;
+    //}
+    //#endregion
+
+    //#region ROWS - Offices, ElectionsOffices, ElectionsPoliticians
+    ////--------- Offices
+    //public static string Rows_Offices(string StateCode, string CountyCode, string LocalCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT StateCode";
+    //  SQL += " FROM Offices";
+    //  SQL += " WHERE Offices.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND Offices.CountyCode = " + db.SQLLit(CountyCode);
+    //  SQL += " AND Offices.LocalCode = " + db.SQLLit(LocalCode);
+    //  return SQL;
+    //}
+    //public static string Rows_Offices_USPresident()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT StateCode";
+    //  SQL += " FROM Offices";
+    //  SQL += " WHERE Offices.StateCode = 'US'";
+    //  SQL += " AND Offices.OfficeLevel = 1";
+    //  return SQL;
+    //}
+    //public static string Rows_Offices_State(string StateCode, int Office_Class)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT StateCode";
+    //  SQL += " FROM Offices";
+    //  SQL += " WHERE Offices.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND Offices.OfficeLevel = " + Office_Class.ToString();
+    //  return SQL;
+    //}
+    //public static string Rows_Offices_County(string StateCode, string CountyCode, int Office_Class)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT StateCode";
+    //  SQL += " FROM Offices";
+    //  SQL += " WHERE Offices.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND Offices.OfficeLevel = " + Office_Class.ToString();
+    //  SQL += " AND Offices.CountyCode = " + db.SQLLit(CountyCode);
+    //  return SQL;
+    //}
+    ////--------  ElectionsOffices
+    //public static string Rows_ElectionsOffices_USPresident(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  //SQL += " SELECT";
+    //  //SQL += " ElectionsOffices.ElectionKey";
+    //  SQL += "SELECT ElectionKey";
+    //  SQL += " FROM ElectionsOffices";
+    //  SQL += " WHERE ElectionsOffices.OfficeKey = 'USPresident'";
+    //  //SQL += " AND ElectionsOffices.ElectionKeyState = " + db.SQLLit(db.ElectionKey_State(ElectionKey));
+    //  SQL += " AND ElectionsOffices.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  return SQL;
+    //}
+    //public static string Rows_ElectionsOffices_USPresident_OnBallot(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT ElectionKey";
+    //  SQL += " FROM ElectionsOffices";
+    //  SQL += " WHERE ElectionsOffices.OfficeKey = 'USPresident'";
+    //  SQL += " AND ElectionsOffices.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  return SQL;
+    //}
+    //public static string Rows_ElectionsOffices(string ElectionKey, int Office_Class)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT ElectionKey";
+    //  //SQL += " ElectionsOffices.ElectionKey";
+    //  SQL += " FROM ElectionsOffices,Offices";
+    //  SQL += " WHERE ElectionsOffices.OfficeKey = Offices.OfficeKey";
+    //  //SQL += " AND ElectionsOffices.ElectionKeyState = " + db.SQLLit(db.ElectionKey_State(ElectionKey));
+    //  SQL += " AND ElectionsOffices.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND Offices.OfficeLevel = " + Office_Class.ToString();
+    //  return SQL;
+    //}
+    //public static string Rows_ElectionsOffices(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT ElectionKey";
+    //  SQL += " FROM ElectionsOffices";
+    //  SQL += " WHERE ElectionsOffices.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  return SQL;
+    //}
+    //public static string Rows_ElectionsOffices_OnBallot(string ElectionKey, int Office_Class)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT ElectionKey";
+    //  SQL += " FROM ElectionsOffices,Offices";
+    //  SQL += " WHERE ElectionsOffices.OfficeKey = Offices.OfficeKey";
+    //  SQL += " AND ElectionsOffices.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND Offices.OfficeLevel = " + Office_Class.ToString();
+    //  return SQL;
+    //}
+    //public static string Rows_ElectionsOffices_County(string ElectionKey, string CountyCode, int Office_Class)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT ElectionKey";
+    //  SQL += " FROM ElectionsOffices,Offices";
+    //  SQL += " WHERE ElectionsOffices.OfficeKey = Offices.OfficeKey";
+    //  SQL += " AND ElectionsOffices.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND Offices.OfficeLevel = " + Office_Class.ToString();
+    //  SQL += " AND Offices.CountyCode = " + db.SQLLit(CountyCode);
+    //  return SQL;
+    //}
+    //public static string Rows_ElectionsOffices_County_OnBallot(string ElectionKey, string CountyCode, int Office_Class)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT ElectionKey";
+    //  SQL += " FROM ElectionsOffices,Offices";
+    //  SQL += " WHERE ElectionsOffices.OfficeKey = Offices.OfficeKey";
+    //  SQL += " AND ElectionsOffices.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND Offices.OfficeLevel = " + Office_Class.ToString();
+    //  SQL += " AND Offices.CountyCode = " + db.SQLLit(CountyCode);
+    //  return SQL;
+    //}
+    ////--------  ElectionsPoliticians
+    //public static string Rows_ElectionsPoliticians_USPresident(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  //SQL += " SELECT ";
+    //  //SQL += "ElectionsPoliticians.ElectionKey";
+    //  SQL += "SELECT ElectionKey";
+    //  SQL += " FROM ElectionsPoliticians";
+    //  SQL += " WHERE ElectionsPoliticians.OfficeKey = 'USPresident'";
+    //  //SQL += " AND ElectionsPoliticians.ElectionKeyState = " + db.SQLLit(db.ElectionKey_State(ElectionKey));
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  return SQL;
+    //}
+    //public static string Rows_ElectionsPoliticians(string ElectionKey, int Office_Class)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT ElectionKey";
+    //  SQL += " FROM ElectionsPoliticians,Offices";
+    //  SQL += " WHERE ElectionsPoliticians.OfficeKey = Offices.OfficeKey";
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND Offices.OfficeLevel = " + Office_Class.ToString();
+    //  return SQL;
+    //}
+    //public static string Rows_ElectionsPoliticians_County(string ElectionKey, string CountyCode, int Office_Class)
+    //{
+    //  string SQL = string.Empty;
+    //  //SQL += " SELECT ";
+    //  //SQL += "ElectionsPoliticians.ElectionKey";
+    //  SQL += "SELECT ElectionKey";
+    //  SQL += " FROM ElectionsPoliticians,Offices";
+    //  SQL += " WHERE ElectionsPoliticians.OfficeKey = Offices.OfficeKey";
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND Offices.OfficeLevel = " + Office_Class.ToString();
+    //  SQL += " AND Offices.CountyCode = " + db.SQLLit(CountyCode);
+    //  return SQL;
+    //}
+
+    //#endregion ROWS - Offices, ElectionsOffices, ElectionsPoliticians
+
+    //public static string xElections_Offices_Text_File(string ElectionKey, string OfficeKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionsOffices.ElectionKey ";
+    //  SQL += " ,Offices.OfficeKey ";
+    //  SQL += " ,Offices.StateCode ";
+    //  SQL += " ,Offices.OfficeLine1 ";
+    //  SQL += " ,Offices.OfficeLine2 ";
+    //  SQL += " ,Offices.OfficeLevel ";
+    //  SQL += " ,Offices.IsRunningMateOffice ";
+    //  SQL += " FROM ElectionsOffices,Offices ";
+    //  SQL += " WHERE ElectionsOffices.OfficeKey = Offices.OfficeKey";
+    //  SQL += " AND ElectionsOffices.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND Offices.OfficeKey = " + db.SQLLit(OfficeKey);
+    //  SQL += " ORDER BY Offices.OfficeOrderWithinLevel, Offices.DistrictCode, Offices.DistrictCodeAlpha";
+    //  return SQL;
+    //}
+
+    //public static string Elections_Offices_County(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += "ElectionsOffices.ElectionKey";
+    //  SQL += ",ElectionsOffices.OfficeKey";
+    //  SQL += ",Offices.OfficeLevel";
+    //  SQL += " FROM ElectionsOffices,Offices";
+    //  SQL += " WHERE ElectionsOffices.OfficeKey = Offices.OfficeKey";
+    //  SQL += " AND ElectionsOffices.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND (Offices.OfficeLevel = " + db.Office_County_Executive.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_County_Legislative.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_County_SchoolBoard.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_County_Commission.ToString() + ")";
+    //  return SQL;
+    //}
+    //public static string Elections_Offices_Judicial(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += "ElectionsOffices.ElectionKey";
+    //  SQL += ",ElectionsOffices.OfficeKey";
+    //  SQL += ",Offices.OfficeLevel";
+    //  SQL += " FROM ElectionsOffices,Offices";
+    //  SQL += " WHERE ElectionsOffices.OfficeKey = Offices.OfficeKey";
+    //  SQL += " AND ElectionsOffices.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND (Offices.OfficeLevel = " + db.Office_State_Judicial.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_State_District_Multi_Counties_Judicial.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_County_Judicial.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_Local_Judicial.ToString() + ")";
+    //  return SQL;
+    //}
+    //public static string Elections_Offices_Party(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += "ElectionsOffices.ElectionKey";
+    //  SQL += ",ElectionsOffices.OfficeKey";
+    //  SQL += ",Offices.OfficeLevel";
+    //  SQL += " FROM ElectionsOffices,Offices";
+    //  SQL += " WHERE ElectionsOffices.OfficeKey = Offices.OfficeKey";
+    //  SQL += " AND ElectionsOffices.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND (Offices.OfficeLevel = " + db.Office_State_Party.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_State_District_Multi_Counties_Party.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_County_Party.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_Local_Party.ToString() + ")";
+    //  return SQL;
+    //}
+
+    //public static string Elections_Politicians_RunningMate(string ElectionKey, string OfficeKey, string RunningMateKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  //SQL += " ElectionsPoliticians.Election";
+    //  SQL += " ElectionsPoliticians.ElectionKey";
+    //  SQL += " ,ElectionsPoliticians.PoliticianKey";
+    //  SQL += " ,ElectionsPoliticians.RunningMateKey";
+    //  SQL += " ,ElectionsPoliticians.OrderOnBallot";
+    //  SQL += " FROM ElectionsPoliticians ";
+    //  SQL += " WHERE ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsPoliticians.OfficeKey = " + db.SQLLit(OfficeKey);
+    //  SQL += " AND ElectionsPoliticians.RunningMateKey = " + db.SQLLit(RunningMateKey);
+    //  return SQL;
+    //}
+
+    //#region ElectionsPoliticians, Elections SELECT
+    //public static string xElectionsPoliticians4PoliticianKeyUpcomingViewable(string PoliticianKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT";
+    //  SQL += " ElectionsPoliticians.ElectionKey";
+    //  SQL += " ,ElectionsPoliticians.OfficeKey";
+    //  SQL += " ,ElectionsPoliticians.StateCode";
+    //  SQL += " FROM ElectionsPoliticians,Elections";
+    //  SQL += " WHERE ElectionsPoliticians.PoliticianKey = " + db.SQLLit(PoliticianKey);
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = Elections.ElectionKey";
+    //  SQL += " AND Elections.ElectionDate >= "
+    //    + db.SQLLit(Db.DbDateTime(DateTime.Today.AddDays(DaysAfterUpcomingElection2KeepShowing)));
+    //  SQL += " AND Elections.IsViewable = 1";
+    //  SQL += " ORDER BY Elections.Electionkey ASC";
+    //  return SQL;//xx
+    //}
+    //public static string ElectionsPoliticians4PoliticianKeyUpcomingViewable4Cache(string PoliticianKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT";
+    //  SQL += " ElectionsPoliticians.ElectionKey";
+    //  SQL += " ,ElectionsPoliticians.OfficeKey";
+    //  SQL += " ,ElectionsPoliticians.StateCode";
+    //  SQL += " FROM ElectionsPoliticians,Elections";
+    //  SQL += " WHERE ElectionsPoliticians.PoliticianKey = " + db.SQLLit(PoliticianKey);
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = Elections.ElectionKey";
+    //  SQL += " AND Elections.ElectionDate >= "
+    //    + db.SQLLit(Db.DbDateTime(DateTime.Today.AddDays(DaysAfterUpcomingElection2KeepShowing)));
+    //  SQL += " AND Elections.IsViewable = 1";
+    //  SQL += " ORDER BY Elections.Electionkey ASC";
+    //  return SQL;
+    //}
+    //public static string ElectionsPoliticians4PoliticianKeyUpcomingNotViewable(string PoliticianKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT";
+    //  SQL += " ElectionsPoliticians.ElectionKey";
+    //  SQL += " ,ElectionsPoliticians.OfficeKey";
+    //  SQL += " FROM ElectionsPoliticians,Elections";
+    //  SQL += " WHERE ElectionsPoliticians.PoliticianKey = " + db.SQLLit(PoliticianKey);
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = Elections.ElectionKey";
+    //  SQL += " AND Elections.ElectionDate >= " + db.SQLLit(Db.DbToday);
+    //  SQL += " AND Elections.IsViewable = 0";
+    //  SQL += " ORDER BY Elections.ElectionDate DESC";
+    //  return SQL;//xx
+    //}
+    //public static string ElectionsPoliticians4RunningMateKeyUpcomingViewable(string RunningMateKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT";
+    //  SQL += " ElectionsPoliticians.ElectionKey";
+    //  SQL += " ,ElectionsPoliticians.OfficeKey";
+    //  SQL += " FROM ElectionsPoliticians,Elections";
+    //  SQL += " WHERE ElectionsPoliticians.RunningMateKey = " + db.SQLLit(RunningMateKey);
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = Elections.ElectionKey";
+    //  SQL += " AND Elections.ElectionDate >= " + db.SQLLit(Db.DbToday);
+    //  SQL += " AND Elections.IsViewable = 1";
+    //  SQL += " ORDER BY Elections.ElectionDate DESC";
+    //  return SQL;//xx
+    //}
+    //public static string ElectionsPoliticians4RunningMateKeyUpcomingNotViewable(string RunningMateKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT";
+    //  SQL += " ElectionsPoliticians.ElectionKey";
+    //  SQL += " ,ElectionsPoliticians.OfficeKey";
+    //  SQL += " FROM ElectionsPoliticians,Elections";
+    //  SQL += " WHERE ElectionsPoliticians.RunningMateKey = " + db.SQLLit(RunningMateKey);
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = Elections.ElectionKey";
+    //  SQL += " AND Elections.ElectionDate >= " + db.SQLLit(Db.DbToday);
+    //  SQL += " AND Elections.IsViewable = 0";
+    //  SQL += " ORDER BY Elections.ElectionDate DESC";
+    //  return SQL;//xx
+    //}
+    //#endregion
+
+    //#region ElectionsPoliticians, Politicians SELECT
+    //public static string ElectionsPoliticians4Sitemap(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT";
+    //  SQL += " ElectionsPoliticians.PoliticianKey ";
+    //  SQL += " ,ElectionsPoliticians.RunningMateKey ";
+    //  SQL += " ,Politicians.GeneralStatement ";
+    //  SQL += " ,Politicians.DataLastUpdated ";
+    //  SQL += " FROM ElectionsPoliticians,Politicians";
+    //  SQL += " WHERE ElectionsPoliticians.ElectionKeyFederal = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsPoliticians.PoliticianKey = Politicians.PoliticianKey";
+    //  return SQL;
+    //}
+    //#endregion
+
+    //#region ElectionsPoliticians, Offices SELECT
+
+    //public static string ElectionsPoliticians4ElectionKeyOfficeLevel(string ElectionKey, int Office_Class)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += "ElectionsPoliticians.ElectionKey";
+    //  SQL += ",ElectionsPoliticians.OfficeKey";
+    //  SQL += ",Offices.OfficeLevel";
+    //  SQL += " FROM ElectionsPoliticians,Offices";
+    //  SQL += " WHERE ElectionsPoliticians.OfficeKey = Offices.OfficeKey";
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND Offices.OfficeLevel = " + Office_Class.ToString();
+    //  return SQL;
+    //}
+    //#endregion
+
+    //#region ElectionsPoliticians, Politicians, Offices SELECT
+    //public static string ElectionsPoliticians4Sitemap(string ElectionKey, int OfficeLevelLow, int OfficeLevelHigh)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT";
+    //  SQL += " ElectionsPoliticians.PoliticianKey ";
+    //  SQL += " ,ElectionsPoliticians.RunningMateKey ";
+    //  SQL += " ,Politicians.GeneralStatement ";
+    //  SQL += " ,Politicians.DataLastUpdated ";
+    //  SQL += " ,Offices.OfficeLevel ";
+    //  SQL += " FROM ElectionsPoliticians,Politicians,Offices";
+    //  SQL += " WHERE ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND Offices.OfficeLevel >= " + OfficeLevelLow.ToString();
+    //  SQL += " AND Offices.OfficeLevel <= " + OfficeLevelHigh.ToString();
+    //  SQL += " AND ElectionsPoliticians.PoliticianKey = Politicians.PoliticianKey";
+    //  SQL += " AND ElectionsPoliticians.OfficeKey = Offices.OfficeKey";
+    //  SQL += " ORDER BY Offices.OfficeLevel ASC";
+    //  return SQL;
+    //}
+
+    //#endregion
+
+    //#region ElectionsPoliticians DELETE
+    //public static string ElectionsPoliticians_Delete(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "DELETE FROM ElectionsPoliticians";
+    //  SQL += " WHERE ElectionKey = " + db.SQLLit(ElectionKey);
+    //  return SQL;
+    //}
+    //public static string ElectionsPoliticiansDelete4AllStates(string ElectionKeySubstring)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "DELETE FROM ElectionsPoliticians";
+    //  SQL += " WHERE SUBSTRING(ElectionKey,1,9) = " + db.SQLLit(ElectionKeySubstring);
+    //  return SQL;
+    //}
+    //#endregion
+
+    //#region ElectionsOffices,ElectionsPoliticians SELECT
+    //public static string ElectionsPoliticians4Politician(string PoliticianKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT";
+    //  SQL += " ElectionsPoliticians.ElectionKey";
+    //  SQL += " ,ElectionsPoliticians.OfficeKey";
+    //  SQL += " FROM ElectionsPoliticians,Elections";
+    //  SQL += " WHERE ElectionsPoliticians.PoliticianKey = " + db.SQLLit(PoliticianKey);
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = Elections.ElectionKey";
+    //  SQL += " ORDER BY Elections.ElectionDate DESC";
+    //  return SQL;
+    //}
+    ////-------------------------------------------
+    //#endregion
+
+    //public static string xCandidates4Office(string ElectionKey, string OfficeKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionsPoliticians.PoliticianKey ";
+    //  SQL += " ,ElectionsPoliticians.RunningMateKey ";
+    //  //SQL += " ,ElectionsPoliticians.IsIncumbent ";
+    //  SQL += " ,ElectionsPoliticians.OrderOnBallot ";
+    //  SQL += " ,ElectionsPoliticians.StateCode ";
+    //  SQL += " ,ElectionsPoliticians.OfficeKey ";
+    //  SQL += " ,Politicians.Password ";
+    //  SQL += " ,Politicians.PoliticianKey ";
+    //  //SQL += " ,Politicians.PoliticianName ";
+    //  SQL += " ,Politicians.AddOn ";
+    //  SQL += " ,Politicians.PartyKey ";
+    //  SQL += " ,Politicians.LDSPartyCode ";
+    //  SQL += " ,Politicians.EmailAddr ";
+    //  SQL += " ,Politicians.StateEmailAddr ";
+    //  SQL += " ,Politicians.LDSEmailAddr ";
+    //  SQL += " ,Politicians.WebAddr ";
+    //  SQL += " ,Politicians.StateWebAddr ";
+    //  SQL += " ,Politicians.LDSWebAddr ";
+    //  SQL += " ,Politicians.Phone ";
+    //  SQL += " ,Politicians.StatePhone ";
+    //  SQL += " ,Politicians.LDSPhone ";
+    //  SQL += " ,Politicians.Address ";
+    //  SQL += " ,Politicians.CityStateZip ";
+    //  SQL += " ,Politicians.StateAddress ";
+    //  SQL += " ,Politicians.StateCityStateZip ";
+    //  SQL += " ,Politicians.LDSAddress ";
+    //  SQL += " ,Politicians.LDSCityStateZip ";
+    //  SQL += " FROM ElectionsPoliticians,Politicians ";
+    //  SQL += " WHERE ElectionsPoliticians.PoliticianKey = Politicians.PoliticianKey ";
+    //  //			SQL += " AND Politicians.OfficeKey = ElectionsPoliticians.OfficeKey ";
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsPoliticians.OfficeKey = " + db.SQLLit(OfficeKey);
+    //  SQL += " ORDER BY ElectionsPoliticians.OrderOnBallot";
+    //  SQL += " ,Politicians.LName";
+    //  SQL += " ,Politicians.FName";
+    //  return SQL;
+    //}
+    //public static string xCandidates4USPres(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionsPoliticians.PoliticianKey ";
+    //  SQL += " ,ElectionsPoliticians.RunningMateKey ";
+    //  SQL += " ,ElectionsPoliticians.OrderOnBallot ";
+    //  SQL += " ,ElectionsPoliticians.StateCode ";
+    //  SQL += " ,ElectionsPoliticians.OfficeKey ";
+    //  SQL += " ,Politicians.Password ";
+    //  SQL += " ,Politicians.AddOn ";
+    //  SQL += " ,Politicians.PartyKey ";
+    //  SQL += " ,Politicians.LDSPartyCode ";
+    //  SQL += " ,Politicians.EmailAddr ";
+    //  SQL += " ,Politicians.StateEmailAddr ";
+    //  SQL += " ,Politicians.LDSEmailAddr ";
+    //  SQL += " ,Politicians.WebAddr ";
+    //  SQL += " ,Politicians.StateWebAddr ";
+    //  SQL += " ,Politicians.LDSWebAddr ";
+    //  SQL += " ,Politicians.Phone ";
+    //  SQL += " ,Politicians.StatePhone ";
+    //  SQL += " ,Politicians.LDSPhone ";
+    //  SQL += " ,Politicians.Address ";
+    //  SQL += " ,Politicians.CityStateZip ";
+    //  SQL += " ,Politicians.StateAddress ";
+    //  SQL += " ,Politicians.StateCityStateZip ";
+    //  SQL += " ,Politicians.LDSAddress ";
+    //  SQL += " ,Politicians.LDSCityStateZip ";
+    //  SQL += " ,Politicians.DataUpdatedCount ";
+    //  SQL += " FROM ElectionsPoliticians,Politicians ";
+    //  SQL += " WHERE ElectionsPoliticians.PoliticianKey = Politicians.PoliticianKey ";
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsPoliticians.OfficeKey = 'USPresident'";
+    //  SQL += " ORDER BY ElectionsPoliticians.OrderOnBallot";
+    //  SQL += " ,Politicians.LName";
+    //  SQL += " ,Politicians.FName";
+    //  return SQL;
+    //}
+    //public static string xCandidates4USSenate(string ElectionKey, string OfficeKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionsPoliticians.PoliticianKey ";
+    //  SQL += " ,ElectionsPoliticians.RunningMateKey ";
+    //  //SQL += " ,ElectionsPoliticians.IsIncumbent ";
+    //  SQL += " ,ElectionsPoliticians.OrderOnBallot ";
+    //  SQL += " ,ElectionsPoliticians.StateCode ";
+    //  SQL += " ,ElectionsPoliticians.OfficeKey ";
+    //  SQL += " ,Politicians.Password ";
+    //  //SQL += " ,Politicians.PoliticianName ";
+    //  SQL += " ,Politicians.AddOn ";
+    //  SQL += " ,Politicians.PartyKey ";
+    //  SQL += " ,Politicians.LDSPartyCode ";
+    //  SQL += " ,Politicians.EmailAddr ";
+    //  SQL += " ,Politicians.StateEmailAddr ";
+    //  SQL += " ,Politicians.LDSEmailAddr ";
+    //  SQL += " ,Politicians.WebAddr ";
+    //  SQL += " ,Politicians.StateWebAddr ";
+    //  SQL += " ,Politicians.LDSWebAddr ";
+    //  SQL += " ,Politicians.Phone ";
+    //  SQL += " ,Politicians.StatePhone ";
+    //  SQL += " ,Politicians.LDSPhone ";
+    //  SQL += " ,Politicians.Address ";
+    //  SQL += " ,Politicians.CityStateZip ";
+    //  SQL += " ,Politicians.StateAddress ";
+    //  SQL += " ,Politicians.StateCityStateZip ";
+    //  SQL += " ,Politicians.LDSAddress ";
+    //  SQL += " ,Politicians.LDSCityStateZip ";
+    //  SQL += " ,Politicians.DataUpdatedCount ";
+    //  SQL += " FROM ElectionsPoliticians,Politicians ";
+    //  SQL += " WHERE ElectionsPoliticians.PoliticianKey = Politicians.PoliticianKey ";
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsPoliticians.OfficeKey = " + db.SQLLit(OfficeKey);
+    //  SQL += " ORDER BY ElectionsPoliticians.OrderOnBallot";
+    //  SQL += " ,Politicians.LName";
+    //  SQL += " ,Politicians.FName";
+    //  return SQL;
+    //}
+    //public static string xCandidates4USHouse(string ElectionKey, string OfficeKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionsPoliticians.PoliticianKey ";
+    //  SQL += " ,ElectionsPoliticians.RunningMateKey ";
+    //  //SQL += " ,ElectionsPoliticians.IsIncumbent ";
+    //  SQL += " ,ElectionsPoliticians.OrderOnBallot ";
+    //  SQL += " ,ElectionsPoliticians.StateCode ";
+    //  SQL += " ,ElectionsPoliticians.OfficeKey ";
+    //  SQL += " ,Politicians.Password ";
+    //  //SQL += " ,Politicians.PoliticianName ";
+    //  SQL += " ,Politicians.AddOn ";
+    //  SQL += " ,Politicians.PartyKey ";
+    //  SQL += " ,Politicians.LDSPartyCode ";
+    //  SQL += " ,Politicians.EmailAddr ";
+    //  SQL += " ,Politicians.StateEmailAddr ";
+    //  SQL += " ,Politicians.LDSEmailAddr ";
+    //  SQL += " ,Politicians.WebAddr ";
+    //  SQL += " ,Politicians.StateWebAddr ";
+    //  SQL += " ,Politicians.LDSWebAddr ";
+    //  SQL += " ,Politicians.Phone ";
+    //  SQL += " ,Politicians.StatePhone ";
+    //  SQL += " ,Politicians.LDSPhone ";
+    //  SQL += " ,Politicians.Address ";
+    //  SQL += " ,Politicians.CityStateZip ";
+    //  SQL += " ,Politicians.StateAddress ";
+    //  SQL += " ,Politicians.StateCityStateZip ";
+    //  SQL += " ,Politicians.LDSAddress ";
+    //  SQL += " ,Politicians.LDSCityStateZip ";
+    //  SQL += " ,Politicians.DataUpdatedCount ";
+    //  SQL += " FROM ElectionsPoliticians,Politicians ";
+    //  SQL += " WHERE ElectionsPoliticians.PoliticianKey = Politicians.PoliticianKey ";
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsPoliticians.OfficeKey = " + db.SQLLit(OfficeKey);
+    //  SQL += " ORDER BY ElectionsPoliticians.OrderOnBallot";
+    //  SQL += " ,Politicians.LName";
+    //  SQL += " ,Politicians.FName";
+    //  return SQL;
+    //}
+    //public static string xCandidates4USSenateHouse(string ElectionKey, string OfficeKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionsPoliticians.PoliticianKey ";
+    //  SQL += " ,ElectionsPoliticians.RunningMateKey ";
+    //  //SQL += " ,ElectionsPoliticians.IsIncumbent ";
+    //  SQL += " ,ElectionsPoliticians.OrderOnBallot ";
+    //  SQL += " ,ElectionsPoliticians.StateCode ";
+    //  SQL += " ,ElectionsPoliticians.OfficeKey ";
+    //  SQL += " ,Politicians.Password ";
+    //  //SQL += " ,Politicians.PoliticianName ";
+    //  SQL += " ,Politicians.AddOn ";
+    //  SQL += " ,Politicians.PartyKey ";
+    //  SQL += " ,Politicians.LDSPartyCode ";
+    //  SQL += " ,Politicians.EmailAddr ";
+    //  SQL += " ,Politicians.StateEmailAddr ";
+    //  SQL += " ,Politicians.LDSEmailAddr ";
+    //  SQL += " ,Politicians.WebAddr ";
+    //  SQL += " ,Politicians.StateWebAddr ";
+    //  SQL += " ,Politicians.LDSWebAddr ";
+    //  SQL += " ,Politicians.Phone ";
+    //  SQL += " ,Politicians.StatePhone ";
+    //  SQL += " ,Politicians.LDSPhone ";
+    //  SQL += " ,Politicians.Address ";
+    //  SQL += " ,Politicians.CityStateZip ";
+    //  SQL += " ,Politicians.StateAddress ";
+    //  SQL += " ,Politicians.StateCityStateZip ";
+    //  SQL += " ,Politicians.LDSAddress ";
+    //  SQL += " ,Politicians.LDSCityStateZip ";
+    //  SQL += " ,Politicians.DataUpdatedCount ";
+    //  SQL += " FROM ElectionsPoliticians,Politicians ";
+    //  SQL += " WHERE ElectionsPoliticians.PoliticianKey = Politicians.PoliticianKey ";
+    //  SQL += " AND ElectionsPoliticians.ElectionKeyFederal = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsPoliticians.OfficeKey = " + db.SQLLit(OfficeKey);
+    //  SQL += " ORDER BY ElectionsPoliticians.OrderOnBallot";
+    //  SQL += " ,Politicians.LName";
+    //  SQL += " ,Politicians.FName";
+    //  return SQL;
+    //}
+
+    //public static string IssuesAnyStatus(string IssueLevel)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " IssueKey ";
+    //  SQL += " ,Issue ";
+    //  SQL += " ,IssueOrder ";
+    //  SQL += " ,IsIssueOmit ";
+    //  //SQL += " ,xIsIssueTagForDeletion ";
+    //  SQL += " FROM Issues ";
+    //  SQL += " WHERE IssueLevel = " + db.SQLLit(IssueLevel);
+    //  SQL += " ORDER BY IssueOrder";
+    //  return SQL;
+    //}
+    //public static string IssuesAnyStatus(string IssueLevel, string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " IssueKey ";
+    //  SQL += " ,Issue ";
+    //  SQL += " ,IssueOrder ";
+    //  SQL += " ,IsIssueOmit ";
+    //  //SQL += " ,xIsIssueTagForDeletion ";
+    //  SQL += " FROM Issues ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND IssueLevel = " + db.SQLLit(IssueLevel);
+    //  SQL += " ORDER BY IssueOrder";
+    //  return SQL;
+    //}
+    ////		public static string IssuesAtNationalLevelAll(string IssueLevel)
+    ////		{
+    ////			string SQL = string.Empty;
+    ////			SQL += " SELECT ";
+    ////			SQL += " IssueKey ";
+    ////			SQL += " ,Issue ";
+    ////			SQL += " ,IssueOrder ";
+    ////			SQL += " ,IsIssueOmit ";
+    ////			SQL += " ,xIsIssueTagForDeletion ";
+    ////			SQL += " FROM Issues ";
+    ////			SQL += " WHERE IssueLevel = " + db.SQLLit(IssueLevel);
+    ////			SQL += " ORDER BY IssueOrder";
+    ////			return SQL;
+    ////		}
+    //public static string xIssuesAtLevel(string IssueLevel)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " IssueKey ";
+    //  SQL += " ,Issue ";
+    //  SQL += " ,IssueOrder ";
+    //  SQL += " ,IsIssueOmit ";
+    //  //SQL += " ,xIsIssueTagForDeletion ";
+    //  SQL += " FROM Issues ";
+    //  SQL += " WHERE IssueLevel = " + db.SQLLit(IssueLevel);
+    //  SQL += " AND IsIssueOmit = 0";
+    //  //SQL += " AND xIsIssueTagForDeletion = 0";
+    //  SQL += " ORDER BY IssueOrder";
+    //  return SQL;
+    //}
+
+    //public static string IssuesAtLevelAll(string IssueLevel)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " IssueKey ";
+    //  SQL += " ,Issue ";
+    //  SQL += " ,IssueOrder ";
+    //  SQL += " ,IsIssueOmit ";
+    //  //SQL += " ,xIsIssueTagForDeletion ";
+    //  SQL += " FROM Issues ";
+    //  SQL += " WHERE IssueLevel = " + db.SQLLit(IssueLevel);
+    //  SQL += " ORDER BY IssueOrder";
+    //  return SQL;
+    //}
+
+    //public static string IssuesAtLevel2Delete(string IssueLevel, string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " IssueKey ";
+    //  SQL += " ,Issue ";
+    //  //SQL += " ,xIsIssueTagForDeletion ";
+    //  SQL += " FROM Issues ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND IssueLevel = " + db.SQLLit(IssueLevel);
+    //  //SQL += " AND xIsIssueTagForDeletion = 1";
+    //  SQL += " ORDER BY IssueOrder";
+    //  return SQL;
+    //}
+    //public static string xIssues4National()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " IssueKey ";
+    //  SQL += " ,Issue ";
+    //  SQL += " ,IssueOrder ";
+    //  SQL += " ,IsIssueOmit ";
+    //  //SQL += " ,xIsIssueTagForDeletion ";
+    //  SQL += " FROM Issues ";
+    //  SQL += " WHERE (StateCode = 'LL' AND IssueLevel = 'A')";
+    //  SQL += " OR (StateCode = 'US' AND IssueLevel = 'B')";
+    //  SQL += " AND IsIssueOmit = 0";
+    //  //SQL += " AND xIsIssueTagForDeletion = 0";
+    //  SQL += " ORDER BY IssueOrder";
+    //  return SQL;
+    //}
+    //public static string xIssues4State(string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " IssueKey ";
+    //  SQL += " ,Issue ";
+    //  SQL += " ,IssueOrder ";
+    //  SQL += " ,IsIssueOmit ";
+    //  //SQL += " ,xIsIssueTagForDeletion ";
+    //  SQL += " FROM Issues ";
+    //  SQL += " WHERE (StateCode = 'ALL' AND IssueLevel = 'A')";
+    //  SQL += " OR (StateCode = " + db.SQLLit(StateCode) + " AND IssueLevel = 'C')";
+    //  SQL += " AND IsIssueOmit = 0";
+    //  //SQL += " AND xIsIssueTagForDeletion = 0";
+    //  SQL += " ORDER BY IssueOrder";
+    //  return SQL;
+    //}
+    //public static string IssuesNationalAnyStatus(string IssueLevel)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " IssueKey ";
+    //  SQL += " ,Issue ";
+    //  SQL += " ,IssueOrder ";
+    //  SQL += " ,IsIssueOmit ";
+    //  //SQL += " ,xIsIssueTagForDeletion ";
+    //  SQL += " FROM Issues ";
+    //  SQL += " WHERE IssueLevel = " + db.SQLLit(IssueLevel);
+    //  SQL += " ORDER BY IssueOrder";
+    //  return SQL;
+    //}
+    //public static string IssuesAtLevelAllAlphaSort(string IssueLevel)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " IssueKey ";
+    //  SQL += " ,Issue ";
+    //  SQL += " ,IssueOrder ";
+    //  SQL += " ,IsIssueOmit ";
+    //  //SQL += " ,xIsIssueTagForDeletion ";
+    //  SQL += " FROM Issues ";
+    //  SQL += " WHERE IssueLevel = " + db.SQLLit(IssueLevel);
+    //  SQL += " ORDER BY Issue";
+    //  return SQL;
+    //}
+    //public static string xIssuesAtLevelAll(string IssueLevel, string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " IssueKey ";
+    //  SQL += " ,Issue ";
+    //  SQL += " ,IssueOrder ";
+    //  SQL += " ,IsIssueOmit ";
+    //  //SQL += " ,xIsIssueTagForDeletion ";
+    //  SQL += " FROM Issues ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND IssueLevel = " + db.SQLLit(IssueLevel);
+    //  SQL += " AND IsIssueOmit = 0";
+    //  //SQL += " AND xIsIssueTagForDeletion = 0";
+    //  SQL += " ORDER BY IssueOrder";
+    //  return SQL;
+    //}
+    //public static string IssuesAtLevelAllAlphaSort(string IssueLevel, string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " IssueKey ";
+    //  SQL += " ,Issue ";
+    //  SQL += " ,IssueOrder ";
+    //  SQL += " ,IsIssueOmit ";
+    //  //SQL += " ,xIsIssueTagForDeletion ";
+    //  SQL += " FROM Issues ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND IssueLevel = " + db.SQLLit(IssueLevel);
+    //  SQL += " ORDER BY Issue";
+    //  return SQL;
+    //}
+    //public static string IssuesAtLevel(string IssueLevel
+    //  , string StateCode
+    //  , string CountyCode
+    //  )
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " IssueKey ";
+    //  SQL += " ,Issue ";
+    //  SQL += " ,IssueOrder ";
+    //  SQL += " ,IsIssueOmit ";
+    //  //SQL += " ,xIsIssueTagForDeletion ";
+    //  SQL += " FROM Issues ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = " + db.SQLLit(CountyCode);
+    //  SQL += " AND IssueLevel = " + db.SQLLit(IssueLevel);
+    //  SQL += " AND IsIssueOmit = 0";
+    //  //SQL += " AND xIsIssueTagForDeletion = 0";
+    //  SQL += " ORDER BY IssueOrder";
+    //  return SQL;
+    //}
+    //public static string IssuesAtLevelAll(string IssueLevel
+    //  , string StateCode
+    //  , string CountyCode
+    //  )
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " IssueKey ";
+    //  SQL += " ,Issue ";
+    //  SQL += " ,IssueOrder ";
+    //  SQL += " ,IsIssueOmit ";
+    //  //SQL += " ,xIsIssueTagForDeletion ";
+    //  SQL += " FROM Issues ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = " + db.SQLLit(CountyCode);
+    //  SQL += " AND IssueLevel = " + db.SQLLit(IssueLevel);
+    //  SQL += " ORDER BY IssueOrder";
+    //  return SQL;
+    //}
+    //public static string IssuesAtLevelAllAlphaSort(string IssueLevel
+    //  , string StateCode
+    //  , string CountyCode
+    //  )
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " IssueKey ";
+    //  SQL += " ,Issue ";
+    //  SQL += " ,IssueOrder ";
+    //  SQL += " ,IsIssueOmit ";
+    //  //SQL += " ,xIsIssueTagForDeletion ";
+    //  SQL += " FROM Issues ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = " + db.SQLLit(CountyCode);
+    //  SQL += " AND IssueLevel = " + db.SQLLit(IssueLevel);
+    //  SQL += " ORDER BY Issue";
+    //  return SQL;
+    //}
+
+    //public static string QuestionKey(string QuestionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Questions.QuestionKey ";
+    //  SQL += " FROM Questions ";
+    //  SQL += " WHERE Questions.QuestionKey =" + db.SQLLit(QuestionKey);
+    //  return SQL;
+    //}
+    //public static string Question(string QuestionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Questions.QuestionKey ";
+    //  SQL += " ,Questions.IssueKey ";
+    //  SQL += " ,Questions.QuestionOrder ";
+    //  SQL += " ,Questions.Question ";
+    //  SQL += " ,Questions.IsQuestionOmit ";
+    //  SQL += " FROM Questions ";
+    //  SQL += " WHERE QuestionKey = " + db.SQLLit(QuestionKey);
+    //  return SQL;
+    //}
+    //public static string Questions4Issue(string IssueKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Questions.QuestionKey ";
+    //  SQL += " ,Questions.Question ";
+    //  SQL += " ,Questions.QuestionOrder ";
+    //  SQL += " ,Questions.IsQuestionOmit ";
+    //  //SQL += " ,Questions.xIsQuestionTagForDeletion ";
+    //  SQL += " FROM Questions ";
+    //  SQL += " WHERE Questions.IssueKey = " + db.SQLLit(IssueKey);
+    //  SQL += " AND Questions.IsQuestionOmit = 0";
+    //  //SQL += " AND Questions.xIsQuestionTagForDeletion = 0";
+    //  SQL += " ORDER BY Questions.QuestionOrder";
+    //  return SQL;
+    //}
+    //public static string QuestionsAll4Issue(string IssueKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Questions.QuestionKey ";
+    //  SQL += " ,Questions.Question ";
+    //  SQL += " ,Questions.QuestionOrder ";
+    //  SQL += " FROM Questions ";
+    //  SQL += " WHERE Questions.IssueKey = " + db.SQLLit(IssueKey);
+    //  SQL += " ORDER BY Questions.QuestionOrder";
+    //  return SQL;
+    //}
+
+    //public static string Answers4Questions(string QuestionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Answers.PoliticianKey ";
+    //  SQL += " ,Answers.QuestionKey ";
+    //  SQL += " ,Answers.Answer ";
+    //  SQL += " FROM Answers ";
+    //  SQL += " WHERE Answers.QuestionKey = " + db.SQLLit(QuestionKey);
+    //  SQL += " ORDER BY Answers.PoliticianKey";
+    //  return SQL;
+    //}
+
+    //public static string Answers4AllIssues4OfficeInElection(string OfficeKey, string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Issues.IssueKey";
+    //  SQL += ",ElectionsOffices.OfficeKey";
+    //  SQL += ",ElectionsPoliticians.PoliticianKey";
+    //  SQL += ",Questions.QuestionKey";
+    //  SQL += " FROM ElectionsOffices,ElectionsPoliticians,Issues,Questions,Answers ";
+    //  SQL += " WHERE ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsOffices.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsOffices.OfficeKey = " + db.SQLLit(OfficeKey);
+    //  SQL += " AND ElectionsOffices.OfficeKey = ElectionsPoliticians.OfficeKey";
+    //  SQL += " AND Questions.IssueKey = Issues.IssueKey";
+    //  SQL += " AND Answers.QuestionKey = Questions.QuestionKey";
+    //  SQL += " AND Answers.PoliticianKey = ElectionsPoliticians.PoliticianKey";
+    //  SQL += " AND Questions.IsQuestionOmit = 0";
+    //  //SQL += " AND Questions.xIsQuestionTagForDeletion = 0";
+    //  SQL += " AND Issues.IsIssueOmit = 0";
+    //  //SQL += " AND Issues.IsIssueTagForDeletion = 0";
+    //  return SQL;
+    //}
+    //public static string Answers4AnIssue4OfficeInIssuesNavbar(string IssueKey, string OfficeKey, string ElectionKey)
+    //  // Modified to include YouTubeUrl
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionsOffices.OfficeKey";
+    //  SQL += ",ElectionsPoliticians.PoliticianKey";
+    //  SQL += ",Questions.Question";
+    //  SQL += ",Answers.Answer";
+    //  SQL += " FROM ElectionsOffices,ElectionsPoliticians,Issues,Questions,Answers ";
+    //  SQL += " WHERE ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsOffices.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsOffices.OfficeKey = " + db.SQLLit(OfficeKey);
+    //  SQL += " AND ElectionsOffices.OfficeKey = ElectionsPoliticians.OfficeKey";
+    //  SQL += " AND Issues.IssueKey = " + db.SQLLit(IssueKey);
+    //  SQL += " AND Questions.IssueKey = Issues.IssueKey";
+    //  SQL += " AND Answers.QuestionKey = Questions.QuestionKey";
+    //  SQL += " AND Answers.PoliticianKey = ElectionsPoliticians.PoliticianKey";
+    //  SQL += " AND (TRIM(Answers.Answer) <> '' OR TRIM(Answers.YouTubeUrl) <> '')";
+    //  SQL += " AND Questions.IsQuestionOmit = 0";
+    //  //SQL += " AND Questions.xIsQuestionTagForDeletion = 0";
+    //  SQL += " AND Issues.IsIssueOmit = 0";
+    //  //SQL += " AND Issues.IsIssueTagForDeletion = 0";
+    //  return SQL;
+    //}
+    //public static string xAnswers4ElectionKeyOfficeKeyIssueKey(string ElectionKey, string OfficeKey, string IssueKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionsOffices.OfficeKey";
+    //  SQL += ",ElectionsPoliticians.PoliticianKey";
+    //  SQL += ",Questions.Question";
+    //  SQL += ",Answers.Answer";
+    //  SQL += " FROM ElectionsOffices,ElectionsPoliticians,Issues,Questions,Answers ";
+    //  SQL += " WHERE ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsOffices.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsOffices.OfficeKey = " + db.SQLLit(OfficeKey);
+    //  SQL += " AND ElectionsOffices.OfficeKey = ElectionsPoliticians.OfficeKey";
+    //  SQL += " AND Issues.IssueKey = " + db.SQLLit(IssueKey);
+    //  SQL += " AND Questions.IssueKey = Issues.IssueKey";
+    //  SQL += " AND Answers.QuestionKey = Questions.QuestionKey";
+    //  SQL += " AND Answers.PoliticianKey = ElectionsPoliticians.PoliticianKey";
+    //  SQL += " AND Questions.IsQuestionOmit = 0";
+    //  //SQL += " AND Questions.xIsQuestionTagForDeletion = 0";
+    //  SQL += " AND Issues.IsIssueOmit = 0";
+    //  //SQL += " AND Issues.IsIssueTagForDeletion = 0";
+    //  return SQL;
+    //}
+
+    //#region Issues,Questions,Answers Tables
+    //public static string Answers4Issue(string IssueKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Answers.PoliticianKey";
+    //  SQL += " FROM Issues,Questions,Answers";
+    //  SQL += " WHERE Questions.IssueKey = " + db.SQLLit(IssueKey);
+    //  SQL += " AND Answers.QuestionKey = Questions.QuestionKey";
+    //  SQL += " AND Issues.IssueKey = Questions.IssueKey";
+    //  return SQL;
+    //}
+
+    //#endregion
+
+    //public static string LogLogins4LoginUserName(string UserName, string Date)
+    //{
+    //  DateTime Day = Convert.ToDateTime(Date);
+    //  DateTime NextDay = Day.AddDays(1);
+    //  string SQL = string.Empty;
+    //  SQL = "SELECT ";
+    //  SQL += " DateStamp";
+    //  SQL += ",UserName";
+    //  SQL += " UserSecurity";
+    //  SQL += ",UserStateCode";
+    //  SQL += ",UserDesignCode";
+    //  SQL += ",UserOrganizationCode";
+    //  SQL += ",UserCountyCode";
+    //  SQL += ",UserLocalCode";
+    //  SQL += ",UserIssuesCode";
+    //  SQL += ",UserPartyKey";
+    //  SQL += " FROM LogLogins";
+    //  SQL += " WHERE UserName = " + db.SQLLit(UserName);
+    //  SQL += " AND DateStamp >= " + db.SQLLit(Day.ToString("yyyy-MM-dd"));
+    //  //SQL += " AND DateStamp <= DATEADD(Day,1," + db.SQLLit(Date) + ")";
+    //  //MySQL does not recognize DATEADD
+    //  SQL += " AND DateStamp <= " + db.SQLLit(NextDay.ToString("yyyy-MM-dd"));
+    //  SQL += " ORDER BY DateStamp ASC";
+    //  return SQL;
+    //}
+
+    //public static string LogLogins4LoginUserName(string UserName, string Date)
+    //{
+    //  DateTime Day = Convert.ToDateTime(Date);
+    //  DateTime NextDay = Day.AddDays(1);
+    //  string SQL = string.Empty;
+    //  SQL = "SELECT ";
+    //  SQL += " DateStamp";
+    //  SQL += ",UserName";
+    //  SQL += " UserSecurity";
+    //  SQL += ",UserStateCode";
+    //  SQL += ",UserDesignCode";
+    //  SQL += ",UserOrganizationCode";
+    //  SQL += ",UserCountyCode";
+    //  SQL += ",UserLocalCode";
+    //  SQL += ",UserIssuesCode";
+    //  SQL += ",UserPartyKey";
+    //  SQL += " FROM LogLogins";
+    //  SQL += " WHERE UserName = " + db.SQLLit(UserName);
+    //  SQL += " AND DateStamp >= " + db.SQLLit(Day.ToString("yyyy-MM-dd"));
+    //  //SQL += " AND DateStamp <= DATEADD(Day,1," + db.SQLLit(Date) + ")";
+    //  //MySQL does not recognize DATEADD
+    //  SQL += " AND DateStamp <= " + db.SQLLit(NextDay.ToString("yyyy-MM-dd"));
+    //  SQL += " ORDER BY DateStamp ASC";
+    //  return SQL;
+    //}
+
+    //public static string Logs4LoginUserName(
+    //  string LogTable
+    //  , string UserName
+    //  , string Date)
+    //{
+    //  DateTime Day = Convert.ToDateTime(Date);
+    //  DateTime NextDay = Day.AddDays(1);
+    //  string SQL = string.Empty;
+    //  SQL = "SELECT ";
+    //  SQL += " DateStamp";
+    //  SQL += " ,UserName";
+    //  SQL += " FROM " + LogTable;
+    //  SQL += " WHERE UserName = " + db.SQLLit(UserName);
+    //  SQL += " AND DateStamp >= " + db.SQLLit(Day.ToString("yyyy-MM-dd"));
+    //  //SQL += " AND DateStamp <= DATEADD(Day,1," + db.SQLLit(Date) + ")";
+    //  //MySQL does not recognize DATEADD
+    //  SQL += " AND DateStamp <= " + db.SQLLit(NextDay.ToString("yyyy-MM-dd"));
+    //  return SQL;
+    //}
+
+    //public static string State4LDSStateCode(string LDSStateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " StateCode ";
+    //  SQL += " ,State ";
+    //  SQL += " FROM States ";
+    //  SQL += " WHERE LDSStateCode = " + db.SQLLit(LDSStateCode);
+    //  return SQL;
+    //}
+
+    //public static string LEGIDYY4NonVacant()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " * ";
+    //  SQL += " FROM LEGIDYY ";
+    //  SQL += " WHERE STATE <= '56'";
+    //  SQL += " AND LAST_NAME != 'VACANT'";
+    //  SQL += " ORDER BY STATE,TYPE,DISTRICT";
+    //  return SQL;
+    //}
+    //public static string LEGIDYYExcludingDCIDWA()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " * ";
+    //  SQL += " FROM LEGIDYY ";
+    //  SQL += " WHERE ((STATE != '11') AND (STATE != '16') AND (STATE != '53') AND (STATE <= '56')) ";
+    //  //SQL += " AND TYPE = '3'";//State house
+    //  SQL += " ORDER BY STATE,TYPE,DISTRICT";
+    //  return SQL;
+    //}
+    //public static string LEGIDYYDCIDWA()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " * ";
+    //  SQL += " FROM LEGIDYY ";
+    //  SQL += " WHERE ((STATE = '11') OR (STATE = '16') OR (STATE = '53')) ";
+    //  SQL += " ORDER BY STATE,TYPE,DISTRICT";
+    //  return SQL;
+    //}
+    //public static string LEGIDYY4STATE(string STATE)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " * ";
+    //  SQL += " FROM LEGIDYY ";
+    //  SQL += " WHERE STATE = " + db.SQLLit(STATE);
+    //  SQL += " AND STATE <= '56'";
+    //  SQL += " ORDER BY DISTRICT";
+    //  return SQL;
+    //}
+    //public static string LEGIDYY4STATETYPE(string STATE, string TYPE)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " * ";
+    //  SQL += " FROM LEGIDYY ";
+    //  SQL += " WHERE STATE = " + db.SQLLit(STATE);
+    //  SQL += " AND TYPE = " + db.SQLLit(TYPE);
+    //  SQL += " AND STATE <= '56'";
+    //  SQL += " ORDER BY DISTRICT";
+    //  return SQL;
+    //}
+
+    //public static string LDCODE4STATETYPENAME(string STATE, string TYPE, string NAME)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " * ";
+    //  SQL += " FROM LDCODE ";
+    //  SQL += " WHERE LDCODE.STATE = " + db.SQLLit(STATE);
+    //  SQL += " AND LDCODE.TYPE = " + db.SQLLit(TYPE);
+    //  SQL += " AND LDCODE.NAME = " + db.SQLLit(NAME);
+    //  SQL += " AND STATE <= '56'";
+    //  return SQL;
+    //}
+    //public static string LDCODE4TYPE(string TYPE)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " * ";
+    //  SQL += " FROM LDCODE ";
+    //  SQL += " WHERE LDCODE.TYPE = " + db.SQLLit(TYPE);
+    //  SQL += " AND STATE <= '56'";
+    //  SQL += " ORDER BY STATE,DISTRICT";
+    //  return SQL;
+    //}
+    //public static string LDCODE4NotTYPE(string TYPE)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " * ";
+    //  SQL += " FROM LDCODE ";
+    //  SQL += " WHERE LDCODE.TYPE != " + db.SQLLit(TYPE);
+    //  SQL += " AND STATE <= '56'";
+    //  SQL += " ORDER BY STATE,TYPE,DISTRICT";
+    //  return SQL;
+    //}
+    //public static string LDCODE4STATETYPENAME(string STATE, string NAME)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " * ";
+    //  SQL += " FROM LDCODE ";
+    //  SQL += " WHERE LDCODE.STATE = " + db.SQLLit(STATE);
+    //  SQL += " AND LDCODE.NAME = " + db.SQLLit(NAME);
+    //  SQL += " AND STATE <= '56'";
+    //  return SQL;
+    //}
+
+    //public static string Office4LDSStateCodeLDSTypeCodeLDSDistrictCodeLDSOffice(string LDSStateCode, string LDSTypeCode, string LDSDistrictCode, string LDSOffice)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Offices.StateCode";
+    //  SQL += " ,Offices.OfficeKey";
+    //  SQL += " ,Offices.OfficeLine1";
+    //  SQL += " ,Offices.OfficeLine2";
+    //  SQL += " ,Offices.OfficeLevel";
+    //  SQL += " ,Offices.LDSStateCode";
+    //  SQL += " ,Offices.LDSTypeCode";
+    //  SQL += " ,Offices.LDSDistrictCode";
+    //  SQL += " ,Offices.LDSOffice";
+    //  SQL += " FROM Offices";
+    //  SQL += " WHERE Offices.LDSStateCode = " + db.SQLLit(LDSStateCode);
+    //  SQL += " AND Offices.LDSTypeCode = " + db.SQLLit(LDSTypeCode);
+    //  SQL += " AND Offices.LDSDistrictCode = " + db.SQLLit(LDSDistrictCode);
+    //  SQL += " AND Offices.LDSOffice = " + db.SQLLit(LDSOffice);
+    //  return SQL;
+    //}
+    //public static string Office4STATETYPEDISTRICT(string LDSStateCode, string LDSTypeCode, string LDSDistrictCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Offices.StateCode";
+    //  SQL += " ,Offices.OfficeKey";
+    //  SQL += " ,Offices.OfficeLine1";
+    //  SQL += " ,Offices.OfficeLine2";
+    //  SQL += " ,Offices.OfficeLevel";
+    //  SQL += " ,Offices.LDSStateCode";
+    //  SQL += " ,Offices.LDSTypeCode";
+    //  SQL += " ,Offices.LDSDistrictCode";
+    //  SQL += " ,Offices.LDSOffice";
+    //  SQL += " FROM Offices";
+    //  SQL += " WHERE Offices.LDSStateCode = " + db.SQLLit(LDSStateCode);
+    //  SQL += " AND Offices.LDSTypeCode = " + db.SQLLit(LDSTypeCode);
+    //  SQL += " AND Offices.LDSDistrictCode = " + db.SQLLit(LDSDistrictCode);
+    //  return SQL;
+    //}
+    //public static string Office4LDSStateCodeLDSOffice(string LDSStateCode, string LDSOffice)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Offices.StateCode";
+    //  SQL += " ,Offices.OfficeKey";
+    //  SQL += " ,Offices.OfficeLine1";
+    //  SQL += " ,Offices.OfficeLine2";
+    //  SQL += " ,Offices.OfficeLevel";
+    //  SQL += " ,Offices.LDSStateCode";
+    //  SQL += " ,Offices.LDSTypeCode";
+    //  SQL += " ,Offices.LDSDistrictCode";
+    //  SQL += " ,Offices.LDSOffice";
+    //  SQL += " FROM Offices";
+    //  SQL += " WHERE Offices.LDSStateCode = " + db.SQLLit(LDSStateCode);
+    //  SQL += " AND Offices.LDSOffice = " + db.SQLLit(LDSOffice);
+    //  return SQL;
+    //}
+    ////public static string Offices4StateCodeLDS()
+    //public static string Offices4LDS()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Offices.StateCode";
+    //  SQL += " ,Offices.OfficeKey";
+    //  SQL += " ,Offices.OfficeLine1";
+    //  SQL += " ,Offices.OfficeLine2";
+    //  SQL += " ,Offices.DistrictCode";
+    //  SQL += " ,Offices.OfficeLevel";
+    //  SQL += " ,Offices.Incumbents";
+    //  SQL += " ,Offices.LDSOffice";
+    //  SQL += " ,Offices.LDSStateCode";
+    //  SQL += " FROM Offices";
+    //  SQL += " WHERE ((OfficeLevel = 2) OR (OfficeLevel = 3) OR (OfficeLevel = 5) OR (OfficeLevel = 6) OR ((OfficeLevel = 4) AND SUBSTRING(OfficeKey,3,8) = 'Governor'))";
+    //  SQL += " ORDER BY StateCode,OfficeLevel,OfficeKey";
+    //  return SQL;
+    //}
+
+    //new-----------------
+
+    //#region SQL primary Election digouts on Many Pages
+
+    ////----------------------
+    //public static string StateLocalDistricts(string StateCode, string CountyCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " LocalDistrict ";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,CountyCode ";
+    //  SQL += " ,LocalCode ";
+    //  SQL += " ,IsLocalDistrictTagForDeletion ";
+    //  SQL += " FROM LocalDistricts ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = " + db.SQLLit(CountyCode);
+    //  SQL += " AND IsLocalDistrictTagForDeletion != 1";
+    //  SQL += " ORDER BY LocalDistrict ";
+    //  return SQL;
+    //}
+
+    //#endregion
+
+    //#region Ballot.aspx - Offices on Ballot - Candidates for One Office
+
+    //public static string Election1Office(string ElectionKey, string OfficeKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionsPoliticians.OrderOnBallot ";
+    //  SQL += " ,ElectionsPoliticians.RunningMateKey ";
+    //  SQL += " ,ElectionsPoliticians.OfficeKey ";
+    //  SQL += " ,Politicians.PoliticianKey ";
+    //  SQL += " ,Politicians.StateCode ";
+    //  SQL += " ,Politicians.AddOn ";
+    //  SQL += " ,Politicians.PartyKey ";
+    //  SQL += " ,Politicians.LDSPartyCode ";
+    //  SQL += " ,Politicians.EmailAddr ";
+    //  SQL += " ,Politicians.StateEmailAddr ";
+    //  SQL += " ,Politicians.LDSEmailAddr ";
+    //  SQL += " ,Politicians.WebAddr ";
+    //  SQL += " ,Politicians.StateWebAddr ";
+    //  SQL += " ,Politicians.LDSWebAddr ";
+    //  SQL += " ,Politicians.Phone ";
+    //  SQL += " ,Politicians.StatePhone ";
+    //  SQL += " ,Politicians.LDSPhone ";
+    //  SQL += " ,Politicians.Address ";
+    //  SQL += " ,Politicians.CityStateZip ";
+    //  SQL += " ,Politicians.StateAddress ";
+    //  SQL += " ,Politicians.StateCityStateZip ";
+    //  SQL += " ,Politicians.LDSAddress ";
+    //  SQL += " ,Politicians.LDSCityStateZip ";
+    //  SQL += " FROM ElectionsPoliticians,Politicians ";
+    //  SQL += " WHERE ElectionsPoliticians.PoliticianKey = Politicians.PoliticianKey ";
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsPoliticians.OfficeKey = " + db.SQLLit(OfficeKey);
+    //  SQL += " ORDER BY ElectionsPoliticians.OrderOnBallot";
+    //  SQL += " ,Politicians.LName";
+    //  SQL += " ,Politicians.FName";
+    //  return SQL;
+    //}
+    //public static string xPoliticianKeys4Election4Office(string ElectionKey, string OfficeKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Politicians.PoliticianKey ";
+    //  SQL += " FROM ElectionsPoliticians,Politicians ";
+    //  SQL += " WHERE ElectionsPoliticians.PoliticianKey = Politicians.PoliticianKey ";
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsPoliticians.OfficeKey = " + db.SQLLit(OfficeKey);
+    //  SQL += " ORDER BY ElectionsPoliticians.OrderOnBallot";
+    //  SQL += " ,Politicians.LName";
+    //  SQL += " ,Politicians.FName";
+    //  return SQL;
+    //}
+
+    //#endregion
+
+    //public static string RunningMateKey4Official(string OfficeKey, string PoliticianKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT RunningMateKey ";
+    //  SQL += " FROM OfficesOfficials ";
+    //  SQL += " WHERE OfficeKey = " + db.SQLLit(OfficeKey);
+    //  SQL += " AND PoliticianKey = " + db.SQLLit(PoliticianKey);
+    //  return SQL;
+    //}
+
+    //public static string PoliticianAnswers(string PoliticianKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Answers.PoliticianKey";
+    //  SQL += " FROM Answers";
+    //  SQL += " WHERE Answers.PoliticianKey = " + db.SQLLit(PoliticianKey);
+    //  return SQL;
+    //}
+
+    //#region Unique Key Checks
+
+    //public static string ElectionKey_State(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Elections.ElectionKey ";
+    //  SQL += " FROM Elections ";
+    //  SQL += " WHERE Elections.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND Elections.CountyCode = ''";
+    //  return SQL;
+    //}
+    //public static string ElectionsOffices_Election_Office(string ElectionKey, string OfficeKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionsOffices.ElectionKey ";
+    //  SQL += " FROM ElectionsOffices ";
+    //  SQL += " WHERE ElectionsOffices.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsOffices.OfficeKey = " + db.SQLLit(OfficeKey);
+    //  return SQL;
+    //}
+    //public static string ElectionPoliticianKeysCheck(string ElectionKey, string OfficeKey, string PoliticianKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionsPoliticians.ElectionKey ";
+    //  SQL += " FROM ElectionsPoliticians ";
+    //  SQL += " WHERE ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsPoliticians.OfficeKey = " + db.SQLLit(OfficeKey);
+    //  SQL += " AND ElectionsPoliticians.PoliticianKey = " + db.SQLLit(PoliticianKey);
+    //  return SQL;
+    //}
+    //public static string IssueKeyCheck(string IssueKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Issues.IssueKey ";
+    //  SQL += " FROM Issues ";
+    //  SQL += " WHERE Issues.IssueKey = " + db.SQLLit(IssueKey);
+    //  return SQL;
+    //}
+    //#endregion
+
+    //#region State Politicians List Reports ABOVE
+
+    //public static string xElectionsPoliticians(string PoliticianKey, string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionsPoliticians.OfficeKey ";
+    //  SQL += " FROM ElectionsPoliticians ";
+    //  SQL += " WHERE ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsPoliticians.PoliticianKey = " + db.SQLLit(PoliticianKey);
+    //  return SQL;
+    //}
+    //#endregion
+
+    //#region PoliticianPageTitle.aspx
+    //#endregion
+
+    //#region /Admin/StateOffices.aspx
+    //public static string Office(string OfficeKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Offices.OfficeKey ";
+    //  SQL += " ,Offices.StateCode ";
+    //  SQL += " ,Offices.OfficeLevel ";
+    //  SQL += " ,Offices.OfficeOrderWithinLevel ";
+    //  SQL += " ,Offices.DistrictCode ";
+    //  SQL += " ,Offices.OfficeLine1 ";
+    //  SQL += " ,Offices.OfficeLine2 ";
+    //  SQL += " ,Offices.IsRunningMateOffice ";
+    //  SQL += " ,Offices.Incumbents ";
+    //  SQL += " ,Offices.VoteInstructions ";
+    //  SQL += " ,Offices.VoteForWording ";
+    //  SQL += " ,Offices.WriteInInstructions ";
+    //  SQL += " ,Offices.WriteInWording ";
+    //  SQL += " ,Offices.WriteInLines ";
+    //  SQL += ",Offices.IsInactive";
+    //  SQL += " FROM Offices ";
+    //  SQL += " WHERE Offices.OfficeKey = " + db.SQLLit(OfficeKey);
+    //  return SQL;
+    //}
+    //#endregion
+
+    //#region /Admin/Questions.aspx
+    //public static string IssueKey4Question(string Question)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Questions.IssueKey ";
+    //  SQL += " FROM Questions ";
+    //  SQL += " WHERE Questions.Question = " + db.SQLLit(Question);
+    //  return SQL;
+    //}
+    //#endregion
+
+    //#region /Admin/Election.aspx
+    //public static string Offices4StateCodeCounties(string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT";
+    //  SQL += " Offices.StateCode";
+    //  SQL += ",Offices.OfficeLevel";
+    //  SQL += " FROM Offices";
+    //  SQL += " WHERE Offices.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND (Offices.OfficeLevel = " + db.Office_County_Executive.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_County_Legislative.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_County_SchoolBoard.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_County_Commission.ToString() + ")";
+    //  return SQL;
+    //}
+    //public static string ElectionsPoliticians4ElectionKey4Counties(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += "ElectionsPoliticians.ElectionKey";
+    //  SQL += ",ElectionsPoliticians.OfficeKey";
+    //  SQL += ",Offices.OfficeLevel";
+    //  SQL += " FROM ElectionsPoliticians,Offices";
+    //  SQL += " WHERE ElectionsPoliticians.OfficeKey = Offices.OfficeKey";
+    //  //SQL += " AND SUBSTRING(ElectionsPoliticians.ElectionKey,1,11) = " + db.SQLLit(ElectionKey.Substring(0, 11));
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND (Offices.OfficeLevel = " + db.Office_County_Executive.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_County_Legislative.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_County_SchoolBoard.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_County_Commission.ToString() + ")";
+    //  return SQL;
+    //}
+    //public static string ElectionsPoliticians4ElectionKey4CountiesPrimary(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += "ElectionsPoliticians.ElectionKey";
+    //  SQL += ",ElectionsPoliticians.OfficeKey";
+    //  SQL += ",Offices.OfficeLevel";
+    //  SQL += " FROM ElectionsPoliticians,Offices";
+    //  SQL += " WHERE ElectionsPoliticians.OfficeKey = Offices.OfficeKey";
+    //  //SQL += " AND SUBSTRING(ElectionsPoliticians.ElectionKey,1,11) = " + db.SQLLit(ElectionKey.Substring(0, 11));
+    //  //SQL += " AND SUBSTRING(ElectionsPoliticians.ElectionKey,20,1) = " + db.SQLLit(ElectionKey.Substring(19, 1));
+    //  SQL += " AND ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND (Offices.OfficeLevel = " + db.Office_County_Executive.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_County_Legislative.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_County_SchoolBoard.ToString();
+    //  SQL += " OR Offices.OfficeLevel = " + db.Office_County_Commission.ToString() + ")";
+    //  return SQL;
+    //}
+    //#endregion
+
+    //#region /Admin/ElectionOffices.aspx
+    //public static string OfficesAtLevel(string StateCode, int Level)
+    //{
+    //  string SQL = "SELECT ";
+    //  SQL += " Offices.OfficeKey";
+    //  SQL += ",Offices.StateCode ";
+    //  SQL += ",Offices.OfficeLevel";
+    //  SQL += ",Offices.DistrictCode ";
+    //  SQL += ",Offices.CountyCode ";
+    //  SQL += ",Offices.LocalCode ";
+    //  SQL += ",Offices.OfficeLine1 ";
+    //  SQL += ",Offices.OfficeLine2 ";
+    //  SQL += " FROM Offices";
+    //  SQL += " WHERE Offices.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND Offices.OfficeLevel = " + Level.ToString();
+    //  //SQL += " ORDER BY CONVERT(int,Offices.DistrictCode)";
+    //  SQL += " ORDER BY Offices.DistrictCode";
+    //  SQL += " ,OfficeOrderWithinLevel";
+    //  return SQL;
+    //}
+    //public static string Rows_ElectionsOffices(string ElectionKey, string OfficeKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionsOffices.ElectionKey";
+    //  SQL += " FROM ElectionsOffices";
+    //  SQL += " WHERE ElectionsOffices.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND ElectionsOffices.OfficeKey = " + db.SQLLit(OfficeKey);
+    //  return SQL;
+    //}
+    //#endregion
+
+    //public static string PrimaryElectionsByDate()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " States.DemocraticPrimaryDate";
+    //  SQL += ",States.State";
+    //  SQL += " FROM States";
+    //  SQL += " ORDER BY States.DemocraticPrimaryDate";
+    //  return SQL;
+    //}
+    //public static string PrimaryElectionsByState()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " States.DemocraticPrimaryDate";
+    //  SQL += ",States.State";
+    //  SQL += " FROM States";
+    //  SQL += " ORDER BY States.State";
+    //  return SQL;
+    //}
+
+    //public static string MasterPoliticianAdds(string UserName)
+    //{
+    //  string SQL = " SELECT StateCode FROM LogPoliticianAdds"
+    //    + " WHERE UserName = " + db.SQLLit(UserName);
+    //  return SQL;
+    //}
+
+    //public static string LEGIDYY4STATETYPEDISTRICTAll(string STATE, string TYPE, string DISTRICT)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " * ";
+    //  SQL += " FROM LEGIDYY ";
+    //  SQL += " WHERE STATE = " + db.SQLLit(STATE);
+    //  SQL += " AND TYPE = " + db.SQLLit(TYPE);
+    //  SQL += " AND DISTRICT = " + db.SQLLit(DISTRICT);
+    //  SQL += " AND STATE <= '56'";
+    //  SQL += " ORDER BY STATE,TYPE,DISTRICT";
+    //  return SQL;
+    //}
+
+    //public static string Counties_LDS()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " County ";
+    //  SQL += " ,StateCode ";
+    //  SQL += " ,CountyCode ";
+    //  SQL += " ,LDSStateCode ";
+    //  SQL += " ,LDSCountyCode ";
+    //  SQL += " ,LDSCounty ";
+    //  SQL += " FROM Counties ";
+    //  SQL += " ORDER BY StateCode,CountyCode";
+    //  return SQL;
+    //}
+
+    //public static DataTable Table_CountyCodes(string StateCode)
+    //{
+    //  string SQL = "SELECT CountyCode";
+    //  SQL += " FROM States,Counties";
+    //  SQL += " WHERE States.StateCode = Counties.StateCode";
+    //  SQL += " AND States.StateCode = " + db.SQLLit(StateCode);
+    //  return db.Table(SQL);
+    //}
+
+    //public static string SameLastName4State(string StateCode, string LastName, string LastNameNoSpecialChars)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Politicians.PoliticianKey ";
+    //  SQL += " ,Politicians.PartyKey ";
+    //  SQL += " ,Politicians.TemporaryOfficeKey ";
+    //  SQL += " ,Politicians.StateAddress ";
+    //  SQL += " ,Politicians.StateCityStateZip ";
+    //  SQL += " ,Politicians.StatePhone ";
+    //  SQL += " ,Politicians.StateEmailAddr ";
+    //  SQL += " ,Politicians.StateWebAddr ";
+    //  SQL += " ,Politicians.Address ";
+    //  SQL += " ,Politicians.CityStateZip ";
+    //  SQL += " ,Politicians.Phone ";
+    //  SQL += " ,Politicians.EmailAddr ";
+    //  SQL += " ,Politicians.WebAddr ";
+    //  SQL += " ,Politicians.LDSAddress ";
+    //  SQL += " ,Politicians.LDSCityStateZip ";
+    //  SQL += " ,Politicians.LDSPhone ";
+    //  SQL += " ,Politicians.LDSEmailAddr ";
+    //  SQL += " ,Politicians.LDSWebAddr ";
+    //  SQL += " ,Politicians.LDSLegIDNum ";
+    //  SQL += " FROM Politicians ";
+    //  SQL += " WHERE Politicians.StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND Politicians.LName = " + db.SQLLit(LastName);
+    //  SQL += " ORDER BY Politicians.FName,Politicians.MName";
+    //  return SQL;
+    //}
+
+    //public static string Elections_Politicians_Election(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " ElectionKey";
+    //  SQL += ",PoliticianKey";
+    //  SQL += " FROM ElectionsPoliticians ";
+    //  SQL += " WHERE ElectionKey = " + db.SQLLit(ElectionKey);
+    //  return SQL;
+    //}
+
+    #region LDS  Tables
+
+    //public static string LEGIDYY()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " * ";
+    //  SQL += " FROM LEGIDYY ";
+    //  SQL += " WHERE STATE <= '56'";
+    //  SQL += " ORDER BY STATE,TYPE,DISTRICT";
+    //  return SQL;
+    //}
+
+    //public static string LDCODE()
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " * ";
+    //  SQL += " FROM LDCODE ";
+    //  SQL += " WHERE STATE <= '56'";
+    //  SQL += " ORDER BY STATE,TYPE,DISTRICT";
+    //  return SQL;
+    //}
+
+    //public static string Politicians4LDSLegIDNum(string LDSLegIDNum)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " LDSLegIDNum ";
+    //  SQL += " FROM Politicians ";
+    //  SQL += " WHERE Politicians.LDSLegIDNum = " + db.SQLLit(LDSLegIDNum);
+    //  return SQL;
+    //}
+
+    //public static string LDCODE4LdsStateCodeLDSTypeCode(string LdsStateCode, char LdsTypeCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " STATE";
+    //  SQL += ",TYPE";
+    //  SQL += ",DISTRICT";
+    //  SQL += ",NAME";
+    //  SQL += " FROM LDCODE";
+    //  SQL += " WHERE STATE = " + db.SQLLit(LdsStateCode);
+    //  SQL += " AND TYPE = " + db.SQLLit(Convert.ToString(LdsTypeCode));
+    //  SQL += " ORDER BY DISTRICT";
+    //  return SQL;
+    //}
+    //public static string LDCODE4LdsStateCodeLDSTypeCodeLDSDistrict(string LdsStateCode, char LdsTypeCode, string LDSDistrict)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " STATE";
+    //  SQL += ",TYPE";
+    //  SQL += ",DISTRICT";
+    //  SQL += ",NAME";
+    //  SQL += " FROM LDCODE";
+    //  SQL += " WHERE STATE = " + db.SQLLit(LdsStateCode);
+    //  SQL += " AND TYPE = " + db.SQLLit(Convert.ToString(LdsTypeCode));
+    //  SQL += " AND DISTRICT = " + db.SQLLit(LDSDistrict);
+    //  return SQL;
+    //}
+
+    #endregion
+
+    //public static DataTable Table_ElectionsFuture(string StateCode)
+    //{
+    //  return sql.xTable_ElectionsFuture(StateCode, string.Empty, string.Empty);
+    //}
+
+    //#region Referendums
+
+    //public static string Referendums4ElectionKey(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Referendums.ElectionKey ";
+    //  SQL += " ,Referendums.ReferendumKey";
+    //  SQL += " ,Referendums.ReferendumTitle ";
+    //  SQL += " ,Referendums.ReferendumDesc ";
+    //  SQL += " ,Referendums.OrderOnBallot";
+    //  SQL += " ,Referendums.IsReferendumTagForDeletion";
+    //  SQL += " FROM Referendums ";
+    //  SQL += " WHERE Referendums.ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND Referendums.IsReferendumTagForDeletion = 0";
+    //  SQL += " ORDER BY OrderOnBallot ASC";
+    //  return SQL;
+    //}
+
+    //#endregion
+
+    //public static DataTable xTable_ElectionsFuture(string StateCode, string CountyCode, string LocalCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT ";
+    //  SQL += " StateCode";
+    //  SQL += ",CountyCode";
+    //  SQL += ",LocalCode";
+    //  SQL += ",ElectionDate";
+    //  SQL += ",ElectionDesc";
+    //  SQL += " FROM ElectionsFuture";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND CountyCode = " + db.SQLLit(CountyCode);
+    //  SQL += " AND LocalCode = " + db.SQLLit(LocalCode);
+    //  SQL += " ORDER BY ElectionDate ASC";
+    //  return db.Table(SQL);
+    //}
+
+    //public static string IssuesAtLevel(string IssueLevel, string StateCode)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " IssueKey ";
+    //  SQL += " ,Issue ";
+    //  SQL += " ,IssueOrder ";
+    //  SQL += " ,IsIssueOmit ";
+    //  //SQL += " ,xIsIssueTagForDeletion ";
+    //  SQL += " FROM Issues ";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(StateCode);
+    //  SQL += " AND IssueLevel = " + db.SQLLit(IssueLevel);
+    //  SQL += " AND IsIssueOmit = 0";
+    //  //SQL += " AND xIsIssueTagForDeletion = 0";
+    //  SQL += " ORDER BY IssueOrder";
+    //  return SQL;
+    //}
+    //public static string CandidateQuestions4Issue(string IssueKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " SELECT ";
+    //  SQL += " Questions.QuestionKey ";
+    //  SQL += " ,Questions.Question ";
+    //  SQL += " ,Questions.IsQuestionOmit ";
+    //  //SQL += " ,Questions.xIsQuestionTagForDeletion ";
+    //  SQL += " FROM Questions ";
+    //  SQL += " WHERE Questions.IssueKey = " + db.SQLLit(IssueKey);
+    //  SQL += " AND Questions.IsQuestionOmit = 0";
+    //  //SQL += " AND Questions.xIsQuestionTagForDeletion = 0";
+    //  SQL += " ORDER BY Questions.QuestionOrder";
+    //  return SQL;
+    //}
+
+    //public static string IssuesPoliticianProvidedAnswers(string politicianKey)
+    //// Modified to check for YouTubeUrl and also to skip where both
+    //// YouTubeUrl and Answer are empty
+    //{
+    //  var sql = string.Empty;
+    //  sql += " SELECT ";
+    //  sql += " Issues.IssueKey";
+    //  sql += " ,Issues.Issue";
+    //  sql += " FROM Issues,Questions,Answers";
+    //  sql += " WHERE Answers.PoliticianKey = " + db.SQLLit(politicianKey);
+    //  sql += " AND (TRIM(Answers.Answer) <> '' OR TRIM(Answers.YouTubeUrl) <> '')";
+    //  sql += " AND Questions.QuestionKey = Answers.QuestionKey";
+    //  sql += " AND Issues.IssueKey = Questions.IssueKey";
+    //  sql += " AND Issues.IsIssueOmit = 0";
+    //  //sql += " AND Issues.IsIssueTagForDeletion = 0";
+    //  sql += " GROUP BY Issues.Issue,Issues.IssueKey,Issues.IssueOrder";
+    //  sql += " ORDER BY Issues.IssueOrder";
+    //  return sql;
+    //}
+
+    //#region Politicians Table
+
+    //public static string Politician(string politicianKey)
+    //{
+    //  var sql = string.Empty;
+    //  sql += " SELECT ";
+    //  sql += " Politicians.PoliticianKey ";
+    //  sql += " ,Politicians.TemporaryOfficeKey ";
+    //  sql += " ,Politicians.StateCode ";
+    //  sql += " ,Politicians.PartyKey ";
+    //  sql += " ,Politicians.LDSPartyCode ";
+    //  sql += " ,Politicians.EmailAddr ";
+    //  sql += " ,Politicians.StateEmailAddr ";
+    //  sql += " ,Politicians.LDSEmailAddr ";
+    //  sql += " ,Politicians.WebAddr ";
+    //  sql += " ,Politicians.StateWebAddr ";
+    //  sql += " ,Politicians.LDSWebAddr ";
+    //  sql += " ,Politicians.Phone ";
+    //  sql += " ,Politicians.StatePhone ";
+    //  sql += " ,Politicians.LDSPhone ";
+    //  sql += " ,Politicians.Address ";
+    //  sql += " ,Politicians.CityStateZip ";
+    //  sql += " ,Politicians.StateAddress ";
+    //  sql += " ,Politicians.StateCityStateZip ";
+    //  sql += " ,Politicians.LDSAddress ";
+    //  sql += " ,Politicians.LDSCityStateZip ";
+    //  sql += " ,Politicians.GeneralStatement ";
+    //  sql += " ,Politicians.Personal ";
+    //  sql += " ,Politicians.Education ";
+    //  sql += " ,Politicians.Profession ";
+    //  sql += " ,Politicians.Military ";
+    //  sql += " ,Politicians.Civic ";
+    //  sql += " ,Politicians.Political ";
+    //  sql += " ,Politicians.Religion ";
+    //  sql += " ,Politicians.Accomplishments ";
+    //  sql += " FROM Politicians";
+    //  sql += " WHERE Politicians.PoliticianKey = " + db.SQLLit(politicianKey);
+    //  return sql;
+    //}
+
+    //#endregion Politicians Table
+
+    #endregion Dead code
+  }
+}

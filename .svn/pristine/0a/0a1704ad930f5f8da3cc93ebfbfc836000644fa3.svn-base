@@ -1,0 +1,51 @@
+﻿using System;
+
+namespace Vote
+{
+  public partial class ForPartnersPage : PublicPage // not CacheablePage due to Captcha
+  {
+    private const string TitleTagAllStatesDomain =
+      "Partner with Political Organizations, Associations and News Media";
+
+    private const string MetaDescriptionAllStatesDomain =
+      "Partner with politically engaged organizations, political parties, associations and news media to share candidate and election information.";
+
+    private const string MetaKeywordsAllStatesDomain =
+      "political parties, political organizations, political news media, political associations";
+
+    private const string TitleTagSingleStateDomain =
+      "Partner with [[state]] Political Organizations, Associations and News Media";
+
+    private const string MetaDescriptionSingleStateDomain =
+      "Partner with [[state]]’s politically engaged organizations, political parties, associations and news media to share candidate and election information.";
+
+    private const string MetaKeywordsSingleStateDomain =
+      "[[state]] political parties, [[state]] political organizations, [[state]] political news media, [[state]] political associations";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+        if (DomainData.IsValidStateCode) // Single state
+        {
+          if (DomainDesign.IncludeTitleForSingleState)
+            Title = TitleTagSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForSingleState)
+            MetaDescription = MetaDescriptionSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForSingleState)
+            MetaKeywords = MetaKeywordsSingleStateDomain.Substitute();
+        }
+        else
+        {
+          if (DomainDesign.IncludeTitleForAllStates)
+            Title = TitleTagAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForAllStates)
+            MetaDescription = MetaDescriptionAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForAllStates)
+            MetaKeywords = MetaKeywordsAllStatesDomain.Substitute();
+        }
+
+      EmailForm.ToEmailAddress = "mgr@Vote-USA.org";
+      EmailForm.SetItems("We are interested in partnering with Vote-USA");
+    }
+  }
+}

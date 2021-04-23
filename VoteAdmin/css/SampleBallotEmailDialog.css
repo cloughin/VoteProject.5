@@ -1,0 +1,116 @@
+﻿/* Styles for the Address Entry dialog */
+
+.ui-widget-overlay 
+{
+  background: repeat-x scroll 50% 50% #000;
+}
+.ui-dialog
+{
+  background: transparent;
+  border: none;
+  /*overflow: visible;*/
+}
+.ui-dialog-titlebar
+{
+  display: none;
+}
+#sampleBallotEmailDialog
+{
+  display: none;
+  text-align: left;
+  color: #666;
+  border: 1px solid #666;
+  background-color: #fff;
+  padding: 0;
+}
+#sampleBallotEmailDialog .header
+{
+  width: 100%;
+  height: 52px;
+  background: #365e77;
+  color: #fff;
+}
+#sampleBallotEmailDialog .header div
+{
+  padding: 15px 0 0 30px;
+  font-family: Georgia;
+  font-size: 24px;
+  font-weight: normal;
+}
+#sampleBallotEmailDialog .inner
+{
+  padding: 15px 30px 0 30px;
+}
+#sampleBallotEmailDialog .inner .blurb
+{
+  font-family: Georgia;
+  font-size: 12pt;
+  line-height: 130%;
+}
+#sampleBallotEmailDialog .inner .inner2
+{
+  margin-left: 40px;
+}
+#sampleBallotEmailDialog .inner .entry
+{
+  padding-top: 20px;
+}
+#sampleBallotEmailDialog .inner .entry .input
+{
+  float: left;
+  background-image: url(/images/addressinput.png);
+  width: 285px;
+  height: 29px;
+}
+#sampleBallotEmailDialog .inner .entry .input2
+{
+  padding: 7px 4px;
+}
+#sampleBallotEmailDialog .inner .entry input
+{
+  width: 275px;
+  height: 13px;
+  border: none;
+  font-family: Arial;
+  font-size: 12px;
+  background-color: transparent;
+}
+#sampleBallotEmailDialog .inner .entry a.emailEnter
+{
+  float: left;
+  width: 55px;
+  height: 29px;
+  display: block;
+  background: #365e77 url(/images/entertext.png);
+  overflow: hidden;
+	text-indent: -10000px;
+	font-size: 0px;
+	line-height: 0px;
+  cursor: pointer;
+}
+#sampleBallotEmailDialog .inner .entry a:hover.emailEnter
+{
+  background-color: #457c98;
+}
+#sampleBallotEmailDialog .inner .nothanks
+{
+  clear: both;
+  padding-top: 20px;
+  margin-left: 126px;
+}
+#sampleBallotEmailDialog .inner .nothanks a.emailNoThanks
+{
+  width: 88px;
+  height: 29px;
+  display: block;
+  background: url(/images/nothanks.png);
+  overflow: hidden;
+	text-indent: -10000px;
+	font-size: 0px;
+	line-height: 0px;
+  cursor: pointer;
+}
+#sampleBallotEmailDialog .inner .nothanks a:hover.emailNoThanks
+{
+  background-position: 0 -29px;
+}

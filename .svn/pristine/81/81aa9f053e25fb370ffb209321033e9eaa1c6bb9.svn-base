@@ -1,0 +1,47 @@
+﻿using System;
+using Vote.Reports;
+
+namespace Vote
+{
+  public partial class IssueListPage : CacheablePage
+  {
+    #region Caching support
+
+    protected override bool SuppressCaching
+    {
+      get { return true; }
+    }
+
+    protected override string GetCacheKey()
+    {
+      return UrlManager.GetStateCodeFromHostName();
+    }
+
+    protected override string GetCacheType()
+    {
+      return "IssueList";
+    }
+
+    #endregion Caching support
+
+    private static string IssueListTag()
+    {
+      return "Issues and issue questions available for candidate responses";
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      Title = IssueListTag();
+      MetaDescription = IssueListTag();
+      MetaKeywords = IssueListTag();
+
+      Instructions.InnerHtml = "These are the issues and questions" +
+        " we make available to candidates to provide voters with their positions" +
+        " and views. All responses are provided by the candidates" +
+        " or are obtained from their websites.";
+
+      IssueReportIssueListResponsive.GetReportByStateCode(QueryState)
+        .AddTo(ReportPlaceHolder);
+    }
+  }
+}

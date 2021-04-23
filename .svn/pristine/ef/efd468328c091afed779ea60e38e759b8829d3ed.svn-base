@@ -1,0 +1,200 @@
+﻿using System;
+using System.Globalization;
+using System.IO;
+using System.Text;
+using System.Web;
+using System.Xml;
+using DB.Vote;
+using SiteMap = Vote.Master.SiteMap;
+
+namespace Vote
+{
+  // This is on hold for now, but the existing sitemap code needs to be seriously 
+  // refactored at some point...
+  //
+  public class SitemapManager
+  {
+    public static void ServeSitemap(string domainDataCode)
+    {
+      var request = HttpContext.Current.Request;
+      var response = HttpContext.Current.Response;
+
+      try
+      {
+        var lastModDate = Sitemap.GetLastCreated(domainDataCode);
+        if (lastModDate == null) // base code, return 404
+          throw new VoteException("No sitemap for {0}", domainDataCode);
+
+        // First check if the sitemap has been modified
+        var ifModifiedSinceHeader = request.Headers["If-Modified-Since"];
+        DateTime ifModifiedSince;
+        var isModified = true; // assume modified unless we prove otherwise
+        if (!string.IsNullOrWhiteSpace(ifModifiedSinceHeader) &&
+          DateTime.TryParse(ifModifiedSinceHeader, out ifModifiedSince))
+        {
+          isModified = false; // change our assumption
+          // If mod date is greater, we need to check for insignificant (< 1 sec)
+          // difference, because of lossy date conversions.
+          if (lastModDate > ifModifiedSince)
+            isModified = (lastModDate - ifModifiedSince) > TimeSpan.FromSeconds(1);
+        }
+
+        ServeSitemapContent(domainDataCode, lastModDate.Value, isModified);
+      }
+      catch (VoteException ex)
+      {
+        response.Write(ex.Message);
+        response.StatusCode = 404;
+      }
+      catch (Exception)
+      {
+        response.Write("Sitemap not available");
+        response.StatusCode = 404;
+      }
+      finally
+      {
+        response.End();
+      }
+    }
+
+    private static void ServeSitemapContent(
+      string domainDataCode, DateTime lastModDate, bool isModified)
+    {
+      var response = HttpContext.Current.Response;
+      var maxAge = new TimeSpan(24, 0, 0); // 24 hours -- used in headers
+      var expiration = DateTime.UtcNow + maxAge;
+
+      response.Cache.SetCacheability(HttpCacheability.Public);
+      response.Cache.SetETag(
+        '"' + lastModDate.Ticks.ToString(CultureInfo.InvariantCulture) + '"');
+      response.Cache.SetLastModified(lastModDate);
+      response.Cache.SetMaxAge(maxAge);
+      response.Cache.SetExpires(expiration);
+      response.Cache.SetSlidingExpiration(false);
+      if (isModified) // serve actual sitemap
+      {
+        var sitemap = Sitemap.GetSitemapXml(domainDataCode);
+        if (sitemap == null || sitemap.Length == 0)
+          throw new VoteException("No sitemap for {0}", domainDataCode);
+
+        response.ContentType = "text/xml";
+        response.ContentEncoding = Encoding.UTF8;
+        response.BinaryWrite(sitemap);
+      }
+      else // tell client to use cached version
+      {
+        response.StatusCode = 304;
+
+        // Explicitly set the Content-Length header so the client doesn't wait for
+        //  content but keeps the connection open for other requests 
+        response.AddHeader("Content-Length", "0");
+      }
+    }
+
+    // Right now, this is mostly a wrapper
+    public static void UpdateAllSitemapVirtualPages()
+    {
+      string message;
+
+      try
+      {
+        VotePage.LogInfo("UpdateAllSitemapVirtualPages", "Started");
+
+        var table = Sitemap.GetAllKeyData(0);
+        foreach (var row in table)
+          UpdateSitemapVirtualPage(row.DomainDataCode);
+
+        message = "Completed";
+      }
+      catch (Exception ex)
+      {
+        VotePage.LogException("UpdateAllSitemapVirtualPages", ex);
+        message = string.Format("Exception: {0} [see exception log for details]",
+          ex.Message);
+      }
+
+      VotePage.LogInfo("UpdateAllSitemapVirtualPages", message);
+    }
+
+    public static void UpdateSitemapVirtualPage(string domainDataCode)
+    {
+      var stream = new MemoryStream();
+      var xmlWriter = new XmlTextWriter(stream, Encoding.UTF8);
+      SiteMap.Domain_Sitemap(domainDataCode, xmlWriter);
+      Sitemap.UpdateSitemapXml(stream.ToArray(), domainDataCode);
+    }
+
+    //  object LockObject = new object();
+    //  string DomainDataCode;
+
+    //  public void Create(string domainDataCode, string path)
+    //  {
+    //    using (StreamWriter streamWriter = new StreamWriter(path))
+    //      Create(domainDataCode, streamWriter);
+    //  }
+
+    //  public void Create(string domainDataCode, TextWriter textWriter)
+    //  {
+    //    using (XmlTextWriter xmlTextWriter = new XmlTextWriter(textWriter))
+    //      Create(domainDataCode, xmlTextWriter);
+    //  }
+
+    //  public void Create(string domainDataCode, XmlTextWriter writer)
+    //  {
+    //    DomainDataCode = domainDataCode; // make it available to the whole class
+
+    //    // Note: Because this algorithm uses temporary db tables, the code
+    //    // is non-reentrant. It would fail if executed from more than one 
+    //    // server at a time, or if run for multiple domains at the same time. 
+    //    // We guard against this with the lock.
+    //    lock (LockObject)
+    //    {
+    //      Create(writer);
+    //    }
+    //  }
+
+    //  private void Create(XmlTextWriter writer)
+    //  {
+    //    CreateTemporaryTables(); 
+    //  }
+
+    //  private void CreateTemporaryTables()
+    //  {
+    //    SitemapPoliticiansTemp.TruncateTable();
+    //    SitemapElectionsTemp.TruncateTable();
+    //    SitemapPoliticiansIssuesTemp.TruncateTable();
+
+    //    if (IsUpcomingStateElectionViewable(DomainDataCode))
+    //      CreateTemporaryTablesForUpcomingElections();
+    //    else
+    //      CreateTemporaryTablesForCurrentlyElectedOfficials();
+    //  }
+
+    //  private void CreateTemporaryTablesForUpcomingElections()
+    //  {
+    //    // The following is a code whose meaning is not entirely clear to me.
+    //    // It appears to take on the values Last, LastG and All, although the
+    //    // db currently only has LastG values.
+    //    // 
+    //    // This seems to be a previousElectionsToInclude code:
+    //    //   Last = last election
+    //    //   LastG = last general election
+    //    //   All = all elections
+    //    string previousElectionsToInclude = Sitemap.GetPoliticianElections(DomainDataCode);
+    //  }
+
+    //  private void CreateTemporaryTablesForCurrentlyElectedOfficials()
+    //  {
+    //    throw new NotImplementedException();
+    //  }
+
+    //  #region Interface methods to existing code -- will be eliminated eventually
+
+    //  private static bool IsUpcomingStateElectionViewable(string domainDataCode)
+    //  {
+    //    return db.Is_Election_Upcoming_Viewable_State(domainDataCode);
+    //  }
+
+    //  #endregion Interface methods to existing code -- will be eliminated eventually
+  }
+}

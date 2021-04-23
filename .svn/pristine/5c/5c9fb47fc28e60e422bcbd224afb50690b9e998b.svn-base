@@ -1,0 +1,104 @@
+using System;
+using System.Data;
+
+namespace Vote.Admin
+{
+  public partial class IssuesReportPage : SecureAdminPage, IAllowEmptyStateCode
+  {
+    #region from db
+    // none
+    #endregion from db
+
+    private void IssueTableReport(DataTable issueTable)
+    {
+      foreach (DataRow issueRow in issueTable.Rows)
+      {
+        var issue = "<hr>" + issueRow["Issue"]
+          + "<br>[" + issueRow["IssueKey"] + "]";
+        if ((bool)issueRow["IsIssueOmit"])
+          issue += " O";
+        var htmlIssueTr = db.Add_Tr_To_Table_Return_Tr(HTMLIssuesTable, "PartyRow");
+        db.Add_Td_To_Tr(htmlIssueTr, issue, "tdReportDetail");
+        db.Add_Td_To_Tr(htmlIssueTr, "<hr>", "tdReportDetail");
+
+        var questionsTable = db.Table(sql.CandidateQuestions4IssueAll(issueRow["IssueKey"].ToString()));
+        foreach (DataRow questionRow in questionsTable.Rows)
+        {
+          var sqlText = "Answers ";
+          sqlText += " WHERE Answers.QuestionKey = " + db.SQLLit(questionRow["QuestionKey"].ToString());
+          var answers = db.Rows_Count_From(sqlText);
+          var question = questionRow["Question"]
+            + " (" + answers + ")"
+            + " ...[" + questionRow["QuestionKey"] + "]";
+          if ((bool)questionRow["IsQuestionOmit"])
+            question += " O";
+          var htmlQuestionRow = db.Add_Tr_To_Table_Return_Tr(HTMLIssuesTable, "PartyRow");
+          db.Add_Td_To_Tr(htmlQuestionRow, string.Empty, "tdReportDetail");
+          db.Add_Td_To_Tr(htmlQuestionRow, question, "tdReportDetail");
+        }
+      }
+    }
+    private void ShowReport(string issueLevel, string issuesGroup)
+    {
+      //IssuesGroup can be either: LL (for All), US or StateCode
+      //in Page html <table id="HTMLIssuesTable" align="center" cellSpacing="0" width="760" runat="server">
+      var headingRow = db.Add_Tr_To_Table_Return_Tr(HTMLIssuesTable, "HeadingRow");//<tr Class="HeadingRow">
+
+      #region Heading <td Class="tdReportGroupHeadingLeft" align="left">
+      db.Add_Td_To_Tr(headingRow
+        , "Issue on Navbar" + "<br>[Issue ID] O D"
+        , "tdReportGroupHeadingLeft");
+      db.Add_Td_To_Tr(headingRow
+        , "Question (Answers) ...[Question ID] O D" + "<br>(What is your position and views regarding)"
+        , "tdReportGroupHeadingLeft");
+      #endregion
+
+      var issueTable = db.Table(sql.IssuesAtLevelAll(issueLevel, issuesGroup));
+      IssueTableReport(issueTable);
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        Title = H1.InnerText = "Issues Report";
+
+        ViewState["StateCode"] = db.State_Code();
+        ViewState["CountyCode"] = db.County_Code();
+        ViewState["LocalCode"] = db.Local_Code();
+        //if (!db.Is_User_Security_Ok())
+        //  SecurePage.HandleSecurityException();
+
+        #region ViewState Values
+        ViewState["IssueLevel"] = string.Empty;
+        ViewState["IssuesGroup"] = string.Empty;
+
+        #region ViewState["IssueLevel"]  ViewState["IssuesGroup"]
+        if (!string.IsNullOrEmpty(GetQueryString("IssueLevel")))
+          ViewState["IssueLevel"] = GetQueryString("IssueLevel");
+        if (!string.IsNullOrEmpty(GetQueryString("Group")))
+          ViewState["IssuesGroup"] = GetQueryString("Group");
+        #endregion
+        #endregion ViewState Values
+
+        #region Additional Security
+        if ((ViewState["IssueLevel"].ToString() == string.Empty)
+          || (ViewState["IssuesGroup"].ToString() == string.Empty))
+        {
+          HandleFatalError("IssueLevel and/or IssueGroup is missing");
+        }
+        #endregion Additional Security
+
+        try
+        {
+          ShowReport(ViewState["IssueLevel"].ToString(), ViewState["IssuesGroup"].ToString());
+        }
+        catch (Exception ex)
+        {
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+﻿namespace DB.Vote
+{
+  public partial class AnswersViewRow {}
+
+  public partial class AnswersView
+  {
+    public static AnswersViewTable GetAllDataByIssueLevelStateCodePoliticianKey(
+      string issueLevel, string stateCode, string politicianKey, int commandTimeout = -1)
+    {
+      const string cmdText = "SELECT ig.IssueGroupKey,ig.IssueGroupOrder,ig.Heading AS IssueGroupHeading," +
+        "ig.SubHeading AS IssueGroupSubHeading,i.IssueKey,i.IssueOrder,i.IssueLevel,i.Issue," +
+        "i.StateCode AS StateCode,q.QuestionKey,q.QuestionOrder,q.Question,a.PoliticianKey,a.Source," +
+        "a.DateStamp,a.Answer,a.YouTubeUrl,a.YouTubeDate,a.Sequence FROM Issues i" +
+        " INNER JOIN IssueGroupsIssues ON IssueGroupsIssues.IssueKey = i.IssueKey" +
+        " INNER JOIN IssueGroups ig ON ig.IssueGroupKey = IssueGroupsIssues.IssueGroupKey" +
+        " INNER JOIN Questions q ON q.IssueKey = i.IssueKey" +
+        " LEFT JOIN Answers a on a.QuestionKey = q.QuestionKey AND a.PoliticianKey=@PoliticianKey" +
+        " WHERE i.StateCode=@StateCode AND i.IssueLevel=@IssueLevel" +
+        "  AND i.IsIssueOmit=0 AND q.IsQuestionOmit=0" +
+        " ORDER BY IssueGroupOrder,IssueOrder,QuestionOrder,DateStamp DESC,Sequence DESC";
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      VoteDb.AddCommandParameter(cmd, "IssueLevel", issueLevel);
+      VoteDb.AddCommandParameter(cmd, "StateCode", stateCode);
+      VoteDb.AddCommandParameter(cmd, "PoliticianKey", politicianKey);
+      return FillTable(cmd, AnswersViewTable.ColumnSet.All);
+    }
+
+    //public static AnswersViewTable GetAllResponsesByQuestionKey(
+    //  string questionKey, int commandTimeout = -1)
+    //{
+    //  const string cmdText = "SELECT a.Source,a.DateStamp,a.Answer,a.Sequence FROM Answers a" +
+    //    " WHERE a.QuestionKey=@QuestionKey" +
+    //    " ORDER BY DateStamp DESC,Sequence DESC";
+    //  var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+    //  VoteDb.AddCommandParameter(cmd, "QuestionKey", questionKey);
+    //  return FillTable(cmd, AnswersViewTable.ColumnSet.All);
+    //}
+  }
+}

@@ -1,0 +1,51 @@
+﻿using System;
+
+namespace Vote
+{
+  public partial class ForPoliticalPartiesPage : PublicPage // not CacheablePage due to Captcha
+  {
+    private const string TitleTagAllStatesDomain =
+      "Free Promotion of Political Party Candidates";
+
+    private const string MetaDescriptionAllStatesDomain =
+      "Helping political parties to promote their candidates in elections, free of charge.";
+
+    //private const string MetaKeywordsAllStatesDomain =
+    //  "political parties, democratic party, republican party, green party, libertarian party";
+
+    private const string TitleTagSingleStateDomain =
+      "Free Promotion of [[state]] Political Party Candidates";
+
+    private const string MetaDescriptionSingleStateDomain =
+      "Helping [[state]] political parties to promote their candidates in elections, free of charge.";
+
+    //private const string MetaKeywordsSingleStateDomain =
+    //  "[[state]] political parties, [[state]] democratic party, [[state]] republican party, [[state]] green party, [[state]] libertarian party";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+        if (DomainData.IsValidStateCode) // Single state
+        {
+          if (DomainDesign.IncludeTitleForSingleState)
+            Title = TitleTagSingleStateDomain.Substitute() + " | " + Master.SiteName;
+          if (DomainDesign.IncludeMetaDescriptionForSingleState)
+            MetaDescription = MetaDescriptionSingleStateDomain.Substitute();
+          //if (DomainDesign.IncludeMetaKeywordsForSingleState)
+          //  MetaKeywords = MetaKeywordsSingleStateDomain.Substitute();
+        }
+        else
+        {
+          if (DomainDesign.IncludeTitleForAllStates)
+            Title = TitleTagAllStatesDomain.Substitute() + " | " + Master.SiteName;
+          if (DomainDesign.IncludeMetaDescriptionForAllStates)
+            MetaDescription = MetaDescriptionAllStatesDomain.Substitute();
+          //if (DomainDesign.IncludeMetaKeywordsForAllStates)
+          //  MetaKeywords = MetaKeywordsAllStatesDomain.Substitute();
+        }
+
+      EmailForm.ToEmailAddress = "mgr@Vote-USA.org";
+      EmailForm.SetItems("Request from a political party for username and password");
+    }
+  }
+}

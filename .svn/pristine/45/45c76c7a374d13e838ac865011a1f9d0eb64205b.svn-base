@@ -1,0 +1,7 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Admin.Master" 
+AutoEventWireup="true" CodeBehind="TestSuper.aspx.cs" Inherits="Vote.Master.TestSuperPage" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="MasterHeadContent" runat="server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="MasterMainContent" runat="server">
+  <p>I got in.</p>
+</asp:Content>

@@ -1,0 +1,243 @@
+﻿#main-tabs li.htab a
+{
+  font-size: 8pt;
+}
+
+#main-tabs div.vtab-panel
+{
+  min-height: 527px;
+}
+
+#main-tabs li.vtab a
+{
+  /* do not change any of these font specs*/
+  /* the program assumes these value for line breaking in the tab labels */
+  font-family: Arial;
+  font-size: 8pt;
+  line-height: 13px;
+  padding: 2px 7px 2px 0;
+}
+
+.main-heading
+{
+  float: left;
+  width: 525px;
+}
+
+div.content-header
+{
+  margin-top: 0;
+}
+
+#outer {
+  position: relative;
+}
+
+#outer h1
+{
+  margin-bottom: 5px;
+}
+
+#outer h1 span
+{
+  font-size: 12pt;
+  padding-left: 10px;
+  white-space: nowrap;
+}
+#outer .slo-load
+{
+  color: #ffaf1e;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 24px;
+}
+
+#outer .politician-links
+{
+  float: right;
+  margin-top: 12px;
+}
+
+#outer .politician-links .actions
+{
+  float: left;
+}
+
+#outer .politician-links .intro-actions
+{
+  margin-right: 15px;
+}
+
+#outer .politician-links a.action
+{
+  border: 1px solid #bf9241;
+  display: block;
+  margin-bottom: 5px;
+  padding: 1px 4px;
+  text-decoration: none;
+}
+
+#outer .politician-links a.action:hover
+{
+  border-color: #ffaf1e;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+#outer .politician-links a.action.disabled
+{
+  -moz-opacity: 0.3;
+  cursor: default;
+  filter: alpha(opacity: 30);
+  opacity: 0.3;
+}
+
+#outer .politician-links a.action p
+{
+  color: #707070;
+  font-family: "trebuchet ms", helvetica, sans-serif;
+  font-size: 12px;
+  line-height: 150%;
+  margin-bottom: 0;
+}
+
+#outer .politician-links a.action p em
+{
+  color: #25a;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: bold;
+}
+
+#outer .politician-links a.action p em span
+{
+  color: #bf9241;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+#outer .politician-links a.action ul
+{
+  color: #bf9241;
+  list-style: disc;
+  margin: 5px 0 0 50px;
+}
+
+#outer .politician-links a.action li
+{
+  color: #bf9241;
+  font-family: "trebuchet ms", helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+#outer .politician-links a.action li span
+{
+  color: #707070;
+}
+
+/***********************************************/
+/* Search                                      */
+/***********************************************/
+
+#outer .search-box {
+  width: 500px;
+  margin-top: 0;
+  position: absolute;
+  right: 0;
+  z-index: 1;
+  background-color: #ffffff;
+}
+
+#outer .search-box input {
+  width: 488px;
+}
+
+#outer .search-box .results {
+  border: 1px solid #dbdbdb;
+  border-top: none;
+  height: 300px;
+  overflow-y: scroll;
+  display: none;
+  padding: 3px;
+}
+
+#outer .search-box .results p 
+{
+  font-size: 9pt;
+  line-height: 130%;
+}
+
+#outer .search-box .results p:hover {
+  color: #ffffff;
+  background-color: #2255aa;
+}
+
+/***********************************************/
+/* Content header/footer                       */
+/***********************************************/
+
+#outer .search-box.start-hidden,
+#outer .content-header.start-hidden,
+#outer .content-footer.start-hidden
+{
+  display: none;
+}
+
+#outer .content-header {
+  width: 400px;
+}
+
+#outer .content-header ul
+{
+  list-style: disc;
+  margin: 10px 0 10px 30px;
+}
+
+#outer .content-header li
+{
+  margin: 3px 0;
+}
+
+#outer .content-footer {
+  margin-top: 20px;
+}
+
+/***********************************************/
+/* Accordion panel                             */
+/***********************************************/
+
+#main-tabs div.accordion-panel
+{
+  padding: 0 15px 15px 15px;
+}
+ 
+#main-tabs div.issues-answer-panel .heading
+{
+  height: 32px;
+}
+
+/*#main-tabs div.issues-answer-panel textarea.answer-textbox
+{
+  margin: 15px 0 10px 0;
+  width: 658px;
+}*/
+
+#main-tabs div.issues-answer-panel .feedback
+{
+  width: 530px;
+}
+
+  /***********************************************/
+  /* FIREFOX                                     */
+  /***********************************************/
+  /*
+	@-moz-document url-prefix()
+	{ 
+	}
+  */
+  	
+  /***********************************************/
+  /* IE10                                        */
+  /***********************************************/

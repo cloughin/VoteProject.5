@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<generateDbClasses>
+  <databases
+    namespace="DB"
+    supportMySql="false"
+    supportMsSql="true"
+    secondary="false"
+    >
+    <database
+      mappedName="VoteSecurity"
+      provider="MsSql"
+      connectionString="data source=.\SQLEXPRESS;Integrated Security=SSPI;Database=aspnetdb"
+      >
+      <tables>
+        <table name="aspnet_Applications" mappedName="Applications" />
+        <table name="aspnet_Membership" mappedName="Membership" />
+        <table name="aspnet_Paths" mappedName="Paths" />
+        <table name="aspnet_PersonalizationAllUsers" mappedName="PersonalizationAllUsers" />
+        <table name="aspnet_PersonalizationPerUser" mappedName="PersonalizationPerUser" />
+        <table name="aspnet_Profile" mappedName="Profile" />
+        <table name="aspnet_Roles" mappedName="Roles" />
+        <table name="aspnet_SchemaVersions" mappedName="SchemaVersions" />
+        <table name="aspnet_Users" mappedName="Users" />
+        <table name="aspnet_UsersInRoles" mappedName="UsersInRoles" />
+        <table name="aspnet_WebEvent_Events" mappedName="WebEvent_Events" />
+        <table name="vw_aspnet_Applications" skip="true" />
+        <table name="vw_aspnet_MembershipUsers" skip="true" />
+        <table name="vw_aspnet_Profiles" skip="true" />
+        <table name="vw_aspnet_Roles" skip="true" />
+        <table name="vw_aspnet_Users" skip="true" />
+        <table name="vw_aspnet_UsersInRoles" skip="true" />
+        <table name="vw_aspnet_WebPartState_Paths" skip="true" />
+        <table name="vw_aspnet_WebPartState_Shared" skip="true" />
+        <table name="vw_aspnet_WebPartState_User" skip="true" />
+        <table name="RolesInRoles">
+          <indexes>
+            <index add="true" columns="RoleIdFrom" />
+          </indexes>
+        </table>
+        <table name="vw_RolesInRoles" mappedName="RolesInRolesView">
+          <indexes>
+            <index add="true" columns="RoleIdFrom" />
+          </indexes>
+        </table>
+      </tables>
+    </database>
+  </databases>
+</generateDbClasses>

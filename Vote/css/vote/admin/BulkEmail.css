@@ -1,0 +1,1991 @@
+﻿/***********************************************/
+/* Entire page                                 */
+/***********************************************/
+
+body.admin-page .mainlabel 
+{
+  color: #bf9241;
+  font-weight: bold;
+  text-align: left;
+}
+
+body.admin-page h2.jurisdiction-message
+{
+  margin: 0;
+}
+
+body.admin-page h4.credential-message
+{
+  font-size: 12px;
+  font-style: italic;
+}
+
+body.admin-page .update-controls
+{
+  margin: 4px 0 0 0;
+  position: relative;
+}
+
+#main-tabs
+{
+  margin: 0 0 20px 0;
+  width: 933px;
+}
+
+#main-tabs .data-area
+{
+  min-height: 279px;
+}
+
+#main-tabs div.col
+{
+  float: left;
+}
+
+#main-tabs .ui-tabs-panel
+{
+  min-height: 509px;
+}
+
+#main-tabs div.htab-panel div.inner-panel
+{
+  min-height: 483px;
+}
+ 
+#main-tabs li.htab .tab-ast
+{
+  top: 0;
+  left: 0;
+}
+
+#main-tabs .sublabel 
+{
+  color: #334f80;
+  font-size: 8pt;
+}
+
+#main-tabs .mainlabel em
+{
+  color: #2254aa;
+  font-style: normal;
+}
+
+#main-tabs .sublabel em
+{
+  color: #bf9241;
+  font-style: normal;
+  font-weight: bold;
+}
+
+#main-tabs div.control-box
+{
+  background: #eee;
+  padding: 5px 0 5px 5px;
+}
+
+#main-tabs div.control-box label,
+#main-tabs label.std-checkbox {
+color: #334f80;
+font-size: 8pt;
+position: relative;
+top: -2px;
+}
+
+#main-tabs .scrolling-list
+{
+  background-color: #ffe;
+  border: 1px solid #dbdbdb;
+  width: 260px;
+  height: 100px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  margin-bottom: 3px;
+  color: #334f80;
+}
+
+#main-tabs .email-list input[type=text]
+{
+  width: 184px;
+}
+
+#main-tabs div.instructions 
+{
+  margin: 0 0 10px 15px;
+}
+
+#main-tabs div.instructions ul
+{
+  color: #bf9241;
+  list-style: disc;
+}
+
+#main-tabs div.instructions ul ul
+{
+  margin-left: 15px;
+  list-style: square;
+}
+
+#main-tabs div.instructions li
+{
+  margin-bottom: 2px;
+}
+
+#main-tabs div.instructions li span
+{
+  color: #334f80;
+  font-size: 11px;
+}
+
+#main-tabs div.instructions em
+{
+  color: #bf9241;
+  font-style: normal;
+  font-weight: bold;
+}
+ 
+#main-tabs .save-options
+{
+  position: absolute;
+  left: 15px;
+  bottom: 10px;
+}
+
+#main-tabs p.template-name
+{
+  text-overflow: ellipsis;
+	width: 858px;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+#main-tabs span.edittemplate-name
+{
+  color: #334f80;
+}
+
+body.admin-page .list-results
+{
+  border: 1px solid #888;
+  overflow-y: scroll;
+  height: 431px;
+  margin-top: 8px;
+}
+
+body.admin-page .list-results p
+{
+  color: #334f80;
+  font-size: 9pt;
+  padding: 5px 5px 0 5px;
+}
+
+body.admin-page .list-results em
+{
+  color: #bf9241;
+  font-style: normal;
+  font-weight: bold;
+}
+
+body.admin-page .list-results table
+{
+  width: 100%
+}
+
+body.admin-page .list-results table.disabled
+{
+  opacity: 0.5;
+  -moz-opacity: 0.5;
+  filter: alpha(opacity: 50);
+}
+
+body.admin-page .list-results table div.css-checkbox
+{
+  float: left;
+  margin: 1px 2px 0 0;
+}
+
+body.admin-page .list-results table thead tr
+{
+  background-color: #d8d8f9;
+}
+
+body.admin-page .list-results table tr.even
+{
+  background-color: #eef;
+}
+
+body.admin-page .list-results table tr.selected
+{
+  background-color: #00f;
+}
+
+body.admin-page .list-results table tr.selected td
+{
+  color: #fff;
+}
+
+body.admin-page .list-results table th,
+body.admin-page .list-results table td
+{
+  padding: 0 3px
+}
+
+body.admin-page .list-results table th
+{
+  color: #bf9241;
+  font-size: 8pt;
+  border-left: 1px solid #eee;
+}
+
+body.admin-page .list-results table th:first-child
+{
+  border-left: none;
+}
+
+body.admin-page .list-results table td
+{
+  color: #334f80;
+  font-size: 8pt;
+}
+
+body.admin-page .list-results .toggler div.criteria
+{
+  position: absolute;
+  background: #ffe;
+  width: 800px;
+  padding: 2px 5px;
+  display: none;
+}
+
+body.admin-page .list-results .toggler.showing div.criteria
+{
+  display: block;
+}
+
+body.admin-page .list-results .criteria p
+{
+  font-size: 8pt;
+  padding-left: 20px;
+  text-indent: -20px;
+}
+
+/* more-info is add-on to list-results for more info dialogs*/
+body.admin-page div.more-info
+{
+  overflow-y: visible;
+}
+
+body.admin-page div.more-info table
+{
+  border: 1px solid #ccc;
+}
+
+body.admin-page div.more-info td.col1
+{
+  text-align: right;
+  width: 125px;
+  padding-right: 5px;
+  font-weight: bold;
+  color: #bf9241;
+}
+
+#main-tabs div input:disabled + label
+{
+  color: #999;
+}
+
+/***********************************************/
+/* Edit Template                               */
+/***********************************************/
+
+#tab-edittemplate div.code-edit
+{
+  background-color: #ffe;
+  border: 1px solid #dbdbdb;
+}
+
+#tab-edittemplate div.subject
+{
+  height: 32px;
+}
+
+#tab-edittemplate div.body
+{
+  height: 316px;
+}
+
+#tab-edittemplate .code-edit-heading .mainlabel
+{
+  float: left;
+  padding-top: 7px;
+}
+
+#tab-edittemplate .code-edit-heading .undo-redo
+{
+  float: right;
+}
+
+#tab-edittemplate .code-edit-heading .undo-redo div
+{
+  width: 24px;
+  height: 22px;
+  float: left;
+  background-image: url(/images/undo-redo.png);
+  margin-bottom: 2px;
+}
+
+#tab-edittemplate .code-edit-heading .undo-redo div.undo
+{
+  margin-right: 2px;
+  background-position: 0 0;
+}
+
+#tab-edittemplate .code-edit-heading .undo-redo div.undo:hover
+{
+  background-position: 0 -22px;
+}
+
+#tab-edittemplate .code-edit-heading .undo-redo div.undo.disabled
+{
+  background-position: 0 -44px;
+}
+
+#tab-edittemplate .code-edit-heading .undo-redo div.redo
+{
+  background-position: -24px 0;
+}
+
+#tab-edittemplate .code-edit-heading .undo-redo div.redo:hover
+{
+  background-position: -24px -22px;
+}
+
+#tab-edittemplate .code-edit-heading .undo-redo div.redo.disabled
+{
+  background-position: -24px -44px;
+}
+
+#tab-edittemplate .code-edit
+{
+  clear: both;
+}
+
+#tab-edittemplate .buttons
+{
+  margin-top: 10px;
+}
+
+#body-editor-tabs {
+  padding: 0;
+}
+
+#body-editor-tabs .ui-tabs-panel {
+  min-height: 293px;
+}
+
+#tab-body-html
+{
+  padding: 0;
+}
+
+#tab-body-rendered .inner
+{
+  height: 290px;
+}
+
+#tab-body-rendered iframe
+{
+  width: 100%;
+  height: 100%;
+}
+ 
+/***********************************************/
+/* Available Substitutions                     */
+/***********************************************/
+
+#main-tabs #tab-availablesubstitutions div.inner-panel
+{
+  padding: 0 0 0 18px;
+} 
+
+#tab-availablesubstitutions div.inner 
+{
+  overflow-y: scroll;
+  max-height: 507px;
+}
+
+#tab-availablesubstitutions div.instructions 
+{
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+#tab-availablesubstitutions.ui-tabs-panel
+{
+  height: 432px;
+  overflow-y: scroll;
+}
+
+#tab-availablesubstitutions tr.odd
+{
+  background-color: #eee;
+}
+
+#tab-availablesubstitutions th
+{
+  color: #bf9241;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+#tab-availablesubstitutions th.substitution-type
+{
+  color: #334f80;
+  font-size: 1.2em;
+  font-weight: bold;
+  padding-top: 6px;
+}
+
+#tab-availablesubstitutions td
+{
+  font-size: 8pt;
+  padding-top: 2px;
+}
+
+#tab-availablesubstitutions td.name
+{
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font-size: 12px;
+  padding-right: 5px;
+  color: rgb(0, 0, 224);
+}
+
+#tab-availablesubstitutions td.name:hover
+{
+  color: red;
+}
+
+#tab-availablesubstitutions td.name .escape
+{
+  color: rgb(0, 0, 0);
+  background-color: rgb(255, 255, 51);
+  -moz-opacity: 0.6;
+  filter: alpha(opacity: 60);
+  opacity: 0.6;
+  }
+  
+#tab-availablesubstitutions td.name.disabled span
+{
+  background-color: transparent;
+  color: #999;
+}
+  
+#tab-availablesubstitutions td.name.disabled + td
+{
+  color: #999;
+}
+
+#tab-availablesubstitutions h3.options-display
+{
+  padding-top: 6px;
+  margin-bottom: 3px;
+}
+
+#tab-availablesubstitutions div.options-display-type 
+{
+  float: left;
+  width: 160px;
+  font-size: 8pt;
+  padding: 0 6px 6px 6px;
+  margin-right: 8px;
+  background-color: #eee;
+}
+
+#tab-availablesubstitutions div.options-display-type ul
+{
+  margin-left: 12px;
+}
+
+#tab-availablesubstitutions div.options-display-type li
+{
+  margin-left: 12px;
+  text-indent: -12px;
+}
+
+#tab-availablesubstitutions div.options-display-type li em
+{
+  font-weight: bold;
+  font-style: normal;
+}
+
+#tab-availablesubstitutions div.options-display-type.type-date
+{
+  width: 309px;
+}
+
+#tab-availablesubstitutions div.options-display-type.type-list
+{
+  width: 485px;
+  margin-right: 0;
+}
+
+#tab-availablesubstitutions div.options-display-type.type-election
+{
+  width: 260px;
+  clear: both;
+  margin-top: 8px;
+}
+
+#tab-availablesubstitutions div.options-display-type.type-viewability
+{
+  margin-top: 8px;
+  width: 160px;
+}
+
+#tab-availablesubstitutions div.options-display-type.type-past-future
+{
+  margin-top: 8px;
+  width: 161px;
+}
+
+#tab-availablesubstitutions div.options-display-type.type-major-party
+{
+  margin-top: 8px;
+  width: 169px;
+  margin-right: 0;
+}
+
+#tab-availablesubstitutions div.options-display-type h4
+{
+  font-size: 12px;
+}
+
+#tab-availablesubstitutions h3.conditionals
+{
+  padding-top: 6px;
+  margin-bottom: 3px;
+  clear: both;
+}
+
+#tab-availablesubstitutions div.conditionals
+{
+  float: left;
+}
+
+#tab-availablesubstitutions div.conditionals select
+{
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font-size: 12px;
+  padding: 0;
+  border: none;
+  color: rgb(136, 18, 159);
+  background-color: #eee;
+}
+
+#tab-availablesubstitutions p.conditionals
+{
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font-size: 12px;
+}
+
+#tab-availablesubstitutions p.conditionals .escape
+{
+  color: rgb(0, 0, 0);
+  background-color: rgb(255, 255, 51);
+}
+
+#tab-availablesubstitutions p.conditionals .keyword
+{
+  color: rgb(0, 0, 224);
+}
+
+#tab-availablesubstitutions p.conditionals .operator
+{
+  color: rgb(136, 18, 159);
+}
+
+#tab-availablesubstitutions div.conditionals.col1
+{
+  background-color: #eee;
+}
+
+#tab-availablesubstitutions div.conditionals.col2
+{
+  margin: 10px 15px 0 15px;
+}
+
+#tab-availablesubstitutions div.conditionals.col3
+{
+  margin: 13px 0 0 0;
+}
+
+#tab-availablesubstitutions div.conditionals.col3 .label
+{
+  font-size: 8pt;
+}
+
+#tab-availablesubstitutions div.conditionals.col3 .keyword
+{
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font-size: 12px;
+  color: rgb(0, 0, 224);
+}
+
+#tab-availablesubstitutions div.conditionals.col3 .elseif .label
+{
+  padding-left: 5px;
+}
+
+#tab-availablesubstitutions div.conditionals.col3 .elseif-spinner
+{
+  width: 10px;
+}
+
+#tab-availablesubstitutions div.conditionals.col3 .else
+{
+  margin-top: 4px;
+}
+
+#tab-availablesubstitutions div.conditionals.col3 .else .label
+{
+  padding-left: 1px;
+}
+
+#tab-availablesubstitutions div.conditionals.col3 .else div
+{
+  float: left;
+}
+
+#tab-availablesubstitutions div.fail-directive
+{
+  margin-bottom: 10px;
+  background-color: #eee;
+}
+
+#tab-availablesubstitutions p.fail-directive
+{
+  margin-bottom: 4px;
+}
+ 
+/***********************************************/
+/* Select Recipients                           */
+/***********************************************/
+
+#tab-selectrecipients div.htab-panel div.inner-panel {
+  padding: 12px 12px;
+  position: relative;
+}
+
+#tab-selectrecipients div.upper
+{
+  margin-top: 12px;
+  min-height: 292px;
+}
+
+#tab-selectrecipients .select-jurisdictions-control
+{
+  float: left;
+}
+
+#tab-selectrecipients div.lower
+{
+  margin-top: 12px;
+  position: relative;
+}
+
+#tab-selectrecipients div.checkbox-list
+{
+  max-height: 190px;
+}
+
+#tab-selectrecipients  div.checkbox-list#PartiesPickerList
+{
+  max-height: 171px;
+}
+
+#tab-selectrecipients div.contacts-buttons,
+#tab-selectrecipients div.emails-checkboxes
+{
+  margin-top: 10px;
+}
+
+#tab-selectrecipients div.col.col1
+{
+  width: 141px;
+  margin-right: 17px;
+}
+
+#tab-selectrecipients .lower div.boxed-group
+{
+  padding-right: 0;
+}
+
+#tab-selectrecipients .lower div.col
+{
+  margin-right: 8px;
+}
+
+#tab-selectrecipients div.lower .col.control-box
+{
+  padding-right: 6px;
+}
+
+#tab-selectrecipients .col label
+{
+  color: #334f80;
+  font-size: 8pt;
+}
+
+#tab-selectrecipients .col label
+{
+  position: relative;
+  top: -2px;
+}
+
+#tab-selectrecipients div.single-election-msg
+{
+  font-size: 8pt;
+  color: #bf9241;
+  font-style: italic;
+  margin-left: 25px;
+  width: 220px;
+}
+
+#tab-selectrecipients .filter-options-box div
+{
+  padding-left: 20px;
+  text-indent: -20px;
+  width: 150px;
+}
+
+#tab-selectrecipients .viewable-election-type-filtering
+{
+  margin-top: 8px;
+}
+
+#tab-selectrecipients .select-election-box
+{
+  position: relative;
+  min-width: 210px;
+  max-width: 370px;
+}
+
+#tab-selectrecipients .selected-election-desc
+{
+  font-size: 8pt;
+  color: #334f80;
+  padding-left: 20px;
+  text-indent: -20px;
+  font-weight: bold;
+}
+
+#tab-selectrecipients .selected-election-desc span
+{
+  font-weight: normal;
+}
+
+#tab-selectrecipients .selected-election-desc span.disabled
+{
+  color: #999;
+}
+
+#tab-selectrecipients .election-control-placeholder
+{
+  width: 1px;
+  height: 28px;
+}
+
+#tab-selectrecipients .election-control-outer
+{
+  top: auto;
+  bottom: -13px;
+  left: 5px;
+}
+ 
+#tab-selectrecipients .lower div.elections-options
+{
+  margin-right: 0;
+}
+ 
+#tab-selectrecipients .get-recipients
+{
+  position: absolute;
+  right: 18px;
+  bottom: 10px;
+}
+
+/* to handle sizing inconsistency with ie */
+#tab-selectrecipients .recipient-buttons > div,
+#tab-selectrecipients .contacts-buttons > div,
+#tab-selectrecipients .emails-checkboxes > div,
+#tab-selectrecipients .election-filter-type > div
+{
+  height: 19px;
+}
+
+#tab-selectrecipients .election-filter-options
+{
+  line-height: 12px;
+}
+
+#tab-selectrecipients .district-options
+{
+  margin-left: 15px;
+}
+
+#tab-selectrecipients .district-filtering
+{
+  width: 200px;
+}
+
+#tab-selectrecipients div.visitor-district-filtering-msg
+{
+  width: 170px;
+}
+
+#tab-selectrecipients .district-filtering .checkbox-list
+{
+  border: 1px solid #888;
+  margin-right: 5px;
+  background-color: #ffe;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  width: 193px;
+  max-height: 149px;
+}
+
+#tab-selectrecipients .district-filtering .checkbox-list p
+{
+  white-space: nowrap;
+}
+
+#tab-selectrecipients .district-filtering p.sublabel span
+{
+  position: relative;
+  top: -2px;
+}
+
+#tab-selectrecipients .visitor-options
+{
+  margin-top: 10px;
+}
+
+#tab-selectrecipients div.visitor-options.visitor-type-options
+{
+  margin-right: 15px;
+}
+
+#tab-selectrecipients .visitor-types
+{
+  width: 180px;
+  margin-right: 8px;
+}
+
+#tab-selectrecipients .visitor-options-filter
+{
+  width: 370px;
+  margin-right: 8px;
+}
+
+#tab-selectrecipients .visitor-options-filter hr
+{
+  margin: 3px 0 3px 4px;
+  width: 98%;
+}
+
+#tab-selectrecipients .visitor-options-filter div.col.col1
+{
+  width: 180px;
+}
+
+#tab-selectrecipients .visitor-options-filter div.col.col2
+{
+  width: 225px;
+}
+
+#tab-selectrecipients .visitor-options-filter .visitors-with-addresses,
+#tab-selectrecipients .visitor-options-filter .visitors-with-known-districts
+{
+  margin-top: 8px;
+}
+
+#tab-selectrecipients .visitor-options-filter .date-range input
+{
+  width: 150px;
+}
+ 
+#tab-selectrecipients .donor-options-filter
+{
+  width: 200px;
+  margin-right: 8px;
+}
+ 
+#tab-selectrecipients .donor-options .msg
+{
+  width: 200px;
+  font-size: 8pt;
+  line-height: 120%;
+  font-style: italic;
+  margin-bottom: 5px;
+}
+
+/***********************************************/
+/* Select Recipients Instructions              */
+/***********************************************/
+
+#main-tabs .instructions-page div.inner-panel {
+  padding: 0 0 0 18px;
+}
+
+#main-tabs .instructions-page div.inner {
+  overflow-y: scroll;
+  max-height: 507px;
+  padding-right: 5px
+}
+
+#main-tabs .instructions-page p.mainlabel
+{
+  margin-top: 10px;
+  font-size: 11pt;
+}
+
+#main-tabs .instructions-page p.intro
+{
+  color: #334f80;
+  font-size: 9pt;
+  margin-top: 10px;
+}
+
+#main-tabs .instructions-page p.intro em
+{
+  color: #bf9241;
+  font-style: normal;
+  font-weight: bold;
+}
+
+#main-tabs .instructions-page div.instructions
+{
+  margin-top: 10px;
+}
+
+#main-tabs .instructions-page div.instructions li p
+{
+  margin-bottom: 6px;
+  font-size: 9pt
+}
+
+#main-tabs .instructions-page div.instructions li span
+{
+  font-size: 9pt
+}
+
+/***********************************************/
+/* View Recipients                             */
+/***********************************************/
+
+#tab-viewrecipients .current-list-results .toggler
+{
+  float: left;
+  position: relative;
+  margin-left: 6px;
+  font-size: 8pt;
+  color: #bf9241;
+}
+
+#tab-viewrecipients .current-list-results .toggler > div
+{
+  float: left;
+  position: relative;
+}
+
+#tab-viewrecipients .current-list-results .toggler p
+{
+  padding: 0;
+}
+
+#tab-viewrecipients .current-list-results .toggler div.ind
+{
+  height: 14px;
+  width: 10px;
+  background-image: url(/images/treeicons.gif);
+  background-position: -4px -2px;
+  background-repeat: no-repeat;
+}
+
+#tab-viewrecipients .current-list-results .toggler div.ind:hover 
+{
+  background-position: -20px -2px;
+}
+
+#tab-viewrecipients .current-list-results .toggler.showing div.ind
+{
+  background-position: -36px -2px;
+}
+
+#tab-viewrecipients .current-list-results .toggler.showing div.ind:hover
+{
+  background-position: -52px -2px;
+}
+
+#tab-viewrecipients .current-list-results .toggler div.criteria
+{
+  position: absolute;
+  background: #ffe;
+  width: 800px;
+  padding: 2px 5px;
+  display: none;
+}
+
+#tab-viewrecipients .current-list-results .toggler.showing div.criteria
+{
+  display: block;
+}
+
+#tab-viewrecipients .current-list-results .toggler div.criteria p
+{
+  font-size: 8pt;
+  padding-left: 20px;
+  text-indent: -20px;
+}
+
+#tab-viewrecipients .current-list-results table
+{
+  width: 100%
+}
+
+#tab-viewrecipients .current-list-results table.disabled
+{
+  opacity: 0.5;
+  -moz-opacity: 0.5;
+  filter: alpha(opacity: 50);
+}
+
+#tab-viewrecipients .current-list-results table div.css-checkbox
+{
+  float: left;
+  margin: 1px 2px 0 0;
+}
+
+#tab-viewrecipients .current-list-results table thead tr
+{
+  background-color: #d8d8f9;
+}
+
+#tab-viewrecipients .current-list-results table tr.even
+{
+  background-color: #eef;
+}
+
+#tab-viewrecipients .current-list-results table tr.selected
+{
+  background-color: #00f;
+}
+
+#tab-viewrecipients .current-list-results table tr.selected td
+{
+  color: #fff;
+}
+
+#tab-viewrecipients .current-list-results table th,
+#tab-viewrecipients .current-list-results table td
+{
+  padding: 0 3px
+}
+
+#tab-viewrecipients .current-list-results table th
+{
+  color: #bf9241;
+  font-size: 8pt;
+  border-left: 1px solid #eee;
+}
+
+#tab-viewrecipients .current-list-results table th:first-child
+{
+  border-left: none;
+}
+
+#tab-viewrecipients .current-list-results table td
+{
+  color: #334f80;
+  font-size: 8pt;
+}
+ 
+/***********************************************/
+/* Preview Sample                              */
+/***********************************************/
+
+#tab-previewsample .inner-panel 
+{
+  padding-top: 4px;
+}
+
+#tab-previewsample .template-name
+{
+  margin-top: 4px;
+}
+
+#tab-previewsample .cols 
+{
+  float: left;
+  margin-top: 4px
+}
+
+#tab-previewsample .col1 
+{
+  width: 200px;
+}
+
+#tab-previewsample .col1 .button input[type=radio]
+{
+  float: left;
+}
+
+#tab-previewsample .col1 .button label
+{
+  margin-left: 21px;
+  padding-top: 3px;
+  display: block;
+  color: #bf9241;
+  font-weight: bold;
+  font-size: 8pt;
+}
+
+#tab-previewsample .col1 .button label em
+{
+  color: #2254aa;
+  font-style: normal;
+}
+
+#tab-previewsample .col1 .options
+{
+  background-color: #eee;
+  margin: 5px 0 0 7px;
+  padding: 0 5px 5px 5px;
+  position: relative;
+}
+
+#tab-previewsample .col1 .options .overlay
+{
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #fff;
+  border-color: #fff;
+  opacity: 0.4;
+  -moz-opacity: 0.4;
+  filter: alpha(opacity: 40);
+  height: 30px;
+  width: 30px;
+}
+
+
+#tab-previewsample .col1 .options p.label
+{
+  margin-top:2px;
+}
+
+#tab-previewsample .col1 .options .databox
+{
+  position: relative;
+  top: -1px;
+}
+
+#tab-previewsample .col1 .options input
+{
+  background-color: #ffe;
+  width: 99%;
+  color: #334f80;
+  font-size: 8pt;
+  padding: 0;
+}
+
+#tab-previewsample .col1 .options select
+{
+  background-color: #ffe;
+  width: 100%;
+  color: #334f80;
+  font-size: 8pt;
+  padding: 0;
+}
+
+#tab-previewsample .col1 .options select:disabled
+{
+  background-color: #f8f8f8;
+}
+
+#tab-previewsample .col1 .options p.label
+{
+  color: #334f80;
+  font-size: 8pt;
+  margin-top: 1px;
+}
+
+#tab-previewsample .generate
+{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: 0 19px 3px 0;
+}
+
+#tab-previewsample .col2 
+{
+  margin-top: 12px;
+  margin-left: 20px;
+}
+
+#tab-previewsample .col2 .sample-subject
+{
+  color: #334f80;
+  font-size: 8pt;
+  overflow: hidden;
+  width: 640px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#tab-previewsample .col2 #preview-sample-tabs
+{
+  margin-top: 10px;
+}
+
+#tab-previewsample .col2 .ui-tabs-panel
+{
+  width: 597px;
+  min-height: 330px;
+  height: 330px;
+}
+ 
+#tab-previewsample #preview-sample-tabs .inner
+{
+  height: 332px;
+}
+ 
+#tab-previewsample #tab-preview-html .error
+{
+  color: #334f80;
+  font-size: 9pt;
+  padding: 5px;
+  overflow-y: scroll;
+  height: 100%;
+  display: none;
+}
+ 
+#tab-previewsample #tab-preview-html #preview-html
+{
+  height: 100%;
+  display: none;
+}
+ 
+#tab-previewsample #tab-preview-html .error
+{
+  padding: 5px;
+  overflow-y: scroll;
+  height: 100%;
+}
+ 
+#tab-previewsample #tab-preview-html .error-head
+{
+  color: red;
+  font-weight: bold;
+}
+ 
+#tab-previewsample #tab-preview-rendered iframe
+{
+  width: 100%;
+  height: 100%
+}
+ 
+/***********************************************/
+/* Email Options                               */
+/***********************************************/
+
+#tab-emailoptions .col
+{
+  margin-right: 20px;
+  margin-top: 50px;
+}
+
+#tab-emailoptions .attachments
+{
+  margin-top: 20px;
+}
+
+#tab-emailoptions .attachments .scrolling-list
+{
+  padding-left: 4px;
+}
+
+#tab-emailoptions .fileinputs
+{
+  margin: 0;
+  height: 24px;
+  position: relative;
+}
+
+#tab-emailoptions .masker
+{
+  background: #eee;
+  display: none;
+  position: absolute;
+  z-index: 3;
+}
+
+#tab-emailoptions .upload-file
+{
+  cursor: pointer;
+  -moz-opacity: 0;
+  filter: alpha(opacity: 0);
+  opacity: 0;
+  position: absolute;
+  text-align: right;
+  z-index: 2;
+}
+
+#tab-emailoptions .browse-button
+{
+  font-size: 11px;
+  left: 0;
+  padding: 2px 18px;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+}
+
+/***********************************************/
+/* Send Emails                                 */
+/***********************************************/
+
+#tab-sendemails .all-email
+{
+  margin: 10px 0 0 0;
+}
+
+#tab-sendemails .email-panel
+{
+  margin-top: 40px;
+}
+
+/* shared with dialog */
+body.admin-page .batch-change-description 
+{
+  background-color: #eee;
+  padding: 10px 15px 10px 10px;
+}
+body.admin-page .all-email 
+{
+  background-color: #eee;
+  padding-right: 23px;
+}
+
+body.admin-page .batch-change-description p em
+{
+  color: red;
+}
+
+body.admin-page .batch-change-description textarea
+{
+  width: 100%;
+  color: #334f80;
+  font-family: arial;
+  display: block;
+  margin-bottom: 10px;
+  height: 80px;
+  padding: 5px;
+}
+
+#tab-sendemails .col
+{
+  margin-right: 18px;
+}
+
+#tab-sendemails .button 
+{
+  margin-top: 53px;
+}
+
+#tab-sendemails .radios 
+{
+  margin-top: 51px;
+}
+
+#tab-sendemails .radios label
+{
+  color: #bf9241;
+  font-weight: bold;
+}
+
+/***********************************************/
+/* Email Logging                               */
+/***********************************************/
+
+#tab-emaillogging .ui-tabs-panel
+{
+  min-height: 438px;
+}
+
+#tab-emaillogging li.tab a {
+font-size: 8pt;
+padding: 3px 12px;
+}
+
+#tab-emaillogging div.inner-panel
+{
+  padding: 0;
+}
+
+#tab-emaillogging-basicfiltering.ui-tabs-panel
+{
+  min-height: 470px;
+}
+
+#tab-emaillogging-basicfiltering .ui-tab-panel
+{
+  margin-top: 10px;
+  min-height: 428px;
+}
+
+#tab-emaillogging-basicfiltering .col2
+{
+  width: 672px;
+}
+
+#tab-emaillogging-basicfiltering .col1 .boxed-group
+{
+  margin: 12px 15px 0 0;
+}
+
+#tab-emaillogging-basicfiltering .boxed-group:first-child
+{
+  margin-top: 0;
+}
+
+#tab-emaillogging-basicfiltering div.control-box .mainlabel
+{
+  font-size: 8pt;
+}
+
+#tab-emaillogging-basicfiltering div.level-box
+{
+  width: 76px;
+}
+
+#tab-emaillogging-basicfiltering div.date-box 
+{
+  width: 140px;
+}
+
+#tab-emaillogging-basicfiltering input[type=text]
+{
+  width: 115px;
+  color: #334f80;
+  font-family: arial;
+}
+
+#tab-emaillogging-basicfiltering div.success-box 
+{
+  width: 65px;
+  float: left;
+}
+
+#tab-emaillogging-basicfiltering div.flagged-box 
+{
+  width: 55px;
+  float: left;
+}
+
+#tab-emaillogging-basicfiltering input[type=text]
+{
+  width: 115px;
+  color: #334f80;
+  font-family: arial;
+}
+
+#tab-emaillogging-basicfiltering div.select-jurisdictions-control div.locals 
+{
+  width: 217px;
+}
+
+#tab-emaillogging-basicfiltering .jurisdiction .checkbox-list
+{
+  max-height: 137px;
+}
+
+#tab-emaillogging-basicfiltering .addresses-box
+{
+  margin-right: 0;
+  margin-top: 15px;
+}
+
+#tab-emaillogging-basicfiltering .addresses-boxes p.sublabel
+{
+  margin-bottom: 2px;
+}
+
+#tab-emaillogging-basicfiltering .addresses-boxes div
+{
+  padding-right: 8px;
+}
+
+#tab-emaillogging-basicfiltering .addresses-boxes input[type=text]
+{
+  width: 635px;
+}
+
+#tab-emaillogging-basicfiltering .get-emails-div
+{
+  margin-top: 4px;
+  float: right;
+}
+
+#tab-emaillogging-basicfiltering .get-emails-div span
+{
+  position: relative;
+  top: 3px;
+}
+
+#tab-emaillogging-morefiltering div.heading
+{
+  width: 845px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 11px;
+}
+
+#tab-emaillogging-morefiltering div.col2
+{
+  float: right;
+}
+
+#tab-emaillogging-morefiltering div.instructions
+{
+  margin-left: 40px;
+}
+
+#tab-emaillogging-morefiltering .elections-offices-candidates
+{
+  margin-top: 6px;
+}
+
+#tab-emaillogging-morefiltering .category .checkbox-list
+{
+  max-height: 270px;
+}
+
+#tab-emaillogging-politicianfiltering .col
+{
+  margin: 8px 15px 0 0;
+}
+
+#tab-emaillogging-politicianfiltering .col:last-child
+{
+  margin-right: 0;
+}
+
+#tab-emaillogging-politicianfiltering .search div.instructions
+{
+  width: 370px;
+}
+
+#tab-emaillogging-politicianfiltering div.search-results-container
+{
+  height: 300px;
+}
+
+#tab-emaillogging-politicianfiltering div.find-politician-control .label
+{
+  margin-left: 15px;
+  width: 125px;
+}
+
+#tab-emaillogging-politicianfiltering div.blue-arrow-column
+{
+  padding-top: 130px;
+}
+
+#tab-emaillogging-politicianfiltering div.blue-arrow
+{
+  width: 63px;
+  height: 60px;
+  background-image: url(/images/blue-arrow-sprite-63x60.jpg);
+  background-position: 0 0;
+}
+
+#tab-emaillogging-politicianfiltering div.blue-arrow:hover
+{
+  background-position: 0 -60px;
+}
+
+#tab-emaillogging-politicianfiltering div.blue-arrow.disabled
+{
+  background-position: 0 -120px;
+}
+
+#tab-emaillogging-politicianfiltering div.selected-politician-list
+{
+  height: 308px;
+  width: 323px;
+  border: 1px solid #ccc;
+  overflow-y: scroll;
+  padding: 5px;
+}
+
+#tab-emaillogging-politicianfiltering div.selected-politician-list div
+{
+  color: #2254aa;
+  font-weight: bold;
+  font-size: 9pt;
+}
+
+#tab-emaillogging-politicianfiltering div.selected-politician-list div.selected
+{
+  background-color: #2254aa;
+  color: #fff;
+}
+
+#tab-emaillogging-politicianfiltering .selections div.instructions
+{
+  width: 320px;
+}
+
+#tab-emaillogging-politicianfiltering .selections div.remove
+{
+  margin-top: 4px;
+}
+
+#tab-emaillogging-politicianfiltering .selections div.get-logged-emails
+{
+  margin-top: 4px;
+  float: right;
+}
+
+#tab-emaillogging-batchfiltering .col
+{
+   margin: 0 15px 0 0;
+}
+
+#tab-emaillogging-batchfiltering .col:last-child
+{
+  margin-right: 0;
+}
+
+#tab-emaillogging-batchfiltering select.add-template-name {
+  max-width: 300px;
+  font-size: 8pt;
+}
+
+#tab-emaillogging-batchfiltering .search-string-col p.radios
+{
+  color: #334f80;
+  font-size: 11px;
+  text-align: center;
+}
+
+#tab-emaillogging-batchfiltering .search-string-col p.radios input[type=radio]
+{
+  position: relative;
+  top: 3px;
+}
+
+#tab-emaillogging-batchfiltering .search-string-instructions ul
+{
+  width: 485px;
+  margin-right: 15px;
+}
+
+#tab-emaillogging-batchfiltering .search-strings
+{
+  width: 300px;
+  height: 66px;
+  color: #334f80;
+  font-family: arial; 
+}
+
+#tab-emaillogging-batchfiltering .get-buttons
+{
+  margin-top: 20px;
+}
+
+#tab-emaillogging-batchfiltering .open-batches-div
+{
+  margin-top: 10px;
+}
+
+#tab-emaillogging-batchfiltering .open-batches-filtering
+{
+  margin-top: 5px;
+}
+
+#tab-emaillogging-batchfiltering .batch-list-results
+{
+  margin-top: 10px;
+  height: 200px;
+}
+
+#batch-list-change-description .bottom-box
+{
+  float: right;
+  margin-top: 18px;
+}
+
+#tab-emaillogging-logfilteringinstructions .ui-tabs-panel,
+#main-tabs #tab-emaillogging-logfilteringinstructions div.inner-panel 
+{
+  min-height: 0;
+}
+
+#tab-emaillogging-logfilteringinstructions.instructions-page div.inner {
+  max-height: 430px;
+}
+
+#tab-emaillogging-getlogentries .email-list-results
+{
+  margin-top: 10px;
+  height: 350px;
+}
+
+#tab-emaillogging-getlogentries td.error
+{
+  color: red;
+}
+
+#tab-emaillogging-getlogentries .maximum-box
+{
+  width: 140px;
+  margin: 8px 20px 0 0;
+  float: right;
+}
+
+#tab-emaillogging-getlogentries .maximum-box input[type=text]
+{
+  width: 115px;
+  color: #334f80;
+  font-family: arial;
+}
+
+#tab-emaillogging-getlogentries .reset
+{
+  margin-top: 8px;
+}
+
+#tab-emaillogging-getlogentries .col1
+{
+  margin-top: 8px;
+}
+
+#tab-emaillogging-getlogentries .msg
+{
+  margin-top: 32px;
+}
+
+#tab-emaillogging-getlogentries .get-logged-emails
+{
+  margin-top: 8px;
+  float: right;
+}
+ 
+/***********************************************/
+/* Master Only                               */
+/***********************************************/
+
+#tab-masteronly .controls
+{
+  margin-top: 10px;
+}
+
+.logged-email-resizeable .ui-icon-gripsmall-diagonal-se
+{
+  right: 0;
+  bottom: 0;
+  width: 24px;
+  height: 24px;
+  background-position: 0 0;
+  cursor: nwse-resize;
+  background-image: url(/images/resize.png);
+}
+
+.logged-email-resizeable .inner
+{
+  position: relative;
+  text-align: left;
+}
+
+.logged-email-resizeable .forward-button-container
+{
+  position: absolute;
+  right: 0;
+  top: 2px;
+  text-align: right;
+}
+
+.logged-email-resizeable .forward-button-container p
+{
+  font-size: 7pt;
+}
+
+.logged-email-resizeable .top
+{
+  margin-bottom: 8px;
+}
+
+
+.logged-email-resizeable table.info td
+{
+  font-family: arial;
+  font-size: 8pt;
+}
+
+.logged-email-resizeable table.info td.col1
+{
+  color: #999;
+  width: 50px;
+  text-align: right;
+  padding: 3px 4px 0 0;
+}
+
+.logged-email-resizeable iframe
+{
+  border: 1px solid #aaa;
+  width: 100%;
+  height: 100%;
+}
+
+.logged-email-notes .top
+{
+  padding-right: 5px;
+}
+
+.logged-email-notes .top textarea
+{
+  width: 100%;
+  height: 50px;
+}
+
+.logged-email-notes .top .add-email-note-button-container
+{
+  float: right;
+  margin-top: 4px;
+}
+
+.logged-email-notes .bottom 
+{
+  border: 1px solid #aaa;
+  overflow-y: scroll;
+  font-family: Tahoma, Geneva, sans-serif;
+  font-size: 10pt;
+  color: #444;
+}
+
+.logged-email-notes .bottom div
+{
+  border-bottom: 1px solid #aaa;
+  padding: 4px;
+}
+
+.logged-email-notes .bottom div.odd
+{
+  background-color: #ffe;
+}
+
+.logged-email-notes .bottom p
+{
+  padding: 2px 0;
+}
+
+.logged-email-notes .bottom .system p
+{
+  color: #880000;
+}
+
+.logged-email-notes .bottom p.date
+{
+  font-weight: bold;
+  color: #334f80;
+  padding-bottom: 4px;
+}
+
+.forward-email .inner 
+{
+  padding-right: 8px;
+}
+
+.forward-email .top 
+{
+  margin-bottom: 2px;
+  padding-right: 4px;
+}
+
+.forward-email .top .send-button-container
+{
+  float: right;
+  margin-top: 4px;
+  margin-right: -12px;
+}
+
+.forward-email .top table
+{
+  margin-bottom: 10px;
+}
+
+.forward-email .top input[type=text]
+{
+  width: 100%;
+  color: #334f80;
+}
+
+.forward-email .bottom .message-text
+{
+  width: 100%;
+  height: 100%;
+  color: #334f80;
+  padding: 3px;
+}
+
+#email-batch-failures .bottom
+{
+  overflow-y: scroll;
+}
+
+#email-template-new-dialog .inner
+{
+  text-align: left;
+  width: 400px;
+}
+
+#email-template-new-dialog .display-box {
+  border: 1px solid #888;
+  width: 100%;
+  height: 200px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+#email-template-new-dialog .button-box {
+  margin-top: 8px;
+  text-align: right;
+}
+
+#email-template-new-dialog .display-box table
+{
+  width: 100%;
+}
+
+#email-template-new-dialog .display-box table td
+{
+  overflow: hidden;
+  max-height: 14px;
+  padding: 1px 4px;
+  font-size: 8pt;
+  font-family: arial;
+}
+
+#email-template-new-dialog .display-box table tr.even
+{
+  background-color: #f6f6f6;
+}
+
+#email-template-new-dialog .display-box table tr.selected
+{
+  background-color: #d3def1;
+}

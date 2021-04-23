@@ -1,0 +1,649 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB;
+using DB.Vote;
+
+namespace Vote.Admin
+{
+  [PageInitializers]
+  public partial class BulkEmailPage : SecureAdminPage, ISuperUser
+  {
+    #region Public
+
+    #region ReSharper disable
+
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable MemberCanBeProtected.Global
+    // ReSharper disable UnusedMember.Global
+    // ReSharper disable UnusedMethodReturnValue.Global
+    // ReSharper disable UnusedAutoPropertyAccessor.Global
+    // ReSharper disable UnassignedField.Global
+
+    #endregion ReSharper disable
+
+    // These are public so they can be used by the WebService
+
+    public static List<SimpleListItem> GetPreviewElectionItems(
+     string stateCode, string countyCode, string localCode, 
+      string defaultText = "<none>")
+    {
+      return
+        new List<SimpleListItem>
+          {
+            new SimpleListItem(string.Empty, defaultText)
+          }.Union(
+          Enumerable.Select(
+            Elections.GetControlDataByStateCodeCountyCodeLocalCode(stateCode,
+              countyCode, localCode)
+              .OrderByDescending(row => row.ElectionDate)
+              .ThenBy(row => row.ElectionOrder)
+              .ThenBy(row => row.ElectionDesc),
+            row =>
+              new SimpleListItem(row.ElectionKey,
+                row.ElectionDesc)))
+          .ToList();
+    }
+
+    public static List<SimpleListItem> GetPreviewOfficeItems(
+      string electionKey)
+    {
+      return
+        new List<SimpleListItem>
+          {
+            new SimpleListItem(string.Empty, "<none>")
+          }.Union(ElectionsOffices
+          .GetElectionOffices(electionKey)
+          .Rows.Cast<DataRow>()
+          .Select(
+            row =>
+              new SimpleListItem(row.OfficeKey(),
+                Offices.FormatOfficeName(row))))
+          .ToList();
+    }
+
+    public static List<SimpleListItem> GetPreviewCandidateItems(
+      string electionKey, string officeKey)
+    {
+      return
+        new List<SimpleListItem>
+          {
+            new SimpleListItem(string.Empty, "<none>")
+          }.Union(ElectionsPoliticians
+          .GetPoliticiansForOfficeInElection(electionKey, officeKey)
+          .Rows.Cast<DataRow>()
+          .Select(
+            row =>
+              new SimpleListItem(row.PoliticianKey(),
+                Politicians.FormatName(row))))
+          .ToList();
+    }
+
+    public static List<SimpleListItem> GetPreviewPartyItems(
+      string stateCode)
+    {
+      return
+        new List<SimpleListItem>
+          {
+            new SimpleListItem(string.Empty, "<none>")
+          }.Union(Parties.GetDataByStateCode(stateCode)
+          .Rows.Cast<DataRow>()
+          .OrderBy(row => row.PartyOrder())
+          .ThenBy(row => row.PartyName())
+          .Select(
+            row =>
+              new SimpleListItem(row.PartyKey(),
+               row.PartyName())))
+          .ToList();
+    }
+
+    public static List<SimpleListItem> GetPreviewPartyEmailItems(
+      string partyKey)
+    {
+      return
+        new List<SimpleListItem>
+          {
+            new SimpleListItem(string.Empty, "<none>")
+          }.Union(PartiesEmails.GetDataByPartyKey(partyKey)
+          .Rows.Cast<DataRow>()
+          .OrderBy(row => row.PartyContactLName())
+          .Select(
+            row =>
+              new SimpleListItem(row.PartyEmail(),
+               row.PartyContactFName() + " " + row.PartyContactLName() + " <" +
+               row.PartyEmail() + ">")))
+          .ToList();
+    }
+
+      #region ReSharper restore
+
+      // ReSharper restore UnassignedField.Global
+      // ReSharper restore UnusedAutoPropertyAccessor.Global
+      // ReSharper restore UnusedMethodReturnValue.Global
+      // ReSharper restore UnusedMember.Global
+      // ReSharper restore MemberCanBeProtected.Global
+      // ReSharper restore MemberCanBePrivate.Global
+
+      #endregion ReSharper restore
+
+      #endregion Public
+
+    #region Private
+
+    private void SetCredentialMessage()
+    {
+      switch (UserSecurityClass)
+      {
+        case MasterSecurityClass:
+          CredentialMessage.InnerHtml =
+            "Your sign-in credentials allow access to all bulk mail capabilities.";
+          break;
+
+        case StateAdminSecurityClass:
+          CredentialMessage.InnerHtml =
+            "Your sign-in credentials permit bulk mailing to any " +
+              States.GetName(StateCode) + " recipients.";
+          break;
+
+        case CountyAdminSecurityClass:
+          CredentialMessage.InnerHtml =
+            "Your sign-in credentials permit bulk mailing only to " +
+              Counties.GetFullName(StateCode, CountyCode) + " recipients.";
+          break;
+
+        case LocalAdminSecurityClass:
+          CredentialMessage.InnerHtml =
+            "Your sign-in credentials permit bulk mailing only to " +
+              LocalDistricts.GetFullName(StateCode, CountyCode, LocalCode) +
+              " recipients.";
+          break;
+
+        default:
+          throw new VoteException("Unexpected UserSecurityClass: " +
+            UserSecurityClass);
+      }
+    }
+
+    private void SetSubHeading()
+    {
+      switch (AdminPageLevel)
+      {
+          //case AdminPageLevel.President:
+          //case AdminPageLevel.PresidentTemplate:
+          //case AdminPageLevel.Federal:
+          //  H2.InnerHtml = States.GetName(StateCode) + ", All States";
+          //  break;
+
+        case AdminPageLevel.AllStates:
+          H2.InnerHtml = "Bulk Email for All States";
+          break;
+
+        case AdminPageLevel.State:
+          H2.InnerHtml = "Bulk Email for " + States.GetName(StateCode);
+          break;
+
+        case AdminPageLevel.County:
+          H2.InnerHtml = "Bulk Email for " +
+            Counties.GetFullName(StateCode, CountyCode);
+          break;
+
+        case AdminPageLevel.Local:
+          H2.InnerHtml = "Bulk Email for " +
+            LocalDistricts.GetFullName(StateCode, CountyCode, LocalCode);
+          break;
+
+        case AdminPageLevel.Unknown:
+          H2.InnerHtml = "No Jurisdiction Selected";
+          break;
+      }
+    }
+
+    #region DataItem objects
+
+    [PageInitializer]
+    // ReSharper disable once UnusedMember.Local
+    private class AvailableSubstitutionsTabItem : DataItemBase
+    {
+      private const string GroupName = "AvailableSubstitutions";
+
+      protected AvailableSubstitutionsTabItem() : base(GroupName) {}
+
+      // ReSharper disable UnusedMember.Local
+      // Invoked via Reflection
+      internal static void Initialize(BulkEmailPage page)
+        // ReSharper restore UnusedMember.Local
+      {
+        if (!page.IsPostBack)
+        {
+          BuildSubstitutionTable(page);
+          BuildSubstitutionsOptionsDisplay(page);
+        }
+      }
+
+      private static void BuildSubstitutionsOptionsDisplay(BulkEmailPage page)
+      {
+        new HtmlH3
+        {
+          InnerText = "Substitution Options"
+        }.AddTo(page.SubstitutionOptionsPlaceHolder,
+          "options-display");
+        foreach (var optionType in Substitutions.OptionTypeInfos)
+        {
+          var cssClass = "type-" +
+            Regex.Replace(optionType.ShortName, "[^a-z0-9]+", "-",
+              RegexOptions.IgnoreCase)
+              .ToLowerInvariant();
+          var div =
+            new HtmlDiv().AddTo(page.SubstitutionOptionsPlaceHolder,
+              cssClass + " options-display-type rounded-border");
+          new HtmlH4
+          {
+            InnerText = optionType.Name
+          }.AddTo(div);
+          new LiteralControl(optionType.HtmlDescription).AddTo(div);
+        }
+      }
+
+      private static void BuildSubstitutionTable(BulkEmailPage page)
+      {
+        var allSubstitutions = Substitutions.GetAllInfo();
+
+        // add specials for email
+        AddEmailSubstitution(allSubstitutions, "[[Contact]]", 
+          "The name of the email recipient", 1);
+        AddEmailSubstitution(allSubstitutions, "[[ContactTitle]]",
+          "The title of the email recipient", 2);
+        AddEmailSubstitution(allSubstitutions, "[[ContactEmail]]",
+          "The email address of the email recipient", 3);
+        AddEmailSubstitution(allSubstitutions, "[[ContactPhone]]",
+          "The phone number of the email recipient", 4);
+        AddEmailSubstitution(allSubstitutions, "@@ContactEmail@@",
+          "Mailto link for the email recipient", 5);
+
+        // add the generics
+        allSubstitutions.Add("@@<i>any email address</i>@@",
+          new SubstitutionInfo
+              {
+                HtmlDescription = "Mailto link for the <i>email address</i>.",
+                Type = Substitutions.Type.Generic,
+                DisplayOrder = 1,
+              }
+          );
+        allSubstitutions.Add("##<i>any web address</i>##",
+              new SubstitutionInfo
+              {
+                HtmlDescription = "Hyperlink to the <i>web address</i>.",
+                Type = Substitutions.Type.Generic,
+                DisplayOrder = 2,
+              }
+          );
+
+        // sort and group
+        var allSubstitutionGroups = allSubstitutions
+          //.OrderBy(kvp => kvp.Value.Type)
+          //.ThenBy(kvp => kvp.Value.DisplayOrder)
+          .GroupBy(kvp => kvp.Value.Type)
+          .OrderBy(g => g.Key);
+
+        var table = new HtmlTable().AddTo(page.AvailableSubstitutionsPlaceHolder,
+          "substitution-table");
+
+        foreach (var group in allSubstitutionGroups)
+        {
+          var g = @group.ToList(); // so we can extend it
+          HtmlTableRow row;
+          if (group.Key != Substitutions.Type.Undocumented &&
+            group.Key != Substitutions.Type.Deprecated)
+          {
+            row = new HtmlTableRow().AddTo(table);
+            new HtmlTableCell("th")
+            {
+              InnerText = Substitutions.TypeNameDictionary[@group.Key],
+              ColSpan = 2
+            }.AddTo(row, "substitution-type");
+            row = new HtmlTableRow().AddTo(table);
+
+            new HtmlTableCell("th") {InnerHtml = "Name"}.AddTo(row);
+            new HtmlTableCell("th") {InnerHtml = "Description"}.AddTo(row);
+          }
+
+          var odd = true;
+          for (var n = 0; n < g.Count; n++)
+          {
+            var key = g[n].Key;
+            var value = g[n].Value;
+            row = new HtmlTableRow().AddTo(table,
+              (odd ? "odd " : "even ") +
+              ((value.Type == Substitutions.Type.Undocumented ||
+              value.Type == Substitutions.Type.Deprecated) ? "hidden " : string.Empty) +
+              Substitutions.GetClass(key).ToString().ToLowerInvariant());
+            odd = !odd;
+
+            var nameClasses = n < g.Count
+              ? GetSubstititionNameClassNames(value)
+              : null;
+
+            var name = n < g.Count
+              ? String.Format(
+                "<span class=\"escape\">{0}</span><span class=\"id\">{1}</span><span class=\"escape\">{2}</span>",
+                key.Substring(0, 2),
+                key.Substring(2, key.Length - 4),
+                key.Substring(key.Length - 2, 2))
+              : "&nbsp;";
+
+            var desc = value.HtmlDescription;
+            if (value.OptionTypes != Substitutions.OptionTypes.None)
+              desc += "<br /><b>Options:</b> " +
+                string.Join(", ",
+                  Substitutions.OptionTypeInfos.Where(
+                    i => (i.OptionType & value.OptionTypes) != 0)
+                    .Select(i => i.ShortName));
+
+            new HtmlTableCell {InnerHtml = name}.AddTo(row, nameClasses);
+            new HtmlTableCell {InnerHtml = desc}.AddTo(row, "desc");
+          }
+        }
+      }
+
+      private static void AddEmailSubstitution(
+        IDictionary<string, SubstitutionInfo> allSubstitutions, string substitution,
+        string description, int order)
+      {
+        allSubstitutions.Add(substitution,
+          new SubstitutionInfo
+          {
+            HtmlDescription = description,
+            Type = Substitutions.Type.EmailList,
+            DisplayOrder = order
+          });
+      }
+
+      private static string GetSubstititionNameClassNames(SubstitutionInfo info)
+      {
+        var classes = info.Requirements.ToString()
+          .Split(',')
+          .Where(c => c != "None")
+          .Select(c => "req-" + c.Trim()
+            .ToLowerInvariant())
+          .ToList();
+        if (info.Type == Substitutions.Type.Generic) classes.Add("generic");
+        classes.Add(info.Type == Substitutions.Type.Deprecated
+          ? "deprecated"
+          : "active");
+        classes.Add("name");
+        return string.Join(" ", classes);
+      }
+    }
+
+    [PageInitializer]
+    // ReSharper disable once UnusedMember.Local
+    private class SelectRecipientsTabItem : DataItemBase
+    {
+      private const string GroupName = "SelectRecipients";
+
+      protected SelectRecipientsTabItem() : base(GroupName) { }
+
+      // ReSharper disable UnusedMember.Local
+      // Invoked via Reflection
+      internal static void Initialize(BulkEmailPage page)
+      // ReSharper restore UnusedMember.Local
+      {
+        if (!page.IsPostBack)
+        {
+          page.SingleElectionFilteringMsg.AddCssClasses("hidden");
+          switch (UserSecurityClass)
+          {
+            case MasterSecurityClass:
+              page.RecipientsSingleElectionFiltering.Enabled = false;
+              page.SingleElectionFilteringMsg.RemoveCssClass("hidden");
+              page.RecipientsSelectJurisdictions.Initialize();
+              break;
+
+            case StateAdminSecurityClass:
+              page.RecipientsSelectJurisdictions.Initialize(page.StateCode);
+              break;
+
+            case CountyAdminSecurityClass:
+              page.RecipientsStateContact.Visible = false;
+              page.RecipientsStateCandidate.Visible = false;
+              page.RecipientsPartyOfficial.Visible = false;
+              page.RecipientsCountyContact.Checked = true;
+              page.RecipientsSelectJurisdictions.Initialize(page.StateCode,
+                page.CountyCode);
+              break;
+
+            case LocalAdminSecurityClass:
+              page.RecipientsStateContact.Visible = false;
+              page.RecipientsStateCandidate.Visible = false;
+              page.RecipientsCountyContact.Visible = false;
+              page.RecipientsCountyCandidate.Visible = false;
+              page.RecipientsPartyOfficial.Visible = false;
+              page.RecipientsLocalContact.Checked = true;
+              page.RecipientsSelectJurisdictions.Initialize(page.StateCode,
+                page.CountyCode, page.LocalCode);
+              break;
+          }
+        }
+      }
+   }
+
+    [PageInitializer]
+    // ReSharper disable once UnusedMember.Local
+    private class EmailOptionsTabItem : DataItemBase
+    {
+      private const string GroupName = "EmailOptions";
+
+      protected EmailOptionsTabItem() : base(GroupName) { }
+
+      // ReSharper disable UnusedMember.Local
+      // Invoked via Reflection
+      internal static void Initialize(BulkEmailPage page)
+      // ReSharper restore UnusedMember.Local
+      {
+        if (!page.IsPostBack)
+        {
+          var emailData = Security.GetEmailDataByUserName(UserName);
+          if (emailData.Count == 1)
+          {
+            var emails = new List<string> { emailData[0].UserEmail.SafeString() };
+            emails.AddRange(emailData[0].UserEmails.SafeString()
+              .Split(new[] { ',' })
+              .Select(a => a.Trim()));
+            var emailList = emails.Select(a => a.Trim())
+              .Where(Validation.IsValidEmailAddress)
+              .Distinct(StringComparer.OrdinalIgnoreCase)
+              .ToList();
+            AddEmailsTo(page.OptionsFrom, emailList, "OptionsFrom", true, true);
+            AddEmailsTo(page.OptionsCC, emailList, "OptionsCC", false, true);
+            AddEmailsTo(page.OptionsBCC, emailList, "OptionsBCC", false, true);
+            // On the Send Emails tab
+            AddEmailsTo(page.TestAddress, emailList, "TestAddress", false);
+          }
+        }
+      }
+
+      private static void AddEmailsTo(Control parent, IEnumerable<string> emailList,
+        string name, bool isRadio, bool isOption = false)
+      {
+        parent.Controls.Clear();
+        var index = 1;
+        foreach (var email in emailList)
+        {
+          var isChecked = index == 1;
+          var id = name + index++;
+          var div = new HtmlDiv().AddTo(parent, "tiptip");
+          div.Attributes["title"] = email;
+          HtmlInputControl inputControl;
+          if (isRadio)
+            inputControl = new HtmlInputRadioButton
+            {
+              ID = id,
+              Value = email,
+              Name = name,
+              Checked = isChecked
+            };
+          else inputControl = new HtmlInputCheckBox { ID = id, Value = email };
+          if (isOption) inputControl.AddCssClasses("is-option-click");
+          inputControl.AddTo(div);
+          new HtmlLabel { InnerText = email }.AddTo(div)
+            .Attributes["for"] = id;
+        }
+      }
+    }
+
+    [PageInitializer]
+    // ReSharper disable once UnusedMember.Local
+    private class PreviewSampleTabItem : DataItemBase
+    {
+      private const string GroupName = "PreviewSample";
+
+      protected PreviewSampleTabItem() : base(GroupName) { }
+
+      // ReSharper disable UnusedMember.Local
+      // Invoked via Reflection
+      internal static void Initialize(BulkEmailPage page)
+      // ReSharper restore UnusedMember.Local
+      {
+        if (!page.IsPostBack)
+        {
+          if (string.IsNullOrWhiteSpace(page.StateCode))
+          {
+            StateCache.Populate(page.PreviewSampleStateDropDownList, "<none>",
+              string.Empty);
+            Utility.PopulateEmpty(page.PreviewSampleElectionDropDownList);
+            Utility.PopulateEmpty(page.PreviewSamplePartyDropDownList);
+          }
+          else
+          {
+            StateCache.Populate(page.PreviewSampleStateDropDownList, page.StateCode);
+            Utility.PopulateFromList(page.PreviewSampleElectionDropDownList,
+              GetPreviewElectionItems(page.StateCode, page.CountyCode, page.LocalCode));
+            Utility.PopulateFromList(page.PreviewSamplePartyDropDownList,
+              GetPreviewPartyItems(page.StateCode));
+          }
+          CountyCache.Populate(page.PreviewSampleCountyDropDownList, page.StateCode,
+            "<none>", string.Empty, page.CountyCode);
+          LocalDistricts.Populate(page.PreviewSampleLocalDropDownList, page.StateCode,
+            page.CountyCode, "<none>", string.Empty, page.LocalCode);
+          Utility.PopulateEmpty(page.PreviewSampleOfficeDropDownList);
+          Utility.PopulateEmpty(page.PreviewSampleCandidateDropDownList);
+          Utility.PopulateEmpty(page.PreviewSamplePartyEmailDropDownList);
+
+          switch (UserSecurityClass)
+          {
+            case MasterSecurityClass:
+              break;
+
+            case StateAdminSecurityClass:
+              page.PreviewSampleStateDropDownList.Enabled = false;
+              break;
+
+            case CountyAdminSecurityClass:
+              page.PreviewSampleStateDropDownList.Enabled = false;
+              page.PreviewSampleCountyDropDownList.Enabled = false;
+              page.PreviewSamplePartyDropDownList.Enabled = false;
+              page.PreviewSamplePartyEmailDropDownList.Enabled = false;
+              break;
+
+            case LocalAdminSecurityClass:
+              page.PreviewSampleStateDropDownList.Enabled = false;
+              page.PreviewSampleCountyDropDownList.Enabled = false;
+              page.PreviewSampleLocalDropDownList.Enabled = false;
+              page.PreviewSamplePartyDropDownList.Enabled = false;
+              page.PreviewSamplePartyEmailDropDownList.Enabled = false;
+              break;
+          }
+        }
+      }
+    }
+
+    [PageInitializer]
+    // ReSharper disable once UnusedMember.Local
+    private class EmailLoggingTabItem : DataItemBase
+    {
+      private const string GroupName = "EmailLogging";
+
+      protected EmailLoggingTabItem() : base(GroupName) { }
+
+      // ReSharper disable UnusedMember.Local
+      // Invoked via Reflection
+      internal static void Initialize(BulkEmailPage page)
+      // ReSharper restore UnusedMember.Local
+      {
+        if (!page.IsPostBack)
+        {
+          page.LogSelectJurisdictions.Initialize();
+        }
+      }
+    }
+
+    [PageInitializer]
+    // ReSharper disable once UnusedMember.Local
+    private class MasterOnlyTabItem : DataItemBase
+    {
+      private const string GroupName = "MasterOnly";
+
+      protected MasterOnlyTabItem() : base(GroupName) { }
+
+      // ReSharper disable UnusedMember.Local
+      // Invoked via Reflection
+      internal static void Initialize(BulkEmailPage page)
+      // ReSharper restore UnusedMember.Local
+      {
+        if (!IsMasterUser)
+        {
+          page.TabMasterItem.Visible = false;
+        }
+      }
+    }
+
+    #endregion DataItem objects
+
+    #endregion Private
+
+    #region Protected
+
+    #region ReSharper disable
+
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable VirtualMemberNeverOverriden.Global
+    // ReSharper disable UnusedMember.Global
+
+    #endregion ReSharper disable
+
+    internal override IEnumerable<string> NonStateCodesAllowed
+    {
+      get { return new[] {string.Empty}; }
+    }
+
+    #region ReSharper restore
+
+    // ReSharper restore UnusedMember.Global
+    // ReSharper restore VirtualMemberNeverOverriden.Global
+    // ReSharper restore MemberCanBePrivate.Global
+
+    #endregion ReSharper restore
+
+    #endregion Protected
+
+    #region Event handlers and overrides
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      const string title = "Bulk Email";
+      Page.Title = title;
+      H1.InnerHtml = title;
+
+      SetSubHeading();
+      SetCredentialMessage();
+
+      if (AdminPageLevel == AdminPageLevel.Unknown) UpdateControls.Visible = false;
+    }
+
+    #endregion Event handlers and overrides
+  }
+}

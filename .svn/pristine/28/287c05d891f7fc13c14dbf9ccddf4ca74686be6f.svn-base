@@ -1,0 +1,152 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="forVoters.aspx.cs" 
+Inherits="Vote.ForVotersPageX" %>
+
+<%@ Register Src="/Controls/SocialMediaButtons.ascx" TagName="SocialMediaButtons" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonateBanner.ascx" TagName="DonateBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainBanner.ascx" TagName="MainBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainNavigation.ascx" TagName="MainNavigation" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainFooter.ascx" TagName="MainFooter" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeading.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntry.ascx" TagName="AddressEntry" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonationRequest.ascx" TagName="DonationRequest" TagPrefix="user" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+  <title runat="server" id="TitleTag">For Voters</title>
+    <meta runat="server" id="MetaDescriptionTag" content="Custom Sample Ballots" name="description" />
+    <meta runat="server" id="MetaKeywordsTag" content="Vote, Custom Ballot, Ballots" name="keywords" />
+</head>
+<body class="voters-page">
+    <form id="form1" runat="server" enableviewstate="True">
+    <div id="outer">
+    <div id="container">
+      <user:SocialMediaButtons runat="server" />
+      <user:DonateBanner runat="server" />
+      <user:MainBanner runat="server" />
+      <user:MainNavigation runat="server" />
+      <div id="mainContent">
+      <div id="InnerContent" runat="server">
+        <user:PageHeading ID="PageHeading" runat="server" 
+          MainHeadingText="For Voters" />
+        <div class="header">
+          <p id="NeedAddress" runat="server">To provide you with your sample ballot or elected representatives we 
+          need either your 9-digit zip code, or your address.</p>
+          <p id="HaveState" runat="server">We only know your state. To provide you with your sample ballot or 
+          elected representatives we need either your 9-digit zip code, or your 
+          address. Or we can provide you with a wealth of statewide election 
+          information. Please make a selection.</p>
+          <p id="HaveAddress" runat="server">We can provide you with your sample ballot to compare candidates’ pictures, 
+          bios and positions on the issues. Or we can prepare a report of your current 
+          elected representatives. Or provide statewide election information. 
+          Please make a selection .</p>
+          <p id="GetStartedButton" runat="server">
+            <a class="getStartedButton bigButton" onclick="openAddressEntryDialog(this);">Let's Get Started</a>
+          </p>
+          <p id="GetAddressButton" runat="server">
+            <a class="bigButtonLeft bigButton hoverChild" onclick="openAddressEntryDialog(this);">My Address or 9 digit Zip Code for My Sample Ballot</a>
+            <a class="bigButtonText hoverChild" onclick="openAddressEntryDialog(this);">My Address or 9 digit Zip Code for My Sample Ballot</a>
+            <a class="bigButtonRight bigButton hoverChild" onclick="openAddressEntryDialog(this);">My Address or 9 digit Zip Code for My Sample Ballot</a>
+          </p>
+          <asp:PlaceHolder ID="SampleBallotPlaceHolder" runat="server"></asp:PlaceHolder>
+          <p id="ElectedOfficialsButton" runat="server">
+            <a class="bigButtonLeft bigButton hoverChild" id="ElectedOfficialsLink1" runat="server" href="">My Elected Officials</a>
+            <a class="bigButtonText hoverChild" id="ElectedOfficialsLink2" runat="server" href="">My Elected Officials</a>
+            <a class="bigButtonRight bigButton hoverChild" id="ElectedOfficialsLink3" runat="server" href="">My Elected Officials</a>
+          </p>
+          <p id="StatewideButton" runat="server">
+            <a class="bigButtonLeft bigButton hoverChild" id="StatewideLink1" runat="server" href="">All State and Federal Elected Officials</a>
+            <a class="bigButtonText hoverChild" id="StatewideLink2" runat="server" href="">All State and Federal Elected Officials</a>
+            <a class="bigButtonRight bigButton hoverChild" id="StatewideLink3" runat="server" href="">All State and Federal Elected Officials</a>
+          </p>
+        </div>
+
+        <div class="blurb">
+          <p>The links below provide complete directories of all federal and state elected officials, election contests and candidates.</p>
+        </div>
+
+        <div class="floatBox">
+          <div class="linkBoxes">
+            <div class="linkBox" id="ExplorerLinkBox" runat="server">
+              <div class="linkHeader">
+              Election Explorer <span style="color:red">New!</span>
+              </div>
+              <div class="links" runat="server">
+                <p>
+                  <asp:HyperLink ToolTip="Election Explorer" ID="ExplorerLink" runat="server">Explore any election for any address or state</asp:HyperLink></p>
+              </div>
+            </div>
+
+            <div class="linkBox" id="UpcomingLinkBox" runat="server">
+              <div class="linkHeader">
+              Upcoming Election(s)
+              </div>
+              <div class="links" id="Upcoming" runat="server">
+              </div>
+            </div>
+
+            <div class="linkBox">
+              <div class="linkHeader" id="ElectionResultsLinkBox" runat="server">
+              Past Elections
+              </div>
+              <div class="links" id="ElectionResults" runat="server">
+              </div>
+            </div>
+
+            <!--<div class="linkBox">
+              <div class="linkHeader">
+              Current Elected Officials
+              </div>
+              <div class="links" id="OfficeHolderLinks" runat="server">
+              </div>
+            </div>-->
+
+            <div class="linkBox" id="PresidentLinks" runat="server">
+            </div>
+
+            <div class="linkBox" id="SenateLinks" runat="server">
+            </div>
+
+            <div class="linkBox" id="HouseLinks" runat="server">
+            </div>
+
+            <div class="linkBox" id="GovernorLinks" runat="server">
+            </div>
+          </div>
+        </div>
+
+        <div class="blurb">
+          <p>All the information we present is candidate authored or copied from candidates’ websites.</p> 
+
+          <p><br />
+         We invite and provided every candidate with the means to securely provide his or her picture, 
+         biographical information, and to express his or her opinions and views on issues of their choosing. 
+         Vote-USA has tried to be as inclusive and non-partisan as possible 
+         regarding the issues to which candidates could respond. 
+         There are about 50 different issues and about 20 topics for each issue. 
+         This provides each candidate with approximately 1,000 different opportunities 
+         to express his or her opinions and views. Candidates select issues for which they want to provide a response.
+          </p> 
+
+          <p><br />For candidates who do not respond to our invitation to provide information about themselves, 
+          we copy pictures and information from candidates’ websites into this website. </p>
+
+          <p><br />Links and pages are only provided where we have candidate information 
+          or responses. This is a report of the 
+          <a href="/IssueList.aspx" id="IssueListLink" runat="server">
+          issues and issue questions we make available to all candidates</a>.</p>
+        </div>
+
+        <user:MainFooter runat="server" />
+        </div> <!-- id=InnerContent -->
+      </div> <!-- id="mainContent" -->
+    </div> <!-- id="container" -->
+    </div> <!-- id="outer" -->
+
+    <user:AddressEntry runat="server" />
+    <user:DonationRequest runat="server" />
+
+    </form>
+</body>
+</html>

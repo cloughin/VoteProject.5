@@ -1,0 +1,63 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Public.Master" AutoEventWireup="true" CodeBehind="Officials.aspx.cs" Inherits="Vote.OfficialsNew" %>
+
+<%@ Register Src="/Controls/PageHeadingResponsive.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonationRequestResponsive.ascx" TagName="DonationRequest" TagPrefix="user" %>
+
+<asp:Content ID="HeadTopContent" ContentPlaceHolderID="MasterHeadTopContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="HeadBottomContent" ContentPlaceHolderID="MasterHeadBottomContent" runat="server">
+  <style type="text/css">
+     .content .instructions {
+       margin-top: 5px;
+       font-size: .9rem;
+       line-height: 120%;
+     }
+    .content .intro {
+      padding: 8px 5px;
+    }
+    .content .not-found-error
+    {
+	    font-family: sans-serif;
+	    font-size: 13px;
+	    font-weight: normal;
+	    line-height: 110%;
+	    color: #373737;
+	    padding: 25px 10px 2px 30px;
+    }
+
+  </style>
+  <script type="text/javascript">
+    $(function () {
+      $(".officials-report").accordion({
+        heightStyle: "content",
+        activate: PUBLIC.accordionActivate
+      });
+    });
+  </script>
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+  <user:PageHeading ID="PageHeading" runat="server" MainHeadingText="Directory of Current State and Federal Representatives" />
+  
+  <div class="intro">
+    <div class="instructions">
+      Visit our <a href="/forVoters.aspx" id="ForVotersLink" runat="server">
+      forVoters page</a> to obtain your  
+      customized enhanced sample ballot and to compare candidates’ bios, pictures, 
+      social media information, and most importantly, their positions and views 
+      on the issues. You will also be able to obtain the same 
+      information for most elections going back to 2004.
+    </div>
+  </div>
+
+  <div id="mainContent">
+    <div id="InnerContent" runat="server">
+      <asp:PlaceHolder ID="ReportPlaceHolder" runat="server"></asp:PlaceHolder>
+    </div>
+  </div>
+</asp:Content>
+
+<asp:Content ID="BottomContent" ContentPlaceHolderID="MasterBottomContent" runat="server">
+  <user:DonationRequest ID="DonationRequest" runat="server" />
+</asp:Content>

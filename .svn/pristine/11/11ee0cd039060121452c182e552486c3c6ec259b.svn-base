@@ -1,0 +1,25 @@
+﻿.mc-group-addcandidates.mc-button {
+  /* hide, but don't disable, the button */
+  position: absolute;
+  left: -10000px;
+}
+
+#tab-addpolitician .content-area {
+  margin-bottom: 15px;
+}
+
+#body .content-area .add-politician-panel {
+  border-left: none;
+  display: none;
+  float: none;
+  padding-left: 0;
+}
+
+#body .content-area .add-politician-panel .inner 
+{
+  margin: 0 auto;
+}
+
+#body .add-search-candidate-button {
+  display: none;
+}

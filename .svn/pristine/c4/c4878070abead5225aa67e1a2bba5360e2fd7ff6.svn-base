@@ -1,0 +1,85 @@
+﻿using System;
+
+namespace Vote
+{
+  public partial class ForCandidatesPageX : CacheablePage
+  {
+    public ForCandidatesPageX()
+    {
+      NoUrlEdit = true;
+    }
+
+    #region Caching support
+
+    protected override bool SuppressCaching
+    {
+      get { return true; }
+    }
+
+    protected override string GetCacheKey()
+    {
+      var key = UrlManager.GetStateCodeFromHostName();
+      var siteId = UrlManager.CurrentQuerySiteId;
+      if (!string.IsNullOrEmpty(siteId))
+        key += "." + siteId;
+
+      return key;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "forCandidates";
+    }
+
+    #endregion Caching support
+
+    private const string TitleTagAllStatesDomain =
+      "Free Candidate Advertising & Promotion in Elections";
+
+    private const string MetaDescriptionAllStatesDomain =
+      "Free candidate promotion in elections for voters including pictures, bios, social links and candidate’s positions and views on the issues.";
+
+    private const string MetaKeywordsAllStatesDomain =
+      "candidate, candidates, candidate promotion, candidates promotion, candidate advertising, candidates advertising, election promotion, elections promotion";
+
+    private const string TitleTagSingleStateDomain =
+      "Free Candidate Advertising & Promotion in [[state]] Elections";
+
+    private const string MetaDescriptionSingleStateDomain =
+      "Free candidate promotion in [[state]] elections for voters including pictures, bios, social links and candidate’s positions and views on the issues.";
+
+    private const string MetaKeywordsSingleStateDomain =
+      "[[state]] candidate, [[state]] candidates, [[state]] candidate promotion, [[state]] candidates promotion, [[state]] candidate advertising, [[state]] candidates advertising, [[state]] election promotion, [[state]] elections promotion";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/SecondaryCommon.css");
+
+      if (!IsPostBack)
+        if (DomainData.IsValidStateCode) // Single state
+        {
+          if (DomainDesign.IncludeTitleForSingleState)
+            TitleTag.Text = TitleTagSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForSingleState)
+            MetaDescriptionTag.Content = MetaDescriptionSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForSingleState)
+            MetaKeywordsTag.Content = MetaKeywordsSingleStateDomain.Substitute();
+        }
+        else
+        {
+          if (DomainDesign.IncludeTitleForAllStates)
+            TitleTag.Text = TitleTagAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForAllStates)
+            MetaDescriptionTag.Content = MetaDescriptionAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForAllStates)
+            MetaKeywordsTag.Content = MetaKeywordsAllStatesDomain.Substitute();
+        }
+
+      VoteUsaAddress.NoBreak = true;
+      EmailForm.ToEmailAddress = "mgr@Vote-USA.org";
+      EmailForm.SetItems(
+        "I am a candidate -- I need my logon credentials and instructions");
+    }
+  }
+}

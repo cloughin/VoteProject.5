@@ -1,0 +1,120 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Web.UI;
+using DB.Vote;
+
+namespace Vote.Master
+{
+  public partial class LogDonationsPage : SecurePage, ISuperUser
+  {
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        Page.Title = "Log Donations";
+        H1.InnerHtml = "Log Donations";
+        Master.MasterForm.Attributes.Add("enctype", "multipart/form-data");
+      }
+      else
+      {
+        var now = DateTime.UtcNow;
+        var messages = new List<string>();
+        var reversals = new List<DonorInfo>();
+        var good = 0;
+        var bad = 0;
+        var reversed = 0;
+        for (var i = 0; i < Request.Files.Count; i++)
+        {
+          var file = Request.Files[i];
+          if (file.ContentLength == 0) continue;
+          try
+          {
+            var info = EmailUtility.ExtractDonorInfoFromMsg(file.InputStream);
+
+            if (info.IsReversal) // save reversals until end in case reversal precedes donation in file list
+            {
+              reversals.Add(info);
+              continue;
+            }
+
+            if (Donations.EmailDateExists(info.Email, info.Date))
+              throw new VoteException(
+                "A donation for this email, date and time already exists");
+            Donations.Insert(info.Email, info.Date, info.FirstName, info.LastName,
+              info.FullName, info.Address, info.City, info.StateCode, info.Zip5,
+              info.Zip4, info.Phone, info.Amount, false);
+
+            // Get the encoding
+            var input = info.Address + " " + info.City + " " + info.StateCode + " " +
+              info.Zip5;
+            if (!string.IsNullOrWhiteSpace(info.Zip4)) input += "-" + info.Zip4;
+            var result = AddressFinder.Find(input, null, false);
+            if (result.Congress != null && result.Congress.Length == 3) result.Congress = result.Congress.Substring(1);
+            var table = Addresses.GetDataByEmail(info.Email);
+            if (table.Count == 0) // Insert
+              Addresses.Insert(info.FirstName, info.LastName, info.Address,
+                info.City, info.StateCode, info.Zip5, info.Zip4, info.Email,
+                info.Phone, now, "DONR", false, true, false, DefaultDbDate, string.Empty,
+                result.Congress.SafeString(), result.StateSenate.SafeString(),
+                result.StateHouse.SafeString(), result.County.SafeString(), 
+                result.Success ? now : DefaultDbDate, 0, DefaultDbDate);
+            else if (result.Success) // update all matching Addresses
+            {
+              foreach (var row in table)
+              {
+                row.FirstName = info.FirstName;
+                row.LastName = info.LastName;
+                row.Address = info.Address;
+                row.City = info.City;
+                row.StateCode = info.StateCode;
+                row.Zip5 = info.Zip5;
+                row.Zip4 = info.Zip4;
+                row.Phone = info.Phone;
+                row.CongressionalDistrict = result.Congress;
+                row.StateSenateDistrict = result.StateSenate;
+                row.StateHouseDistrict = result.StateHouse;
+                row.County = result.County;
+                row.DistrictLookupDate = now;
+              }
+              Addresses.UpdateTable(table);
+            }
+
+            messages.Add(
+              string.Format(
+                "<p>{0:C} donation added for {1}&lt;{2}&gt; on {3:G}</p>",
+                info.Amount, info.FullName, info.Email, info.Date));
+            good++;
+          }
+          catch (Exception ex)
+          {
+            messages.Add(string.Format("<p class=\"error\">Error processing file: {0}, {1}</p>",
+              file.FileName, ex.Message));
+            bad++;
+          }
+        }
+
+        // process reversals
+        foreach (var reversal in reversals)
+          try
+          {
+            if (Donations.DeleteByEmailDate(reversal.Email, reversal.Date) == 0) 
+              throw new VoteException("Could not find donation to reverse");
+            messages.Add(string.Format("<p>Donation from {0} on {1:G} was reversed</p>",
+              reversal.Email, reversal.Date));
+            reversed++;
+          }
+          catch (Exception ex)
+          {
+            messages.Add(string.Format("<p class=\"error\">Could not reverse donation from {0} on {1:G}: {2}</p>",
+              reversal.Email, reversal.Date, ex.Message));
+            bad++;
+          }
+
+        messages.Add(string.Format("<p>{0} donations added. {1} donations reversed. {2} errors.</p>",
+          good, reversed, bad));
+        SummaryPlaceHolder.Controls.Add(new LiteralControl(string.Join(string.Empty, messages)));
+        SummaryContainer.RemoveCssClass("hidden");
+      }
+    }
+  }
+}

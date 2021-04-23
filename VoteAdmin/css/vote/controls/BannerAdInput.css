@@ -1,0 +1,40 @@
+﻿.master-main-content {
+  width: 650px;
+}
+
+.input-element
+{
+  margin-top: 15px;
+}
+
+.fieldlabel
+{
+  font-size: 12.1px;
+}
+
+.fieldnote
+{
+  max-width: 500px;
+}
+
+input[type=text]
+{
+  width: 500px;
+  margin-right: 10px;
+}
+
+.view-button {
+  width: 20px;
+  height: 20px;
+  background: url(/images/opsprite.png);
+  background-position: -260px -20px;
+  position: relative;
+  top: 6px;
+  display: inline-block;
+                                }
+
+.update-button
+{
+  margin-top: 15px;
+  float: none;
+}

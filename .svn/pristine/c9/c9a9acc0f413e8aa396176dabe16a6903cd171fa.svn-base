@@ -1,0 +1,249 @@
+using System;
+using System.Data;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB;
+using DB.Vote;
+using Vote.Reports;
+
+namespace Vote
+{
+  public partial class IntroPageX : CacheablePage
+  {
+    protected IntroPageX()
+    {
+      NoUrlEdit = true;
+      NoIndex = true;
+    }
+
+    #region Caching support
+
+    protected override bool SuppressCaching
+    {
+      get { return true; }
+    }
+
+    protected override string GetCacheKey()
+    {
+      var key = UrlManager.GetStateCodeFromHostName() + "." + QueryState + "." +
+        QueryId;
+      var siteId = UrlManager.CurrentQuerySiteId;
+      if (!string.IsNullOrEmpty(siteId))
+        key += "." + siteId;
+
+      return key;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "Intro";
+    }
+
+    #endregion Caching support
+
+    private readonly string _PoliticianKey = QueryId;
+    private DataRow _PoliticianInfo;
+    private string _PoliticianName;
+    private string _OfficeAndStatus;
+
+    private string GetPageTitle()
+    {
+      var title = _PoliticianName + ", " + _OfficeAndStatus;
+      if (_PoliticianInfo.LivePoliticianStatus()
+        .IsInFutureViewableElection())
+        title += ", " + _PoliticianInfo.ElectionDescription();
+      return title;
+    }
+
+    private string MetaTags()
+    {
+      var metaTag = _PoliticianName + ", " + _OfficeAndStatus;
+
+      if (_PoliticianInfo.LivePoliticianStatus()
+        .IsInFutureViewableElection())
+      {
+        metaTag += ", " +
+          PageCache.Politicians.GetFutureViewableElectionDescription(_PoliticianKey);
+        metaTag +=
+          " candidate picture, biographical, social media and positions on issues";
+      }
+      else
+        metaTag += " picture, biographical, social media and positions on issues";
+
+      return metaTag;
+    }
+
+    private void FillInProfileHeadings()
+    {
+      if (_PoliticianInfo.LivePoliticianStatus()
+        .IsInFutureViewableElection())
+      {
+        ProfileHeading.Visible = true;
+        ProfileHeading.Text = "Use the links below to compare " + _PoliticianName +
+          "'s positions and views with the other candidates:";
+        IssuesListLinks.GetReport(
+          PageCache.Politicians.GetFutureViewableElectionKeyByPoliticianKey(
+            _PoliticianKey), PageCache.Politicians.GetOfficeKey(_PoliticianKey))
+          .AddTo(LinksPlaceHolder);
+      }
+      else
+      {
+        ProfileHeading.Visible = true;
+        ProfileHeading.Text = _PoliticianName +
+          "'s positions and views on the issues:";
+        PoliticianIssueListLinks.GetReport(_PoliticianKey, _PoliticianName)
+          .AddTo(LinksPlaceHolder);
+      }
+    }
+
+    private void FillInBioTopics()
+    {
+      FillInBioTopic(GeneralStatement, _PoliticianInfo.GeneralStatement());
+      FillInBioTopic(Personal, _PoliticianInfo.Personal());
+      FillInBioTopic(Education, _PoliticianInfo.Education());
+      FillInBioTopic(Profession, _PoliticianInfo.Profession());
+      FillInBioTopic(Military, _PoliticianInfo.Military());
+      FillInBioTopic(Civic, _PoliticianInfo.Civic());
+      FillInBioTopic(Political, _PoliticianInfo.Political());
+      FillInBioTopic(Religion, _PoliticianInfo.Religion());
+      FillInBioTopic(Accomplishments, _PoliticianInfo.Accomplishments());
+    }
+
+    private static void FillInBioTopic(ITextControl label, string text)
+    {
+      label.Text = string.IsNullOrWhiteSpace(text)
+        ? "no response"
+        : Report.TruncateAnswer(text)
+          .ReplaceNewLinesWithBreakTags();
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      // The OnPreInit method of the parent class handles serving from cache, 
+      // in which case this method is never called.
+
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/SecondaryCommon.css");
+      this.IncludeCss("~/css/All.css");
+      this.IncludeCss("~/css/Intro.css");
+
+      _PoliticianInfo = Politicians.GetPoliticianIntroReportData(_PoliticianKey);
+
+      if (_PoliticianInfo == null)
+      {
+        InnerContent.Controls.Clear();
+        var p = new HtmlGenericControl("p").AddTo(InnerContent, "not-found-error");
+        new LiteralControl("Could not find Id " + _PoliticianKey).AddTo(p);
+        return;
+      }
+
+      _PoliticianName = Politicians.FormatName(_PoliticianInfo);
+      _OfficeAndStatus = Politicians.FormatOfficeAndStatus(_PoliticianInfo);
+
+      TitleTag.Text = GetPageTitle();
+      MetaDescriptionTag.Content = MetaTags();
+      MetaKeywordsTag.Content = _PoliticianName;
+
+      PageHeading.MainHeadingText = string.Format(PageHeading.MainHeadingText,
+        _PoliticianName);
+
+      PoliticianInfo.GetReport(_PoliticianInfo)
+        .AddTo(InfoPlaceHolder);
+
+      FillInProfileHeadings();
+
+      FillInBioTopics();
+    }
+
+    #region Dead code
+
+    //public static string CacheIntroPageKey(string DomainDesignCode,
+    //  string DomainDataCode, string StateCode, string PoliticianKey)
+    //{
+    //  return (
+    //    DomainDesignCode //VOTE-USA VOTE-VA
+    //    + "." + DomainDataCode //US VA
+    //    + "." + "Intro"
+    //    + "." + StateCode
+    //    + "." + PoliticianKey
+    //    );
+    //}
+
+    //private static void FillInPersonalInformation(PageCache cache,
+    //  DataRow politicianRow, Label name, Label office, Label election, Label age,
+    //  HyperLink partyLink, Label website, Label phone, Label address,
+    //  Label socialMedia, Image image)
+    //{
+    //  #region Politician Name, Office, and Election
+
+    //  var politicianKey = db.QueryString("Id");
+    //  var partyKey = politicianRow["PartyKey"].ToString();
+
+    //  office.Text = cache.Politicians.GetOfficeAndStatus(politicianKey);
+    //  election.Text =
+    //    cache.Politicians.GetFutureViewableElectionDescription(politicianKey);
+
+    //  #endregion Politician Name, Office, and Election
+
+    //  #region Age (DOB)
+
+    //  age.Text = db.Age(cache, politicianKey);
+    //  if (string.IsNullOrEmpty(age.Text))
+    //    //age.Text = "n/a";
+    //    age.Text = string.Empty;
+
+    //  #endregion Age (DOB)
+
+    //  #region Party
+
+    //  if (partyKey != string.Empty &&
+    //    !string.IsNullOrEmpty(cache.Parties.GetPartyName(partyKey)))
+    //  {
+    //    partyLink.ToolTip = cache.Parties.GetPartyName(partyKey) + " Website";
+    //    //partyLink.Target = "view";
+    //    partyLink.Target = "_website";
+    //    partyLink.Text = cache.Parties.GetPartyName(partyKey);
+    //    if (!string.IsNullOrEmpty(cache.Parties.GetPartyUrl(partyKey)))
+    //      partyLink.NavigateUrl = db.Http(cache.Parties.GetPartyUrl(partyKey));
+    //  }
+    //  else
+    //    partyLink.Text = "No Party Affiliation";
+
+    //  #endregion
+
+    //  #region Website
+
+    //  website.Text = db.Politician_WebAddress_Public_Anchor(cache, politicianKey,
+    //    "Website", "Politician WebSite", "_website");
+    //  if (website.Text == db.No_Website)
+    //    website.Text = string.Empty;
+
+    //  #endregion
+
+    //  phone.Text = db.Politician_Phone_Any_For_Label(cache, politicianKey);
+    //  if (phone.Text == db.No_Phone)
+    //    phone.Text = string.Empty;
+
+    //  #region AddressCell
+
+    //  address.Text = db.Politician_Address_Any_For_Label(cache, politicianKey) +
+    //    db.Politician_CityStateZip_Any_For_Label(cache, politicianKey);
+    //  if (address.Text == db.No_Address)
+    //    //address.Text = "n/a";
+    //    address.Text = string.Empty;
+
+    //  #endregion
+
+    //  #region Social Media Links
+
+    //  socialMedia.Text = db.Social_Media_Anchors(cache, politicianKey);
+
+    //  #endregion Social Media Links
+
+    //  image.ImageUrl = db.Url_Image_Politician_Or_NoPhoto(politicianKey,
+    //    db.Image_Size_300_Profile, db.Image_Size_200_Profile);
+    //}
+
+    #endregion Dead code
+  }
+}

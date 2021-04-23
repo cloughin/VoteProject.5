@@ -1,0 +1,64 @@
+﻿.file-upload-container
+{
+  margin-top: 20px;
+}
+
+#FileUpload
+{
+  width: 920px;
+}
+
+.extra-addresses-container
+{
+  margin-top: 14px;
+}
+
+.extra-addresses
+{
+  width: 916px;
+}
+
+.summary-container
+{
+  margin-top: 20px;
+}
+
+.summary
+{
+  width: 918px;
+  border: 1px solid #999;
+  min-height: 100px;
+  max-height: 300px;
+  overflow-y: scroll;
+  padding: 2px;
+}
+
+.check-container
+{
+  margin-top: 10px;
+}
+
+.submit-container
+{
+  margin-top: 10px;
+}
+
+.summary p.error
+{
+  color: red;
+}
+
+.lookup-source-id-container
+{
+  margin-top: 50px;
+}
+
+.lookup-source-id-input
+{
+  margin-right: 10px;
+}
+
+.source-id-email {
+  font-size: 16pt;
+  margin-top: 12px;
+}

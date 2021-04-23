@@ -1,0 +1,170 @@
+﻿body.admin-page .navigate-jurisdiction .ui-dialog-titlebar
+{
+  background: #779ad4 url(/images/menubg.gif) repeat-x;
+  height: 23px;
+  padding: 0;
+}
+
+body.admin-page .navigate-jurisdiction .ui-dialog-title
+{
+  color: #ffffee;
+  font-size: 10pt;
+  padding: 1px 12px;
+}
+
+#navigateJurisdiction
+{
+  display: none;
+}
+
+#navigateJurisdiction table
+{
+  margin-top: 6px;
+  padding-top: 8px;
+}
+
+#navigateJurisdiction td
+{
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 13px;
+}
+
+#navigateJurisdiction select
+{
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 13px;
+  max-width: 475px;
+}
+
+#navigateJurisdiction td.col1 > div
+{
+  height: 30px;
+  padding: 0 0 0 10px;
+}
+
+#navigateJurisdiction td.col2 > div
+{
+  padding: 0 10px 0 0;
+}
+
+#navigateJurisdiction td.col4
+{
+  width: 100%;
+}
+
+#navigateJurisdiction td.col4 > div
+{
+  text-align: right;
+  width: 100%;
+}
+
+#navigateJurisdiction td.col4 input[type=button]
+{
+  margin: 0 10px 0 0;
+  width: 70px;
+}
+
+#navigateJurisdiction td .name
+{
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+
+
+#navigateJurisdiction .outer
+{
+  text-align: left;
+  padding: 10px 10px 0 10px;
+  margin-top: 3px;
+}
+
+#navigateJurisdiction .outer .col
+{
+  float: left;
+}
+
+#navigateJurisdiction .outer .col.col4
+{
+  float: right;
+}
+
+#navigateJurisdiction .cell
+{
+  height: 33px;
+}
+
+#navigateJurisdiction .c1
+{
+  width: 25px;
+}
+
+#navigateJurisdiction .c2
+{
+  width: 70px;
+  padding-top: 3px;
+  height: 30px;
+}
+
+#navigateJurisdiction .c3
+{
+  float: left;
+  clear: both;
+}
+
+#navigateJurisdiction .c3 .name
+{
+  font-weight: bold;
+  white-space: nowrap;
+  padding-top: 3px;
+}
+
+#navigateJurisdiction .c4 input[type=button]
+{
+  margin: 0 10px 0 0;
+  width: 70px;
+}
+
+#navigateJurisdiction .search-all-districts-button
+{
+  margin: 4px 0 4px 95px;
+}
+
+.search-districts-in-state
+{
+  z-index: 201 !important;
+}
+
+.search-districts-in-state .search-districts-text
+{
+  width: 510px;
+}
+
+.search-districts-in-state .instr
+{
+  margin-top: 10px;
+  font-style: italic;
+}
+
+.search-districts-in-state .search-districts-select
+{
+  width: 500px;
+  height: 500px;
+  border: 1px solid #666666;
+  padding: 0 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.search-districts-in-state .search-districts-select p
+{
+  text-align: left;
+  margin: 3px 0;
+  padding: 2px;
+}
+
+.search-districts-in-state .search-districts-select p:hover
+{
+  color: #ffffff;
+  background-color: #0000ff;
+}

@@ -1,0 +1,4 @@
+﻿#main-tabs div.vtab-panel textarea
+{
+  height: 224px;
+}

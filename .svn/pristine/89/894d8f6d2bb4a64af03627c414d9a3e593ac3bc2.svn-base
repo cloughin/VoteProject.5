@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<configuration>
+  <startup>
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/>
+  </startup>
+  <appSettings>
+    <add key="CnVoteZipNewLocal.MySql" value="Server=localhost;Uid=root;Pwd=p17134;Database=votezipnew" />
+  </appSettings>
+</configuration>

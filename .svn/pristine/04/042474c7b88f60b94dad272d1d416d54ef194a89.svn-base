@@ -1,0 +1,84 @@
+﻿using System;
+using System.Web.UI.HtmlControls;
+using DB.Vote;
+
+namespace Vote.Controls
+{
+  public partial class ManagePoliticiansPanel
+  {
+    #region DataItem objects
+
+    private class ConsolidateDialogItem : DataItemBase
+    {
+      private const string GroupName = "Consolidate";
+      protected readonly ManagePoliticiansPanel ThisControl;
+
+      protected ConsolidateDialogItem(ManagePoliticiansPanel thisControl)
+        : base(GroupName)
+      {
+        ThisControl = thisControl;
+      }
+
+      public static ConsolidateDialogItem[] GetDialogInfo(ManagePoliticiansPanel control)
+      {
+        var consolidateInfo = new ConsolidateDialogItem[] 
+          {
+          };
+
+        foreach (var item in consolidateInfo)
+          item.InitializeItem(control);
+
+        InitializeGroup(control, GroupName);
+
+        return consolidateInfo;
+      }
+    }
+
+    private ConsolidateDialogItem[] _ConsolidateDialogInfo;
+
+    #endregion DataItem objects
+
+    #region Private
+
+    private void LoadContactTab(PoliticiansTable p1, PoliticiansTable p2)
+    {
+      new HtmlDiv {InnerText = "Politician Name"}.AddTo(ConsolidateContactTabContent, "content-name");
+      //Politicians.FormatName(p1);
+    }
+
+    #endregion Private
+
+    #region Event handlers and overrides
+
+    protected void ButtonConsolidate_OnClick(object sender, EventArgs e)
+    {
+
+      switch (ConsolidateReloading.Value)
+      {
+        case "reloading":
+          {
+            var listData1 = Politicians.GetListItemData(ConsolidateKey1.Value);
+            var listData2 = Politicians.GetListItemData(ConsolidateKey2.Value);
+            Politicians.GetCandidateListItem(listData1).AddTo(ConsolidateItem1);
+            Politicians.GetCandidateListItem(listData2).AddTo(ConsolidateItem2);
+            var p1 = Politicians.GetData(ConsolidateKey1.Value);
+            var p2 = Politicians.GetData(ConsolidateKey2.Value);
+            LoadContactTab(p1, p2);
+          }
+          break;
+
+        case "":
+          {
+            // normal update
+          }
+          break;
+
+        default:
+          throw new VoteException("Unknown reloading option");
+      }
+    }
+
+    #endregion Event handlers and overrides
+
+  }
+}

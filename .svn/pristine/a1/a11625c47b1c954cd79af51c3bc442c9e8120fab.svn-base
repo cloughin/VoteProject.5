@@ -1,0 +1,74 @@
+<%@ Page Language="C#" EnableEventValidation="False" EnableSessionState="ReadOnly" 
+ AutoEventWireup="true" CodeBehind="xBallot.aspx.cs" Inherits="Vote.BallotPageX" %>
+
+<%@ Register Src="/Controls/SocialMediaButtons.ascx" TagName="SocialMediaButtons" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonateBanner.ascx" TagName="DonateBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainBanner.ascx" TagName="MainBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainNavigation.ascx" TagName="MainNavigation" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainFooter.ascx" TagName="MainFooter" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeading.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntry.ascx" TagName="AddressEntry" TagPrefix="user" %>
+<%@ Register Src="/Controls/SampleBallotEmailDialog.ascx" TagName="SampleBallotEmailDialog" TagPrefix="user" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+  <title runat="server" id="TitleTag" ></title>
+  <meta id="MetaDescriptionTag" content="" name="description" runat="server" EnableViewState="False" />
+  <meta id="MetaKeywordsTag" content="" name="keywords" runat="server" EnableViewState="False" />
+</head>
+<body class="ballot-page">
+    <form id="form1" runat="server">
+
+    <div id="outer">
+    <div id="container">
+      <user:SocialMediaButtons ID="SocialMediaButtons1" runat="server" />
+      <user:DonateBanner ID="DonateBanner1" runat="server" />
+      <user:MainBanner ID="MainBanner1" runat="server" />
+      <user:MainNavigation ID="MainNavigation1" runat="server" />
+      <div id="mainContent">
+        <div id="InnerContent" runat="server">
+        <user:PageHeading ID="PageHeading" runat="server" 
+          MainHeadingText="Your Sample Ballot" />
+
+        <%-- 
+        <table class="tablePage" id="ElectionResultsTable" cellspacing="0" cellpadding="0"
+          border="0" runat="server" EnableViewState="False">
+          <tr>
+            <td valign="top" align="center">
+              <asp:Image ID="ElectionImage" runat="server" EnableViewState="False" CssClass="ResultsImage">
+              </asp:Image></td>
+          </tr>
+          <tr>
+            <td align="center" class="PageSubTitle">
+              Source:<asp:Label ID="ElectionResultsSource" runat="server" CssClass="HSmall" EnableViewState="False"></asp:Label>
+              &nbsp;
+              <asp:Label ID="ElectionResultsDate" runat="server" EnableViewState="False"></asp:Label></td>
+          </tr>
+        </table>
+        
+        <table class="tablePage" id="SampleBallotLinkTable" cellspacing="0" cellpadding="0"
+          border="0" runat="server" EnableViewState="False">
+          <tr>
+          <td align="center"><asp:HyperLink ID="SampleBallotLink" runat="server" EnableViewState="False">[HyperLinkSampleBallot]</asp:HyperLink></td>
+          </tr>
+        </table>
+        --%>
+        <table class="tablePage" id="BallotHeadingTable" cellspacing="0" cellpadding="0" runat="server" EnableViewState="False" border="0">
+        </table>
+        <asp:PlaceHolder ID="ReportPlaceHolder" runat="server"></asp:PlaceHolder>
+        <asp:PlaceHolder ID="ReferendumReportPlaceHolder" runat="server"></asp:PlaceHolder>
+
+       </div>
+       <user:MainFooter ID="MainFooter1" runat="server" />
+      </div> <!-- id="mainContent" -->
+    </div> <!-- id="container" -->
+    </div> <!-- id="outer" -->
+
+    <user:AddressEntry ID="AddressEntry" runat="server" />
+    <user:SampleBallotEmailDialog ID="SampleBallotEmailDialog" runat="server" />
+
+    </form>
+</body>
+</html>

@@ -1,0 +1,26 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Public.Master" AutoEventWireup="true" 
+CodeBehind="ContactUs3.aspx.cs" Inherits="Vote.ContactUs3" %>
+
+<%@ Register Src="/Controls/VoteUsaAddress.ascx" TagName="VoteUsaAddress" TagPrefix="user" %>
+<%@ Register Src="/Controls/EmailForm.ascx" TagName="EmailForm" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeadingResponsive.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonationRequestResponsive.ascx" TagName="DonationRequest" TagPrefix="user" %>
+
+<asp:Content ID="HeadTopContent" ContentPlaceHolderID="MasterHeadTopContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="HeadBottomContent" ContentPlaceHolderID="MasterHeadBottomContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+  <user:PageHeading ID="PageHeading" runat="server" MainHeadingText="Contact Us" />
+  <div class="intro-copy">
+    <p>You can contact us via standard mail at:</p>
+    <div class="address">
+      <p><user:VoteUsaAddress ID="VoteUsaAddress" runat="server" /></p>
+    </div>
+    <p>Or send us an email using the form below:</p>
+    <user:EmailForm id="EmailForm" runat="server" />
+  </div>
+  <user:DonationRequest ID="DonationRequest" runat="server" />
+</asp:Content>

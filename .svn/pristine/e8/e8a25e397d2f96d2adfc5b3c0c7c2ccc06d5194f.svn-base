@@ -1,0 +1,19 @@
+﻿using System;
+
+namespace DB.Vote
+{
+  public partial class DebugLogRow {}
+
+  public partial class DebugLog
+  {
+    public static Int32 Insert(String message)
+    {
+      return Insert(DateTime.UtcNow, "Default", message, -1);
+    }
+
+    public static Int32 Insert(String messageType, String message)
+    {
+      return Insert(DateTime.UtcNow, messageType, message, -1);
+    }
+  }
+}

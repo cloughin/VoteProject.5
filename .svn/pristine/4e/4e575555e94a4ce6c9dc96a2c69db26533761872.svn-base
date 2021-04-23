@@ -1,0 +1,88 @@
+<%@ Page Language="C#" EnableSessionState="ReadOnly"  AutoEventWireup="true"
+ Codebehind="xElection.aspx.cs" Inherits="Vote.ElectionPageX" %>
+
+<%@ Register Src="/Controls/SocialMediaButtons.ascx" TagName="SocialMediaButtons" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonateBanner.ascx" TagName="DonateBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainBanner.ascx" TagName="MainBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainNavigation.ascx" TagName="MainNavigation" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainFooter.ascx" TagName="MainFooter" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeading.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntry.ascx" TagName="AddressEntry" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonationRequest.ascx" TagName="DonationRequest" TagPrefix="user" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+  <title runat="server" id="TitleTag" ></title>
+  <meta id="MetaDescriptionTag" content="" name="description" runat="server" EnableViewState="False" />
+  <meta id="MetaKeywordsTag" content="" name="keywords" runat="server" EnableViewState="False" />
+</head>
+<body class="election-page">
+    <form id="form1" runat="server">
+
+    <div id="outer">
+    <div id="container">
+      <user:SocialMediaButtons ID="SocialMediaButtons1" runat="server" />
+      <user:DonateBanner ID="DonateBanner1" runat="server" />
+      <user:MainBanner ID="MainBanner1" runat="server" />
+      <user:MainNavigation ID="MainNavigation1" runat="server" />
+      <div id="mainContent">
+        <user:PageHeading ID="PageHeading" runat="server" 
+          MainHeadingText="Election Contests and Ballot Measures" />
+
+        <table class="tablePage" cellspacing="0" cellpadding="0" id="ElectionHeading"
+        border="0" enableviewstate="False">
+        <tr class="trElectionName">
+          <td class="tdElectionName">
+            <asp:Label ID="LabelTitle" runat="server" EnableViewState="False"></asp:Label></td>
+        </tr>
+        <tr class="trElectionTitle">
+          <td class="tdElectionTitle">
+            <asp:Label ID="LabelDirectory" runat="server" EnableViewState="False"></asp:Label></td>
+        </tr>
+        <tr class="trElectionElection">
+          <td class="tdElectionElection">
+            <asp:Label ID="LabelElection" runat="server" EnableViewState="False"></asp:Label></td>
+        </tr>
+        </table>
+        <!-- Table -->
+        <table class="tablePage" id="ElectionInfoTable" cellspacing="0" cellpadding="0"
+          border="0" runat="server" enableviewstate="False">
+          <tr class="trElectionElectionInfo">
+            <td class="tdElectionElectionInfo">
+              <asp:Label ID="ReportInstructions" runat="server" EnableViewState="False"></asp:Label></td>
+          </tr>
+        </table>
+        <table class="tablePage" id="PastElectionWarningTable" cellspacing="0" cellpadding="0"
+          border="0" runat="server" enableviewstate="False">
+          <tr class="trElectionElectionInfo">
+            <td class="tdElectionElectionInfo warning">
+              <asp:Label ID="PastElectionWarning" runat="server" EnableViewState="False">
+              <strong>WARNING:</strong> Candidate pictures are the most current we have on file. Because 
+              this is a past election, they may not show a candidate’s likeness at the 
+              time of the election. Likewise, some of the links to websites, emails, 
+              and social media may be broken.</asp:Label></td>
+          </tr>
+        </table>
+
+        <table class="tablePage" id="ElectionInstructionTable" cellspacing="0" cellpadding="0"
+          border="0" runat="server" enableviewstate="False">
+          <tr class="trElectionInstruction">
+            <td class="tdElectionInstruction">
+              <asp:Label ID="AdditionalElectionInfo" runat="server" EnableViewState="False"></asp:Label></td>
+          </tr>
+        </table>
+        
+        <asp:PlaceHolder ID="ElectionPlaceHolder" runat="server"  EnableViewState="False"></asp:PlaceHolder>
+       <user:MainFooter ID="MainFooter1" runat="server" />
+      </div> <!-- id="mainContent" -->
+    </div> <!-- id="container" -->
+    </div> <!-- id="outer" -->
+
+    <user:AddressEntry ID="AddressEntry" runat="server" />
+    <user:DonationRequest ID="DonationRequest1" runat="server" />
+
+    </form>
+</body>
+</html>

@@ -1,0 +1,49 @@
+﻿using System;
+
+namespace Vote
+{
+  public partial class ForVolunteersPage : PublicPage // not CacheablePage due to Captcha
+  {
+    private const string TitleTagAllStatesDomain =
+      "Volunteer to Help Inform Voters and Support Better Elections";
+
+    private const string MetaDescriptionAllStatesDomain =
+      "We offer many ways to volunteer your help to inform voters and to support better elections. All you need is an internet connection and the desire.";
+
+    private const string TitleTagSingleStateDomain =
+      "Volunteer to Help Inform [[state]] Voters and Support Better Elections";
+
+    private const string MetaDescriptionSingleStateDomain =
+      "We offer many ways to volunteer your help to inform voters and to support better [[state]] elections. All you need is an internet connection and the desire.";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+        if (DomainData.IsValidStateCode) // Single state
+        {
+          if (DomainDesign.IncludeTitleForSingleState)
+            Title = TitleTagSingleStateDomain.Substitute() + " | " + Master.SiteName;
+          if (DomainDesign.IncludeMetaDescriptionForSingleState)
+            MetaDescription = MetaDescriptionSingleStateDomain.Substitute();
+        }
+        else
+        {
+          if (DomainDesign.IncludeTitleForAllStates)
+            Title = TitleTagAllStatesDomain.Substitute() + " | " + Master.SiteName;
+          if (DomainDesign.IncludeMetaDescriptionForAllStates)
+            MetaDescription = MetaDescriptionAllStatesDomain.Substitute();
+        }
+
+      EmailForm.ToEmailAddress = "john.fleisch@vote-usa.org";
+      EmailForm.CcEmailAddress = "ron.kahlow@vote-usa.org";
+
+      EmailForm.SetItems(
+        "I would like to volunteer for whatever is needed",
+        "I would like to volunteer to scrape candidate websites",
+        "I would like to volunteer to research county and local elected offices",
+        "I would like to volunteer to interview and video candidates",
+        "I would like to volunteer to speak to my local political parties/community outreach groups",
+        "I would like to contact candidates via email");
+    }
+  }
+}

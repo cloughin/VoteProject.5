@@ -1,0 +1,140 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Admin.Master" 
+AutoEventWireup="true" CodeBehind="UpdateOffices.aspx.cs" 
+Inherits="Vote.Admin.UpdateOfficesPage" %>
+
+<%@ Register TagPrefix="user" Namespace="Vote" Assembly="Vote" %>
+<%@ Register Src="/Controls/NavigateJurisdiction.ascx" TagName="NavigateJurisdiction" TagPrefix="user" %>
+<%@ Register Src="/Controls/FeedbackContainer.ascx" TagName="FeedbackContainer" TagPrefix="user" %>
+
+<asp:Content ID="HeadContent" ContentPlaceHolderID="MasterHeadContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+  
+  <div id="outer">
+    <h1 id="H1" EnableViewState="false" runat="server"></h1>
+    <div class="sub-heading headings">
+      <h2 id="H2" EnableViewState="false" class="jurisdiction-message" runat="server"></h2>
+      <h4 id="CredentialMessage" EnableViewState="false" class="credential-message" runat="server"></h4>
+    </div>
+    <div class="sub-heading change-button">
+      <input id="ChangeJurisdictionButton" runat="server" type="button" 
+          value="Change Jurisdiction" class="jurisdiction-change-button button-1 button-smaller tiptip"
+          title="Update the offices for a different state, county or local jurisdiction -- subject to your sign-in credentials."/>
+    </div>
+
+    <div class="clear-both"></div>
+
+    <div id="UpdateControls" class="update-controls" runat="server">
+  
+      <div id="main-tabs" class="tab-control htab-control jqueryui-tabs start-hidden shadow">
+ 
+        <ul class="main-tabs tabs htabs unselectable">
+          <li class="tab htab" EnableViewState="false" runat="server"><a href="#tab-addoffice" onclick="this.blur()" id="TabAddOffice" EnableViewState="false" runat="server">Add<br />Office</a></li>
+          <li class="tab htab" EnableViewState="false" runat="server"><a href="#tab-changeinfo" onclick="this.blur()" id="TabChangeInfo" EnableViewState="false" runat="server">Office<br />Information</a></li>
+          <li class="tab htab" EnableViewState="false" runat="server"><a href="#tab-incumbents" onclick="this.blur()" id="TabIncumbents" EnableViewState="false" runat="server">Office<br />Incumbents</a></li>
+          <li class="tab htab" EnableViewState="false" runat="server" id="TabMasterItem"><a href="#tab-masteronly" onclick="this.blur()" id="TabMaster" EnableViewState="false" runat="server">Master<br />Functions</a></li>
+        </ul>
+
+        <div id="tab-addoffice" class="main-tab content-panel tab-panel htab-panel">
+        </div>
+
+        <div id="tab-changeinfo" class="main-tab content-panel tab-panel htab-panel">
+        </div>
+
+        <div id="tab-incumbents" class="main-tab content-panel tab-panel htab-panel">
+        </div>
+
+  <% if (IsMasterUser)
+     { %>
+        <div id="tab-masteronly" class="main-tab content-panel tab-panel htab-panel">
+          <asp:UpdatePanel ID="UpdatePanelMasterOnly" 
+            UpdateMode="Conditional" runat="server">
+            <ContentTemplate>
+            <div id="ContainerMasterOnly" runat="server">
+              <input id="MasterOnlyReloading" class="reloading" type="hidden" runat="server" />
+              <input id="ContainerMasterOnlySubTabIndex" class="sub-tab-index" type="hidden" runat="server" value="0" />
+              <div class="inner-panel rounded-border">
+                <div class="tab-panel-heading horz-center">
+                  <div class="center-inner">
+                    <div class="undo-button tiptip" title="Revert all fields on this panel to the latest saved version">
+                      <div id="UndoMasterOnly" runat="server"></div>
+                    </div>
+                    <h4 class="center-element">Master-Only Functions</h4>
+                  </div>
+                </div>
+                <hr/>
+                <div class="content-area">
+                <%-- 
+                <h6 class="panel-heading inverted ellipsis" id="HeadingMasterOnly" runat="server">Please select an election from the list on the left</h6>
+                <hr/>
+                --%>
+
+                <div class="data-area">
+                  
+                  <div id="master-only-tabs" class="jqueryui-tabs shadow">
+                        
+                    <ul class="htabs unselectable">
+                      <li class="tab htab" EnableViewState="false" runat="server"><a href="#tab-masteronly-lockclass" onclick="this.blur()" id="TabMasterOnlyLockClass" EnableViewState="false" runat="server">Lock/Unlock<br />Office Class</a></li>
+                    </ul>
+
+                    <div id="tab-masteronly-lockclass">
+                   
+                      <div class="instructions">
+                        <ul>
+                          <li><span>Check an office class to prevent inadvertant addition of offices within that class.</span></li>
+                        </ul>
+                      </div>
+                      
+                      <div class="input-element classestolock rounded-border">
+                        <asp:CheckBoxList ID="ControlMasterOnlyClassesToLock" CssClass="check-box-list kalypto" runat="server">
+                          <asp:ListItem>&nbsp;</asp:ListItem>
+                        </asp:CheckBoxList>
+                      </div>
+
+                    </div>
+
+                  </div>
+                  
+                </div>
+ 
+                <div class="clear-both"></div>
+                </div>
+                
+                <hr />
+                <div class="content-footer">
+                  <div class="feedback-floater-for-ie7">
+                    <user:FeedbackContainer ID="FeedbackMasterOnly" 
+                    EnableViewState="false" runat="server" />
+                   </div>
+                  <div class="footer-item footer-ajax-loader">
+                    <asp:Image ID="AjaxLoaderMasterOnly" 
+                    EnableViewState="false" ImageUrl="~/images/ajax-loader32.gif" 
+                      CssClass="ajax-loader" runat="server" />
+                  </div>
+                  <div class="update-button">
+                    <asp:Button ID="ButtonMasterOnly" EnableViewState="false" 
+                     runat="server" 
+                      Text="Update" CssClass="update-button button-1 tiptip" 
+                      Title="Update the election order"
+                      OnClick="ButtonMasterOnly_OnClick" /> 
+                  </div>   
+                  <div class="clear-both"></div>
+                </div>   
+
+              </div>
+            </div>
+            </ContentTemplate>
+          </asp:UpdatePanel>
+        </div>
+  <% } %>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <user:NavigateJurisdiction ID="NavigateJurisdiction1" runat="server" AdminPageName="UpdateOffices" />
+
+</asp:Content>

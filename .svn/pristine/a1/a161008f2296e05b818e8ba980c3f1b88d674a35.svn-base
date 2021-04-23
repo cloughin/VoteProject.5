@@ -1,0 +1,968 @@
+﻿using System;
+using System.Globalization;
+using DB.Vote;
+using Vote.Reports;
+
+namespace Vote.Admin
+{
+  public partial class Default : SecureAdminPage
+  {
+    #region from db
+
+    private static bool States_Bool(string stateCode, string column)
+    {
+      return stateCode != string.Empty && stateCode != "US" &&
+        db.Single_Key_Bool("States", column, "StateCode", stateCode);
+    }
+
+    private static string Url_Admin_Officials(string stateCode)
+    {
+      return Url_Admin_Officials(stateCode, string.Empty, string.Empty);
+    }
+
+    private static string Url_Admin_Officials(string stateCode, string countyCode,
+      string localCode)
+    {
+      var url = "/Admin/Officials.aspx";
+      if (stateCode != string.Empty)
+        url += "&State=" + stateCode;
+      if (countyCode != string.Empty)
+        url += "&County=" + countyCode;
+      if (localCode != string.Empty)
+        url += "&Local=" + localCode;
+      return db.Fix_Url_Parms(url);
+    }
+
+    private static bool Is_StateCode_State_By_State(string stateCode)
+    {
+      return StateCache.IsValidFederalCode(stateCode) &&
+        !StateCache.IsUS(stateCode);
+    }
+
+    private static string Str_Election_Type_Description(string type, string stateCode)
+    {
+      switch (type)
+      {
+        case "G":
+          return "General Election";
+        case "O":
+          return "General Off-Year Election";
+        case "S":
+          return "Special Election";
+        case "P":
+          return "Primary";
+        case "B":
+          return "Presidential Primary";
+        case "A":
+          return stateCode == "US"
+            ? "Remaining Presidential Party Primary Candidates"
+            : "Template of Major Presidential Party Primary Candidates";
+        default:
+          return string.Empty;
+      }
+    }
+
+    private static string Url_Admin_Ballot()
+    {
+      var url = "/Admin/Ballot.aspx";
+      url += db.Url_Add_State_County_Local_Codes();
+      return db.Fix_Url_Parms(url);
+    }
+
+    private static int States_Int(string stateCode, string column)
+    {
+      return stateCode != string.Empty && stateCode != "US"
+        ? db.Single_Key_Int("States", column, "StateCode", stateCode)
+        : 0;
+    }
+
+    private static DateTime States_Date(string stateCode, string column)
+    {
+      return stateCode != string.Empty
+        ? db.Single_Key_Date("States", column, "StateCode", stateCode)
+        : DateTime.MinValue;
+    }
+
+    private static string Url_Admin_Parties(string stateCode)
+    {
+      return db.Url_Admin_Parties(stateCode, string.Empty, string.Empty);
+    }
+
+    private static string Url_Admin_Politicians(OfficeClass officeClass)
+    {
+      var url = db.Url_Admin_Politicians();
+      url += "&Class=" + officeClass.ToInt();
+      url += db.Url_Add_State_County_Local_Codes();
+      return db.Fix_Url_Parms(url);
+    }
+
+    private static string Url_Admin_Offices(string stateCode, string countyCode, string localCode)
+    {
+      var url = db.Url_Admin_Offices();
+      if (!string.IsNullOrEmpty(stateCode))
+        url += "&State=" + stateCode;
+      if (!string.IsNullOrEmpty(countyCode))
+        url += "&County=" + countyCode;
+      if (!string.IsNullOrEmpty(localCode))
+        url += "&Local=" + localCode;
+      return db.Fix_Url_Parms(url);
+    }
+
+    private static bool Is_Electoral_Class_Local(string stateCode, string countyCode, string localCode)
+    {
+      return db.Electoral_Class(stateCode, countyCode, localCode) == db.ElectoralClass.Local;
+    }
+
+    private static string Url_Admin_Offices(string stateCode, string countyCode)
+    {
+      return Url_Admin_Offices(stateCode, countyCode, string.Empty);
+    }
+
+    private static bool Is_Electoral_Class_County(string stateCode, string countyCode, string localCode)
+    {
+      return db.Electoral_Class(stateCode, countyCode, localCode) == db.ElectoralClass.County;
+    }
+
+    private static string Url_Admin_Offices(string stateCode)
+    {
+      return Url_Admin_Offices(stateCode, string.Empty, string.Empty);
+    }
+
+    private static bool Is_Electoral_Class_State(string stateCode, string countyCode, string localCode)
+    {
+      return db.Electoral_Class(stateCode, countyCode, localCode) == db.ElectoralClass.State;
+    }
+
+    private static bool Is_Electoral_Class_Federal(string stateCode, string countyCode, string localCode)
+    {
+      return (db.Electoral_Class(stateCode, countyCode, localCode) == db.ElectoralClass.USPresident)
+        || (db.Electoral_Class(stateCode, countyCode, localCode) == db.ElectoralClass.USSenate)
+        || (db.Electoral_Class(stateCode, countyCode, localCode) == db.ElectoralClass.USHouse)
+        || (db.Electoral_Class(stateCode, countyCode, localCode) == db.ElectoralClass.USGovernors);
+    }
+
+    private static string Url_Admin_LocalDistricts(string stateCode, string countyCode, string localCode)
+    {
+      var url = "/Admin/Districts.aspx";
+      if (stateCode != string.Empty)
+        url += "&State=" + stateCode;
+      if (countyCode != string.Empty)
+        url += "&County=" + countyCode;
+      if (localCode != string.Empty)
+        url += "&Local=" + localCode;
+      return db.Fix_Url_Parms(url);
+    }
+
+    #endregion from db
+
+    #region Private
+
+    private void CheckTextBoxsForHtmlAndIllegalInput()
+    {
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBoxOfficesStatusStatewide);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBoxOfficesStatusJudicial);
+      db.Throw_Exception_TextBox_Html_Or_Script(TextBoxOfficesStatusCounties);
+    }
+
+    private void LoadCountyLinks()
+    {
+      TableCountyLinks.Visible = true;
+      LabelCounties.Text =
+        CountyLinks.GetDefaultCountyLinks(ViewState["StateCode"].ToString())
+        .RenderToString();
+    }
+
+    private void LoadLocalLinks()
+    {
+      TableLocalLinks.Visible = true;
+      Label_County.Text =
+        Offices.GetElectoralClassDescription(ViewState["StateCode"].ToString(),
+          ViewState["CountyCode"].ToString()) + " LOCAL DISTRICTS, TOWNS and CITIES";
+      LabelLocalDistricts.Text = 
+        LocalLinks.GetDefaultLocalLinks(ViewState["StateCode"].ToString(),
+          ViewState["CountyCode"].ToString()).RenderToString();
+      if (string.IsNullOrEmpty(LabelLocalDistricts.Text))
+      {
+        LabelLocalDistricts.Text =
+          "No Local Districts, Towns or Cities have been identified for " +
+            Offices.GetElectoralClassDescription(ViewState["StateCode"].ToString(),
+              ViewState["CountyCode"].ToString());
+
+        LabelLocalDesc.Text = string.Empty;
+      }
+      else
+        LabelLocalDesc.Text =
+          "Use the links above to EDIT information for any of these local districts" +
+            " towns or cities in this county." +
+            " Use the link below to ADD local districts, towns and cities to this county.";
+    }
+
+    private void RecordElectionStatusData()
+    {
+      var updateSql = "UPDATE States SET " + " OfficesStatusStatewide = " +
+        db.SQLLit(TextBoxOfficesStatusStatewide.Text.Trim()) +
+        ", OfficesStatusJudicial = " +
+        db.SQLLit(TextBoxOfficesStatusJudicial.Text.Trim()) +
+        ", OfficesStatusCounties = " +
+        db.SQLLit(TextBoxOfficesStatusCounties.Text.Trim()) + " WHERE StateCode= " +
+        db.SQLLit(ViewState["StateCode"].ToString());
+      db.ExecuteSql(updateSql);
+      Msg.Text = db.Ok("The Election Authority Data was Recorded.");
+    }
+
+    #endregion Private
+
+    #region Event handlers and overrides
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        //The Session UserStateCode, UserCountyCode, UserLocalCode can be changed
+        //by a higher administration level using query strings
+        //This is done in db.State_Code(), db.County_Code(), db.Local_Code()
+        //
+        //Using ViewState variables insures these values won't
+        //change on any postbacks or in different tab or browser Sessions.
+        //
+        //ViewState["StateCode"] can be a StateCode or U1, u2, u3 for FederalCode
+        //db.QueryString("State") can't be used because Login Security does not pass
+        //the State in a query string
+        //
+        //db.State_Code(),db.County_Code(),db.Local_Code() have to be called 
+        //in that order because db.State_Code() resets CountyCode and LocalCode empty 
+
+        Page.Title = "Home";
+
+        ViewState["StateCode"] = db.State_Code();
+        ViewState["CountyCode"] = db.County_Code();
+        ViewState["LocalCode"] = db.Local_Code();
+
+        try
+        {
+          // All Tables Not Visible
+
+          TableStateElection.Visible = false;
+          TablePresidentialPrimary.Visible = false;
+          TablePresidentialPrimaryTemplate.Visible = false;
+          TableStateByStateElections.Visible = false;
+
+          TableStateElectionMaint.Visible = false;
+
+          TableCountyLinks.Visible = false;
+          TableElectionAuthority.Visible = false;
+          TableBallotDesign.Visible = false;
+          TableSendEmails.Visible = false;
+          TableLocalLinks.Visible = false;
+          TableLocalLinksEdit.Visible = false;
+          //TableOffices_Identified.Visible = false;
+          TableBulkCountyOfficeAdds.Visible = false;
+          TableMultiCountyJudicialDistricts.Visible = false;
+          TableMultiCountyOtherDistricts.Visible = false;
+          TableMultiCountyPartyDistricts.Visible = false;
+          TableNotes.Visible = false;
+          TableMasterOnly.Visible = false;
+          TableMisc.Visible = false;
+
+          // State vs Non-State Controls
+          // State
+          if (StateCache.IsValidStateCode(ViewState["StateCode"].ToString()))
+          {
+            TableStateElection.Visible = true;
+            TableStateElectionMaint.Visible = true;
+
+            PageTitle.Text = string.Empty;
+            PageTitle.Text += Offices.GetElectoralClassDescription(ViewState["StateCode"].ToString(),
+              ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString());
+
+            PageTitle.Text += "<br>";
+            PageTitle.Text += "ADMINISTRATION";
+
+            HyperLinkElections.Text = db.Name_Electoral_Plus_Text(" Elections");
+            HyperLinkElections.NavigateUrl = GetUpdateElectionsPageUrl(StateCode,
+              CountyCode, LocalCode);
+
+            // Counties & Locals Links
+            switch (
+              db.Electoral_Class(ViewState["StateCode"].ToString(),
+                ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString())
+              )
+            {
+              case db.ElectoralClass.USPresident:
+                break;
+              case db.ElectoralClass.USSenate:
+                break;
+              case db.ElectoralClass.USHouse:
+                break;
+              case db.ElectoralClass.USGovernors:
+                break;
+              case db.ElectoralClass.State:
+                LoadCountyLinks();
+
+                // Bulk County Office Adds & Multi-County Districts
+                if (IsSuperUser)
+                {
+                  TableBulkCountyOfficeAdds.Visible = true;
+
+                  TableMultiCountyJudicialDistricts.Visible = true;
+                  TableMultiCountyOtherDistricts.Visible = true;
+                  TableMultiCountyPartyDistricts.Visible = true;
+
+                  // Bulk Addition of County Offices
+
+                  var sql = string.Empty;
+                  sql += " Offices";
+                  sql += " WHERE StateCode = " +
+                    db.SQLLit(ViewState["StateCode"].ToString());
+                  sql += " AND (";
+                  sql += " (OfficeLevel = 8)";
+                  sql += " OR (OfficeLevel = 9)";
+                  sql += " OR (OfficeLevel = 10)";
+                  sql += " OR (OfficeLevel = 11)";
+                  sql += " OR (OfficeLevel = 18)";
+                  sql += " OR (OfficeLevel = 22)";
+                  sql += " )";
+                  var countyOffices = db.Rows_Count_From(sql);
+                  Label_BulkCountyOfficeAdds.Text = countyOffices +
+                    " County offices are defined in all counties.";
+
+                  if (countyOffices > 0)
+                  {
+                    sql = string.Empty;
+                    sql += " Offices";
+                    sql += " WHERE StateCode = " +
+                      db.SQLLit(ViewState["StateCode"].ToString());
+                    sql += " AND OfficeLevel = 8";
+                    var countyExecutiveOffices = db.Rows_Count_From(sql);
+                    Label_BulkCountyOfficeAdds.Text += " (" + countyExecutiveOffices +
+                      " Executive Offices)";
+
+                    sql = string.Empty;
+                    sql += " Offices";
+                    sql += " WHERE StateCode = " +
+                      db.SQLLit(ViewState["StateCode"].ToString());
+                    sql += " AND OfficeLevel = 9";
+                    var countyLegislative = db.Rows_Count_From(sql);
+                    Label_BulkCountyOfficeAdds.Text += " (" + countyLegislative +
+                      " Legislative Offices)";
+
+                    sql = string.Empty;
+                    sql += " Offices";
+                    sql += " WHERE StateCode = " +
+                      db.SQLLit(ViewState["StateCode"].ToString());
+                    sql += " AND OfficeLevel = 10";
+                    var countySchoolBoard = db.Rows_Count_From(sql);
+                    Label_BulkCountyOfficeAdds.Text += " (" + countySchoolBoard +
+                      " SchoolBoard Offices)";
+
+                    sql = string.Empty;
+                    sql += " Offices";
+                    sql += " WHERE StateCode = " +
+                      db.SQLLit(ViewState["StateCode"].ToString());
+                    sql += " AND OfficeLevel = 11";
+                    var countyCommission = db.Rows_Count_From(sql);
+                    Label_BulkCountyOfficeAdds.Text += " (" + countyCommission +
+                      " Commission Offices)";
+
+                    sql = string.Empty;
+                    sql += " Offices";
+                    sql += " WHERE StateCode = " +
+                      db.SQLLit(ViewState["StateCode"].ToString());
+                    sql += " AND OfficeLevel = 18";
+                    var countyJudicial = db.Rows_Count_From(sql);
+                    Label_BulkCountyOfficeAdds.Text += " (" + countyJudicial +
+                      " Judicial Offices)";
+
+                    sql = string.Empty;
+                    sql += " Offices";
+                    sql += " WHERE StateCode = " +
+                      db.SQLLit(ViewState["StateCode"].ToString());
+                    sql += " AND OfficeLevel = 22";
+                    var countyParty = db.Rows_Count_From(sql);
+                    Label_BulkCountyOfficeAdds.Text += " (" + countyParty +
+                      " Party Offices)";
+                  }
+
+                  HyperLinkBulkCountyOfficeAdds.NavigateUrl =
+                    "/Admin/Office.aspx?Electoral=4";
+
+                  HyperLinkBulkCountyOfficeAdds.Text =
+                    StateCache.GetStateName(ViewState["StateCode"].ToString()) +
+                      " Bulk Additions, Updates and Report of County Offices in EACH COUNTY";
+
+                  sql = string.Empty;
+
+                  // JUDICIAL Districts
+                  sql += " Districts";
+                  sql += " WHERE StateCode = " +
+                    db.SQLLit(ViewState["StateCode"].ToString());
+                  sql += " AND OfficeLevel = 17";
+                  var judicialDistricts = db.Rows_Count_From(sql);
+                  Label_JudicialDistricts.Text = judicialDistricts +
+                    " Multi-County JUDICIAL Districts are defined.";
+                  HyperLinkJudicialDistricts.NavigateUrl =
+                    "/Admin/Districts.aspx?Level=17";
+
+                  HyperLinkJudicialDistricts.Text =
+                    StateCache.GetStateName(ViewState["StateCode"].ToString()) +
+                      " Add or Edit JUDICIAL Multi-County Districts (Office Level 17)";
+
+                  // OTHER Districts
+                  sql = string.Empty;
+                  sql += " Districts";
+                  sql += " WHERE StateCode = " +
+                    db.SQLLit(ViewState["StateCode"].ToString());
+                  sql += " AND OfficeLevel = 7";
+                  var otherDistricts = db.Rows_Count_From(sql);
+                  Label_MultiCountyDistricts.Text = otherDistricts +
+                    " Multi-County OTHER Districts are defined.";
+                  HyperLinkMultiCountyDistricts.NavigateUrl =
+                    "/Admin/Districts.aspx?Level=7";
+
+                  HyperLinkMultiCountyDistricts.Text =
+                    StateCache.GetStateName(ViewState["StateCode"].ToString()) +
+                      " Add or Edit OTHER Multi-County Districts like Conservation Districts (Office Level 7)";
+
+                  // PARTY Districts
+                  sql = string.Empty;
+                  sql += " Districts";
+                  sql += " WHERE StateCode = " +
+                    db.SQLLit(ViewState["StateCode"].ToString());
+                  sql += " AND OfficeLevel = 21";
+                  var partyDistricts = db.Rows_Count_From(sql);
+                  Label_PartyDistricts.Text = partyDistricts +
+                    " Multi-County PARTY Districts are defined.";
+                  HyperLinkPartyDistricts.NavigateUrl =
+                    "/Admin/Districts.aspx?Level=21";
+
+                  HyperLinkPartyDistricts.Text =
+                    StateCache.GetStateName(ViewState["StateCode"].ToString()) +
+                      " Add or Edit PARTY Multi-County Districts (Office Level 21)";
+                }
+
+                TableBallotDesign.Visible = true;
+
+                TableElectionAuthority.Visible = true;
+
+                break;
+              case db.ElectoralClass.County:
+
+                //County
+                LoadCountyLinks();
+                LoadLocalLinks();
+
+                // Local Districts
+                TableLocalLinksEdit.Visible = true;
+                HyperLinkLocalDistricts.NavigateUrl = Url_Admin_LocalDistricts(ViewState["StateCode"].ToString(),
+                  ViewState["CountyCode"].ToString(), string.Empty);
+
+                HyperLinkLocalDistricts.Text = "ADD " +
+                  Offices.GetElectoralClassDescription(ViewState["StateCode"].ToString(),
+                    ViewState["CountyCode"].ToString()) +
+                  " Local Districts, Towns and Cities";
+
+                TableElectionAuthority.Visible = true;
+
+                break;
+              case db.ElectoralClass.Local:
+
+                LoadCountyLinks();
+
+                LoadLocalLinks();
+
+                TableElectionAuthority.Visible = true;
+
+                break;
+            }
+
+            // Elected Officials
+            HyperLinkOfficials.NavigateUrl = db.Url_Admin_Officials();
+            HyperLinkOfficials.Text = //db.Name_Electoral_Plus_Text_Officials();
+              db.Name_Electoral_Plus_Text(" Currently Elected Officials (Incumbents)");
+
+            // Elected Offices
+            if (Is_Electoral_Class_Federal(ViewState["StateCode"].ToString(),
+              ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString()))
+            {
+              //No link -> defined at state level
+            }
+            else if (Is_Electoral_Class_State(ViewState["StateCode"].ToString(),
+              ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString()))
+
+              // State Admin
+              HyperLinkElectedOffices.NavigateUrl =
+                Url_Admin_Offices(ViewState["StateCode"].ToString());
+
+            else if (Is_Electoral_Class_County(ViewState["StateCode"].ToString(),
+              ViewState["CountyCode"].ToString(),
+              ViewState["LocalCode"].ToString()))
+
+              // County Admin
+              HyperLinkElectedOffices.NavigateUrl =
+                Url_Admin_Offices(ViewState["StateCode"].ToString(),
+                  ViewState["CountyCode"].ToString());
+
+            else if (Is_Electoral_Class_Local(ViewState["StateCode"].ToString(),
+              ViewState["CountyCode"].ToString(),
+              ViewState["LocalCode"].ToString()))
+
+              // Local Admiin
+              HyperLinkElectedOffices.NavigateUrl =
+                Url_Admin_Offices(ViewState["StateCode"].ToString(),
+                  ViewState["CountyCode"].ToString(),
+                  ViewState["LocalCode"].ToString());
+
+            HyperLinkElectedOffices.Text = ////db.Name_Electoral_Plus_Text_Offices();
+              Offices.GetElectoralClassDescription(ViewState["StateCode"].ToString(),
+                ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString()) +
+                " Elected Offices";
+            if (Is_Electoral_Class_Federal(ViewState["StateCode"].ToString(),
+              ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString()))
+
+              // Federal
+              HyperLinkElectedOffices.Text +=
+                " are all defined, and can onlly be edited at the state level.";
+
+            // Politicians
+            // HyperLinkPoliticians.NavigateUrl
+            if (Is_Electoral_Class_Federal(ViewState["StateCode"].ToString(),
+              ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString()))
+            {
+              // Federal - No link -> defined at state level
+            }
+            else
+              HyperLinkPoliticians.NavigateUrl =
+                Url_Admin_Politicians(OfficeClass.Undefined);
+
+            HyperLinkPoliticians.Text = db.Name_Electoral_Plus_Text(" Politicians");
+            if (Is_Electoral_Class_Federal(ViewState["StateCode"].ToString(),
+              ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString()))
+
+              // Federal
+              HyperLinkPoliticians.Text += " are edited at the state level.";
+
+            if (
+              db.Is_Electoral_Class_State_County_Local(
+                ViewState["StateCode"].ToString(), ViewState["CountyCode"].ToString(),
+                ViewState["LocalCode"].ToString()))
+            {
+              // Election Authority
+              if (TableElectionAuthority.Visible)
+              {
+                HyperLinkElectionAuthority.NavigateUrl = db.Url_Admin_Authority();
+                //HyperLinkElectionAuthority.Text = db.Name_Electoral(
+                //  db.State_Code(), string.Empty, string.Empty, true)
+                //  + " Election Authority";
+                HyperLinkElectionAuthority.Text =
+                  db.Name_Electoral_Plus_Text(" Election Authority");
+              }
+
+              // Political Parties
+              HyperLinkPoliticalParties.NavigateUrl =
+                Url_Admin_Parties(ViewState["StateCode"].ToString());
+              HyperLinkPoliticalParties.Text =
+                Offices.GetElectoralClassDescription(db.State_Code(), string.Empty, string.Empty) +
+                  " Political Parties";
+
+              // Counties
+              Label_Counties.Text = db.Name_Electoral_Plus_Text(" Counties");
+
+              // Emails
+              Label_Emails_Date_Roster_Primary.Text = States_Date(
+                ViewState["StateCode"].ToString(), "EmailsDateElectionRosterPrimary")
+                .ToString(CultureInfo.InvariantCulture);
+              Label_Emails_Sent_Roster_Primary.Text = States_Int(
+                ViewState["StateCode"].ToString(), "EmailsSentElectionRosterPrimary")
+                .ToString(CultureInfo.InvariantCulture);
+              Label_Emails_Date_Roster_General.Text = States_Date(
+                ViewState["StateCode"].ToString(), "EmailsDateElectionRosterGeneral")
+                .ToString(CultureInfo.InvariantCulture);
+              Label_Emails_Sent_Roster_General.Text = States_Int(
+                ViewState["StateCode"].ToString(), "EmailsSentElectionRosterGeneral")
+                .ToString(CultureInfo.InvariantCulture);
+
+              // Ballot Design
+              HyperLinkBallotDesign.NavigateUrl = Url_Admin_Ballot();
+              HyperLinkBallotDesign.Text = //db.Name_Electoral_Plus_Text_Ballot();
+                db.Name_Electoral_Plus_Text(" Ballot Design and Content");
+            }
+          }
+          else
+            switch (ViewState["StateCode"].ToString())
+            {
+              case "US":
+                TablePresidentialPrimary.Visible = true;
+                PageTitle.Text = Str_Election_Type_Description("A", "US");
+                PageTitle.Text += "<br>";
+                PageTitle.Text += "ADMINISTRATION";
+                HyperLinkElectionsUS.Text = Str_Election_Type_Description("A",
+                  "US");
+                HyperLinkElectionsUS.NavigateUrl = db.Url_Admin_Elections("US");
+                break;
+              case "PP":
+                TablePresidentialPrimaryTemplate.Visible = true;
+                PageTitle.Text = Str_Election_Type_Description("A", "PP");
+                PageTitle.Text += "<br>";
+                PageTitle.Text += "ADMINISTRATION";
+                HyperLinkElectionsPP.Text = Str_Election_Type_Description("A",
+                  "PP");
+                HyperLinkElectionsPP.NavigateUrl = db.Url_Admin_Elections("PP");
+                break;
+              default:
+                if (Is_StateCode_State_By_State(ViewState["StateCode"].ToString()))
+                {
+                  // State-By-State Reports
+                  TableStateByStateElections.Visible = true;
+                  //if (db.QueryString("State") == "U1")
+                  switch (ViewState["StateCode"].ToString())
+                  {
+                    case "U1":
+                      PageTitle.Text = "U.S. President or State-By-State Elections";
+                      PageTitle.Text += "<br>";
+                      PageTitle.Text += "ADMINISTRATION";
+                      HyperLinkElectionsUD.Text = "US President State-By-State";
+                      HyperLinkElectionsUD.NavigateUrl = db.Url_Admin_Elections("U1");
+                      HyperLinkOfficialsUD.Text = "Current US President";
+                      HyperLinkOfficialsUD.NavigateUrl = Url_Admin_Officials("U1");
+                      break;
+                    case "U2":
+                      PageTitle.Text =
+                        "U.S. Senate Officials or State-By-State Elections";
+                      PageTitle.Text += "<br>";
+                      PageTitle.Text += "ADMINISTRATION";
+                      HyperLinkElectionsUD.Text = "US Senate State-By-State";
+                      HyperLinkElectionsUD.NavigateUrl = db.Url_Admin_Elections("U2");
+                      HyperLinkOfficialsUD.Text = "Current US Senate";
+                      HyperLinkOfficialsUD.NavigateUrl = Url_Admin_Officials("U2");
+                      break;
+                    case "U3":
+                      PageTitle.Text =
+                        "U.S. House of Representatives Officials or State-By-State Elections";
+                      PageTitle.Text += "<br>";
+                      PageTitle.Text += "ADMINISTRATION";
+                      HyperLinkElectionsUD.Text =
+                        "US House of Representatives State-By-State";
+                      HyperLinkElectionsUD.NavigateUrl = db.Url_Admin_Elections("U3");
+                      HyperLinkOfficialsUD.Text =
+                        "Current US House of Representatives";
+                      HyperLinkOfficialsUD.NavigateUrl = Url_Admin_Officials("U3");
+                      break;
+                    case "U4":
+                      PageTitle.Text =
+                        "Current Governors or State-By-State Elections";
+                      PageTitle.Text += "<br>";
+                      PageTitle.Text += "ADMINISTRATION";
+                      HyperLinkElectionsUD.Text =
+                        "Governors State-By-State Elections";
+                      HyperLinkElectionsUD.NavigateUrl = db.Url_Admin_Elections("U4");
+                      HyperLinkOfficialsUD.Text = "Current Governors State-By-State";
+                      HyperLinkOfficialsUD.NavigateUrl = Url_Admin_Officials("U4");
+                      break;
+                  }
+                }
+                break;
+            }
+
+          // Help links
+          if (IsMasterUser)
+          {
+            HyperLink_Interns.Visible = true;
+            HyperLink_Help.Visible = false;
+          }
+          else
+          {
+            HyperLink_Help.Visible = true;
+            HyperLink_Interns.Visible = false;
+          }
+
+          if ((IsSuperUser)
+            && (StateCache.IsValidStateCode(ViewState["StateCode"].ToString())))
+          {
+            // Master Only
+            TableMasterOnly.Visible = true;
+            TableSendEmails.Visible = true;
+            TableMisc.Visible = true;
+
+            HyperLinkNames.NavigateUrl =
+              "/Master/MgtReports.aspx?Report=OfficialsNames&State=" +
+                ViewState["StateCode"];
+
+            RadioButtonListUseBOLBanner.SelectedValue =
+              States_Bool(ViewState["StateCode"].ToString(), "IsUseBOEBanner")
+                ? "T"
+                : "F";
+
+            if (
+              db.Electoral_Class(ViewState["StateCode"].ToString(),
+                ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString()) ==
+                db.ElectoralClass.State)
+            {
+              // Status Notes of Statewide, Judicial and County Elected Offices and Incumbents
+              TableNotes.Visible = true;
+              TextBoxOfficesStatusStatewide.Text =
+                db.States_Str(ViewState["StateCode"].ToString(),
+                  "OfficesStatusStatewide");
+              TextBoxOfficesStatusJudicial.Text =
+                db.States_Str(ViewState["StateCode"].ToString(),
+                  "OfficesStatusJudicial");
+              TextBoxOfficesStatusCounties.Text =
+                db.States_Str(ViewState["StateCode"].ToString(),
+                  "OfficesStatusCounties");
+            }
+          }
+        }
+        catch (Exception ex)
+        {
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+        }
+      }
+    }
+
+    protected void ButtonRecordOfficesStaus_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        CheckTextBoxsForHtmlAndIllegalInput();
+
+        RecordElectionStatusData();
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Page_PreRender(object sender, EventArgs e)
+    {
+      try
+      {
+        if (Session["ErrNavBarAdmin"].ToString() != string.Empty)
+          Msg.Text = db.Fail(Session["ErrNavBarAdmin"].ToString());
+      }
+      // ReSharper disable once EmptyGeneralCatchClause
+      catch /*(Exception ex)*/ {}
+    }
+
+    #endregion Event handlers and overrides
+
+    #region Dead code
+
+    //protected void xRecordFutureElectionDates()
+    //{
+    //  //Update("Contact", TextBoxContact.Text.Trim());
+    //  //Update("ContactTitle", TextBoxContactTitle.Text.Trim());
+    //  //Update("ContactEmail", TextBoxContactEmail.Text.Trim());
+    //  //Update("Phone", TextBoxPhone.Text.Trim());
+    //  //Update("AltContact", TextBoxAltContact.Text.Trim());
+    //  //Update("AltContactTitle", TextBoxAltContactTitle.Text.Trim());
+    //  //Update("AltEMail", TextBoxAltEmail.Text.Trim());
+    //  //Update("AltPhone", TextBoxAltPhone.Text.Trim());
+    //  //Update("ElectionsAuthority", TextBoxElectionsAuthority.Text.Trim());
+    //  //Update("AddressLine1", TextBoxAdressLine1.Text.Trim());
+    //  //Update("AddressLine2", TextBoxAddressLine2.Text.Trim());
+    //  //Update("CityStateZip", TextBoxCityStateZip.Text.Trim());
+    //  //Update("Notes", TextBoxNotes.Text.Trim());
+
+    //  //if (!string.IsNullOrEmpty(ViewState["LocalCode"].ToString()))
+    //  //  Msg.Text = db.Ok("The State's Future Election Dates were Recorded.");
+    //  //else if (!string.IsNullOrEmpty(ViewState["CountyCode"].ToString()))
+    //  //  Msg.Text = db.Ok("The County's Future Election Dates were Recorded.");
+    //  //else
+    //  Msg.Text = db.Ok("The Local District's Future Election Dates were Recorded.");
+    //}
+
+    //protected void xLoadFutureElectionDates()
+    //{
+    //  //TextBoxContact.Text = Get("Contact");
+    //  //TextBoxContactTitle.Text = Get("ContactTitle");
+    //  //HyperLinkContactEmail.NavigateUrl = "mailto:" + Get("ContactEmail");
+    //  //HyperLinkContactEmail.Text = Get("ContactEmail");
+    //  //TextBoxContactEmail.Text = Get("ContactEmail");
+    //  //TextBoxPhone.Text = Get("Phone");
+    //  //TextBoxAltContact.Text = Get("AltContact");
+    //  //TextBoxAltContactTitle.Text = Get("AltContactTitle");
+    //  //HyperLinkAltEMail.Text = Get("AltEMail");
+    //  //HyperLinkAltEMail.NavigateUrl = "mailto:" + Get("AltEMail");
+    //  //TextBoxAltEmail.Text = Get("AltEMail");
+    //  //TextBoxAltPhone.Text = Get("AltPhone");
+    //  //TextBoxElectionsAuthority.Text = Get("ElectionsAuthority");
+    //  //TextBoxAdressLine1.Text = Get("AddressLine1");
+    //  //TextBoxAddressLine2.Text = Get("AddressLine2");
+    //  //TextBoxCityStateZip.Text = Get("CityStateZip");
+    //  //TextBoxNotes.Text = Get("Notes");
+    //}
+
+    //protected void ButtonCountyOfficialsRpt_Click(object sender, System.EventArgs e)
+    //{
+    //  try
+    //  {
+    //    //				Session.Timeout = 6000;
+    //    Server.ScriptTimeout = 300;//300 sec = 5 min
+    //    DataTable CountiesTable = db.Table(sql.Counties(ViewState["StateCode"].ToString()));
+    //    foreach (DataRow CountyRow in CountiesTable.Rows)
+    //    {
+    //      db.Report_Officials_Update(PageCache,
+    //        ViewState["StateCode"].ToString(), CountyRow["CountyCode"].ToString());
+    //    }
+    //    //Page with anchors for all Counties in State
+    //    //db.xReconstructCountiesListReports(
+    //    //  ViewState["StateCode"].ToString(), db.ReportOf.Officials);
+    //    Msg.Text = db.Ok("All COUNTY Elected Officials Reports have been made.");
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    #region
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //    #endregion
+    //  }
+
+    //}
+
+    //private void xLoad_Checkboxes_And_Internal_Tables()
+    //{
+    //  DataTable StatesOffices_Table = xOffice_Table_Levels();
+    //  int Index = 0;
+    //  foreach (DataRow OfficeLevel_Row in StatesOffices_Table.Rows)
+    //  {
+    //    //Create checkbox
+    //    CheckBoxList_Offices_All_Identified.Items.Add(new ListItem());
+
+    //    #region Set Office Name
+    //    CheckBoxList_Offices_All_Identified.Items[Index].Text = "<nobr>"
+    //    + db.Name_Electoral(
+    //        Convert.ToInt16(OfficeLevel_Row["OfficeLevel"])
+    //        , ViewState["StateCode"].ToString()
+    //        , ViewState["CountyCode"].ToString()
+    //        , ViewState["LocalCode"].ToString())
+    //    + "</nobr>";
+    //    #endregion Set Office Name
+
+    //    #region UnCheck Checkbox and save in internal table
+    //    if (Convert.ToBoolean(OfficeLevel_Row["IsOfficesAllIdentified"]))
+    //    {
+    //      CheckBoxList_Offices_All_Identified.Items[Index].Selected = true;
+    //      ViewState["CheckBoxLevel" + Index.ToString()] = true;
+    //    }
+    //    else
+    //    {
+    //      CheckBoxList_Offices_All_Identified.Items[Index].Selected = false;
+    //      ViewState["CheckBoxLevel" + Index.ToString()] = false;
+    //    }
+    //    #endregion UnCheck Checkbox and save in internal table
+
+    //    #region Save OfficeLevel in internal table
+    //    ViewState["OfficeLevel" + Index.ToString()] = OfficeLevel_Row["OfficeLevel"].ToString();
+    //    #endregion Save OfficeLevel in internal table
+
+    //    Index++;
+    //  }
+    //}
+
+    //protected void xPage_Title()
+    //{
+    //  PageTitle.Text = string.Empty;
+    //  PageTitle.Text += db.Name_Electoral(
+    //     ViewState["StateCode"].ToString()
+    //    , ViewState["CountyCode"].ToString()
+    //    , ViewState["LocalCode"].ToString());
+
+    //  PageTitle.Text += "<br>";
+    //  PageTitle.Text += "ADMINISTRATION";
+
+    //}
+
+    //protected void xCheckBoxList_Offices_All_Identified_SelectedIndexChanged(
+    //  object sender, EventArgs e)
+    //{
+    //  try
+    //  {
+    //    var Office_Changed = xOffice_That_Changed();
+
+    //    var Is_Checked = xUpdate_StatesOffices_And_Internal_Table(Office_Changed);
+
+    //    #region Msg
+
+    //    if (Is_Checked)
+    //      Msg.Text =
+    //        db.Ok(
+    //          "The status has been set indicating that all offices in the group have been IDENTIFIED and NO MORE office can be added.");
+    //    else
+    //      Msg.Text =
+    //        db.Ok(
+    //          "The status has been set indicating that all offices in the group have NOT been IDENTIFIED and offices CAN be added.");
+
+    //    #endregion Msg
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    Msg.Text = db.Fail(ex.Message);
+    //    db.Log_Error_Admin(ex);
+    //  }
+    //}
+
+    //private int xOffice_That_Changed()
+    //{
+    //  var StatesOffices_Table = xOffice_Table_Levels();
+    //  var Is_Found_Change = false;
+    //  var Index = 0;
+    //  foreach (DataRow Level_Row in StatesOffices_Table.Rows)
+    //    if (!Is_Found_Change)
+    //    {
+    //      //if (Convert.ToBoolean(ViewState["CheckBoxLevel" + Index.ToString()]) !=
+    //      //  CheckBoxList_Offices_All_Identified.Items[Index].Selected)
+
+    //      //if (db.Is_Offices_All_Identified(
+    //      if (
+    //        db.Is_Offices_All_Identified(ViewState["StateCode"].ToString(),
+    //          Convert.ToInt16(Level_Row["OfficeLevel"])) !=
+    //          CheckBoxList_Offices_All_Identified.Items[Index].Selected)
+    //        Is_Found_Change = true;
+    //      Index++;
+    //    }
+    //  return Index;
+    //}
+
+    //private DataTable xOffice_Table_Levels()
+    //{
+    //  var sql = string.Empty;
+    //  sql += " SELECT StateCode,OfficeLevel,IsOfficesAllIdentified";
+    //  sql += " FROM StatesOffices";
+    //  sql += " WHERE StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+    //  sql += " ORDER BY OfficeLevel";
+
+    //  var officeLevelsTable = db.Table(sql);
+    //  return officeLevelsTable;
+    //}
+
+    //#region Deleted Office Categories Completely Identified - Moved to Offices.aspx
+
+    //protected bool xUpdate_StatesOffices_And_Internal_Table(int Office_Changed)
+    //{
+    //  var Index_Checkbox_Changed = Office_Changed - 1;
+    //  var SQL = string.Empty;
+    //  SQL += " UPDATE StatesOffices";
+    //  if (CheckBoxList_Offices_All_Identified.Items[Index_Checkbox_Changed].Selected)
+    //    SQL += " SET IsOfficesAllIdentified = 1";
+    //  else
+    //    SQL += " SET IsOfficesAllIdentified = 0";
+    //  SQL += " WHERE StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+    //  SQL += " AND OfficeLevel = " + Office_Changed.ToString();
+    //  db.ExecuteSQL(SQL);
+
+    //  if (CheckBoxList_Offices_All_Identified.Items[Index_Checkbox_Changed].Selected)
+    //    ViewState["CheckBoxLevel" + Index_Checkbox_Changed.ToString()] = true;
+    //  else
+    //    ViewState["CheckBoxLevel" + Index_Checkbox_Changed.ToString()] = true;
+
+    //  return
+    //    CheckBoxList_Offices_All_Identified.Items[Index_Checkbox_Changed].Selected;
+    //}
+
+    //#endregion Deleted Office Categories Completely Identified - Moved to Offices.aspx
+
+    #endregion Dead code
+  }
+}

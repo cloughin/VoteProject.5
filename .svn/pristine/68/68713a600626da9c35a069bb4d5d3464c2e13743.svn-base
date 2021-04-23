@@ -1,0 +1,118 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace Vote
+{
+  // We make this an immutable object because it goes in a Dictionary
+  // as a key. We also override the equality operators and GetHashCode 
+  // for the same reason.
+  public class StreetInfo
+  {
+    string _ZipCode;
+    string _DirectionPrefix;
+    string _StreetName;
+    string _StreetSuffix;
+    string _DirectionSuffix;
+
+    public StreetInfo(string zipCode, string directionPrefix, string streetName,
+      string streetSuffix, string directionSuffix)
+    {
+      _ZipCode = zipCode;
+      _DirectionPrefix = directionPrefix;
+      _StreetName = streetName;
+      _StreetSuffix = streetSuffix;
+      _DirectionSuffix = directionSuffix;
+    }
+
+    public string DirectionPrefix
+    {
+      get { return _DirectionPrefix; }
+    }
+
+    public string DirectionSuffix
+    {
+      get { return _DirectionSuffix; }
+    }
+
+    public string StreetName
+    {
+      get { return _StreetName; }
+    }
+
+    public string StreetSuffix
+    {
+      get { return _StreetSuffix; }
+    }
+
+    public string ZipCode
+    {
+      get { return _ZipCode; }
+    }
+
+    #region Override GetHashCode and equality methods
+
+    public override int GetHashCode()
+    {
+      return
+        _ZipCode.GetHashCode() ^
+        _DirectionPrefix.GetHashCode() ^
+        _StreetName.GetHashCode() ^
+        _StreetSuffix.GetHashCode() ^
+        _DirectionSuffix.GetHashCode();
+    }
+
+    public static bool Equals(StreetInfo x, StreetInfo y)
+    {
+      return
+        x._ZipCode == y._ZipCode &&
+        x._DirectionPrefix == y._DirectionPrefix &&
+        x._StreetName == y._StreetName &&
+        x._StreetSuffix == y._StreetSuffix &&
+        x._DirectionSuffix == y._DirectionSuffix;
+    }
+
+    public override bool Equals(System.Object obj)
+    {
+      // If parameter is null return false.
+      if (obj == null) return false;
+
+      // If parameter cannot be cast to StreetInfo return false.
+      StreetInfo other = obj as StreetInfo;
+      if ((object) other == null) return false;
+
+      // Return true if the fields match:
+      return Equals(this, other);
+    }
+
+    //public bool Equals(StreetInfo other)
+    //{
+    //  // If parameter is null return false:
+    //  if ((object) other == null) return false;
+
+    //  // Return true if the fields match:
+    //  return Equals(this, other);
+    //}
+
+    public static bool operator ==(StreetInfo a, StreetInfo b)
+    {
+      // If both are null, or both are same instance, return true.
+      if (System.Object.ReferenceEquals(a, b)) return true;
+
+      // If one is null, but not both, return false.
+      if (((object) a == null) || ((object) b == null))
+        return false;
+
+      // Return true if the fields match:
+      return Equals(a, b);
+    }
+
+    public static bool operator !=(StreetInfo a, StreetInfo b)
+    {
+      return !(a == b);
+    }
+
+    #endregion Override GetHashCode and equality methods
+  }
+}

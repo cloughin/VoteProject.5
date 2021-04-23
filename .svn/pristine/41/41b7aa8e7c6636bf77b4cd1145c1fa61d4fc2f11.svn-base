@@ -1,0 +1,33 @@
+﻿using System;
+
+namespace Vote
+{
+  public partial class PrivacyPage : CacheablePage
+  {
+    #region Caching support
+
+    protected override string GetCacheKey()
+    {
+      return UrlManager.GetStateCodeFromHostName();
+    }
+
+    protected override string GetCacheType()
+    {
+      return "Privacy";
+    }
+
+    #endregion Caching support
+
+    private const string TitleTag = "Privacy Policy | {0}";
+    private const string MetaDescriptionTag = "{0}.org's privacy policy regarding visitor information.";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        Title = string.Format(TitleTag, Master.SiteName);
+        MetaDescription = string.Format(MetaDescriptionTag, Master.SiteName);
+      }
+    }
+  }
+}

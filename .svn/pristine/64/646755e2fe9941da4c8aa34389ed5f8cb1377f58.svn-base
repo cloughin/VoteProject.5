@@ -1,0 +1,205 @@
+﻿/***********************************************/
+/* Entire page                                 */
+/***********************************************/
+
+body.admin-page #outer
+{
+  position: relative;
+}
+
+body.admin-page .sub-heading.headings
+{
+  float: left;
+}
+
+body.admin-page .sub-heading.change-button
+{
+  position: absolute;
+  right: 0;
+  top: 10px;
+}
+
+body.admin-page h2.jurisdiction-message
+{
+  margin: 0;
+}
+
+body.admin-page h4.credential-message
+{
+  font-size: 12px;
+  font-style: italic;
+}
+
+body.admin-page .update-controls
+{
+  margin: 4px 0 0 0;
+  position: relative;
+}
+
+body.admin-page #main-tabs
+{
+  margin: 0 0 20px 0;
+  width: 933px;
+}
+
+body.admin-page #main-tabs .data-area
+{
+  min-height: 279px;
+}
+
+#main-tabs p.fieldlabel em
+{
+  color: #334f80;
+  font-style: normal;
+}
+
+#main-tabs p.fieldlabel.sub
+{
+  color: #334f80;
+  font-size: 8pt;
+  font-weight: normal;
+}
+
+#main-tabs p.fieldlabel.sub em
+{
+  color: #bf9241;
+  font-weight: bold;
+}
+
+#main-tabs .spacer
+{
+  height: 10px;
+  width: 1px;
+}
+
+#main-tabs .input-element
+{
+  float: left;
+  margin: 0 16px 0 0;
+}
+
+#main-tabs .content-footer
+{
+  margin: 0;
+}
+
+#main-tabs .feedback-floater-for-ie7
+{
+  float: left;
+  min-height: 1px;
+  width: 702px;
+}
+
+#main-tabs div.htab-panel div.inner-panel .feedback
+{
+  width: 676px;
+}
+
+#main-tabs input[type=text]
+{
+  margin-left: 0;
+}
+
+#main-tabs .htab-panel
+{
+  min-height: 509px;
+}
+
+#main-tabs div.htab-panel div.inner-panel
+{
+  min-height: 483px;
+}
+
+#main-tabs div.htab-panel div.content-area
+{
+  min-height: 400px;
+}
+
+#main-tabs div.instructions
+{
+  float: left;
+}
+
+#main-tabs div.instructions ul
+{
+  color: #bf9241;
+  list-style: disc;
+  margin: 50px 0 0 60px;
+  width: 300px;
+}
+
+#main-tabs div.instructions li
+{
+  margin-bottom: 5px;
+}
+
+#main-tabs div.instructions li span
+{
+  color: #334f80;
+  font-size: 11px;
+}
+
+#main-tabs div.instructions em
+{
+  color: #bf9241;
+  font-style: normal;
+  font-weight: bold;
+}
+ 
+/***********************************************/
+/* Master only                                 */
+/***********************************************/
+
+#main-tabs #tab-masteronly #master-only-tabs 
+{
+  margin-top: 10px;
+}
+
+#main-tabs #tab-masteronly #master-only-tabs li.tab a 
+{
+  font-size: 8pt;
+  padding: 3px 12px;
+}
+
+#main-tabs #tab-masteronly .ui-tabs-panel 
+{
+  min-height: 316px;
+}
+
+#main-tabs #tab-masteronly div.instructions
+{
+  float: none;
+}
+
+#main-tabs #tab-masteronly div.instructions ul
+{
+  margin: 0 0 0 20px;
+  width: 750px;
+}
+
+#main-tabs #tab-masteronly div.instructions ul ul
+{
+  margin: 7px 0 7px 20px;
+}
+
+#main-tabs #tab-masteronly div.classestolock
+{
+  padding: 5px;
+  background-color: #f8f8f8;
+  overflow-y: scroll;
+  max-height: 288px;
+  width: 808px;
+}
+
+#main-tabs #tab-masteronly div.classestolock a.kalypto-checkbox
+{
+  float: left;
+  margin: 0 6px 3px 0;
+}
+
+#main-tabs #tab-masteronly div.classestolock label
+{
+  position: relative;
+  top: 2px;
+  color: #334f80;
+}

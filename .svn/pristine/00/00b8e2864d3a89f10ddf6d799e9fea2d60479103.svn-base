@@ -1,0 +1,314 @@
+using System;
+using System.Data;
+using System.Text.RegularExpressions;
+using DB.Vote;
+
+namespace Vote.Master
+{
+  public partial class FindPolitician : SecurePage, ISuperUser
+  {
+    #region from db
+
+    public static string UrlAddressEmail(string emailAddress)
+    {
+      return emailAddress != string.Empty ? "mailto:" + emailAddress : string.Empty;
+    }
+
+    public static string Anchor_Politician_Intro_HappyFace(string politicianKey)
+    {
+      var anchor = string.Empty;
+      anchor += "<a href=";
+      anchor += "\"";
+      anchor += db.Url_Politician_Intro(politicianKey);
+      anchor += "\"";
+
+      anchor += " target=";
+      anchor += "\"";
+      anchor += "_politician";
+      anchor += "\"";
+
+      anchor += " title=";
+      anchor += "\"";
+      anchor += "Update Politicians Intro Page";
+      anchor += "\"";
+
+      anchor += ">";
+
+      anchor += " <img src=";
+      anchor += "\"";
+      //Anchor += "/images/PoliticianHappyFace.jpg";
+      anchor += Url_Politician_HappyFace_Image();
+      anchor += "\"";
+
+      anchor += " border=0";
+
+      anchor += "</a>";
+      return anchor;
+    }
+
+    public static string Url_Politician_HappyFace_Image()
+    {
+      return "/images/PoliticianHappyFace.jpg"; 
+    }
+
+    public static string Anchor(Uri uri)
+    {
+      return db.Anchor(uri.ToString(), string.Empty, string.Empty, string.Empty);
+    }
+
+    public static string Anchor_Master_FindPolitician(string politicianKey)
+    {
+      var anchor = string.Empty;
+      anchor += "<a href=";
+      anchor += "\"";
+      anchor += db.Url_Master_FindPolitician(politicianKey);
+      anchor += "\"";
+
+      anchor += ">";
+      anchor += "<nobr>" + Politicians.GetFormattedName(politicianKey) + "</nobr>";
+      anchor += "</a>";
+      return anchor;
+    }
+
+    #endregion from db
+
+    #region Note:
+    //The content generated when a politician is found
+    //Is in the Master Table in cols Report1 and Report2
+    //Use the link 'Modify Email Content Sent to a Politician ' on /Master/Default.aspx
+    //to change the content.
+    #endregion Note:
+
+    protected string PoliticiansReport(string stateCode, string lastName)
+    {
+      var sqlText = string.Empty;
+      sqlText += " SELECT ";
+      sqlText += " Politicians.PoliticianKey ";
+      sqlText += " ,Politicians.PartyKey ";
+      sqlText += " ,Politicians.TemporaryOfficeKey ";
+      sqlText += " ,Politicians.EmailAddrVoteUSA ";
+      sqlText += " ,Politicians.EmailAddr ";
+      sqlText += " ,Politicians.StateEmailAddr ";
+      sqlText += " ,Politicians.WebAddr ";
+      sqlText += " ,Politicians.StateWebAddr ";
+      sqlText += " ,Politicians.Password ";
+      sqlText += " FROM Politicians ";
+      sqlText += " WHERE Politicians.LName = " + db.SQLLit(lastName);
+      var reportPoliticians1 = string.Empty;
+      if (stateCode != string.Empty)
+      {
+        sqlText += " AND Politicians.StateCode = " + db.SQLLit(stateCode);
+      }
+      sqlText += " ORDER BY Politicians.FName,Politicians.MName";
+      var politiciansTable = db.Table(sqlText);
+
+      if (politiciansTable.Rows.Count > 0)
+      {
+        foreach (DataRow politiciansRow in politiciansTable.Rows)
+        {
+          reportPoliticians1 += "<br>" + Anchor_Master_FindPolitician(politiciansRow["PoliticianKey"].ToString());
+          //if (db.Name_Electoral_And_Contest(PoliticiansRow["OfficeKey"].ToString()) != string.Empty)
+          //  ReportPoliticians1 += " <strong>Office:</strong> " + db.Name_Electoral_And_Contest(PoliticiansRow["OfficeKey"].ToString());
+          //string officeKey = Politicians.GetOfficeKey(politiciansRow["PoliticianKey"].ToString(), string.Empty);
+          var politicianKey = politiciansRow["PoliticianKey"].ToString();
+          var officeKey = GetPageCache().Politicians.GetOfficeKey(politicianKey);
+          if (Offices.GetLocalizedOfficeName(officeKey) != string.Empty)
+            reportPoliticians1 += " <strong>Office:</strong> "
+              + StateCache.GetStateName(stateCode) + " " + Offices.GetLocalizedOfficeName(officeKey);
+          if (politiciansRow["EmailAddr"].ToString() != string.Empty)
+            reportPoliticians1 += " <strong>Email Address:</strong> "
+              + politiciansRow["EmailAddr"];
+          if (politiciansRow["StateEmailAddr"].ToString() != string.Empty)
+            reportPoliticians1 += " <strong>State Email Address:</strong> "
+              + politiciansRow["StateEmailAddr"];
+          if (politiciansRow["EmailAddrVoteUSA"].ToString() != string.Empty)
+            reportPoliticians1 += " <strong>Vote-USA Email Address:</strong> "
+              + politiciansRow["EmailAddrVoteUSA"];
+          if (politiciansRow["WebAddr"].ToString() != string.Empty)
+            reportPoliticians1 += " <strong>Web Address:</strong> "
+              + politiciansRow["WebAddr"];
+          if (politiciansRow["StateWebAddr"].ToString() != string.Empty)
+            reportPoliticians1 += " <strong>State Web Address:</strong> "
+              + politiciansRow["StateWebAddr"];
+        }
+        Msg.Text = db.Msg("<br><br>Click on a politician link to get the email text.");
+      }
+      else
+      {
+        reportPoliticians1 = "<br><br>No politicians found.";
+        Msg.Text = db.Msg("<br><br>No politicians were found in this State with this last name.");
+      }
+      return reportPoliticians1;
+    }
+
+    protected string Subsitutions_Politician_Find(string politicianKey, string strToApplySubsitutions)
+    {
+      var newStr = strToApplySubsitutions;
+      newStr = Regex.Replace(newStr, @"\[\[USERNAME\]\]"
+        , db.Politicians_Str(politicianKey, "PoliticianKey")
+        , RegexOptions.IgnoreCase);
+
+      newStr = Regex.Replace(newStr, @"\[\[PASSWORD\]\]"
+        , db.Politicians_Str(politicianKey, "Password")
+        , RegexOptions.IgnoreCase);
+
+      var stateCode = Politicians.GetStateCodeFromKey(politicianKey).ToUpper();
+      newStr = Regex.Replace(newStr, @"\[\[STATE\]\]"
+        , StateCache.GetStateName(stateCode)
+        , RegexOptions.IgnoreCase);
+
+      newStr = Regex.Replace(newStr, @"\[\[VOTEXXANCHOR\]\]"
+        //, db.Anchor(@"http://Vote-" + StateCode + ".org/")
+        , Anchor(UrlManager.GetDefaultPageUri(stateCode))
+        , RegexOptions.IgnoreCase);
+
+      newStr = Regex.Replace(newStr, @"\[\[MGREMAIL\]\]"
+        , db.Anchor_Mailto_Email("mgr@Vote-USA.org")
+        , RegexOptions.IgnoreCase);
+
+      newStr = Regex.Replace(newStr, @"\[\[INTROANCHOR\]\]"
+        //, db.Anchor(@"http://Vote-" + StateCode + ".org/Intro.aspx?Id=" + db.Politicians_Str(PoliticianKey, "PoliticianKey"))
+        , Anchor(UrlManager.GetIntroPageUri(politicianKey))
+        , RegexOptions.IgnoreCase);
+
+      // ToDo: This doesn't look right
+      newStr = Regex.Replace(newStr, @"\[\[POLITICIANENTRY\]\]"
+        //, db.Anchor(@"http://Vote-" + StateCode + ".org/Politician")
+        , db.Anchor(UrlManager.GetStateUri(stateCode) + "Politician")
+        , RegexOptions.IgnoreCase);
+      return newStr;
+    }
+    protected void ButtonFindPolitician_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBoxStateCode);
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBoxLastName);
+
+        ReportPoliticians1.Text = PoliticiansReport(TextBoxStateCode.Text.Trim(), TextBoxLastName.Text.Trim());
+        Report1.Text = string.Empty;
+        Report2.Text = string.Empty;
+        LabelPoliticianPage.Text = string.Empty;
+        LabelSendEmail.Text = string.Empty;
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        Page.Title = "Find Politician";
+        if (!IsMasterUser)
+          HandleSecurityException();
+
+        try
+        {
+          #region Get PoliticianKey from link on politicians report
+          if (!string.IsNullOrEmpty(QueryId))
+            ViewState["PoliticianKey"] = QueryId;
+          else
+            ViewState["PoliticianKey"] = string.Empty;
+          #endregion Get PoliticianKey from link on politicians report
+
+          if ((ViewState["PoliticianKey"] as string) != string.Empty)
+          {
+            #region politician selected
+            ViewState["StateCode"] = Politicians.GetStateCodeFromKey(ViewState["PoliticianKey"].ToString());
+            TextBoxStateCode.Text = ViewState["StateCode"].ToString();
+
+            ViewState["LastName"] = db.Politicians_Str(ViewState["PoliticianKey"].ToString(), "LName");
+            TextBoxLastName.Text = ViewState["LastName"].ToString();
+
+            ViewState["ReportPoliticians1"] = PoliticiansReport(
+              Politicians.GetStateCodeFromKey(ViewState["PoliticianKey"].ToString())
+              , db.Politicians_Str(ViewState["PoliticianKey"].ToString(), "LName"));
+
+            #region 1st Report Template in Master Table
+            ViewState["Report1"] = Subsitutions_Politician_Find(
+              ViewState["PoliticianKey"].ToString()
+              , db.Master_Str("Report1")).ReplaceNewLinesWithBreakTags();
+
+            Report1.Text = ViewState["Report1"].ToString();
+            #endregion 1st Report Template in Master Table
+
+
+            #region 2nd Report Template in Master Table
+            ViewState["Report2"] = Subsitutions_Politician_Find(
+              ViewState["PoliticianKey"].ToString()
+              , db.Master_Str("Report2")).ReplaceNewLinesWithBreakTags();
+            Report2.Text = ViewState["Report2"].ToString();
+            #endregion 2nd Report Template in Master Table
+
+            LabelPoliticianPage.Text = "Politician's Intro.aspx Page: ";
+            //LabelPoliticianPage.Text += db.Anchor_PoliticianIntroPage_(
+            LabelPoliticianPage.Text += Anchor_Politician_Intro_HappyFace(
+                ViewState["PoliticianKey"].ToString()
+              );
+            LabelSendEmail.Text = "Send Email to: ";
+            LabelSendEmail.Text += UrlAddressEmail(db.Anchor_Mailto_Email(db.Politicians_Str(ViewState["PoliticianKey"].ToString(), "EmailAddr")));
+
+            TableEmail.Visible = true;
+            #endregion politician selected
+          }
+          else
+          {
+            #region First time form is presented
+            TextBoxStateCode.Text = string.Empty;
+            TextBoxLastName.Text = string.Empty;
+            ReportPoliticians1.Text = string.Empty;
+            Report1.Text = string.Empty;
+            Report2.Text = string.Empty;
+            LabelPoliticianPage.Text = string.Empty;
+            LabelSendEmail.Text = string.Empty;
+
+            TableEmail.Visible = false;
+            #endregion First time form is presented
+          }
+        }
+        catch (Exception ex)
+        {
+          #region
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+          #endregion
+        }
+      }
+    }
+
+    protected void TextBox_Email_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Script(TextBox_Email);
+
+        var email = Validation.StripWebProtocol(TextBox_Email.Text.Trim());
+        TextBox_Email.Text = email;
+
+        var columnName = db.Politician_Update_Transaction_Str(
+           ViewState["PoliticianKey"].ToString()
+          , db.Politician_Column.CampaignEmail
+          , email);
+
+        Msg.Text = db.Ok(email
+          + " has been recorded as the politician's "
+          + columnName);
+
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+
+  }
+}

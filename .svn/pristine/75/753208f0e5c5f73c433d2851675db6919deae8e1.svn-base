@@ -1,0 +1,3817 @@
+using System;
+using System.Data;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
+using DB.Vote;
+
+namespace Vote
+{
+  public static partial class db
+  {
+    #region Security Table & Security
+
+    public static string Session_Get(string str)
+    {
+      return HttpContext.Current.Session[str] as string;
+    }
+
+    public static void Session_Put(string sessionStr, string valueStr)
+    {
+      HttpContext.Current.Session[sessionStr] = valueStr;
+    }
+
+    #endregion Security Table & Security
+
+    #region User
+
+    public static string User_StateCode()
+    {
+      if (
+        SecurePage.IsMasterUser
+        && !string.IsNullOrEmpty(VotePage.QueryState)
+        )
+        return VotePage.QueryState;
+      else
+        return db.Session_Get("UserStateCode").ToUpper();
+    }
+
+    public static string User_CountyCode()
+    {
+      if (
+        (SecurePage.IsMasterUser || SecurePage.IsStateAdminUser)
+        && (!string.IsNullOrEmpty(VotePage.QueryCounty))
+        )
+        return VotePage.QueryCounty;
+      else
+        return db.Session_Get("UserCountyCode");
+    }
+
+    public static string User_LocalCode()
+    {
+      if (
+        (SecurePage.IsMasterUser || SecurePage.IsStateAdminUser || SecurePage.IsCountyAdminUser)
+        && (!string.IsNullOrEmpty(VotePage.QueryLocal))
+        )
+        return VotePage.QueryLocal;
+      return db.Session_Get("UserLocalCode");
+    }
+
+    #endregion User
+
+    #region Is_Valid StateCode... ElectionKey OfficeKey PoliticianKey IssueKey
+
+    public static bool Is_Valid_Election(string electionKey)
+    {
+      if (!string.IsNullOrEmpty(electionKey))
+        return db.Rows("Elections", "ElectionKey", electionKey) == 1;
+      return false;
+    }
+
+    public static bool Is_Valid_Issue(string issueKey)
+    {
+      if (string.IsNullOrEmpty(issueKey)) return false;
+      if (issueKey.Length == 13 && issueKey.Substring(3, 10)
+        .ToUpper() == "ISSUESLIST")
+        return true;
+      if ((issueKey.Length == 6) && (issueKey.Substring(3, 3)
+        .ToUpper() == "BIO"))
+        return true;
+      return db.Rows("Issues", "IssueKey", issueKey) == 1;
+    }
+
+    #endregion Is_Valid StateCode... ElectionKey OfficeKey PoliticianKey IssueKey
+
+    #region StateCode, ReportCode, CountyCode, LocalCode
+
+    public static string State_Code()
+    {
+      //**Test
+      string stateCode = SecurePage.GetViewStateStateCode();
+      if (stateCode != null) return stateCode;
+
+      #region Note
+      //All Security State Administators Users 
+      //may have the StateCode passed in query string
+      //or set in /Admin/Home.aspx or by login security
+      //
+      //delete below
+      //if (
+      //  (! db.Is_SessionState_Enabled())
+      //  )
+      #endregion Note
+
+      if (VotePage.IsPublicPage)
+        return db.StateCode_Domain_This();
+
+      if (SecurePage.IsMasterUser)
+      {
+        #region Master
+        #region A State Change Note
+        //only unrestricted MASTER can change StateCode, 
+        //which resets CountyCode and LocalCode
+        //next call to db.County_Code() then db.Local_Code() 
+        //may set CountyCode and LocalCode
+        #endregion A State Change
+
+
+        if (!string.IsNullOrEmpty(VotePage.QueryState))
+        {
+          db.Session_Put("UserCountyCode", string.Empty);
+          db.Session_Put("UserLocalCode", string.Empty);
+          db.Session_Put("UserStateCode", VotePage.QueryState);
+
+          return VotePage.QueryState;
+        }
+        if (!string.IsNullOrEmpty(db.User_StateCode()))
+        {
+          return db.User_StateCode();
+        }
+        return string.Empty;
+
+        #endregion Master
+      }
+      if (SecurePage.IsStateAdminUser)
+      {
+        #region Admin
+        if (StateCache.IsValidStateOrFederalCode(db.User_StateCode(), false))
+          return db.User_StateCode();
+        if (StateCache.IsValidStateOrFederalCode(db.Domain_StateCode_This(), false))
+          return db.Domain_StateCode_This();
+        return string.Empty;
+
+        #endregion Admin
+      }
+      return string.Empty;
+    }
+
+    public static string County_Code()
+    {
+      string viewStateCountyCode = SecurePage.GetViewStateCountyCode();
+      if (viewStateCountyCode != null) return viewStateCountyCode;
+
+      string countyCode = string.Empty;
+
+      if (
+        !VotePage.IsSessionStateEnabled
+        || !SecurePage.IsSignedIn
+        )
+      //if (db.Is_User_Anonymous())
+      {
+        #region Anonymous User
+        if (!string.IsNullOrEmpty(VotePage.QueryElection))
+          //could be old ElectionKey format
+          countyCode = Elections.GetCountyCodeFromKey(
+            //db.ElectionKey_New_Format(db.QueryString("Election")));
+            VotePage.QueryElection);
+        else if (!string.IsNullOrEmpty(VotePage.QueryOffice))
+          countyCode = Offices.GetCountyCodeFromKey(VotePage.QueryOffice);
+        else if (!string.IsNullOrEmpty(VotePage.QueryCounty))
+          countyCode = VotePage.QueryCounty;
+        if (
+          (countyCode == "000")//Directory of Counties
+          || (CountyCache.CountyExists(db.State_Code()
+          , countyCode))
+          )
+          return countyCode;
+        else
+          return string.Empty;
+        #endregion Anonymous User
+      }
+      else
+      {
+        #region Master, or State, County or Local Administrator
+        #region A County Change
+        //only MASTER or State ADMIN can change CountyCode of county
+        //Setting UserLocalCode empty resets to County level security
+        #endregion A County Change
+
+        if ((SecurePage.IsMasterUser|| (SecurePage.IsStateAdminUser))
+          && !string.IsNullOrEmpty(VotePage.QueryCounty)
+          )
+        {
+          db.Session_Put("UserCountyCode", VotePage.QueryCounty);
+          db.Session_Put("UserLocalCode", string.Empty);
+        }
+        else
+        {
+          //Need to reset CountyCode to empty
+          //When there is a StateCode query string 
+          //but no CountyCode query string
+          if (!string.IsNullOrEmpty(db.State_Code()))
+          {
+            db.Session_Put("UserCountyCode", string.Empty);
+            db.Session_Put("UserLocalCode", string.Empty);
+          }
+        }
+
+        if (CountyCache.CountyExists(
+          db.State_Code()
+          , db.User_CountyCode()))
+          return db.User_CountyCode();
+        else
+          return string.Empty;
+        #endregion Master, or State, County or Local Administrator
+      }
+    }
+
+    public static string Local_Code()
+    {
+      string viewStateLocalCode = SecurePage.GetViewStateLocalCode();
+      if (viewStateLocalCode != null) return viewStateLocalCode;
+
+      string localCode = string.Empty;
+
+      if (
+        !VotePage.IsSessionStateEnabled
+        || !SecurePage.IsSignedIn
+        )
+      {
+        #region Anonymous User
+        if (!string.IsNullOrEmpty(VotePage.QueryElection))
+          localCode = Elections.GetLocalCodeFromKey(
+            VotePage.QueryElection);
+        else if (!string.IsNullOrEmpty(VotePage.QueryOffice))
+          localCode = Offices.GetLocalCodeFromKey(VotePage.QueryOffice);
+        else if (!string.IsNullOrEmpty(VotePage.QueryLocal))
+          localCode = VotePage.QueryLocal;
+        if (
+          (localCode == "00")//Directory of Local Districts
+          || (LocalDistricts.IsValid(db.State_Code()
+          , db.County_Code()
+          , localCode))
+          )
+          return localCode;
+        else
+          return string.Empty;
+        #endregion Anonymous User
+      }
+      else
+      {
+        #region Master, or State, County or Local Administrator
+
+        #region A Local District Change
+        //Any user can change the LocalCode for Local District
+        //If so, County and State MUST stay unchanged
+        #endregion A Local District Change
+
+        if (!string.IsNullOrEmpty(VotePage.QueryLocal))
+          //Session["UserLocalCode"] = db.QueryString("Local");
+          db.Session_Put("UserLocalCode", VotePage.QueryLocal);
+
+        //Local_Code = db.User_LocalCode();
+        if (LocalDistricts.IsValid(
+          db.State_Code()
+          , db.User_CountyCode()
+          , db.User_LocalCode()))
+          return db.User_LocalCode();
+        else
+          return string.Empty;
+        #endregion State, County or Local Administrator User
+      }
+    }
+    #endregion Master, or State, County or Local Administrator
+
+    #region Office Electoral Level
+
+    public static bool Is_Electoral_Federal(OfficeClass officeClass)
+    {
+      #region switch (Office_Class)
+      switch (officeClass)
+      {
+        case OfficeClass.USPresident:
+        case OfficeClass.USSenate:
+        case OfficeClass.USHouse:
+          return true;
+        default:
+          return false;
+      }
+      #endregion Template
+    }
+
+    public static bool Is_Electoral_District_Multi_Counties(OfficeClass officeClass)
+    {
+      switch (officeClass)
+      {
+        case OfficeClass.StateDistrictMultiCounties:
+        case OfficeClass.StateDistrictMultiCountiesJudicial:
+        case OfficeClass.StateDistrictMultiCountiesParty:
+          return true;
+        default:
+          return false;
+      }
+    }
+    public static bool Is_Electoral_County(OfficeClass officeClass)
+    {
+      switch (officeClass)
+      {
+        case OfficeClass.CountyExecutive:
+        case OfficeClass.CountyLegislative:
+        case OfficeClass.CountySchoolBoard:
+        case OfficeClass.CountyCommission:
+        case OfficeClass.CountyJudicial:
+        case OfficeClass.CountyParty:
+          return true;
+        default:
+          return false;
+      }
+    }
+
+    public static bool Is_Electoral_District_Multi_Partial_Counties(OfficeClass officeClass)
+    {
+      switch (officeClass)
+      {
+        case OfficeClass.StateDistrictMultiPartialCounties:
+          return true;
+        default:
+          return false;
+      }
+    }
+
+    public static bool Is_Electoral_Local(OfficeClass officeClass)
+    {
+      switch (officeClass)
+      {
+        case OfficeClass.LocalExecutive:
+        case OfficeClass.LocalLegislative:
+        case OfficeClass.LocalSchoolBoard:
+        case OfficeClass.LocalCommission:
+        case OfficeClass.LocalJudicial:
+        case OfficeClass.LocalParty:
+          return true;
+        default:
+          return false;
+      }
+    }
+
+    public static bool Is_Electoral_Federal(string officeKey)
+    {
+      return db.Is_Electoral_Federal(Offices.GetOfficeClass(officeKey));
+    }
+
+    public static bool Is_Electoral_District_Multi_Counties(string officeKey)
+    {
+      return db.Is_Electoral_District_Multi_Counties(Offices.GetOfficeClass(officeKey));
+    }
+
+    public static bool Is_OfficeKey_County(string officeKey)
+    {
+      return db.Is_Electoral_County(Offices.GetOfficeClass(officeKey));
+    }
+
+    public static bool Is_Electoral_District_Multi_Partial_Counties(string officeKey)
+    {
+      return db.Is_Electoral_District_Multi_Partial_Counties(Offices.GetOfficeClass(officeKey));
+    }
+
+    public static bool Is_OfficeKey_Local(string officeKey)
+    {
+      return db.Is_Electoral_Local(Offices.GetOfficeClass(officeKey));
+    }
+     
+    public static bool Is_Electoral_District(string officeKey)
+    {
+      //Need a DistrictCode
+      return Offices.IsUSHouse(officeKey)
+        || Offices.IsStateSenate(officeKey)
+        || Offices.IsStateHouse(officeKey)
+        || db.Is_Electoral_District_Multi_Counties(officeKey)
+        || db.Is_Electoral_District_Multi_Partial_Counties(officeKey);
+    }
+
+    #endregion Office Electoral Level
+
+    // Electoral Regions
+
+    #region Electoral_Class (Demographic Class)
+    public enum ElectoralClass
+    {
+      All,
+      USPresident,
+      USSenate,
+      USHouse,
+      USGovernors,
+      State,
+      County,
+      Local,
+      Unknown
+    }
+
+    public static ElectoralClass Electoral_Class(string stateCode, string countyCode,
+      string localCode)
+    {
+      if ((!string.IsNullOrEmpty(localCode)) && (!string.IsNullOrEmpty(countyCode)) &&
+        (!string.IsNullOrEmpty(stateCode)))
+        return ElectoralClass.Local;
+
+      if ((!string.IsNullOrEmpty(countyCode)) && (!string.IsNullOrEmpty(stateCode)))
+        return ElectoralClass.County;
+
+      if (!string.IsNullOrEmpty(stateCode))
+        switch (stateCode)
+        {
+          case "PP":
+          case "US":
+          case "U1":
+            return ElectoralClass.USPresident;
+          case "U2":
+            return ElectoralClass.USSenate;
+          case "U3":
+            return ElectoralClass.USHouse;
+          case "U4":
+            return ElectoralClass.USGovernors;
+          default:
+            return StateCache.IsValidStateCode(stateCode) ? ElectoralClass.State : ElectoralClass.All;
+        }
+
+      return ElectoralClass.Unknown;
+    }
+
+    public static db.ElectoralClass Electoral_Class_Election(string electionKey)
+    {
+      switch (electionKey.Length)
+      {
+        case Elections.ElectionKeyLengthStateOrFederal:
+          return db.Electoral_Class(
+            Offices.GetStateCodeFromKey(electionKey)
+            , string.Empty
+            , string.Empty
+            );
+        case Elections.ElectionKeyLengthCounty:
+          return db.Electoral_Class(
+            Offices.GetStateCodeFromKey(electionKey)
+            , Elections.GetCountyCodeFromKey(electionKey)
+            , string.Empty
+            );
+        case Elections.ElectionKeyLengthLocal:
+          return db.Electoral_Class(
+            Offices.GetStateCodeFromKey(electionKey)
+            , Elections.GetCountyCodeFromKey(electionKey)
+            , Elections.GetLocalCodeFromKey(electionKey)
+            );
+        default:
+          return db.Electoral_Class(
+            string.Empty
+            , string.Empty
+            , string.Empty
+            );
+      }
+    }
+
+    #endregion Electoral_Class  (Demographic Class)
+
+    #region Is_Electoral_Class
+
+    public static bool Is_Electoral_Class_State_County_Local(string stateCode, string countyCode, string localCode)
+    {
+      if (
+        (db.Electoral_Class(stateCode, countyCode, localCode) == db.ElectoralClass.State)
+        || (db.Electoral_Class(stateCode, countyCode, localCode) == db.ElectoralClass.County)
+        || (db.Electoral_Class(stateCode, countyCode, localCode) == db.ElectoralClass.Local)
+        )
+        return true;
+      else
+        return false;
+    }
+
+    #endregion Is_Electoral_Class
+
+    #region Electoral Region NAME
+
+    public static string Name_Electoral()
+    {
+      return Offices.GetElectoralClassDescription(db.State_Code(), db.County_Code(), 
+        db.Local_Code());
+    }
+
+    public static string Name_Electoral_Short()
+    {
+      return Offices.GetElectoralClassShortDescription(db.State_Code(), db.County_Code(),
+        db.Local_Code());
+    }
+
+    public static string Name_Electoral_Plus_Text(
+      string textBeforeName
+      , string textAfterName
+      , bool isElectoralClassNameLong
+      )
+    {
+      string text = string.Empty;
+      if (!string.IsNullOrEmpty(textBeforeName.Trim()))
+        text += textBeforeName;
+
+      if (isElectoralClassNameLong)
+        text += db.Name_Electoral();
+      else
+        text += db.Name_Electoral_Short();
+
+      if (!string.IsNullOrEmpty(textAfterName.Trim()))
+        //Text += " " + Text_After_Name;
+        text += textAfterName;
+
+      return text;
+    }
+
+    public static string Name_Electoral_Plus_Text(string textAfterName)
+    {
+      return db.Name_Electoral_Plus_Text(
+             string.Empty
+            , textAfterName
+            , true
+            );
+    }
+
+    #endregion Electoral Region NAME
+
+    // Office Contests
+
+    #region Contest, Office
+    public static string Name_Office_Contest_And_Electoral(string officeKey)
+    {
+      if (Offices.IsValid(officeKey))
+      {
+        string nameOfficeContest = string.Empty;
+
+        nameOfficeContest += Offices.FormatOfficeName(officeKey);
+
+        nameOfficeContest += ", ";
+
+        nameOfficeContest += 
+          Offices.GetElectoralClassDescriptionFromOfficeKey(officeKey);
+
+        return nameOfficeContest;
+      }
+      else
+        return string.Empty;
+    }
+    #endregion Contest, Office
+
+    #region Messages
+    public static string Ok(string msg)
+    {
+      return "<span class=" + "\"" + "MsgOk" + "\"" + ">"
+      + "SUCCESS!!! " + msg + "</span>";
+    }
+    public static string Fail(string msg)
+    {
+      return "<span class=" + "\"" + "MsgFail" + "\"" + ">"
+      + "****FAILURE**** " + msg + "</span>";
+    }
+    public static string Msg(string msg)
+    {
+      return "<span class=" + "\"" + "Msg" + "\"" + ">"
+      + msg + "</span>";
+    }
+    public static string Warn(string msg)
+    {
+      return "<span class=" + "\"" + "MsgWarn" + "\"" + ">"
+      + "******WARNING****** " + msg + "</span>";
+    }
+
+
+    #endregion
+
+    #region Errors 301, 302, 404 & Unhandled & Error Logs
+    #region Note
+    //301 Permanent Redirect
+    //302 Temporary Redirect
+    //404 Page Not Found
+    //Unhandled Errors
+    #endregion Note
+
+    #region Log Errors
+
+    public static void Log_Page_Not_Found_404(string msg)
+    {
+      if (MemCache.IsLoggingErrors)
+        DB.VoteLog.Log404PageNotFound.Insert(DateTime.Now, VotePage.CurrentUrl, msg);
+    }
+
+
+    public static void Log_Error_Admin(Exception ex, string message = null)
+    {
+      string logMessage = string.Empty;
+      string stackTrace = string.Empty;
+      if (ex != null)
+      {
+        logMessage = ex.Message;
+        stackTrace = ex.StackTrace;
+      }
+      if (!string.IsNullOrWhiteSpace(message))
+      {
+        if (!string.IsNullOrWhiteSpace(logMessage))
+          logMessage += " :: ";
+        logMessage += message;
+      }
+      DB.VoteLog.LogErrorsAdmin.Insert(DateTime.Now, UrlManager.GetCurrentPathUri(true).ToString(), 
+        logMessage, stackTrace);
+    }
+
+    #endregion Log Errors
+
+    #endregion Errors 301, 302, 404 & Unhandled & Error Logs
+
+    #region Bool (Is)
+
+    public static bool Is_Valid_Integer(string number2Check)
+    {
+      int value;
+      return int.TryParse(number2Check, out value);
+    }
+
+    public static bool Is_Digits(string strToCheck)
+    {
+      char[] chars = strToCheck.ToCharArray(0, strToCheck.Length);
+      for (int i = 0; i <= strToCheck.Length - 1; i++)
+      {
+        //if (!db.Is_Digit(chars[i]))
+        if (!char.IsDigit(chars[i]))
+          return false;
+      }
+      return true;
+    }
+    public static bool Is_Str_Html(string strTest)
+    {
+      if (
+        strTest.IndexOf("<") >= 0
+        || strTest.IndexOf("/>") >= 0
+        )
+        return true;
+      else
+        return false;
+    }
+    public static bool Is_TextBox_Html(TextBox textBox)
+    {
+      if (
+        (textBox.Text.IndexOf("<") >= 0)
+        || (textBox.Text.IndexOf("/>") >= 0)
+        )
+        return true;
+      else
+        return false;
+    }
+    public static bool Is_Str_Script(string strToCheck)
+    {
+      if (strToCheck.Trim().ToUpper().IndexOf("<SCRIPT") >= 0)
+        return true;
+      else
+        return false;
+    }
+    public static bool Is_Str_Html_Or_Illegal(string str)
+    {
+      if (
+        (db.Is_Str_Html(str))
+        || (db.Is_Str_Script(str))
+        )
+        return true;
+      else
+        return false;
+    }
+
+    #endregion Bool (Is)
+
+    //---strings --- 
+
+    #region Strings
+
+    public static string SQLLit(string str)
+    {
+      //Enclose string in single quotes and double up any embededded single quotes
+      str = "'" + str.Replace("'", "''") + "'";
+      return str;
+    }
+
+    public static string RenderToString(Control control)
+    {
+      var stringWriter = new StringWriter();
+      var htmlWriter = new HtmlTextWriter(stringWriter);
+      control.RenderControl(htmlWriter);
+      return stringWriter.ToString();
+    }
+
+    public static string Str_ReCase(string str2Fix)
+    {
+      StringBuilder sb = new StringBuilder(str2Fix.Length);
+      bool wordBegin = true;
+      foreach (char c in str2Fix)
+      {
+        sb.Append(wordBegin ? char.ToUpper(c) : char.ToLower(c));
+        //wordBegin = char.IsWhiteSpace(c);
+        if (
+          (char.IsWhiteSpace(c))
+          || (char.IsPunctuation(c))
+          )
+          wordBegin = true;
+        else
+          wordBegin = false;
+      }
+      return sb.ToString();
+    }
+
+    public static string Str_Remove_Single_And_Double_Quotes(string str2Modify)
+    {
+      string str = str2Modify;
+      str = str.Replace("\'", string.Empty);
+      str = str.Replace("\"", string.Empty);
+
+      return str;
+    }
+
+
+    public static string Str_Remove_SpecialChars_All(string str2Modify)
+    {
+      string str = str2Modify;
+      str = str.Trim();
+      str = str.Replace("-", string.Empty);
+      str = str.Replace("+", string.Empty);
+      str = str.Replace("=", string.Empty);
+      str = str.Replace("\"", string.Empty);
+      str = str.Replace("\'", string.Empty);
+      str = str.Replace(".", string.Empty);
+      str = str.Replace(",", string.Empty);
+      str = str.Replace("(", string.Empty);
+      str = str.Replace(")", string.Empty);
+      str = str.Replace("!", string.Empty);
+      str = str.Replace("@", string.Empty);
+      str = str.Replace("#", string.Empty);
+      str = str.Replace("%", string.Empty);
+      str = str.Replace("&", string.Empty);
+      str = str.Replace("*", string.Empty);
+      str = str.Replace(":", string.Empty);
+      str = str.Replace(";", string.Empty);
+      str = str.Replace("$", string.Empty);
+      str = str.Replace("^", string.Empty);
+      str = str.Replace("?", string.Empty);
+      str = str.Replace("<", string.Empty);
+      str = str.Replace(">", string.Empty);
+      str = str.Replace("[", string.Empty);
+      str = str.Replace("]", string.Empty);
+      str = str.Replace("{", string.Empty);
+      str = str.Replace("}", string.Empty);
+      str = str.Replace("|", string.Empty);
+      str = str.Replace("~", string.Empty);
+      str = str.Replace("`", string.Empty);
+      str = str.Replace("_", string.Empty);
+      str = str.Replace("/", string.Empty);
+      return str;
+    }
+    public static string Str_Remove_Non_Key_Chars(string str2Modify)
+    {
+      string str = str2Modify;
+      str = db.Str_Remove_SpecialChars_All(str);
+      str = str.Replace(" ", string.Empty);
+      return str;
+    }
+    public static string Str_Remove_Puctuation(string str2Modify)
+    {
+      string str = str2Modify;
+      //characters to strip off
+      str = str.Trim();
+      str = str.Replace("\"", string.Empty);
+      str = str.Replace("\'", string.Empty);
+      str = str.Replace(".", string.Empty);
+      str = str.Replace(",", string.Empty);
+      str = str.Replace("(", string.Empty);
+      str = str.Replace(")", string.Empty);
+      str = str.Replace("[", string.Empty);
+      str = str.Replace("[", string.Empty);
+      str = str.Replace("_", string.Empty);
+      str = str.Replace("-", string.Empty);
+      return str;
+    }
+
+    public static string Str_Replace_Puctuation_With(string str2Modify, string strReplaceWith)
+    {
+      string str = str2Modify;
+      //characters to strip off
+      str = str.Trim();
+      str = str.Replace("\"", strReplaceWith);
+      str = str.Replace("\'", strReplaceWith);
+      str = str.Replace(".", strReplaceWith);
+      str = str.Replace(",", strReplaceWith);
+      str = str.Replace("(", strReplaceWith);
+      str = str.Replace(")", strReplaceWith);
+      str = str.Replace("[", strReplaceWith);
+      str = str.Replace("[", strReplaceWith);
+      str = str.Replace("_", strReplaceWith);
+      str = str.Replace("-", strReplaceWith);
+      return str;
+    }
+
+    public static string Str_Remove_MailTo(string str2Fix)
+    {
+      //?? dangerous: sendmailtome@gmail.com -> sendme@gmail.com
+      //int loc = Str2Fix.ToLower().IndexOf("mailto", 0, Str2Fix.Length);
+      //if (loc != -1)
+      //  Str2Fix = Str2Fix.Remove(loc, 6).Trim();
+      int loc = str2Fix.ToLower().IndexOf(@"mailto:", 0, str2Fix.Length);
+      if (loc != -1)
+        str2Fix = str2Fix.Remove(loc, 7).Trim();
+
+      //?? dangerous: myemail@gmail.com -> my@gmail.com
+      //loc = Str2Fix.ToLower().IndexOf("email", 0, Str2Fix.Length);
+      //if (loc != -1)
+      //{
+      //  Str2Fix = Str2Fix.Remove(loc, 5).Trim();
+      //}
+
+      //Str2Fix = Str2Fix.Replace(":", string.Empty);
+      return str2Fix;
+    }
+    public static string Str_Remove_Http(string str2Fix)
+    {
+      if (!string.IsNullOrEmpty(str2Fix))
+      {
+        int loc = str2Fix.ToLower().IndexOf("http://", 0, str2Fix.Length);
+        if (loc != -1)
+        {
+          str2Fix = str2Fix.Remove(loc, 7).Trim();
+        }
+
+        loc = str2Fix.ToLower().IndexOf("http//", 0, str2Fix.Length);
+        if (loc != -1)
+        {
+          str2Fix = str2Fix.Remove(loc, 6).Trim();
+        }
+
+        loc = str2Fix.ToLower().IndexOf("https://", 0, str2Fix.Length);
+        if (loc != -1)
+        {
+          str2Fix = str2Fix.Remove(loc, 8).Trim();
+        }
+
+        //?? dangerous: burlington.com -> bington.com
+        //loc = Str2Fix.ToLower().IndexOf("url", 0, Str2Fix.Length);
+        //if (loc != -1)
+        //{
+        //  Str2Fix = Str2Fix.Remove(loc, 3).Trim();
+        //}
+
+        //?? NB: for bare domain names the trailing / is typically retained
+        if (str2Fix.EndsWith(@"/"))
+        {
+          str2Fix = str2Fix.Substring(0, str2Fix.Length - 1);
+        }
+      }
+
+      //Str2Fix = Str2Fix.Replace(":", string.Empty);
+
+      return str2Fix;
+    }
+
+
+    public static string DBErrorMsg(string sql, string err)
+    {
+      //Write code to log database errors to a DBFailues Table
+      return "Database Failure for SQL Statement::" + sql + " :: Error Msg:: " + err;
+    }
+
+    public static string MakeUnique6Digits()
+    {
+      string password = string.Empty;
+      //Make a DDDDDD password
+      for (int n = 0; n < 6; n++)
+        password += GetRandomDigit();
+      return password;
+    }
+
+    #endregion Strings
+
+    #region Edits
+
+    public static string LegislativeDistrictsWithBRs()
+    {
+      return "<br />" + VotePage.FormatLegislativeDistrictsFromQueryString();
+      //string theLegislativeDistricts = string.Empty;
+      ////if (db.QueryString("State")//db.State_Code() 
+      //if (db.State_Code()
+      //  != "DC")
+      //{
+      //  if (db.CongressDistrict_Code_QueryString() != "000")
+      //    theLegislativeDistricts += "<br>US House District "
+      //      + db.Str_Remove_Leading_0s(db.CongressDistrict_Code_QueryString())
+      //      //+ " " + db.Name_State(db.QueryString("State"));//db.State_Code());
+      //      + " " + StateCache.GetStateName(db.State_Code());
+      //  if (db.StateSenate_Code_QueryString() != "000")
+      //    theLegislativeDistricts += "<br>"
+      //      //+ db.Name_State(db.QueryString("State"))//db.State_Code())
+      //      + StateCache.GetStateName(db.State_Code())
+      //      + " Senate District "
+      //      + db.Str_Remove_Leading_0s(db.StateSenate_Code_QueryString());
+      //  if (db.StateHouse_Code_QueryString() != "000")
+      //    theLegislativeDistricts += "<br>"
+      //      //+ db.Name_State(db.QueryString("State"))//db.State_Code())
+      //      + db.State_Code()
+      //      + " House District "
+      //      + db.Str_Remove_Leading_0s(db.StateHouse_Code_QueryString());
+      //  if (db.QueryString("County") != string.Empty)
+      //    theLegislativeDistricts += "<br>" + CountyCache.GetCountyName(
+      //      db.State_Code(), db.QueryString("County"));
+      //}
+      //else
+      //{
+      //  if (db.StateSenate_Code_QueryString() != "000")
+      //    theLegislativeDistricts += "<br>"
+      //      + "Ward "
+      //      + db.Str_Remove_Leading_0s(db.StateSenate_Code_QueryString());
+      //}
+      //return theLegislativeDistricts;
+    }
+
+    public static string LegislativeDistricts()
+    {
+      string legislativeDistrictsAddress;
+
+      if (!StateCache.IsValidStateCode(db.State_Code()))
+        legislativeDistrictsAddress = "for any address in the United States";
+      else
+      {
+        legislativeDistrictsAddress = "<span class=\"districtsHead\">for address in:</span>"
+          + LegislativeDistrictsWithBRs();
+      }
+      return legislativeDistrictsAddress;
+    }
+
+    #endregion
+
+    #region Passwords
+    public static Random RandomObject = null;
+    public static char GetRandomAlpha24()
+    {
+      if (RandomObject == null)
+        RandomObject = new Random();
+      int n = RandomObject.Next(24);
+      if (n < 8)
+        return Convert.ToChar(n + Convert.ToInt32('A'));
+      else if (n < 13)
+        return Convert.ToChar(n + Convert.ToInt32('B'));//skip I
+      else
+        return Convert.ToChar(n + Convert.ToInt32('C'));//skip O
+    }
+    public static char GetRandomDigit()
+    {
+      if (RandomObject == null)
+        RandomObject = new Random();
+      return Convert.ToChar(RandomObject.Next(10) + Convert.ToUInt32('0'));
+    }
+    public static string MakeUniquePassword()
+    {
+      string password = string.Empty;
+      //Make a AAADDD password
+      for (int n = 0; n < 3; n++)
+        password += GetRandomAlpha24();
+      for (int n = 0; n < 3; n++)
+        password += GetRandomDigit();
+      return password;
+    }
+
+    #endregion
+
+    #region Default and Custom Strings
+
+    #endregion Default and Custom Strings
+
+    //--- Urls and Anchors for Pages
+
+    #region URLs & Anchors for Pages ==============
+
+    #region Generic Urls & Anchors
+
+
+
+    #region Urls State Election Authority and Organization
+    #endregion Urls State Election Authority and Organization
+
+    #region Email Anchors
+
+    public static string Anchor_Mailto_Email(string emailAddress)
+    {
+      if (emailAddress != string.Empty)
+      {
+        return "<a href=mailto:"
+          + emailAddress
+          + ">"
+          + emailAddress
+          + "</a>";
+      }
+      else
+        return string.Empty;
+    }
+
+    #endregion Email Anchors
+
+    #region Anchor(string Url, string AnchorText, string ToolTip, string Target)
+    public static string Anchor(string url, string anchorText, string toolTip, 
+      string target)
+    {
+      //<a href="Url" title="ToolTip" Class= "className" target=Target>AnchorText</a>
+      string anchor = string.Empty;
+      anchor += "<a href=";
+      anchor += "\"";
+      anchor += url;
+      anchor += "\"";
+
+      if (toolTip != string.Empty)
+      {
+        anchor += " title=";
+        anchor += "\"";
+        anchor += db.Str_Remove_Single_And_Double_Quotes(toolTip);
+        anchor += "\"";
+        anchor += " ";
+      }
+
+      if (target != string.Empty)
+      {
+        anchor += " target=";
+        anchor += "\"";
+        anchor += target;
+        anchor += "\"";
+        anchor += " ";
+      }
+
+      anchor += ">";
+
+      if (anchorText != string.Empty)
+        anchor += anchorText;
+      else
+        anchor += url;
+
+      anchor += "</a>";
+      return anchor;
+    }
+    #endregion public static string Anchor(string Url, string AnchorText, string ToolTip, string Target)
+
+
+    #endregion Generic Anchors
+
+    #region / root urls & anchors on NavBarDefault (StateCode not used but passed along)
+
+    #region /Default.aspx URLs & Anchors
+
+    #region Vote-XX.org Urls and Anchors
+    public static string Url_Vote_XX_org_Page(string page)
+    {
+      return UrlManager.GetStateUri(db.State_Code(),
+           page, "State=" + db.State_Code()).ToString();
+    }
+
+    public static string Url_Vote_XX_org_Default()
+    {
+      return db.Url_Vote_XX_org_Page("Default.aspx");
+    }
+
+    #endregion Vote-XX.org Urls and Anchors
+
+    #endregion /Default.aspx URLs & Anchors
+
+    #region /Login.aspx URLs & Anchors (ok)
+    #endregion
+
+    #endregion / root urls & anchors on NavBarState & NavBarDefault (after State selected or domain is for single State)
+
+    #region /Admin/ URLs & Anchors
+
+    #region /Admin/Url/Utilities
+
+    public static string Fix_Url_Parms(string url)
+    {
+      //sets first parm in a query string to ? if all seperators are &'s
+      if (
+        (url.IndexOf('?', 0, url.Length) == -1)//no ?
+        && (url.IndexOf('&', 0, url.Length) > -1)//but one or more &
+        )
+      {
+        int Loc = url.IndexOf('&', 0, url.Length);
+        int LenAfter = url.Length - Loc - 1;
+        string UrlBefore = url.Substring(0, Loc);
+        string UrlAfter = url.Substring(Loc + 1, LenAfter);
+        return UrlBefore + "?" + UrlAfter;
+      }
+      else
+        return url;
+    }
+
+    public static string Url_Add_State_County_Local_Codes()
+    {
+      //Pass along any query string parms otherwise use Security Codes
+      //string UrlParms = string.Empty;
+
+      //if (!string.IsNullOrEmpty(db.CountyCode_ViewState()))
+      //  UrlParms += "&County=" + db.CountyCode_ViewState();
+
+      //if (!string.IsNullOrEmpty(db.LocalCode_ViewState()))
+      //  UrlParms += "&Local=" + db.LocalCode_ViewState();
+      //if (!string.IsNullOrEmpty(db.User_CountyCode()))
+      //  UrlParms += "&County=" + db.User_CountyCode();
+
+      //if (!string.IsNullOrEmpty(db.User_LocalCode()))
+      //  UrlParms += "&Local=" + db.User_LocalCode();
+
+      //return UrlParms;
+
+      //Add only lower level codes
+      string urlParms = string.Empty;
+      switch (db.Electoral_Class(
+          db.State_Code()//db.State_Code()
+        , db.County_Code()
+        , db.Local_Code()))
+      {
+        case db.ElectoralClass.State:
+          if (!string.IsNullOrEmpty(db.State_Code()))
+            urlParms += "&State=" + db.State_Code();
+          break;
+        case db.ElectoralClass.County:
+          if (!string.IsNullOrEmpty(db.State_Code()))
+            urlParms += "&State=" + db.State_Code();
+          if (!string.IsNullOrEmpty(db.User_CountyCode()))
+            urlParms += "&County=" + db.User_CountyCode();
+          break;
+        case db.ElectoralClass.Local:
+          if (!string.IsNullOrEmpty(db.State_Code()))
+            urlParms += "&State=" + db.State_Code();
+          if (!string.IsNullOrEmpty(db.User_CountyCode()))
+            urlParms += "&County=" + db.User_CountyCode();
+          if (!string.IsNullOrEmpty(db.User_LocalCode()))
+            urlParms += "&Local=" + db.User_LocalCode();
+          break;
+        default: //for Federal Codes U!...U4
+          if (!string.IsNullOrEmpty(db.State_Code()))
+            urlParms += "&State=" + db.State_Code();
+          break;
+      }
+      return urlParms;
+    }
+    #endregion /Admin/Url/Utilities
+
+    #region /Admin/Authority.aspx URLs & Anchors
+    public static string Url_Admin_Authority()
+    {
+      string url = "/Admin/Authority.aspx";
+      url += db.Url_Add_State_County_Local_Codes();
+      return db.Fix_Url_Parms(url);
+
+      //return "/Admin/Authority.aspx";
+    }
+    #endregion /Admin/Ballot.aspx URLs & Anchors
+
+
+    #region /Admin/Default.aspx URLs & Anchors
+    //Urls
+    public static string Url_Admin_Default(string stateCode, string countyCode, 
+      string localCode)
+    {
+      string url = "/Admin/Default.aspx";
+      if (stateCode != string.Empty)
+        url += "&State=" + stateCode;
+      if (countyCode != string.Empty)
+        url += "&County=" + countyCode;
+      if (localCode != string.Empty)
+        url += "&Local=" + localCode;
+      return db.Fix_Url_Parms(url);
+    }
+
+    public static string Url_Admin_Default_Login()
+    {
+      return db.Url_Admin_Default(
+        db.State_Code()
+        , db.User_CountyCode()
+        , db.User_LocalCode()
+        );
+    }
+
+    #endregion /Admin/Admin.aspx URLs & Anchors
+
+    #region /Admin/Districts.aspx
+
+    #endregion /Admin/Districts.aspx
+
+    #region /Admin/IssuesReport.aspx URLs & Anchors
+
+    public static string Url_Admin_IssuesReport(string issueLevel, string groupCode)
+    {
+      return "/Admin/IssuesReport.aspx"
+      + "?IssueLevel=" + issueLevel
+      + "&Group=" + groupCode;
+    }
+    #endregion
+
+    #region /Admin/Office.aspx URLs
+    //------URLs----------
+
+    public static string Ur4AdminOffice()
+    {
+      return "/Admin/Office.aspx";
+    }
+
+    #region (mode: UPDATE Offices Table)
+
+    public static string Url_Admin_Office_UPDATE(string officeKey)
+    {
+      string url = db.Ur4AdminOffice();
+      url += "&Office=" + officeKey;
+      //Url += db.xUrl_Add_ViewState_DataCodes_OfficeKey(OfficeKey);
+      return db.Fix_Url_Parms(url);
+    }
+
+    #endregion (mode: UPDATE Offices Table)
+
+
+    #endregion /Admin/Office.aspx URLs
+
+    #region /Admin/Office.aspx Anchors
+
+
+    #endregion /Admin/Office.aspx Anchors
+
+    #region /Admin/Parties.aspx URLs & Anchors
+    public static string Url_Admin_Parties(
+      string stateCode
+      , string partyKey
+      , string partyEmail
+      )
+    {
+      string url = "/Admin/Parties.aspx";
+      if (!string.IsNullOrEmpty(stateCode))
+        url += "&State=" + stateCode;
+      if (!string.IsNullOrEmpty(partyKey))
+        url += "&Party=" + partyKey;
+      if (!string.IsNullOrEmpty(partyEmail))
+        url += "&Email=" + partyEmail;
+      return db.Fix_Url_Parms(url);
+    }
+    #endregion /Admin/Parties.aspx URLs & Anchors
+
+    #region /Admin/Politician.aspx URLs
+
+    //------URLs----------
+
+    public static string Url_Admin_Politician()
+    {
+      return "/Admin/Politician.aspx";
+    }
+    #endregion /Admin/Politician.aspx URLs
+
+    #region /Admin/Politicians.aspx Anchors
+    #endregion /Admin/Politicians.aspx Anchors
+
+    #region /Admin/OfficeContest.aspx Anchors
+
+    #endregion /Admin/OfficeContest.aspx Anchors
+
+    #region /Admin/Questions.aspx URLs & Anchors
+    public static string Url_Admin_Questions()
+    {
+      return "/Admin/Questions.aspx";
+    }
+
+    public static string Url_Admin_Questions(string issueGroup, string issueKey, 
+      string questionKey)
+    {
+      return Url_Admin_Questions()
+      + "?Group=" + issueGroup
+      + "&Issue=" + issueKey
+      + "&Question=" + questionKey;
+    }
+    #endregion
+
+    #region /Admin/DesignStyleSheet.aspx URLs & Anchors
+    #endregion
+
+    #endregion
+
+    #region /Politician/ URLs & Anchors
+
+    #region /Politician/Default.aspx URLs & Anchors
+
+    public static string Politician_Id_Add_To_QueryString_Master_User()
+    {
+      #region Note
+      //A Master User passes the same PoliticianKey in a Id QueryString from page to page
+      //A Politician User never passes the Id in a QueryString
+      #endregion Note
+      if (
+        (
+        (SecurePage.IsMasterUser)
+        || (SecurePage.IsPartyUser)
+        )
+        && (!string.IsNullOrEmpty(VotePage.QueryId))
+        )
+        return "&Id=" + VotePage.QueryId;
+      else
+        return string.Empty;
+    }
+    public static string PartyKey_Add_To_QueryString_Master_User()
+    {
+      #region Note
+      //A Master User passes the same PartyKey in a QueryString from page to page
+      //A Party User never passes the a QueryString
+      #endregion Note
+      if (
+        (SecurePage.IsMasterUser)
+        && (!string.IsNullOrEmpty(VotePage.QueryParty))
+        )
+        return "&Party=" + VotePage.QueryParty;
+      else
+        return string.Empty;
+    }
+
+    #endregion
+
+    #region /Politician/IntroPage.aspx URLs & Anchors
+
+    public static string Url_Politician_Intro()
+    {
+      return @"/Politician/IntroPage.aspx";
+      //Url += db.Politician_Id_Add_To_QueryString_Master_User();
+      //return db.Fix_Url_Parms(Url);
+    }
+
+    public static string Url_Politician_Intro(string PoliticianKey)
+    {
+      string Url = db.Url_Politician_Intro();
+
+      if (!string.IsNullOrEmpty(PoliticianKey))
+        Url += "&Id=" + PoliticianKey;
+      else if (!string.IsNullOrEmpty(VotePage.QueryId))
+        Url += "&Id=" + VotePage.QueryId;
+
+      return db.Fix_Url_Parms(Url);
+    }
+
+
+    #endregion
+
+    #region /Politician/IssueQuestions.aspx URLs & Anchors
+    public static string Url_Politician_IssueQuestions()
+    {
+      return @"/Politician/IssueQuestions.aspx";
+    }
+    public static string Url_Politician_IssueQuestions(
+      string issueKey
+      , string PoliticianKey
+      )
+    {
+      string Url;
+      //if (IssueKey != db.Issues_List(IssueKey))
+      if (!db.Is_IssuesList(issueKey))
+        Url = db.Url_Politician_IssueQuestions()
+        + "&Issue=" + issueKey;
+      else
+        Url = db.Url_Politician_IssueQuestions()
+          + "&Issue=" + "ALLPersonal";
+      //+ "&Issue=" + "ALLBio";
+      if (!string.IsNullOrEmpty(PoliticianKey))
+        Url += "&Id=" + PoliticianKey;
+      else
+        Url += db.Politician_Id_Add_To_QueryString_Master_User();
+
+      return db.Fix_Url_Parms(Url);
+    }
+    #endregion
+
+    #endregion
+
+    #region /Party/ Urls and Anchors
+    public static string Url_Party_Default(string State_Code, string Election_Key)
+    {
+      string Url = @"/Party/Default.aspx";
+      if (!string.IsNullOrEmpty(State_Code))
+        Url += "&State=" + State_Code;
+      if (!string.IsNullOrEmpty(Election_Key))
+        Url += "&Election=" + Election_Key;
+      Url += db.PartyKey_Add_To_QueryString_Master_User();
+      return db.Fix_Url_Parms(Url);
+    }
+    #endregion /Party/ Urls and Anchors
+
+    // --- URLs for Images and css ---
+
+    #region Urls - Images which have defaults when not present
+
+    public static string Url_Image_Politician(string PoliticianKey, int Image_Width,
+      int noPhotoWidth)
+    {
+      string Url = string.Empty;
+      Url += @"/Image.aspx";
+      Url += "?Id=";
+      Url += PoliticianKey;
+
+      Url += "&Col=";
+      string columnName = ImageManager.GetPoliticianImageColumnNameByWidth(Image_Width);
+      Url += columnName;
+
+      // This handles the NoPhoto case without having to hit the db for every img href
+      // on the page
+      if (noPhotoWidth > 0)
+      {
+        if (noPhotoWidth == Image_Width)
+          Url += "&Def=1"; // the short form
+        else
+        {
+          Url += "&Def=";
+          string defaultColumnName = ImageManager.GetPoliticianImageColumnNameByWidth(noPhotoWidth);
+          Url += defaultColumnName;
+        }
+      }
+      return Url;
+    }
+
+    public static string Url_Image_Politician_Or_NoPhoto(string politicianKey,
+      int imageWidth)
+    {
+      // This handles the NoPhoto case without having to hit the db for every img href
+      // on the page
+      //if (db.Is_Valid_PoliticiansImages(PoliticianKey))
+      //  return db.Url_Image_Politician(PoliticianKey, Width_Image);
+      //else
+      //  return db.Url_Image_NoPhoto(Width_Image);
+      return db.Url_Image_Politician(politicianKey, imageWidth, imageWidth);
+    }
+
+    #endregion Urls for Images which have defaults when not present
+    #endregion  URLs & Anchors ==============
+
+    //---Paths------
+
+    #region File Delete
+
+    #endregion File Deletes
+
+    #region HttpPostedFile SaveAs & Bitmap Save
+    #endregion HttpPostedFile Save
+
+
+    //------------ DB Primitives --------------
+
+    #region DB Connection, ExecuteSQL DataTable DataRow (Rows)
+
+    //public static void ExecuteSql(string SQL)
+    //{
+    //  db.ExecuteSql(SQL);
+    //}
+    #endregion
+
+    #region Rows
+    public static int Rows(string SQL)
+    {
+      DataTable table = db.Table(SQL);
+      if (table == null)
+        return 0;
+      else
+        return table.Rows.Count;
+    }
+
+    public static DataRow Row(string SQL)
+    {
+      DataTable table = db.Table(SQL);
+      if (table.Rows.Count == 1)
+        return table.Rows[0];
+      else
+        throw new ApplicationException(db.DBErrorMsg(SQL, "Did not find a unique row for this Id."));
+    }
+
+    public static DataRow Row_Optional(string SQL)
+    {
+      DataTable table = db.Table(SQL);
+      if (table.Rows.Count == 1)
+        return table.Rows[0];
+      else
+        return null;
+    }
+    public static DataRow Row_First(string SQL)
+    {
+      DataTable table = db.Table(SQL);
+      if (table.Rows.Count >= 1)
+        return table.Rows[0];
+      else
+        throw new ApplicationException(db.DBErrorMsg(SQL, "Did not find any rows."));
+    }
+
+    public static DataRow Row_First_Optional(string SQL)
+    {
+      DataTable table = db.Table(SQL);
+      if (table.Rows.Count >= 1)
+        return table.Rows[0];
+      else
+        return null;
+    }
+
+    public static DataRow Row_Last_Optional(string SQL)
+    {
+      DataTable table = db.Table(SQL);
+      if (table.Rows.Count >= 1)
+        return table.Rows[table.Rows.Count - 1];
+      else
+        return null;
+    }
+    #endregion
+
+    #region simple Key and Condition dig outs
+
+    public static string Single_Key_Str(string Table, string Column, string KeyName, string KeyValue)
+    {
+      string SQL = "SELECT " + Column.Trim() + " FROM " + Table.Trim()
+        + " WHERE " + KeyName.Trim() + " = " + db.SQLLit(KeyValue.Trim());
+
+      DataTable table = db.Table(SQL);
+      if (table.Rows.Count == 1)
+      {
+        // modified to pass through nulls (Politician.Address etc)
+        //return (string)table.Rows[0][Column].ToString().Trim();
+        string result = table.Rows[0][Column] as string;
+        if (result != null) result = result.Trim();
+        return result;
+      }
+      else
+      {
+        throw new ApplicationException(db.DBErrorMsg(SQL, "Did not find a single row"));
+      }
+    }
+
+    public static string Single_Key_Str_Optional(string Table, string Column, string KeyName, string KeyValue)
+    {
+      string SQL = "SELECT " + Column.Trim() + " FROM " + Table.Trim()
+        + " WHERE " + KeyName.Trim() + " = " + db.SQLLit(KeyValue.Trim());
+      DataTable table = db.Table(SQL);
+      switch (table.Rows.Count)
+      {
+        case 1://KeyValue
+          return (string)table.Rows[0][Column].ToString().Trim();
+        case 0://no row
+          return string.Empty;
+        default:
+          return string.Empty;
+      }
+    }
+
+    public static int Single_Key_Int(string Table, string Column, string KeyName, string KeyValue)
+    {
+      string SQL = "SELECT " + Column.Trim() + " FROM " + Table.Trim()
+        + " WHERE " + KeyName.Trim() + " = " + db.SQLLit(KeyValue.Trim());
+      DataTable table = db.Table(SQL);
+      if (table.Rows.Count == 1)
+      {
+        return (int)table.Rows[0][Column];
+      }
+      else
+      {
+        throw new ApplicationException(db.DBErrorMsg(SQL, "Did not find a single row"));
+      }
+    }
+
+    public static bool Single_Key_Bool(string Table, string Column, string KeyName, string KeyValue)
+    {
+      string SQL = "SELECT " + Column.Trim() + " FROM " + Table.Trim()
+        + " WHERE " + KeyName.Trim() + " = " + db.SQLLit(KeyValue.Trim());
+      DataTable table = db.Table(SQL);
+      if (table.Rows.Count == 1)
+      {
+        return Convert.ToBoolean(table.Rows[0][Column]);
+      }
+      else
+      {
+        throw new ApplicationException(db.DBErrorMsg(SQL, "Did not find a single row"));
+      }
+    }
+
+    public static DateTime Single_Key_Date(string Table, string Column, string KeyName, string KeyValue)
+    {
+      string SQL = "SELECT " + Column.Trim() + " FROM " + Table.Trim()
+        + " WHERE " + KeyName.Trim() + " = " + db.SQLLit(KeyValue.Trim());
+      DataTable table = db.Table(SQL);
+      if (table.Rows.Count == 1)
+      {
+        return (DateTime)table.Rows[0][Column];
+      }
+      else
+      {
+        throw new ApplicationException(db.DBErrorMsg(SQL, "Did not find a single row"));
+      }
+    }
+
+
+
+    #endregion
+
+    #region simple Table updates
+    public static void Single_Key_Update_Str(string Table, string Column, string ColumnValue, string KeyName, string KeyValue)
+    {
+      //string UpdateSQL = "UPDATE " + Table
+      //  + " SET " + Column + " = " + db.SQLLit(ColumnValue)
+      //  + " WHERE " + KeyName + " = " + db.SQLLit(KeyValue);
+      //db.ExecuteSQL(UpdateSQL);
+      Db.UpdateColumnByKey(Table, Column, ColumnValue, KeyName, KeyValue);
+    }
+    public static void Single_Key_Update_Int(string Table, string Column, int ColumnValue, string KeyName, string KeyValue)
+    {
+      string UpdateSQL = "UPDATE " + Table
+        + " SET " + Column + " = " + ColumnValue.ToString()
+        + " WHERE " + KeyName + " = " + db.SQLLit(KeyValue);
+      db.ExecuteSql(UpdateSQL);
+    }
+
+    public static void Single_Key_Update_Bool(string Table, string Column, bool ColumnValue, string KeyName, string KeyValue)
+    {
+      string UpdateSQL = "UPDATE " + Table
+        + " SET " + Column + " = " + Convert.ToUInt16(ColumnValue).ToString()
+        + " WHERE " + KeyName + " = " + db.SQLLit(KeyValue);
+      db.ExecuteSql(UpdateSQL);
+    }
+    public static void Single_Key_Update_Date(string Table, string Column, DateTime ColumnValue, string KeyName, string KeyValue)
+    {
+      string UpdateSQL = "UPDATE " + Table
+        + " SET " + Column + " = " + db.SQLLit(Db.DbDateTime(ColumnValue))
+        + " WHERE " + KeyName + " = " + db.SQLLit(KeyValue);
+      db.ExecuteSql(UpdateSQL);
+    }
+
+    public static void Triple_Key_Update_Str(string Table, string Column, string ColumnValue, string KeyName1, string KeyValue1, string KeyName2, string KeyValue2, string KeyName3, string KeyValue3)
+    {
+      string UpdateSQL = "UPDATE " + Table
+        + " SET " + Column + " = " + db.SQLLit(ColumnValue)
+        + " WHERE " + KeyName1 + " = " + db.SQLLit(KeyValue1)
+        + " AND " + KeyName2 + " = " + db.SQLLit(KeyValue2)
+      + " AND " + KeyName3 + " = " + db.SQLLit(KeyValue3);
+      db.ExecuteSql(UpdateSQL);
+    }
+
+
+    #endregion
+
+    #region Security Table
+    public static string Security_Str(string userName, string column)
+    {
+      if (userName != string.Empty)
+        return db.Single_Key_Str("Security", column, "UserName", userName);
+      else
+        return string.Empty;
+    }
+
+    public static bool Security_Bool(string userName, string column)
+    {
+      if (userName != string.Empty)
+        return db.Single_Key_Bool("Security", column, "UserName", userName);
+      else
+        return false;
+    }
+
+    public static bool Security_User_Is_Has_DataEntry_Authority(string userName)
+    {
+      return db.Security_Bool(userName, "UserIsHasDataEntryAuthority");
+    }
+    #endregion
+
+    #region Master Table
+    //Str
+    public static string Master_Str(string Column)
+    {
+      return db.Single_Key_Str("Master", Column, "ID", "Master");
+    }
+
+    #endregion
+
+    #region States Table
+
+    public static string States_Str(string StateCode, string Column)
+    {
+      //if ((StateCode != string.Empty) && (StateCode != "US"))
+      if (StateCode != string.Empty)
+        return db.Single_Key_Str("States", Column, "StateCode", StateCode);
+      else
+        return string.Empty;
+    }
+
+    #endregion States Table
+
+    #region OfficesAllIdentified Table
+
+    //public static bool StatesOffices_Bool(string stateCode, OfficeClass officeClass,
+    //  string column)
+    //{
+    //  if (stateCode != string.Empty && officeClass.IsValid())
+    //    return Double_Key_Bool("StatesOffices", column, "StateCode", stateCode,
+    //      "OfficeLevel", officeClass.ToInt());
+    //  else
+    //    return false;
+    //}
+
+    //public static bool Is_Offices_All_Identified(string stateCode, OfficeClass officeClass)
+    //{
+    //  //return db.StatesOffices_Bool(stateCode, officeClass, "IsOfficesAllIdentified");
+    //  return OfficesAllIdentified.GetIsOfficesAllIdentified(stateCode, officeClass.ToInt());
+    //}
+
+    #endregion OfficesAllIdentified Table
+
+    #region Domains Table
+
+    public static string Domain_DesignCode_This()
+    {
+      //string test = db.SERVER_NAME();
+      if (!string.IsNullOrEmpty(VotePage.QueryDesign))
+        return VotePage.QueryDesign;
+      else
+        //return db.Domains(db.SERVER_NAME(), "DomainDesignCode");
+        return UrlManager.CurrentDomainDesignCode;
+    }
+
+    public static string Domain_DataCode_This()
+    {
+      var queryData = VotePage.GetQueryString("Data").ToUpperInvariant();
+      if (!string.IsNullOrEmpty(queryData))
+        return queryData;
+      var queryState = VotePage.QueryState;
+      return !string.IsNullOrEmpty(queryState)
+        ? queryState 
+        : UrlManager.CurrentDomainDataCode;
+    }
+
+    public static string StateCode_Domain_This()
+    {
+      if (StateCache.IsValidStateCode(db.Domain_DataCode_This()))
+        return db.Domain_DataCode_This();
+      else
+        return string.Empty;
+    }
+
+    public static string Domain_StateCode_This()
+    {
+      return db.StateCode_Domain_This();
+    }
+
+    #endregion
+
+    #region DomainDesigns Table
+    //Strings
+
+    //bool
+    public static bool DomainDesigns_Bool(string DomainDesignCode, string Column)
+    {
+      return db.Single_Key_Bool("DomainDesigns", Column, "DomainDesignCode", DomainDesignCode);
+    }
+
+    #endregion
+
+    public static bool DomainDesigns_Bool_This(string Column)
+    {
+      return db.DomainDesigns_Bool(db.Domain_DesignCode_This(), Column);
+    }
+    public static bool Is_Include_First_Footer_This()
+    {
+      return db.DomainDesigns_Bool_This("IsIncludedFirstFooterAllPages");
+    }
+    public static bool Is_Include_Second_Footer_This()
+    {
+      return db.DomainDesigns_Bool_This("IsIncludedSecondFooterAllPages");
+    }
+    public static bool Is_Include_Email_Us_This()
+    {
+      return db.DomainDesigns_Bool_This("IsIncludedEmailUsAllPages");
+    }
+    public static bool Is_Include_Powered_By_This()
+    {
+      return db.DomainDesigns_Bool_This("IsIncludedPoweredByAllPages");
+    }
+    public static bool Is_Include_Donate_This()
+    {
+      return db.DomainDesigns_Bool_This("IsIncludedDonateAllPages");
+    }
+
+    #region MultiCountyDistrictCounties Table
+    #endregion
+
+    #region JudicialDistrictCounties Table
+    #endregion
+    //--- Offices
+
+    #region Offices Table
+
+    public static string Offices_Str(string OfficeKey, string Column)
+    {
+      if (OfficeKey != string.Empty)
+        return db.Single_Key_Str("Offices", Column, "OfficeKey", OfficeKey);
+      else
+        return string.Empty;
+    }
+
+    #region OfficeKey and OfficeRecs
+
+    //---------------------------------------
+    public enum Politician_Status
+    {
+      In_Election_Upcoming_Viewable,
+      In_Election_Upcoming_Not_Viewable,
+      In_Election_Upcoming_Viewable_RunningMate,
+      In_Election_Upcoming_Not_Viewable_RunningMate,
+      In_Election_Upcoming_Not_Created,
+      Incumbent,
+      Incumbent_RunningMate,
+      In_Election_Previous,
+      In_Election_Previous_RunningMate,
+      Unknown
+    }
+
+    public static DataRow Politician_Incumbent_RunningMate_Row(string PoliticianKey)
+    {
+      string SQL = string.Empty;
+      SQL += " SELECT ";
+      SQL += " Offices.OfficeKey";
+      SQL += " FROM OfficesOfficials,Offices ";
+      SQL += " WHERE OfficesOfficials.RunningMateKey = " + db.SQLLit(PoliticianKey);
+      SQL += " AND OfficesOfficials.OfficeKey = Offices.OfficeKey";
+      DataRow Row_Politician = db.Row_First_Optional(SQL);
+      if (Row_Politician != null)
+        return Row_Politician;
+      else
+        return null;
+    }
+
+    public static DataRow Politician_Election_Previous_Row(string PoliticianKey)
+    {
+      string SQL = string.Empty;//xx
+      SQL += " SELECT";
+      SQL += " ElectionsPoliticians.ElectionKey";
+      SQL += " FROM ElectionsPoliticians,Elections";
+      SQL += " WHERE ElectionsPoliticians.PoliticianKey = " + db.SQLLit(PoliticianKey);
+      SQL += " AND ElectionsPoliticians.ElectionKey = Elections.ElectionKey";
+      SQL += " AND Elections.ElectionDate < " + db.SQLLit(Db.DbToday);
+      //SQL += " AND Elections.IsViewable = 0";
+      SQL += " ORDER BY Elections.ElectionDate DESC";
+      DataRow Row_Politician = db.Row_First_Optional(SQL);
+      if (Row_Politician != null)
+        return Row_Politician;
+      else
+        return null;
+    }
+
+    public static DataRow Politician_Election_Previous_RunningMate_Row(string PoliticianKey)
+    {
+      string SQL = string.Empty;//xx
+      SQL += " SELECT";
+      SQL += " ElectionsPoliticians.ElectionKey";
+      SQL += " FROM ElectionsPoliticians,Elections";
+      SQL += " WHERE ElectionsPoliticians.RunningMateKey = " + db.SQLLit(PoliticianKey);
+      SQL += " AND ElectionsPoliticians.ElectionKey = Elections.ElectionKey";
+      SQL += " AND Elections.ElectionDate < " + db.SQLLit(Db.DbToday);
+      //SQL += " AND Elections.IsViewable = 0";
+      SQL += " ORDER BY Elections.ElectionDate DESC";
+      DataRow Row_Politician = db.Row_First_Optional(SQL);
+      if (Row_Politician != null)
+        return Row_Politician;
+      else
+        return null;
+    }
+
+    public static DataRow Politician_Election_Upcoming_Not_Created_Row(string politicianKey)
+    {
+      string SQL = string.Empty;
+      SQL += " SELECT ";
+      SQL += " TemporaryOfficeKey";
+      SQL += " FROM Politicians";
+      SQL += " WHERE PoliticianKey = " + db.SQLLit(politicianKey);
+      DataRow Row_Politician = db.Row_First_Optional(SQL);
+      if (Row_Politician != null)
+        return Row_Politician;
+      else
+        return null;
+    }
+
+    public static db.Politician_Status Politician_Current_Status_Type(
+      PageCache cache, string politicianKey)
+    {
+      //if (db.Politician_Election_Upcoming_Viewable_Row(PoliticianKey) != null)
+      //  return db.Politician_Status.In_Election_Upcoming_Viewable;
+
+      if (!string.IsNullOrEmpty(cache.ElectionsPoliticians.GetFutureElectionKeyByPoliticianKey(politicianKey, true)))
+        return db.Politician_Status.In_Election_Upcoming_Viewable;
+
+      //if (db.Politician_Election_Upcoming_Not_Viewable_Row(politicianKey) != null)
+      //  return db.Politician_Status.In_Election_Upcoming_Not_Viewable;
+
+      if (!string.IsNullOrEmpty(cache.ElectionsPoliticians.GetFutureElectionKeyByPoliticianKey(politicianKey, false)))
+        return db.Politician_Status.In_Election_Upcoming_Not_Viewable;
+
+      //if (db.Politician_Election_Upcoming_Viewable_RunningMate_Row(politicianKey) != null)
+      //  return db.Politician_Status.In_Election_Upcoming_Viewable_RunningMate;
+
+      if (!string.IsNullOrEmpty(cache.ElectionsPoliticians.GetFutureElectionKeyByRunningMateKey(politicianKey, true)))
+        return db.Politician_Status.In_Election_Upcoming_Viewable_RunningMate;
+
+      //if (db.Politician_Election_Upcoming_Not_Viewable_RunningMate_Row(politicianKey) != null)
+      //  return db.Politician_Status.In_Election_Upcoming_Not_Viewable_RunningMate;
+
+      if (!string.IsNullOrEmpty(cache.ElectionsPoliticians.GetFutureElectionKeyByRunningMateKey(politicianKey, false)))
+        return db.Politician_Status.In_Election_Upcoming_Not_Viewable_RunningMate;
+
+      //if (db.Politician_Incumbent_Row(politicianKey) != null)
+      //  return db.Politician_Status.Incumbent;
+
+      if (!string.IsNullOrEmpty(cache.OfficesOfficials.GetIncumbentOfficeKeyByPoliticianKey(politicianKey)))
+        return db.Politician_Status.Incumbent;
+
+      if (db.Politician_Incumbent_RunningMate_Row(politicianKey) != null)
+        return db.Politician_Status.Incumbent_RunningMate;
+
+      if (db.Politician_Election_Previous_Row(politicianKey) != null)
+        return db.Politician_Status.In_Election_Previous;
+
+      if (db.Politician_Election_Previous_RunningMate_Row(politicianKey) != null)
+        return db.Politician_Status.In_Election_Previous_RunningMate;
+
+      if (db.Politician_Election_Upcoming_Not_Created_Row(politicianKey) != null)
+        return db.Politician_Status.In_Election_Upcoming_Not_Created;
+
+      return db.Politician_Status.Unknown;
+    }
+
+    public static string Politician_Current_Office_And_Status(PageCache cache,
+      string politicianKey)
+    {
+      var officeStatus = cache.Politicians.GetOfficeStatus(politicianKey);
+      if (!Offices.IsValid(officeStatus.OfficeKey)) return string.Empty;
+      var officeName = Offices.GetLocalizedOfficeNameWithElectoralClass(cache, officeStatus.OfficeKey);
+      return officeStatus.PoliticianStatus.GetOfficeStatusDescription(officeName);
+    }
+
+    public static bool Is_Politician_In_Election_Upcoming_Viewable(PageCache cache,
+      string politicianKey)
+    {
+      switch (Politician_Current_Status_Type(cache, politicianKey))
+      {
+        case db.Politician_Status.In_Election_Upcoming_Viewable:
+          return true;
+        case db.Politician_Status.In_Election_Upcoming_Not_Viewable:
+          return false;
+        case db.Politician_Status.In_Election_Upcoming_Viewable_RunningMate:
+          return true;
+        case db.Politician_Status.In_Election_Upcoming_Not_Viewable_RunningMate:
+          return false;
+        case db.Politician_Status.In_Election_Upcoming_Not_Created:
+          return false;
+        case db.Politician_Status.Incumbent:
+          return false;
+        case db.Politician_Status.Incumbent_RunningMate:
+          return false;
+        case db.Politician_Status.In_Election_Previous:
+          return false;
+        case db.Politician_Status.In_Election_Previous_RunningMate:
+          return false;
+        default:
+          return false;
+      }
+    }
+
+    //---------------------------------------
+
+    #endregion
+
+    #endregion
+
+    #region Offices UPDATE
+
+    public static void Offices_Update_Int(string OfficeKey, string Column, int ColumnValue)
+    {
+      db.Single_Key_Update_Int("Offices", Column, ColumnValue, "OfficeKey", OfficeKey);
+    }
+
+
+    #endregion
+
+    #region Offices LOG
+
+    public static void LogOfficeChange(string officeKey, string dataItem,
+      string dataFrom, string dataTo)
+    {
+      DB.VoteLog.LogOfficeChanges.Insert(
+        DateTime.Now,
+        SecurePage.UserSecurityClass,
+        SecurePage.UserName,
+        officeKey,
+        dataItem,
+        dataFrom.Trim().ReplaceBreakTagsWithNewLines(),
+        dataTo.Trim());
+    }
+
+    public static void LogOfficeChange(string officeKey, string dataItem,
+      int dataFrom, int dataTo)
+    {
+      LogOfficeChange(officeKey, dataItem, dataFrom.ToString(), dataTo.ToString());
+    }
+
+    #endregion
+
+    #region Office Rows Multiple Tables
+ 
+    public static void Office_Delete_All_Tables_All_Rows(string officeKey,
+      string deleteOrConsolidate)
+    {
+      #region Delete all rows in Offices, ElectionsOffices, ElectionsPoliticians, OfficesOfficials
+      string SQL;
+
+      #region LogOfficeAddsDeletes
+      DB.VoteLog.LogOfficeAddsDeletes.Insert(
+        DateTime.Now,
+        deleteOrConsolidate.ToUpper(),
+        SecurePage.UserSecurityClass,
+        SecurePage.UserName,
+        officeKey,
+        Offices.GetStateCodeFromKey(officeKey),
+        Offices.GetOfficeClass(officeKey).ToInt(),
+        0,
+        string.Empty,
+        string.Empty,
+        string.Empty,
+        string.Empty,
+        db.Offices_Str(officeKey, "OfficeLine1"),
+        db.Offices_Str(officeKey, "OfficeLine2"),
+        false,
+        false,
+        1,
+        string.Empty,
+        string.Empty,
+        string.Empty,
+        string.Empty,
+        1);
+      #endregion
+
+      SQL = " DELETE FROM ElectionsOffices";
+      SQL += " WHERE OfficeKey = " + db.SQLLit(officeKey);
+      db.ExecuteSql(SQL);
+
+      SQL = " DELETE FROM ElectionsPoliticians";
+      SQL += " WHERE OfficeKey = " + db.SQLLit(officeKey);
+      db.ExecuteSql(SQL);
+
+      SQL = " DELETE FROM OfficesOfficials";
+      SQL += " WHERE OfficeKey = " + db.SQLLit(officeKey);
+      db.ExecuteSql(SQL);
+
+      SQL = " DELETE FROM Offices";
+      SQL += " WHERE OfficeKey = " + db.SQLLit(officeKey);
+      db.ExecuteSql(SQL);
+      #endregion
+
+      #region commented out - Delete all Politicians and related data with this OfficeKey
+      //SQL = "SELECT PoliticianKey";
+      //SQL += " FROM Politicians";
+      //SQL += " WHERE OfficeKey = " + db.SQLLit(OfficeKey);
+      //DataTable Table_Politicians = db.Table(SQL);
+      //foreach (DataRow Row_Politician in Table_Politicians.Rows)
+      //{
+      //  db.Politician_Delete_All_Tables_All_Rows(Row_Politician["PoliticianKey"].ToString());
+      //}
+      #endregion Delete all Politicians and related data with this OfficeKey
+
+      //db.Invalidate_Office(OfficeKey);
+    }
+
+    public static void Office_Delete_All_Tables_All_Rows(string OfficeKey)
+    {
+      db.Office_Delete_All_Tables_All_Rows(OfficeKey, "D");
+    }
+    #endregion Office Rows Multiple Tables
+
+    #region Office Name and Data
+ 
+    public static string Office_Data(string OfficeKey)
+    {
+      string Office_Data = string.Empty;
+
+      //if (db.xIs_Office_Tag_Deletion(OfficeKey))
+      //  Office_Data += "<strong>Office is Tagged for Deletion</strong>";
+
+      if (Offices.IsValid(OfficeKey))
+      {
+        #region Office Codes and Class
+        Office_Data += "<br>StateCode:" + Offices.GetStateCodeFromKey(OfficeKey);
+        Office_Data += ", CountyCode:" + Offices.GetCountyCodeFromKey(OfficeKey);
+        Office_Data += ", LocalCode:" + Offices.GetLocalCodeFromKey(OfficeKey);
+        Office_Data += "<br>OfficeClass:"
+          + " (" + Offices.GetOfficeClass(OfficeKey).ToInt() + ") "
+          + Offices.GetOfficeClassDescription(OfficeKey);
+        #endregion Office Codes
+
+        #region Office Electoral Description
+        Office_Data += "<br>";
+        Office_Data += Offices.GetOfficeClassDescription(
+            Offices.GetOfficeClass(OfficeKey)
+            , Offices.GetStateCodeFromKey(OfficeKey));
+        Office_Data += "<br>";
+        Office_Data += "<strong>"
+          + db.Name_Office_Contest_And_Electoral(OfficeKey)
+          + "</strong>";
+        #endregion Office Electoral Description
+
+        string SQL;
+        #region Office Elections
+        Office_Data += "<br>";
+        Office_Data += "In the following ELECTIONS:";
+        SQL = string.Empty;
+        SQL += " ElectionsOffices";
+        SQL += " WHERE OfficeKey = " + db.SQLLit(OfficeKey);
+        if (db.Rows_Count_From(SQL) > 0)
+        {
+          SQL = string.Empty;
+          SQL += " SELECT";
+          SQL += " ElectionKey";
+          SQL += " FROM ElectionsOffices";
+          SQL += " ElectionsOffices";
+          SQL += " WHERE OfficeKey = " + db.SQLLit(OfficeKey);
+          DataTable Elections_Table = db.Table(SQL);
+          if (Elections_Table != null)
+          {
+            foreach (DataRow Elections_Row in Elections_Table.Rows)
+              Office_Data += "<br><strong>"
+                + db.Name_Election(Elections_Row["ElectionKey"].ToString())
+                + "</strong>";
+          }
+        }
+        else
+        {
+          Office_Data += "<br><strong>NONE</strong>";
+        }
+        #endregion Office Elections
+
+        #region Office being held by a politician (OfficesOfficials)
+        Office_Data += "<br>";
+        Office_Data += "POLITICIAN(S) as Incumbnet to this office:";
+        SQL = string.Empty;
+        SQL += " OfficesOfficials";
+        SQL += " WHERE OfficeKey = " + db.SQLLit(OfficeKey);
+        if (db.Rows_Count_From(SQL) > 0)
+        {
+          SQL = string.Empty;
+          SQL += " SELECT";
+          SQL += " PoliticianKey";
+          SQL += " FROM OfficesOfficials";
+          SQL += " WHERE OfficeKey = " + db.SQLLit(OfficeKey);
+          DataTable Politicians_Table = db.Table(SQL);
+          if (Politicians_Table != null)
+          {
+            foreach (DataRow Politician_Row in Politicians_Table.Rows)
+              Office_Data += "<br><strong>"
+                + Politicians.GetFormattedName(Politician_Row["PoliticianKey"].ToString())
+                + "</strong>";
+          }
+        }
+        else
+        {
+          Office_Data += "<br><strong>NONE</strong>";
+        }
+        #endregion Office being held by a politician (OfficesOfficials)
+      }
+      else
+        Office_Data += "<br><strong>Office does not exist</strong>";
+
+      return Office_Data;
+    }
+    #endregion Office Name and Data
+
+    //--Parties
+    #region Parties
+    #region Parties Table keys, Codes and Levels
+
+    #region Parties Table Get
+
+    public static string Parties_Str(
+      string PartyKey
+      , string Column)
+    {
+      if (PartyKey != string.Empty)
+        return db.Single_Key_Str_Optional("Parties", Column, "PartyKey", PartyKey);
+      else
+        return string.Empty;
+    }
+
+    #endregion Parties Table Get
+
+    #region PartiesEmails Table
+    public static string PartiesEmails_Str(
+      string Party_Email
+      , string Column
+      )
+    {
+      if (Party_Email != string.Empty)
+        return db.Single_Key_Str_Optional(
+          "PartiesEmails"
+          , Column
+          , "PartyEmail"
+          , Party_Email
+          );
+      else
+        return string.Empty;
+    }
+
+    #endregion PartiesEmails Table
+
+
+    #endregion PartiesEmails Table Parties Table keys, Codes and Levels
+    #endregion Parties
+
+    //--- Referendums
+
+    #region OfficesOfficials LOG
+
+    public static void Log_OfficesOfficials_Add_Or_Delete(string addOrDelete,
+      string officeKey, string politicianKey)
+    {
+      //string SQL = "INSERT INTO LogOfficeOfficialAddsDeletes"
+      //  + "("
+      //  + "DateStamp"
+      //  + ",AddOrDelete"
+      //  + ",UserSecurity"
+      //  + ",UserName"
+      //  + ",PoliticianKey"
+      //  + ",StateCode"
+      //  + ",OfficeKey"
+      //  + ")"
+      //  + " VALUES("
+      //  + db.SQLLit(Db.DbNow)
+      //  + "," + db.SQLLit(addOrDelete)
+      //  + "," + db.SQLLit(db.User_Security())
+      //  + "," + db.SQLLit(db.User_Name())
+      //  + "," + db.SQLLit(politicianKey)
+      //  //+ "," + db.SQLLit(db.StateCode4OfficeKey(OfficeKey))
+      //  + "," + db.SQLLit(db.StateCode_In_OfficeKey(officeKey))
+      //  + "," + db.SQLLit(officeKey)
+      //  + ")";
+      //db.ExecuteSQL(SQL);
+      DB.VoteLog.LogOfficeOfficialAddsDeletes.Insert(
+        DateTime.Now,
+        addOrDelete,
+        SecurePage.UserSecurityClass,
+        SecurePage.UserName,
+        politicianKey,
+        Offices.GetStateCodeFromKey(officeKey),
+        string.Empty,
+        string.Empty,
+        officeKey);
+    }
+    #endregion
+
+    //--- Politicians Tables
+
+    #region Politicians Table
+
+    #region Politicians Get
+
+    #region Politicians Columns
+    public enum Politician_Column
+    {
+      Password,
+      PasswordHint,
+      TemporaryOfficeKey,
+      StateCode,
+      FName,
+      MName,
+      Nickname,
+      LName,
+      Suffix,
+      AddOn,
+      EmailAddrVoteUSA,
+      EmailAddr,
+      StateEmailAddr,
+      WebAddr,
+      StateWebAddr,
+      Phone,
+      StatePhone,
+      Gender,
+      PartyKey,
+      Address,
+      CityStateZip,
+      StateAddress,
+      StateCityStateZip,
+      CampaignName,
+      CampaignAddr,
+      CampaignCityStateZip,
+      CampaignPhone,
+      CampaignEmail,
+      //LDSEmailAddr,
+      //LDSWebAddr,
+      //LDSPhone,
+      //LDSAddress,
+      //LDSCityStateZip,
+      //GeneralStatement,
+      //Personal,
+      //Education,
+      //Profession,
+      //Military,
+      //Civic,
+      //Political,
+      //Religion,
+      //Accomplishments,
+      FacebookWebAddress,
+      WikipediaWebAddress,
+      YouTubeWebAddress,
+      FlickrWebAddress,
+      TwitterWebAddress,
+      RSSFeedWebAddress,
+      VimeoWebAddress
+    }
+
+    public static string Politician_Column_Name(
+      db.Politician_Column Politician_Column
+      )
+    {
+      switch (Politician_Column)
+      {
+        case db.Politician_Column.Password:
+          return "Password";
+        case db.Politician_Column.PasswordHint:
+          return "PasswordHint";
+        case db.Politician_Column.TemporaryOfficeKey:
+          return "TemporaryOfficeKey";
+        case db.Politician_Column.StateCode:
+          return "StateCode";
+        case db.Politician_Column.FName:
+          return "FName";
+        case db.Politician_Column.MName:
+          return "MName";
+        case db.Politician_Column.Nickname:
+          return "Nickname";
+        case db.Politician_Column.LName:
+          return "LName";
+        case db.Politician_Column.Suffix:
+          return "Suffix";
+        case db.Politician_Column.AddOn:
+          return "AddOn";
+        case db.Politician_Column.EmailAddrVoteUSA:
+          return "EmailAddrVoteUSA";
+        case db.Politician_Column.EmailAddr:
+          return "EmailAddr";
+        case db.Politician_Column.StateEmailAddr:
+          return "StateEmailAddr";
+        case db.Politician_Column.WebAddr:
+          return "WebAddr";
+        case db.Politician_Column.StateWebAddr:
+          return "StateWebAddr";
+        case db.Politician_Column.Phone:
+          return "Phone";
+        case db.Politician_Column.StatePhone:
+          return "StatePhone";
+        case db.Politician_Column.Gender:
+          return "Gender";
+        case db.Politician_Column.PartyKey:
+          return "PartyKey";
+        case db.Politician_Column.Address:
+          return "Address";
+        case db.Politician_Column.CityStateZip:
+          return "CityStateZip";
+        case db.Politician_Column.StateAddress:
+          return "StateAddress";
+        case db.Politician_Column.StateCityStateZip:
+          return "StateCityStateZip";
+        case db.Politician_Column.CampaignName:
+          return "CampaignName";
+        case db.Politician_Column.CampaignAddr:
+          return "CampaignAddr";
+        case db.Politician_Column.CampaignCityStateZip:
+          return "CampaignCityStateZip";
+        case db.Politician_Column.CampaignPhone:
+          return "CampaignPhone";
+        case db.Politician_Column.CampaignEmail:
+          return "CampaignEmail";
+        //case db.Politician_Column.GeneralStatement:
+        //  return "GeneralStatement";
+        //case db.Politician_Column.Personal:
+        //  return "Personal";
+        //case db.Politician_Column.Education:
+        //  return "Education";
+        //case db.Politician_Column.Profession:
+        //  return "Profession";
+        //case db.Politician_Column.Military:
+        //  return "Military";
+        //case db.Politician_Column.Civic:
+        //  return "Civic";
+        //case db.Politician_Column.Political:
+        //  return "Political";
+        //case db.Politician_Column.Religion:
+        //  return "Religion";
+        //case db.Politician_Column.Accomplishments:
+        //  return "Accomplishments";
+        case db.Politician_Column.FacebookWebAddress:
+          return "FacebookWebAddress";
+        case db.Politician_Column.WikipediaWebAddress:
+          return "YouTubeWebAddress";
+        case db.Politician_Column.YouTubeWebAddress:
+          return "WikipediaWebAddress";
+        case db.Politician_Column.FlickrWebAddress:
+          return "FlickrWebAddress";
+        case db.Politician_Column.TwitterWebAddress:
+          return "TwitterWebAddress";
+        case db.Politician_Column.RSSFeedWebAddress:
+          return "RSSFeedWebAddress";
+        default:
+          return string.Empty;
+      }
+    }
+
+    public static string Politician_Column_Description(
+      db.Politician_Column Politician_Column
+      )
+    {
+      switch (Politician_Column)
+      {
+        case db.Politician_Column.Password:
+          return "Password";
+        case db.Politician_Column.PasswordHint:
+          return "Password Hint";
+        case db.Politician_Column.TemporaryOfficeKey:
+          return "Office Key";
+        case db.Politician_Column.StateCode:
+          return "State Code";
+        case db.Politician_Column.FName:
+          return "First Name";
+        case db.Politician_Column.MName:
+          return "Middle Name";
+        case db.Politician_Column.Nickname:
+          return "Nick Name";
+        case db.Politician_Column.LName:
+          return "Last Name";
+        case db.Politician_Column.Suffix:
+          return "Name Suffix";
+        case db.Politician_Column.AddOn:
+          return "Additional Name Info";
+        case db.Politician_Column.EmailAddrVoteUSA:
+          return "VoteUSA Email Address";
+        case db.Politician_Column.EmailAddr:
+          return "Candidate Email Address";
+        case db.Politician_Column.StateEmailAddr:
+          return "State Email Address";
+        case db.Politician_Column.WebAddr:
+          return "Candidate Website Address";
+        case db.Politician_Column.StateWebAddr:
+          return "State Website Address";
+        case db.Politician_Column.Phone:
+          return "Candidate Phone";
+        case db.Politician_Column.StatePhone:
+          return "State Phone";
+        case db.Politician_Column.Gender:
+          return "Gender";
+        case db.Politician_Column.PartyKey:
+          return "Party Key";
+        case db.Politician_Column.Address:
+          return "Street Address";
+        case db.Politician_Column.CityStateZip:
+          return "City, State Zip";
+        case db.Politician_Column.StateAddress:
+          return "State Street Address";
+        case db.Politician_Column.StateCityStateZip:
+          return "State City, State Zip";
+        case db.Politician_Column.CampaignName:
+          return "Campaign Name";
+        case db.Politician_Column.CampaignAddr:
+          return "Campaign Address";
+        case db.Politician_Column.CampaignCityStateZip:
+          return "Campaign City State Zip";
+        case db.Politician_Column.CampaignPhone:
+          return "Campaign Phone";
+        case db.Politician_Column.CampaignEmail:
+          return "Campaign Email";
+        //case db.Politician_Column.GeneralStatement:
+        //  return "General Statement";
+        //case db.Politician_Column.Personal:
+        //  return "Personal";
+        //case db.Politician_Column.Education:
+        //  return "Education";
+        //case db.Politician_Column.Profession:
+        //  return "Profession";
+        //case db.Politician_Column.Military:
+        //  return "Military";
+        //case db.Politician_Column.Civic:
+        //  return "Civic";
+        //case db.Politician_Column.Political:
+        //  return "Political";
+        //case db.Politician_Column.Religion:
+        //  return "Religion";
+        //case db.Politician_Column.Accomplishments:
+        //  return "Accomplishments";
+        case db.Politician_Column.FacebookWebAddress:
+          return "Facebook Address";
+        case db.Politician_Column.WikipediaWebAddress:
+          return "Wikipedia Address";
+        case db.Politician_Column.YouTubeWebAddress:
+          return "YouTubeWeb Address";
+        case db.Politician_Column.FlickrWebAddress:
+          return "Flickr WebAddress";
+        case db.Politician_Column.TwitterWebAddress:
+          return "Twitter WebAddress";
+        case db.Politician_Column.RSSFeedWebAddress:
+          return "RSSFeed WebAddress";
+        default:
+          return string.Empty;
+      }
+    }
+    #endregion Politicians Columns
+
+    #region Politician Column Values
+    public static string Politicians_Str(string politicianKey, string columnName)
+    {
+      return Politicians_Str(politicianKey, Politicians.GetColumn(columnName));
+    }
+
+    public static string Politicians_Str(string politicianKey, Politicians.Column column)
+    {
+      object value = Politicians.GetColumn(column, politicianKey);
+      if (value == null) return string.Empty;
+      return value as string;
+    }
+
+    //---- Int
+    public static int Politicians_Int(string PoliticianKey, string Column)
+    {
+      if (PoliticianKey != string.Empty)
+        return db.Single_Key_Int("Politicians", Column, "PoliticianKey", PoliticianKey);
+      else
+        return 0;
+    }
+
+    public static string Politician(string politicianKey, db.Politician_Column column)
+    {
+      return Politician(VotePage.GetPageCache(), politicianKey, column);
+    }
+
+    public static string Politician(PageCache cache,
+      string politicianKey, db.Politician_Column column)
+    {
+      switch (column)
+      {
+        case db.Politician_Column.Password:
+          return Politicians.GetPassword(politicianKey, string.Empty);
+
+        case db.Politician_Column.PasswordHint:
+          return Politicians.GetPasswordHint(politicianKey, string.Empty);
+
+        case db.Politician_Column.TemporaryOfficeKey:
+          return Politicians.GetTemporaryOfficeKey(politicianKey, string.Empty);
+
+        case db.Politician_Column.StateCode:
+          return Politicians.GetStateCode(politicianKey, string.Empty);
+
+        case db.Politician_Column.FName:
+          return cache.Politicians.GetFirstName(politicianKey);
+
+        case db.Politician_Column.MName:
+          return Politicians.GetMiddleName(politicianKey, string.Empty);
+
+        case db.Politician_Column.Nickname:
+          return Politicians.GetNickname(politicianKey, string.Empty);
+
+        case db.Politician_Column.LName:
+          return cache.Politicians.GetLastName(politicianKey);
+
+        case db.Politician_Column.Suffix:
+          return Politicians.GetSuffix(politicianKey, string.Empty);
+
+        case db.Politician_Column.AddOn:
+          return Politicians.GetAddOn(politicianKey, string.Empty);
+
+        case db.Politician_Column.EmailAddrVoteUSA:
+          return Politicians.GetEmailVoteUSA(politicianKey, string.Empty);
+
+        case db.Politician_Column.EmailAddr:
+          return Politicians.GetEmail(politicianKey, string.Empty);
+
+        case db.Politician_Column.StateEmailAddr:
+          return Politicians.GetStateEmail(politicianKey, string.Empty);
+
+        case db.Politician_Column.WebAddr:
+          return Politicians.GetWebAddress(politicianKey, string.Empty);
+
+        case db.Politician_Column.StateWebAddr:
+          return Politicians.GetStateWebAddress(politicianKey, string.Empty);
+
+        case db.Politician_Column.Phone:
+          return Politicians.GetPhone(politicianKey, string.Empty);
+
+        case db.Politician_Column.StatePhone:
+          return Politicians.GetStatePhone(politicianKey, string.Empty);
+
+        case db.Politician_Column.Gender:
+          return Politicians.GetGender(politicianKey, string.Empty);
+
+        case db.Politician_Column.PartyKey:
+          return cache.Politicians.GetPartyKey(politicianKey);
+
+        case db.Politician_Column.Address:
+          return Politicians.GetAddress(politicianKey, string.Empty);
+
+        case db.Politician_Column.CityStateZip:
+          return Politicians.GetCityStateZip(politicianKey, string.Empty);
+
+        case db.Politician_Column.StateAddress:
+          return Politicians.GetStateAddress(politicianKey, string.Empty);
+
+        case db.Politician_Column.StateCityStateZip:
+          return Politicians.GetStateCityStateZip(politicianKey, string.Empty);
+
+        case db.Politician_Column.CampaignName:
+          return Politicians.GetCampaignName(politicianKey, string.Empty);
+
+        case db.Politician_Column.CampaignAddr:
+          return Politicians.GetCampaignAddress(politicianKey, string.Empty);
+
+        case db.Politician_Column.CampaignCityStateZip:
+          return Politicians.GetCampaignCityStateZip(politicianKey, string.Empty);
+
+        case db.Politician_Column.CampaignPhone:
+          return Politicians.GetCampaignPhone(politicianKey, string.Empty);
+
+        case db.Politician_Column.CampaignEmail:
+          return Politicians.GetCampaignEmail(politicianKey, string.Empty);
+
+        //case db.Politician_Column.GeneralStatement:
+        //  return cache.PoliticiansBio.GetGeneralStatement(politicianKey);
+
+        //case db.Politician_Column.Personal:
+        //  return cache.PoliticiansBio.GetPersonal(politicianKey);
+
+        //case db.Politician_Column.Education:
+        //  return cache.PoliticiansBio.GetEducation(politicianKey);
+
+        //case db.Politician_Column.Profession:
+        //  return cache.PoliticiansBio.GetProfession(politicianKey);
+
+        //case db.Politician_Column.Military:
+        //  return cache.PoliticiansBio.GetMilitary(politicianKey);
+
+        //case db.Politician_Column.Civic:
+        //  return cache.PoliticiansBio.GetCivic(politicianKey);
+
+        //case db.Politician_Column.Political:
+        //  return cache.PoliticiansBio.GetPolitical(politicianKey);
+
+        //case db.Politician_Column.Religion:
+        //  return cache.PoliticiansBio.GetReligion(politicianKey);
+
+        //case db.Politician_Column.Accomplishments:
+        //  return cache.PoliticiansBio.GetAccomplishments(politicianKey);
+
+        default:
+          return string.Empty;
+      }
+    }
+    #endregion Politician Column Values
+
+    //------------------------
+    //------------------------F
+ 
+    //------------------------
+    //------------------------
+    #endregion Politicians Get
+
+    #region Politicians UPDATE
+    #region Politicians UPDATE Str
+
+    // We set a maximum response length to be applied to these columns:
+    //
+    // Politicians.GeneralStatement
+    // Politicians.Personal
+    // Politicians.Education
+    // Politicians.Profession
+    // Politicians.Military
+    // Politicians.Civic
+    // Politicians.Political
+    // Politicians.Religion
+    // Politicians.Accomplishments
+    //
+    // If the length is exceeded, we truncate and append a message.
+
+    const int PoliticiansResponseLengthMax = 2000;
+    const string PoliticiansResponseLengthExceededMessage =
+      " [Response was truncated to maximum response length of {0} characters.]";
+
+    static string PoliticiansLimitStringLength(string original)
+    {
+      string result = original;
+      if (result.Length > PoliticiansResponseLengthMax)
+        result = result.Remove(PoliticiansResponseLengthMax) +
+          string.Format(PoliticiansResponseLengthExceededMessage, PoliticiansResponseLengthMax);
+      return result;
+    }
+
+    public static void Politicians_Update_Str(
+      string PoliticianKey
+      , string Column
+      , string ColumnValue)
+    {
+      db.Single_Key_Update_Str("Politicians", Column, ColumnValue, "PoliticianKey", PoliticianKey);
+    }
+    public static void Politicians_Update_Password(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "Password", ColumnValue);
+    }
+    public static void Politicians_Update_PasswordHint(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "PasswordHint", ColumnValue);
+    }
+
+    public static void Politicians_Update_TemporaryOfficeKey(string PoliticianKey,
+      string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "TemporaryOfficeKey", ColumnValue);
+    }
+
+    public static void Politicians_Update_StateCode(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "StateCode", ColumnValue);
+    }
+    public static void Politicians_Update_FName(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "FName", ColumnValue);
+    }
+    public static void Politicians_Update_MName(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "MName", ColumnValue);
+    }
+    public static void Politicians_Update_Nickname(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "Nickname", ColumnValue);
+    }
+    public static void Politicians_Update_LName(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "LName", ColumnValue);
+    }
+    public static void Politicians_Update_Suffix(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "Suffix", ColumnValue);
+    }
+    public static void Politicians_Update_AddOn(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "AddOn", ColumnValue);
+    }
+    public static void Politicians_Update_EmailAddrVoteUSA(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "EmailAddrVoteUSA", ColumnValue);
+    }
+    public static void Politicians_Update_EmailAddr(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "EmailAddr", ColumnValue);
+    }
+    public static void Politicians_Update_StateEmailAddr(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "StateEmailAddr", ColumnValue);
+    }
+    public static void Politicians_Update_WebAddr(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "WebAddr", ColumnValue);
+    }
+    public static void Politicians_Update_StateWebAddr(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "StateWebAddr", ColumnValue);
+    }
+    public static void Politicians_Update_Phone(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "Phone", ColumnValue);
+    }
+    public static void Politicians_Update_StatePhone(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "StatePhone", ColumnValue);
+    }
+    public static void Politicians_Update_Gender(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "Gender", ColumnValue);
+    }
+    public static void Politicians_Update_PartyKey(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "PartyKey", ColumnValue);
+    }
+    public static void Politicians_Update_Address(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "Address", ColumnValue);
+    }
+    public static void Politicians_Update_CityStateZip(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "CityStateZip", ColumnValue);
+    }
+    public static void Politicians_Update_StateAddress(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "StateAddress", ColumnValue);
+    }
+    public static void Politicians_Update_StateCityStateZip(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "StateCityStateZip", ColumnValue);
+    }
+    public static void Politicians_Update_CampaignName(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "CampaignName", ColumnValue);
+    }
+    public static void Politicians_Update_CampaignAddr(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "CampaignAddr", ColumnValue);
+    }
+    public static void Politicians_Update_CampaignCityStateZip(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "CampaignCityStateZip", ColumnValue);
+    }
+    public static void Politicians_Update_CampaignPhone(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "CampaignPhone", ColumnValue);
+    }
+    public static void Politicians_Update_CampaignEmail(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "CampaignEmail", ColumnValue);
+    }
+    //LDS
+    //public static void Politicians_Update_LDSEmailAddr(
+    //  string PoliticianKey
+    //  , string ColumnValue)
+    //{
+    //  db.Politicians_Update_Str(PoliticianKey, "LDSEmailAddr", ColumnValue);
+    //}
+
+    //public static void Politicians_Update_LDSWebAddr(
+    //  string PoliticianKey
+    //  , string ColumnValue)
+    //{
+    //  db.Politicians_Update_Str(PoliticianKey, "LDSWebAddr", ColumnValue);
+    //}
+    //public static void Politicians_Update_LDSPhone(
+    //  string PoliticianKey
+    //  , string ColumnValue)
+    //{
+    //  db.Politicians_Update_Str(PoliticianKey, "LDSPhone", ColumnValue);
+    //}
+    //public static void Politicians_Update_LDSAddress(
+    //  string PoliticianKey
+    //  , string ColumnValue)
+    //{
+    //  db.Politicians_Update_Str(PoliticianKey, "LDSAddress", ColumnValue);
+    //}
+    //public static void Politicians_Update_LDSCityStateZip(
+    //  string PoliticianKey
+    //  , string ColumnValue)
+    //{
+    //  db.Politicians_Update_Str(PoliticianKey, "LDSCityStateZip", ColumnValue);
+    //}
+    //public static void Politicians_Update_GeneralStatement(
+    //  string PoliticianKey
+    //  , string ColumnValue)
+    //{
+    //  db.Politicians_Update_Str(PoliticianKey, "GeneralStatement",
+    //    PoliticiansLimitStringLength(ColumnValue));
+    //}
+
+    //public static void Politicians_Update_Personal(
+    //  string PoliticianKey
+    //  , string ColumnValue)
+    //{
+    //  db.Politicians_Update_Str(PoliticianKey, "Personal",
+    //    PoliticiansLimitStringLength(ColumnValue));
+    //}
+    //public static void Politicians_Update_Education(
+    //  string PoliticianKey
+    //  , string ColumnValue)
+    //{
+    //  db.Politicians_Update_Str(PoliticianKey, "Education",
+    //    PoliticiansLimitStringLength(ColumnValue));
+    //}
+    //public static void Politicians_Update_Profession(
+    //  string PoliticianKey
+    //  , string ColumnValue)
+    //{
+    //  db.Politicians_Update_Str(PoliticianKey, "Profession",
+    //    PoliticiansLimitStringLength(ColumnValue));
+    //}
+    //public static void Politicians_Update_Military(
+    //  string PoliticianKey
+    //  , string ColumnValue)
+    //{
+    //  db.Politicians_Update_Str(PoliticianKey, "Military",
+    //    PoliticiansLimitStringLength(ColumnValue));
+    //}
+    //public static void Politicians_Update_Civic(
+    //  string PoliticianKey
+    //  , string ColumnValue)
+    //{
+    //  db.Politicians_Update_Str(PoliticianKey, "Civic",
+    //    PoliticiansLimitStringLength(ColumnValue));
+    //}
+    //public static void Politicians_Update_Political(
+    //  string PoliticianKey
+    //  , string ColumnValue)
+    //{
+    //  db.Politicians_Update_Str(PoliticianKey, "Political",
+    //    PoliticiansLimitStringLength(ColumnValue));
+    //}
+    //public static void Politicians_Update_Religion(
+    //  string PoliticianKey
+    //  , string ColumnValue)
+    //{
+    //  db.Politicians_Update_Str(PoliticianKey, "Religion",
+    //    PoliticiansLimitStringLength(ColumnValue));
+    //}
+    //public static void Politicians_Update_Accomplishments(
+    //  string PoliticianKey
+    //  , string ColumnValue)
+    //{
+    //  db.Politicians_Update_Str(PoliticianKey, "Accomplishments",
+    //    PoliticiansLimitStringLength(ColumnValue));
+    //}
+    public static void Politicians_Update_FacebookWebAddress(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "FacebookWebAddress",
+        PoliticiansLimitStringLength(ColumnValue));
+    }
+    public static void Politicians_Update_WikipediaWebAddress(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "WikipediaWebAddress",
+        PoliticiansLimitStringLength(ColumnValue));
+    }
+    public static void Politicians_Update_YouTubeWebAddress(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "YouTubeWebAddress",
+        PoliticiansLimitStringLength(ColumnValue));
+    }
+    public static void Politicians_Update_FlickrWebAddress(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "FlickrWebAddress",
+        PoliticiansLimitStringLength(ColumnValue));
+    }
+    public static void Politicians_Update_TwitterWebAddress(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "TwitterWebAddress",
+        PoliticiansLimitStringLength(ColumnValue));
+    }
+    public static void Politicians_Update_RSSFeedWebAddress(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "RSSFeedWebAddress",
+        PoliticiansLimitStringLength(ColumnValue));
+    }
+    public static void Politicians_Update_VimeoWebAddress(
+      string PoliticianKey
+      , string ColumnValue)
+    {
+      db.Politicians_Update_Str(PoliticianKey, "VimeoWebAddress",
+        PoliticiansLimitStringLength(ColumnValue));
+    }
+    #endregion Politicians UPDATE Str
+
+    #region Politicians UPDATE Int
+    public static void Politicians_Update_Int(string PoliticianKey, string Column, int ColumnValue)
+    {
+      db.Single_Key_Update_Int("Politicians", Column, ColumnValue, "PoliticianKey", PoliticianKey);
+    }
+    public static int Politicians_Update_DataUpdatedCount(string politicianKey)
+    {
+      return db.Politicians_Int(politicianKey, "DataUpdatedCount");
+    }
+    public static void Politician_Update_Increment_Count_Data_Updated(string PoliticianKey)
+    {
+      int DataUpdatedCount = db.Politicians_Update_DataUpdatedCount(PoliticianKey);
+      DataUpdatedCount++;
+      db.Politicians_Update_Int(PoliticianKey, "DataUpdatedCount", DataUpdatedCount);
+    }
+    #endregion Politicians UPDATE Int
+
+    #region Politicians UPDATE Date
+    public static void Politicians_Update_Date(string PoliticianKey, string Column, DateTime ColumnValue)
+    {
+      db.Single_Key_Update_Date("Politicians", Column, ColumnValue, "PoliticianKey", PoliticianKey);
+    }
+    public static void Politician_Update_DataLastUpdated(string PoliticianKey)
+    {
+      db.Politicians_Update_Date(PoliticianKey, "DataLastUpdated", DateTime.Now);
+    }
+    #endregion Politicians UPDATE Date
+
+    public static void Politician_Update_Str(
+       string PoliticianKey
+      , db.Politician_Column Column
+      , string Str_New_Value
+      )
+    {
+      switch (Column)
+      {
+        case db.Politician_Column.Password:
+          db.Politicians_Update_Password(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.PasswordHint:
+          db.Politicians_Update_PasswordHint(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.TemporaryOfficeKey:
+          db.Politicians_Update_TemporaryOfficeKey(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.StateCode:
+          db.Politicians_Update_StateCode(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.FName:
+          db.Politicians_Update_FName(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.MName:
+          db.Politicians_Update_MName(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.Nickname:
+          db.Politicians_Update_Nickname(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.LName:
+          db.Politicians_Update_LName(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.Suffix:
+          db.Politicians_Update_Suffix(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.AddOn:
+          db.Politicians_Update_AddOn(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.EmailAddrVoteUSA:
+          db.Politicians_Update_EmailAddrVoteUSA(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.EmailAddr:
+          db.Politicians_Update_EmailAddr(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.StateEmailAddr:
+          db.Politicians_Update_StateEmailAddr(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.WebAddr:
+          db.Politicians_Update_WebAddr(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.StateWebAddr:
+          db.Politicians_Update_StateWebAddr(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.Phone:
+          db.Politicians_Update_Phone(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.StatePhone:
+          db.Politicians_Update_StatePhone(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.Gender:
+          db.Politicians_Update_Gender(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.PartyKey:
+          db.Politicians_Update_PartyKey(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.Address:
+          db.Politicians_Update_Address(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.CityStateZip:
+          db.Politicians_Update_CityStateZip(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.StateAddress:
+          db.Politicians_Update_StateAddress(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.StateCityStateZip:
+          db.Politicians_Update_StateCityStateZip(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.CampaignName:
+          db.Politicians_Update_CampaignName(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.CampaignAddr:
+          db.Politicians_Update_CampaignAddr(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.CampaignCityStateZip:
+          db.Politicians_Update_CampaignCityStateZip(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.CampaignPhone:
+          db.Politicians_Update_CampaignPhone(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.CampaignEmail:
+          db.Politicians_Update_CampaignEmail(PoliticianKey, Str_New_Value);
+          break;
+        //case db.Politician_Column.LDSEmailAddr:
+        //  db.Politicians_Update_LDSEmailAddr(PoliticianKey, Str_New_Value);
+        //  break;
+        //case db.Politician_Column.LDSWebAddr:
+        //  db.Politicians_Update_LDSWebAddr(PoliticianKey, Str_New_Value);
+        //  break;
+        //case db.Politician_Column.LDSPhone:
+        //  db.Politicians_Update_LDSPhone(PoliticianKey, Str_New_Value);
+        //  break;
+        //case db.Politician_Column.LDSAddress:
+        //  db.Politicians_Update_LDSAddress(PoliticianKey, Str_New_Value);
+        //  break;
+        //case db.Politician_Column.LDSCityStateZip:
+        //  db.Politicians_Update_LDSCityStateZip(PoliticianKey, Str_New_Value);
+        //  break;
+        //case db.Politician_Column.GeneralStatement:
+        //  db.Politicians_Update_GeneralStatement(PoliticianKey, Str_New_Value);
+        //  break;
+        //case db.Politician_Column.Personal:
+        //  db.Politicians_Update_Personal(PoliticianKey, Str_New_Value);
+        //  break;
+        //case db.Politician_Column.Education:
+        //  db.Politicians_Update_Education(PoliticianKey, Str_New_Value);
+        //  break;
+        //case db.Politician_Column.Profession:
+        //  db.Politicians_Update_Profession(PoliticianKey, Str_New_Value);
+        //  break;
+        //case db.Politician_Column.Military:
+        //  db.Politicians_Update_Military(PoliticianKey, Str_New_Value);
+        //  break;
+        //case db.Politician_Column.Civic:
+        //  db.Politicians_Update_Civic(PoliticianKey, Str_New_Value);
+        //  break;
+        //case db.Politician_Column.Political:
+        //  db.Politicians_Update_Political(PoliticianKey, Str_New_Value);
+        //  break;
+        //case db.Politician_Column.Religion:
+        //  db.Politicians_Update_Religion(PoliticianKey, Str_New_Value);
+        //  break;
+        //case db.Politician_Column.Accomplishments:
+        //  db.Politicians_Update_Accomplishments(PoliticianKey, Str_New_Value);
+        //  break;
+        case db.Politician_Column.FacebookWebAddress:
+          db.Politicians_Update_FacebookWebAddress(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.WikipediaWebAddress:
+          db.Politicians_Update_WikipediaWebAddress(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.YouTubeWebAddress:
+          db.Politicians_Update_YouTubeWebAddress(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.FlickrWebAddress:
+          db.Politicians_Update_FlickrWebAddress(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.TwitterWebAddress:
+          db.Politicians_Update_TwitterWebAddress(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.RSSFeedWebAddress:
+          db.Politicians_Update_RSSFeedWebAddress(PoliticianKey, Str_New_Value);
+          break;
+        case db.Politician_Column.VimeoWebAddress:
+          db.Politicians_Update_VimeoWebAddress(PoliticianKey, Str_New_Value);
+          break;
+        default:
+          break;
+      }
+    }
+
+    public static void Politician_Update_Post(string politicianKey)
+    {
+      db.Politician_Update_Increment_Count_Data_Updated(politicianKey);
+      db.Politician_Update_DataLastUpdated(politicianKey);
+      //db.Invalidate_Politician(politicianKey);
+    }
+
+    public static string Politician_Update_Transaction_Str(string politicianKey,
+      db.Politician_Column column, string newValue)
+    {
+      #region Log the change
+ 
+      DB.VoteLog.LogPoliticianChanges.Insert(
+        DateTime.Now,
+        SecurePage.UserSecurityClass,
+        SecurePage.UserName,
+        politicianKey,
+        db.Politician_Column_Name(column),
+        db.Politician(politicianKey, column).ToStringOrNull(),
+        newValue.ToStringOrNull().Trim());
+      #endregion Log the change
+
+      db.Politician_Update_Str(politicianKey, column, newValue);
+
+      db.Politician_Update_Post(politicianKey);
+
+      return db.Politician_Column_Description(column);
+    }
+    #endregion Politicians UPDATE
+
+    #endregion Politicians Table
+
+    #region Delete Politician
+    public static void Politician_Delete(string politicianKey)
+    {
+      string sqlDelete;
+
+      #region Politicians Table
+      sqlDelete = "DELETE FROM Politicians WHERE PoliticianKey ="
+        + db.SQLLit(politicianKey);
+      db.ExecuteSql(sqlDelete);
+      #endregion Politicians Table
+
+      #region PoliticiansImages Table
+      //SQLDELETE = "DELETE FROM PoliticiansImages WHERE PoliticianKey ="
+      //  + db.SQLLit(PoliticianKey);
+      //db.ExecuteSQL(SQLDELETE);
+      PoliticiansImagesData.DeleteByPoliticianKey(politicianKey);
+      PoliticiansImagesBlobs.DeleteByPoliticianKey(politicianKey);
+      CommonCacheInvalidation.ScheduleInvalidation("politicianimage", politicianKey);
+      #endregion PoliticiansImages Table
+
+      #region Answers Table
+      sqlDelete = "DELETE FROM Answers WHERE PoliticianKey ="
+        + db.SQLLit(politicianKey);
+      db.ExecuteSql(sqlDelete);
+      #endregion Answers Table
+
+      #region ElectionsPoliticians Table
+      sqlDelete = "DELETE FROM ElectionsPoliticians WHERE PoliticianKey ="
+        + db.SQLLit(politicianKey);
+      db.ExecuteSql(sqlDelete);
+      #endregion ElectionsPoliticians Table
+
+      #region OfficesOfficials Table
+      sqlDelete = "DELETE FROM OfficesOfficials WHERE PoliticianKey ="
+        + db.SQLLit(politicianKey);
+      db.ExecuteSql(sqlDelete);
+      #endregion OfficesOfficials Table
+
+      #region LogElectionPoliticianAddsDeletes Table
+      //SQLDELETE = "DELETE FROM LogElectionPoliticianAddsDeletes WHERE PoliticianKey ="
+      //  + db.SQLLit(PoliticianKey);
+      //db.ExecuteSQL(SQLDELETE);
+      DB.VoteLog.LogElectionPoliticianAddsDeletes.DeleteByPoliticianKey(politicianKey);
+      #endregion LogElectionPoliticianAddsDeletes Table
+
+      #region LogPoliticianAdds Table
+      //sqlDelete = "DELETE FROM LogPoliticianAdds WHERE PoliticianKey ="
+      //  + db.SQLLit(politicianKey);
+      //db.ExecuteSQL(sqlDelete);
+      DB.VoteLog.LogPoliticianAdds.DeleteByPoliticianKey(politicianKey);
+      #endregion LogPoliticianAdds Table
+
+      #region LogPoliticianChanges Table
+      //sqlDelete = "DELETE FROM LogPoliticianChanges WHERE PoliticianKey ="
+      //  + db.SQLLit(politicianKey);
+      //db.ExecuteSQL(sqlDelete);
+      DB.VoteLog.LogPoliticianChanges.DeleteByPoliticianKey(politicianKey);
+      #endregion LogPoliticianChanges Table
+
+      #region LogPoliticianAnswers Table
+      //sqlDelete = "DELETE FROM LogPoliticianAnswers WHERE PoliticianKey ="
+      //  + db.SQLLit(politicianKey);
+      //db.ExecuteSQL(sqlDelete);
+      DB.VoteLog.LogPoliticianAnswers.DeleteByPoliticianKey(politicianKey);
+      #endregion LogPoliticianAnswers Table
+
+
+      //db.Invalidate_Politician(politicianKey);
+      //db.Cache_Remove_PoliticianIssue_Politician(politicianKey);
+    }
+    #endregion Delete Politician
+
+    // Politician Utilities
+
+
+    //Log
+
+    #region ElectionKey
+    public static string ElectionKey_New_Format(string ElectionKeyOld)
+    {
+      //Converts old ElectionKey format to new ElectionKey format
+      if (string.IsNullOrEmpty(ElectionKeyOld))
+      {
+        return string.Empty;
+      }
+      else
+      {
+        #region Note
+        //If first two chars are a State or Federal Code it is in the new ElectionKey format
+        //Old ElectionKey format looks like: 20081104GSC000000ALL
+        #endregion Note
+        string ElectionKeyNew;
+        if (!StateCache.IsValidStateOrFederalCode(ElectionKeyOld.Substring(0, 2).ToUpper(), false))
+        {
+          if (ElectionKeyOld.Length >= Elections.ElectionKeyLengthStateOrFederal)
+          {
+
+            ElectionKeyNew = ElectionKeyOld.Substring(9, 2).ToUpper();//StateCode
+            ElectionKeyNew += ElectionKeyOld.Substring(0, 8);//YYYYMMDD
+            ElectionKeyNew += ElectionKeyOld.Substring(8, 1).ToUpper();//Type
+
+            if (ElectionKeyOld.Length == 18)
+              ElectionKeyNew += ElectionKeyOld.Substring(17, 1).ToUpper();//Nationa Party Code
+            else if (ElectionKeyOld.Length >= 21)
+            {
+              if (ElectionKeyOld.Substring(17, 3).ToUpper() == "ALL")
+                ElectionKeyNew += "A";
+              else
+                ElectionKeyNew += ElectionKeyOld.Substring(19, 1).ToUpper();
+            }
+            else
+              ElectionKeyNew += "A";
+
+            if (ElectionKeyOld.Length >= 17)
+            {
+              #region CountyCode
+              if (ElectionKeyOld.Substring(11, 3) != "000")
+              {
+                ElectionKeyNew += ElectionKeyOld.Substring(11, 3);
+                //LocalCode
+                if (ElectionKeyOld.Substring(14, 2) != "00")
+                  ElectionKeyNew += ElectionKeyOld.Substring(14, 2);
+              }
+              #endregion CountyCode
+            }
+
+            //if (db.Is_Valid_Election(ElectionKeyNew))
+            return ElectionKeyNew.ToUpper();
+            //else
+            //  return string.Empty;
+          }
+          else
+            return string.Empty;
+        }
+        else
+          return ElectionKeyOld;//Valid ElectionKey - Old ElectionKey is the New ElectionKey
+      }
+    }
+    #endregion ElectionKey Build, convert from old format
+
+    #region ElectionKey convert for Federal, State, County, Local
+
+    public static string ElectionKey_Federal(
+      string ElectionKey
+      , string OfficeKey
+      )
+    {
+      if (
+        (!string.IsNullOrEmpty(ElectionKey))
+        && (!string.IsNullOrEmpty(OfficeKey))
+        && (db.Is_Electoral_Federal(OfficeKey))
+        )
+      {
+        string ElectionKey_Federal = "U";
+
+        ElectionKey_Federal += Offices.GetOfficeClass(OfficeKey).ToInt();
+
+        if (ElectionKey.Length >= Elections.ElectionKeyLengthStateOrFederal)
+          ElectionKey_Federal +=
+            ElectionKey.Substring(2, Elections.ElectionKeyLengthStateOrFederal - 2);
+
+        return ElectionKey_Federal;
+      }
+      else
+        return string.Empty;
+    }
+
+    public static string ElectionKey_State(string ElectionKey)
+    {
+      if (
+        (!string.IsNullOrEmpty(ElectionKey))
+        && (ElectionKey.Length >= Elections.ElectionKeyLengthStateOrFederal)
+        )
+        return ElectionKey.Substring(0, Elections.ElectionKeyLengthStateOrFederal);
+      else
+        return string.Empty;
+    }
+
+    public static string ElectionKey_State(string ElectionKey, string StateCode)
+    {
+      if (
+        (ElectionKey.Length >= 12)
+        && (StateCode.Length == 2)
+        )
+      {
+        return StateCode + ElectionKey.Substring(2, 10);
+      }
+      else
+        return string.Empty;
+    }
+
+    public static string ElectionKey_County(
+      string ElectionKeyAny
+      , string OfficeKey
+      )
+    {
+      #region Note
+      //Used to insert ElectionsOffices rows
+      //ElectionKeyCounty is empty for State level offices
+      //ElectionKeyCounty is ElectionKeyState + CountyCode
+      //for County offices and Local offices
+      #endregion Note
+      if (
+        (!string.IsNullOrEmpty(ElectionKeyAny))
+        && (!string.IsNullOrEmpty(OfficeKey))
+        && (db.Is_OfficeKey_County(OfficeKey) || (db.Is_OfficeKey_Local(OfficeKey)))
+        )
+      {
+        return
+          db.ElectionKey_State(
+            ElectionKeyAny
+            , Offices.GetStateCodeFromKey(OfficeKey)
+            )
+          + Offices.GetCountyCodeFromKey(OfficeKey);
+
+      }
+      else
+        return string.Empty;
+    }
+
+    public static string ElectionKey_Local(
+      string ElectionKeyAny
+      , string OfficeKey
+      )
+    {
+      #region Note
+      //Used to insert ElectionsOffices rows
+      //ElectionKeyLocal is empty for State and County level offices
+      //ElectionKeyLocal is ElectionKeyState + CountyCode + LocalCode
+      //for Local offices only
+      #endregion Note
+      if (
+        (!string.IsNullOrEmpty(ElectionKeyAny))
+        && (!string.IsNullOrEmpty(OfficeKey))
+        && (db.Is_OfficeKey_Local(OfficeKey))
+        )
+      {
+        return db.ElectionKey_State(
+            ElectionKeyAny
+          , Offices.GetStateCodeFromKey(OfficeKey))
+          + Offices.GetCountyCodeFromKey(OfficeKey)
+          + Offices.GetLocalCodeFromKey(OfficeKey);
+      }
+      else
+        return string.Empty;
+    }
+
+    #endregion ElectionKey convert for Federal, State, County, Local
+
+    //-- Elections
+
+    #region Elections Table
+ 
+    public static string Elections_Str(string electionKey, string columnName)
+    {
+      //if (db.Is_Valid_Election(electionKey))
+      //  return db.Single_Key_Str("Elections", columnName, "ElectionKey", electionKey);
+      //else
+      //  return string.Empty;
+
+      // This version only hits the DB once per call, not twice
+      return Elections_Str(electionKey, Elections.GetColumn(columnName));
+    }
+
+    public static string Elections_Str(string electionKey, Elections.Column column)
+    {
+      object value = Elections.GetColumn(column, electionKey);
+      if (value == null) return string.Empty;
+      else return value as string;
+    }
+
+    public static string Name_Election(string ElectionKey)
+    {
+      if (
+        (ElectionKey != string.Empty)
+        && (db.Is_Valid_Election(ElectionKey))
+        )
+        return db.Elections_Str(ElectionKey, "ElectionDesc");
+      else
+        return string.Empty;
+    }
+    #endregion
+
+    //-- ElectionKey Information
+
+
+    #region ElectionsOffices UPDATE
+    public static void ElectionsOffices_Update_DistrictCode(string OfficeKey, string DistrictCode)
+    {
+      string SQLUPDATE = "UPDATE ElectionsOffices"
+      + " SET DistrictCode =" + db.SQLLit(DistrictCode)
+      + " WHERE OfficeKey =" + db.SQLLit(OfficeKey);
+      db.ExecuteSql(SQLUPDATE);
+    }
+    #endregion
+
+
+    //-- Issues, Questions Answers Tables
+
+    #region Issues Table
+ 
+    public static string Issues_Str(string IssueKey, string Column)
+    {
+      if (
+        (IssueKey != string.Empty)
+        && (!db.Is_IssueKey_IssuesList(IssueKey))
+        )
+        return db.Single_Key_Str("Issues", Column, "IssueKey", IssueKey);
+      else
+        return string.Empty;
+    }
+
+    public static string Issues_Issue(string IssueKey)
+    {
+      if (!string.IsNullOrEmpty(IssueKey))
+        return db.Issues_Str(IssueKey, "Issue");
+      else
+        return string.Empty;
+    }
+
+    public static bool Is_IssueKey_IssuesList(string IssueKey)
+    {
+      //if ((IssueKey.Length == 13) && (IssueKey.Substring(3, 10).ToUpper() == "IssuesList"))
+      if (
+        (IssueKey.Length == 13)
+        && (IssueKey.Substring(3, 10).ToUpper() == "ISSUESLIST")
+        )
+        return true;
+      else
+        return false;
+    }
+
+    public static string IssueLevel_Issue(string IssueKey)
+    {
+      if (IssueKey.Length > 0)
+        return IssueKey.Substring(0, 1).ToUpper();
+      else
+        return string.Empty;
+    }
+
+    public static string IssueGroup_IssueKey(string IssueKey)
+    {
+      if (IssueKey.Length >= 3)
+        return IssueKey.Substring(1, 2).ToUpper();
+      else
+        return string.Empty;
+    }
+
+    public static string Issues_List(string IssueKey)
+    {
+      if (!string.IsNullOrEmpty(IssueKey))
+      {
+        string IssueLevel = db.IssueLevel_Issue(IssueKey);
+        string StateCode = db.IssueGroup_IssueKey(IssueKey);//LL, US or StateCode
+        return IssueLevel + StateCode + "IssuesList";
+      }
+      else
+        return string.Empty;
+    }
+
+    public static bool Is_IssuesList(string IssueKey)
+    {
+      if (IssueKey == db.Issues_List(IssueKey))
+        return true;
+      else
+        return false;
+    }
+
+    #endregion
+
+    #region Questions Table
+    public static bool Is_Valid_Question(string QuestionKey)
+    {
+      //if (db.Row_Optional(sql.QuestionKey(QuestionKey)) != null)
+      string SQL = " SELECT";
+      SQL += " Questions.QuestionKey";
+      SQL += " FROM Questions";
+      SQL += " WHERE Questions.QuestionKey =" + db.SQLLit(QuestionKey);
+      if (db.Row_Optional(SQL) != null)
+        return true;
+      else
+        return false;
+    }
+
+    public static string Questions_Str(string QuestionKey, string Column)
+    {
+      if (QuestionKey != string.Empty)
+        return db.Single_Key_Str("Questions", Column, "QuestionKey", QuestionKey);
+      else
+        return string.Empty;
+    }
+
+    #endregion Questions Table
+
+    //------- Zip Addresses & Tables
+    #region Zip Addresses & Tables
+
+
+    #endregion Zip Addresses & Tables
+
+    //------------- Design ---------------------------
+    #region Design Forms ====================================
+
+
+    #region Design Textboxes (Default and Custom)
+
+    public static void Throw_Exception_TextBox_Html(TextBox TextBox)
+    {
+      if (db.Is_TextBox_Html(TextBox))
+        throw new ApplicationException("Text in a textbox appears to be HTML because it contains an opening or closing HTML tag (< or />). Please remove and try again.");
+    }
+    public static void Throw_Exception_TextBox_Script(TextBox TextBox)
+    {
+      if (db.Is_Str_Script(TextBox.Text))
+        throw new ApplicationException("Text in the textbox is illegal.");
+    }
+    public static void Throw_Exception_If_Html_Or_Script(string Str)
+    {
+      if (db.Is_Str_Html_Or_Illegal(Str))
+        throw new ApplicationException(
+          "The text has Html or illegal tags.");
+    }
+    public static void Throw_Exception_TextBox_Html_Or_Script(TextBox TextBox)
+    {
+      db.Throw_Exception_TextBox_Html(TextBox);
+      db.Throw_Exception_TextBox_Script(TextBox);
+    }
+
+     //-----------------------------------
+
+
+    #endregion Design Textboxes
+
+    #endregion Design Forms ====================================
+
+    #region Page Title Elements
+    //Election
+
+    public static string PageTitle_QuestionAnswers(string stateCode, string issueLevel)
+    {
+      string pageTitle = "Move Questions and Answers";
+      pageTitle += "<br>";
+      switch (issueLevel)
+      {
+        case "A":
+          pageTitle += "for ALL Candidates";
+          break;
+        case "B":
+          pageTitle += "for NATIONAL Office Candidates";
+          break;
+        case "C":
+          if (StateCache.IsValidStateCode(stateCode))
+          {
+            pageTitle += "for "
+              + StateCache.GetStateName(stateCode).ToUpper()
+              + " Office Candidates";
+          }
+          else
+          {
+            throw new ApplicationException("States Table needs a row for StateCode:" + stateCode);
+            //return PageTitle;
+          }
+          break;
+        case "D":
+          if (StateCache.IsValidStateCode(stateCode))
+          {
+            pageTitle += "for "
+              + StateCache.GetStateName(stateCode).ToUpper()
+              + " Office Candidates";
+          }
+          else
+          {
+            throw new ApplicationException("States Table needs a row for StateCode:" + stateCode);
+          }
+          break;
+      }
+
+      return pageTitle;
+    }
+
+    #endregion Page Title Elements
+
+    #region HTML elements (table tr td checkbox)
+
+    #region Add HTML tr to HTML table
+
+    public static HtmlTableRow Add_Tr_To_Table_Return_Tr(HtmlTable htmlTable, string rowClass, string align)
+    {
+      //<tr Class="RowClass">
+      HtmlTableRow htmlTr = new HtmlTableRow();
+      if (rowClass != string.Empty)
+        htmlTr.Attributes["Class"] = rowClass;
+      if (align != string.Empty)
+        htmlTr.Attributes["align"] = align;
+      //</tr>
+      htmlTable.Rows.Add(htmlTr);
+      return htmlTr;
+    }
+
+    public static HtmlTableRow Add_Tr_To_Table_Return_Tr(HtmlTable htmlTable, string rowClass)
+    {
+      return db.Add_Tr_To_Table_Return_Tr(htmlTable, rowClass, string.Empty);
+    }
+
+    #endregion Add HTML tr to HTML table
+
+    #region Add HTML td to HTML tr
+
+    public static void Add_Td_To_Tr(
+      HtmlTableRow htmlTr
+      , string text
+      , string tdClass
+      , string align
+      , string width
+      , int colspan
+      )
+    {
+      //<td Class="TdClass">
+      HtmlTableCell htmlTableCell = new HtmlTableCell();
+      htmlTableCell.InnerHtml = text;
+      if (tdClass != string.Empty)
+        htmlTableCell.Attributes["class"] = tdClass;
+      if (align != string.Empty)
+        htmlTableCell.Attributes["align"] = align;
+      if (width != string.Empty)
+        htmlTableCell.Attributes["width"] = width;
+      if (colspan != 0)
+        htmlTableCell.Attributes["colspan"] = colspan.ToString();
+      //</td>
+      htmlTr.Cells.Add(htmlTableCell);
+      return;
+    }
+
+    public static void Add_Td_To_Tr(HtmlTableRow htmlTr, string text, string tdClass, string align, int colspan = 0)
+    {
+      //<td Class="TdClass">
+      HtmlTableCell htmlTableCell = new HtmlTableCell();
+      htmlTableCell.InnerHtml = text;
+      if (tdClass != string.Empty)
+        htmlTableCell.Attributes["class"] = tdClass;
+      if (align != string.Empty)
+        htmlTableCell.Attributes["align"] = align;
+      if (colspan != 0)
+        htmlTableCell.Attributes["colspan"] = colspan.ToString();
+      //</td>
+      htmlTr.Cells.Add(htmlTableCell);
+      return;
+    }
+
+    public static void Add_Td_To_Tr(HtmlTableRow htmlTr, string text, string tdClass, int colspan)
+    {
+      db.Add_Td_To_Tr(htmlTr, text, tdClass, string.Empty, colspan);
+    }
+
+    public static void Add_Td_To_Tr(HtmlTableRow htmlTr, string text, string tdClass)
+    {
+      db.Add_Td_To_Tr(htmlTr, text, tdClass, string.Empty, 0);
+    }
+
+    #endregion Add HTML td to HTML tr
+
+    #endregion HTML elements (table tr td checkbox)
+
+    // reinstated
+
+    public static string Anchor(string url)
+    {
+      return db.Anchor(url, string.Empty, string.Empty, string.Empty);
+    }
+
+    public static string Url_Master_FindPolitician(string PoliticianKey)
+    {
+      return "/Master/PoliticianFind.aspx?Id=" + PoliticianKey;
+    }
+
+    public static void Unreferenced() {}
+  }
+}

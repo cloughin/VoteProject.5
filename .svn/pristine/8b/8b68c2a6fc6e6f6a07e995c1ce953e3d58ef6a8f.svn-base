@@ -1,0 +1,2255 @@
+using System;
+using System.Data;
+using System.Globalization;
+using DB.Vote;
+
+namespace Vote.Master
+{
+  public partial class DefaultPage : SecurePage
+  {
+    #region from db
+
+    public static int Master_Int(string column)
+    {
+      return db.Single_Key_Int("Master", column, "ID", "Master");
+    }
+
+    public static DateTime Master_Date(string column)
+    {
+      return db.Single_Key_Date("Master", column, "ID", "Master");
+    }
+
+    public static bool Master_Bool(string column)
+    {
+      return db.Single_Key_Bool("Master", column, "ID", "Master");
+    }
+
+    public static string ElectionKey_USSenate(string electionKey)
+    {
+      if (electionKey != string.Empty)
+      {
+        electionKey = db.ElectionKey_State(electionKey);
+        electionKey = electionKey.Remove(0, 2);
+        electionKey = electionKey.Insert(0, "U2");
+        return electionKey;
+      }
+      return string.Empty;
+    }
+
+    public static string ElectionKey_USHouse(string electionKey)
+    {
+      if (electionKey != string.Empty)
+      {
+        electionKey = db.ElectionKey_State(electionKey);
+        electionKey = electionKey.Remove(0, 2);
+        electionKey = electionKey.Insert(0, "U3");
+        return electionKey;
+      }
+      return string.Empty;
+    }
+
+    public static string ElectionKey_USPres(string electionKey)
+    {
+      if (electionKey != string.Empty)
+      {
+        electionKey = db.ElectionKey_State(electionKey);
+        electionKey = electionKey.Remove(0, 2);
+        electionKey = electionKey.Insert(0, "U1");
+        return electionKey;
+      }
+      return string.Empty;
+    }
+
+    public static void OfficesOfficials_Delete(string officeKey)
+    {
+      var sql = string.Empty;
+      sql += " DELETE FROM OfficesOfficials ";
+      sql += " WHERE OfficesOfficials.OfficeKey = " + db.SQLLit(officeKey);
+      //db.ExecuteSQL(sql.OfficesOfficials_Delete(OfficeKey));
+      db.ExecuteSql(sql);
+      db.Log_OfficesOfficials_Add_Or_Delete(
+        "D"
+        , officeKey
+        , string.Empty
+        );
+    }
+
+    public static void Politician_Delete_All_Tables_All_Rows(string politicianKey)
+    {
+      var sqlDelete = "DELETE FROM Politicians WHERE PoliticianKey = "
+        + db.SQLLit(politicianKey);
+      db.ExecuteSql(sqlDelete);
+
+      //LDS Committees
+      //sql_delete = "DELETE FROM PoliticiansCommittees WHERE PoliticianKey = "
+      //  + db.SQLLit(PoliticianKey);
+      //db.ExecuteSQL(sql_delete);
+
+      sqlDelete = "DELETE FROM Answers WHERE PoliticianKey = "
+        + db.SQLLit(politicianKey);
+      db.ExecuteSql(sqlDelete);
+
+      sqlDelete = "DELETE FROM ElectionsPoliticians WHERE PoliticianKey = "
+        + db.SQLLit(politicianKey);
+      db.ExecuteSql(sqlDelete);
+
+      sqlDelete = "DELETE FROM OfficesOfficials WHERE PoliticianKey = "
+        + db.SQLLit(politicianKey);
+      db.ExecuteSql(sqlDelete);
+
+      //db.Invalidate_Politician(PoliticianKey);
+      //db.Cache_Remove_PoliticianIssue_Politician(PoliticianKey);
+    }
+
+    public static void Master_Update_Bool(string column, bool columnValue)
+    {
+      var sql = "UPDATE Master "
+        + " SET " + column + " = " + Convert.ToUInt16(columnValue)
+        + " WHERE ID = 'MASTER' ";
+      db.ExecuteSql(sql);
+    }
+
+    #endregion from db
+
+    protected void RadioButtonListTestMode_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        if (RadiobuttonlistTestMode.SelectedValue == "T")
+        {
+          Master_Update_Bool("IsTestMode", true);
+          Msg.Text = db.Msg("Test Mode have been set ON.");
+        }
+        else
+        {
+          Master_Update_Bool("IsTestMode", false);
+          Msg.Text = db.Msg("Test Mode have been set OFF.");
+        }
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+
+    }
+
+    protected void RadioButtonListPermitElectionDeletions_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        //if (db.User_Name().ToLower() == "ron")
+        if (IsSuperUser)
+        {
+          if (RadioButtonListPermitElectionDeletions.SelectedValue == "T")
+          {
+            Master_Update_Bool("IsElectionDeletionPermitted", true);
+            Msg.Text = db.Msg("Elections can now be deleted. After deleting an election remember to reset the radio button.");
+          }
+          else
+          {
+            Master_Update_Bool("IsElectionDeletionPermitted", false);
+            Msg.Text = db.Msg("Deletion of Elections will now NOT BE PERMITTED.");
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+
+    }
+
+    protected void ButtonCleanElections_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        //ElectionsPoliticians Clean up - delete all rows without a cooresponding row in Offices and Politicians Tables
+        Response.Write("<br>ElectionsPoliticians rows deleted because no Politician or Office Row(s) in Politicians and offices Table for: ");
+        var sql = "SELECT ElectionKey,PoliticianKey,OfficeKey FROM ElectionsPoliticians ORDER BY ElectionKey DESC, PoliticianKey,OfficeKey, OrderOnBallot";
+        var electionsPoliticiansTable = db.Table(sql);
+        foreach (DataRow electionsPoliticiansRowA in electionsPoliticiansTable.Rows)
+        {
+          var rows = db.Rows("Politicians", "PoliticianKey", electionsPoliticiansRowA["PoliticianKey"].ToString());
+          if (rows != 1)
+          {
+            sql = "DELETE FROM ElectionsPoliticians"
+              + " WHERE ElectionKey = " + db.SQLLit(electionsPoliticiansRowA["ElectionKey"].ToString())
+              + " AND PoliticianKey = " + db.SQLLit(electionsPoliticiansRowA["PoliticianKey"].ToString());
+            db.ExecuteSql(sql);
+            Response.Write("<br>" + electionsPoliticiansRowA["ElectionKey"] + " / " + electionsPoliticiansRowA["PoliticianKey"]);
+          }
+          rows = db.Rows("Offices", "OfficeKey", electionsPoliticiansRowA["OfficeKey"].ToString());
+          if (rows != 1)
+          {
+            sql = "DELETE FROM ElectionsPoliticians"
+              + " WHERE ElectionKey = " + db.SQLLit(electionsPoliticiansRowA["ElectionKey"].ToString())
+              + " AND OfficeKey = " + db.SQLLit(electionsPoliticiansRowA["OfficeKey"].ToString());
+            db.ExecuteSql(sql);
+            Response.Write("<br>" + electionsPoliticiansRowA["ElectionKey"] + " / " + electionsPoliticiansRowA["OfficeKey"]);
+          }
+        }
+        //ElectionsOffices Clean up
+        Response.Write("<br><br>ElectionsOffices rows deleted because no Office Row(s) in Offices Table for following Election/OfficeKeys: ");
+        sql = "SELECT ElectionKey,OfficeKey FROM ElectionsOffices ORDER BY ElectionKey DESC,OfficeKey";
+        var electionsOfficesTable = db.Table(sql);
+        foreach (DataRow electionsOfficesRowA in electionsOfficesTable.Rows)
+        {
+          var rows = db.Rows("Offices", "OfficeKey", electionsOfficesRowA["OfficeKey"].ToString());
+          if (rows != 1)
+          {
+            sql = "DELETE FROM ElectionsOffices"
+              + " WHERE ElectionKey = " + db.SQLLit(electionsOfficesRowA["ElectionKey"].ToString())
+              + " AND OfficeKey = " + db.SQLLit(electionsOfficesRowA["OfficeKey"].ToString());
+            db.ExecuteSql(sql);
+            Response.Write("<br>" + electionsOfficesRowA["ElectionKey"] + " / " + electionsOfficesRowA["OfficeKey"]);
+          }
+        }
+        Msg.Text = db.Ok("Done!");
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void ButtonRestructure_Click(object sender, EventArgs e)
+    {
+      var sqlupdate = string.Empty;
+#if false
+      var sql = string.Empty;
+      var sqldelete = string.Empty;
+      var electionKey = string.Empty;
+      var newElectionKey = string.Empty;
+      var electionKeyFederal = string.Empty;
+#endif
+
+      try
+      {
+        Server.ScriptTimeout = 6000;//6000 sec = 100 min
+
+        //			ElectionsOffices Changes
+        // 1) Delete level 1-3 Offices with StateCode in ElectionKey
+#if false
+          SQL = "SELECT * FROM ElectionsOffices";
+          Office_Class = 0;
+          string StateCodeInKey = string.Empty;
+          DataTable ElectionsOfficesTable = db.Table(SQL);
+          foreach (DataRow ElectionOfficeRow in ElectionsOfficesTable.Rows)
+          {
+            Office_Class = db.Office_Class(ElectionOfficeRow["OfficeKey"].ToString());
+            if (Office_Class <= 3)
+            {
+              StateCodeInKey = ElectionOfficeRow["ElectionKey"].ToString().Substring(9, 2).ToUpper();
+              if (
+                (StateCodeInKey == ElectionOfficeRow["StateCode"].ToString())
+                && (ElectionOfficeRow["StateCode"].ToString() != "U1")
+                )
+              {
+                SQLDELETE = "DELETE FROM ElectionsOffices"
+                  + " WHERE ElectionKey = " + db.SQLLit(ElectionOfficeRow["ElectionKey"].ToString())
+                  + " AND OfficeKey = " + db.SQLLit(ElectionOfficeRow["OfficeKey"].ToString());
+                db.ExecuteSQL(SQLDELETE);
+              }
+            }
+          }
+          Msg.Text += "Done 1) Delete level 1-3 Offices with StateCode in ElectionKey";
+#endif
+
+        // 2) Change all ElectionKey to replace any U1-U6 with StateCode -&- Copy ElectionKey to ElectionKey4USReports but Change all ElectionKey4USReports to replace StateCode with U1-U6
+#if false
+          Office_Class = 0;
+          SQL = "SELECT * FROM ElectionsOffices";
+          DataTable ElectionsOfficesTable = db.Table(SQL);
+          foreach (DataRow ElectionOfficeRow in ElectionsOfficesTable.Rows)
+          {
+            Office_Class = db.Office_Class(ElectionOfficeRow["OfficeKey"].ToString());
+            NewElectionKey = db.ElectionKey_State(ElectionOfficeRow["ElectionKey"].ToString(), ElectionOfficeRow["StateCode"].ToString());
+            ElectionKey_Federal = NewElectionKey;
+            ElectionKey_Federal = ElectionKey_Federal.Remove(9, 2);//StateCode
+            ElectionKey_Federal = ElectionKey_Federal.Insert(9, "U");
+            ElectionKey_Federal = ElectionKey_Federal.Insert(10, Office_Class.ToString());
+            SQLUPDATE = "UPDATE ElectionsOffices "
+              + " SET ElectionKey = " + db.SQLLit(NewElectionKey)
+              + ",ElectionKeyFederal = " + db.SQLLit(ElectionKey_Federal)
+              + " WHERE ElectionKey = " + db.SQLLit(ElectionOfficeRow["ElectionKey"].ToString())
+              + " AND OfficeKey = " + db.SQLLit(ElectionOfficeRow["OfficeKey"].ToString());
+            db.ExecuteSQL(SQLUPDATE);
+          }
+          Msg.Text += "<br>Done 2) Change all ElectionKey to replace any U1-U6 with StateCode -&- Copy ElectionKey to ElectionKey4USReports but Change all ElectionKey4USReports to replace StateCode with U1-U6";
+#endif
+
+        //ElectionsPoliticians Changes
+        // 3) Change all ElectionKey to replace any U1-U6 with StateCode -&&- Copy ElectionKey to ElectionKey4USReports  but Change all ElectionKey4USReports to replace StateCode with U1-U6
+#if false
+          Office_Class = 0;
+          SQL = "SELECT * FROM ElectionsPoliticians";
+          DataTable ElectionsPoliticiansTable = db.Table(SQL);
+          foreach (DataRow ElectionPoliticianRow in ElectionsPoliticiansTable.Rows)
+          {
+            Office_Class = db.Office_Class(ElectionPoliticianRow["OfficeKey"].ToString());
+            NewElectionKey = db.ElectionKey_State(ElectionPoliticianRow["ElectionKey"].ToString(), ElectionPoliticianRow["StateCode"].ToString());
+            ElectionKey_Federal = NewElectionKey;
+            ElectionKey_Federal = ElectionKey_Federal.Remove(9, 2);//StateCode
+            ElectionKey_Federal = ElectionKey_Federal.Insert(9, "U");
+            ElectionKey_Federal = ElectionKey_Federal.Insert(10, Office_Class.ToString());
+            SQLUPDATE = "UPDATE ElectionsPoliticians "
+              + " SET ElectionKey = " + db.SQLLit(NewElectionKey)
+              + ",ElectionKeyFederal = " + db.SQLLit(ElectionKey_Federal)
+              + " WHERE ElectionKey = " + db.SQLLit(ElectionPoliticianRow["ElectionKey"].ToString())
+              + " AND OfficeKey = " + db.SQLLit(ElectionPoliticianRow["OfficeKey"].ToString())
+              + " AND PoliticianKey = " + db.SQLLit(ElectionPoliticianRow["PoliticianKey"].ToString());
+            db.ExecuteSQL(SQLUPDATE);
+          }
+          Msg.Text += "<br>Done 3) Change all ElectionKey to replace any U1-U6 with StateCode -&&- Copy ElectionKey to ElectionKey4USReports  but Change all ElectionKey4USReports to replace StateCode with U1-U6";
+#endif
+
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message
+          + "<br>" + sqlupdate);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void ButtonClearDebugFile_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        //string SQL = "TRUNCATE TABLE LogDebug";
+        //db.ExecuteSQL(SQL);
+        DB.VoteLog.LogDebug.TruncateTable();
+
+        Msg.Text = db.Ok(@"LogDebug Table was truncated.");
+
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void RadioButtonListDebugMode_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        if (RadioButtonListDebugMode.SelectedValue == "T")
+        {
+          Master_Update_Bool("IsDebugMode", true);
+          Msg.Text = db.Msg("Debug Mode have been set ON.");
+        }
+        else
+        {
+          Master_Update_Bool("IsDebugMode", false);
+          Msg.Text = db.Msg("Debug Mode have been set OFF.");
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void ButtonCleanData_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Server.ScriptTimeout = 60000;// = 1000 min = 16 hrs
+
+        #region Offices Table
+        var sql = "UPDATE Offices set DistrictCode = '' WHERE LTRIM(DistrictCode) = ''";
+        db.ExecuteSql(sql);
+
+        sql = "UPDATE Offices set DistrictCodeAlpha = '' WHERE LTRIM(DistrictCodeAlpha) = ''";
+        db.ExecuteSql(sql);
+
+        sql = "UPDATE Offices set CountyCode = '' WHERE LTRIM(CountyCode) = ''";
+        db.ExecuteSql(sql);
+
+        sql = "UPDATE Offices set LocalCode = '' WHERE LTRIM(LocalCode) = ''";
+        db.ExecuteSql(sql);
+        #endregion Offices Table
+
+        #region OfficesOfficials Table
+        sql = "UPDATE OfficesOfficials set CountyCode = '' WHERE LTRIM(CountyCode) = ''";
+        db.ExecuteSql(sql);
+
+        sql = "UPDATE OfficesOfficials set LocalCode = '' WHERE LTRIM(LocalCode) = ''";
+        db.ExecuteSql(sql);
+        #endregion OfficesOfficials Table
+
+        #region Elections Table
+        sql = "UPDATE Elections set CountyCode = '' WHERE LTRIM(CountyCode) = ''";
+        db.ExecuteSql(sql);
+
+        sql = "UPDATE Elections set LocalCode = '' WHERE LTRIM(LocalCode) = ''";
+        db.ExecuteSql(sql);
+        #endregion Elections Table
+
+        #region ElectionsOffices Table
+        sql = "UPDATE ElectionsOffices set CountyCode = '' WHERE LTRIM(CountyCode) = ''";
+        db.ExecuteSql(sql);
+
+        sql = "UPDATE ElectionsOffices set LocalCode = '' WHERE LTRIM(LocalCode) = ''";
+        db.ExecuteSql(sql);
+        #endregion ElectionsOffices Table
+
+        #region Ballots Table
+        sql = "UPDATE Ballots set CountyCode = '' WHERE LTRIM(CountyCode) = ''";
+        db.ExecuteSql(sql);
+        #endregion Ballots Table
+
+        #region Issues Table
+        sql = "UPDATE Issues set CountyCode = '' WHERE LTRIM(CountyCode) = ''";
+        db.ExecuteSql(sql);
+
+        sql = "UPDATE Issues set LocalCode = '' WHERE LTRIM(LocalCode) = ''";
+        db.ExecuteSql(sql);
+        #endregion Issues Table
+
+        #region JudicialDistrictCounties Table
+        sql = "UPDATE JudicialDistrictCounties set DistrictCode = '' WHERE LTRIM(DistrictCode) = ''";
+        db.ExecuteSql(sql);
+
+        sql = "UPDATE JudicialDistrictCounties set DistrictCodeAlpha = '' WHERE LTRIM(DistrictCodeAlpha) = ''";
+        db.ExecuteSql(sql);
+
+        sql = "UPDATE JudicialDistrictCounties set CountyCode = '' WHERE LTRIM(CountyCode) = ''";
+        db.ExecuteSql(sql);
+        #endregion JudicialDistrictCounties Table
+
+        #region Referendums Table
+        sql = "UPDATE Referendums set CountyCode = '' WHERE LTRIM(CountyCode) = ''";
+        db.ExecuteSql(sql);
+
+        sql = "UPDATE Referendums set LocalCode = '' WHERE LTRIM(LocalCode) = ''";
+        db.ExecuteSql(sql);
+        #endregion Referendums Table
+
+        Msg.Text = db.Ok("Done");
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void ButtonOneShot_Click(object sender, EventArgs e)
+    {
+      try
+      {
+
+        //foreach (string stateCode in StateCache.All51StateCodes)
+        //{
+        //  string electionKeyMostRecent = db.ElectionKey_Previous_Most_Recent(stateCode);
+        //  string sql = string.Empty;
+        //  sql += " select PoliticianKey,OfficeKey from ElectionsPoliticians";
+        //  sql += " where ElectionKey = " + db.SQLLit(electionKeyMostRecent);
+        //  sql += " order by OfficeKey asc";
+        //  DataTable tableElectionsPoliticians = db.Table(sql);
+        //  foreach (DataRow rowElectionsPoliticians in tableElectionsPoliticians.Rows)
+        //  //DataRow rowElectionsPoliticians = db.Row_First(sql);
+        //  {
+        //    if(db.Is_Incumbent(rowElectionsPoliticians["PoliticianKey"].ToString(),
+        //      rowElectionsPoliticians["OfficeKey"].ToString()))
+        //    {
+        //      db.ElectionsPoliticians_Update_Bool(
+        //        electionKeyMostRecent,
+        //        rowElectionsPoliticians["OfficeKey"].ToString(),
+        //        rowElectionsPoliticians["PoliticianKey"].ToString(),
+        //        "IsIncumbent",
+        //        true
+        //        );
+        //    }
+        //      else
+        //    {
+        //      db.ElectionsPoliticians_Update_Bool(
+        //        electionKeyMostRecent,
+        //        rowElectionsPoliticians["OfficeKey"].ToString(),
+        //        rowElectionsPoliticians["PoliticianKey"].ToString(),
+        //        "IsIncumbent",
+        //        false
+        //        );
+        //    }
+        //  }
+
+        //  Msg.Text = db.Ok("<br>Done");
+        //}
+      }
+      catch (Exception ex)
+      {
+        #region
+
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void ButtonCleanCodes_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Server.ScriptTimeout = 60000;// = 1000 min = 16 hrs
+
+        var sql = "update offices set countycode = '',localdistrictcode = '' where officelevel >= 0 AND officelevel <= 7";
+        db.ExecuteSql(sql);
+
+        sql = "update offices set localdistrictcode = '' where officelevel >= 8 AND officelevel <= 11";
+        db.ExecuteSql(sql);
+
+        sql = "update offices set countycode = '' ,localdistrictcode = '' where officelevel >= 16 AND officelevel <= 17";
+        db.ExecuteSql(sql);
+
+        sql = "update offices set localdistrictcode = '' where officelevel =18 ";
+        db.ExecuteSql(sql);
+
+        sql = "update offices set countycode = '' ,localdistrictcode = '' where officelevel >= 20 AND officelevel <= 21";
+        db.ExecuteSql(sql);
+
+        sql = "update offices set localdistrictcode = '' where officelevel =22 ";
+        db.ExecuteSql(sql);
+
+        Msg.Text = db.Ok("Done");
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void ButtonDeletePolitician_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBoxDeletePoliticianKey);
+
+        db.Politician_Delete(TextBoxDeletePoliticianKey.Text.Trim());
+
+        Msg.Text = db.Ok("Politician with PoliticianKey: "
+          + TextBoxDeletePoliticianKey.Text.Trim()
+        + " was deleted in all tables.");
+
+        TextBoxDeletePoliticianKey.Text = string.Empty;
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void ButtonEditPolitician_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBoxEditPoliticianKey);
+        if (!Politicians.IsValid(TextBoxEditPoliticianKey.Text.Trim()))
+          throw new ApplicationException("The PoliticianKey is invalid");
+
+        HyperLinkEditPolitician.Enabled = true;
+        HyperLinkEditPolitician.NavigateUrl =
+          db.Url_Politician_Intro(TextBoxEditPoliticianKey.Text.Trim());
+        HyperLinkEditPolitician.Text = "Edit "
+          + Politicians.GetFormattedName(TextBoxEditPoliticianKey.Text.Trim());
+
+        Msg.Text = db.Msg("Click the link in the Politician(s) Maintenace Section to edit "
+          + Politicians.GetFormattedName(TextBoxEditPoliticianKey.Text.Trim()));
+
+        //can't use because target needs to be _edit
+        //Response.Redirect(db.Url_Politician_Intro(TextBoxEditPoliticianKey.Text.Trim()));
+
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void ButtonDeleteBadPoliticianRows_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        var count = 0;
+        var politiciansTable = db.Table("SELECT * from Politicians");
+        foreach (DataRow politicianRow in politiciansTable.Rows)
+        {
+          var politicianKey = politicianRow["PoliticianKey"].ToString();
+          //string sql = string.Empty;
+          //sql =
+          //"Select Count(*) FROM Offices"
+          //+ " WHERE OfficeKey =" + db.SQLLit(PoliticianRow["OfficeKey"].ToString());
+
+          //if (db.Rows_Sql
+          //  (
+          //    "Select Count(*) FROM Offices"
+          //    + " WHERE OfficeKey =" + db.SQLLit(PoliticianRow["OfficeKey"].ToString())
+          //  ) == 0)
+          var officeKey = PageCache.Politicians.GetOfficeKey(politicianKey);
+          if (db.Rows("Offices", "OfficeKey", officeKey) == 0)
+          {
+            db.Politician_Delete(politicianKey);
+            count++;
+          }
+        }
+
+        Msg.Text = db.Ok(count + " Politicians Deleted.");
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+ 
+    protected void ButtonDeleteOffice_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        var msgReturn = string.Empty;
+        var officeKey = TextBoxOfficeKey.Text.Trim();
+        if (TextBoxOfficeKey.Text.Trim() == string.Empty)
+        {
+          throw new ApplicationException("The OfficeKey textbox is empty.");
+        }
+        if (!Offices.CanAddOfficesToOfficeClass(officeKey))
+        {
+          throw new ApplicationException("This office is not allowed to be deleted.");
+        }
+        //sql_count = "SELECT COUNT(*) FROM Offices WHERE OfficeKey = " + db.SQLLit(OfficeKey);
+        msgReturn += "<br>"
+          + db.Rows("Offices", "OfficeKey", officeKey)
+          + " Offices Rows deleted.";
+
+        var sqlDelete = "DELETE FROM Offices WHERE OfficeKey = " + db.SQLLit(officeKey);
+        db.ExecuteSql(sqlDelete);
+        //---------
+
+        //sql_count = "SELECT COUNT(*) FROM OfficesOfficials WHERE OfficeKey = " + db.SQLLit(OfficeKey);
+        msgReturn += "<br>"
+          + db.Rows("OfficesOfficials", "OfficeKey", officeKey)
+          + " OfficesOfficials Rows deleted.";
+
+        sqlDelete = "DELETE FROM OfficesOfficials WHERE OfficeKey = " + db.SQLLit(officeKey);
+        db.ExecuteSql(sqlDelete);
+        //---------
+
+        //sql_count = "SELECT COUNT(*) FROM ElectionsOffices WHERE OfficeKey = " + db.SQLLit(OfficeKey);
+        msgReturn += "<br>"
+          + db.Rows("ElectionsOffices", "OfficeKey", officeKey)
+          + " ElectionsOffices Rows deleted.";
+
+        sqlDelete = "DELETE FROM ElectionsOffices WHERE OfficeKey = " + db.SQLLit(officeKey);
+        db.ExecuteSql(sqlDelete);
+        //---------
+
+        //sql_count = "SELECT COUNT(*) FROM ElectionsPoliticians WHERE OfficeKey = " + db.SQLLit(OfficeKey);
+        msgReturn += "<br>"
+          + db.Rows("ElectionsPoliticians", "OfficeKey", officeKey)
+          + " ElectionsPoliticians Rows deleted.";
+
+        sqlDelete = "DELETE FROM ElectionsPoliticians WHERE OfficeKey = " + db.SQLLit(officeKey);
+        db.ExecuteSql(sqlDelete);
+
+
+        Msg.Text = db.Ok(msgReturn);
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void RadioButtonListMasterControls_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        if (RadioButtonListMasterControls.SelectedValue == "T")
+        {
+          Master_Update_Bool("IsMasterControlsVisible", true);
+          Msg.Text = db.Msg("Master Form Controls are set VISIBLE.");
+        }
+        else
+        {
+          Master_Update_Bool("IsMasterControlsVisible", false);
+          Msg.Text = db.Msg("Master Form Controls are set NOT VISIBLE.");
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void RadioButtonList_Zip_Lookup_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        if (RadioButtonList_Zip_Lookup.SelectedValue == "T")
+        {
+          Master_Update_Bool("IsZipLookupUseDbTables", true);
+          Msg.Text = db.Msg("Internally developed database tables will be used"
+          + " to convert addresses into legislative districts.");
+        }
+        else
+        {
+          Master_Update_Bool("IsZipLookupUseDbTables", false);
+          Msg.Text = db.Msg("LDS API will be used"
+          + " to convert addresses into legislative districts.");
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void ButtonBadPoliticianOfficeKeys_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        const string sqlText = "SELECT * FROM Politicians";
+        var politiciansTable = db.Table(sqlText);
+        foreach (DataRow politicianRow in politiciansTable.Rows)
+        {
+          var politicianKey = politicianRow["PoliticianKey"].ToString();
+          var officeKey =
+            PageCache.Politicians.GetOfficeKey(politicianKey);
+          var sqlOffice = "SELECT OfficeKey FROM Offices"
+          + " WHERE OfficeKey=" + db.SQLLit(officeKey);
+          var officeRow = db.Row_Optional(sqlOffice);
+          if (officeRow == null)
+          {
+            Politician_Delete_All_Tables_All_Rows(politicianKey);
+
+            Msg.Text += "<br>Politician for: " + politicianKey
+            + " rows deleted in: Politicians, Answers,ElectionsPoliticians";
+          }
+        }
+        Msg.Text = db.Ok("Done" + Msg.Text);
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Button_Delete_Politicians_Report_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        var count = 0;
+        var politiciansList = string.Empty;
+        const string sqlText = "SELECT * FROM Politicians";
+        var politiciansTable = db.Table(sqlText);
+        foreach (DataRow politicianRow in politiciansTable.Rows)
+        {
+          var politicianKey = politicianRow["PoliticianKey"].ToString();
+          var officeKey =
+            PageCache.Politicians.GetOfficeKey(politicianKey);
+          var sqlOfficeText = "SELECT OfficeKey FROM Offices"
+          + " WHERE OfficeKey=" + db.SQLLit(officeKey);
+          var officeRow = db.Row_Optional(sqlOfficeText);
+          if (officeRow == null)
+          {
+            politiciansList += "<br>Politician in Politicians Table for PoliticianKey: "
+              + politicianKey
+              + " has no Office Row for OfficeKey: "
+              + officeKey;
+            count++;
+          }
+        }
+        Msg.Text = db.Msg(politiciansList
+          + "<br>Politicians to be deleted:" + count);
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void ButtonUpdateAnswers_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        var sql = "SELECT *";
+        sql += " FROM Answers";
+        sql += " WHERE DateStamp = '1/1/1900'";
+        var answersTable = db.Table(sql);
+        foreach (DataRow answerRow in answersTable.Rows)
+        {
+          var sqlSelect = string.Empty;
+          sqlSelect += "select ElectionKey";
+          sqlSelect += " from ElectionsPoliticians";
+          sqlSelect += " where PoliticianKey = " + db.SQLLit(answerRow["PoliticianKey"].ToString());
+          sqlSelect += " order by ElectionKey desc";
+          var electionsPoliticiansRow = db.Row_First_Optional(sqlSelect);
+          if (electionsPoliticiansRow != null)
+          {
+            var electionKey = electionsPoliticiansRow["ElectionKey"].ToString();
+            var yyyy = electionKey.Substring(2, 4);
+            var mm = electionKey.Substring(6, 2).ToUpper();
+            var dd = electionKey.Substring(8, 2);
+            int imm = Convert.ToUInt16(mm);
+            if (imm > 1)
+              imm--;
+            mm = imm.ToString(CultureInfo.InvariantCulture);
+            if (mm.Length == 1)
+              mm = mm.PadLeft(2, '0');
+            var date = mm + "/" + dd + "/" + yyyy;
+
+
+            var sqlUpdate = "UPDATE Answers";
+            sqlUpdate += " SET DateStamp=" + db.SQLLit(date);
+            sqlUpdate += ",Source='Candidate Website'";
+            sqlUpdate += " WHERE QuestionKey=" + db.SQLLit(answerRow["QuestionKey"].ToString());
+            sqlUpdate += " AND PoliticianKey =" + db.SQLLit(answerRow["PoliticianKey"].ToString());
+            sqlUpdate += " AND DateStamp = '1/1/1900'";
+            db.ExecuteSql(sqlUpdate);
+          }
+        }
+
+#if false
+        SQL = "SELECT QuestionKey,IssueKey";
+        SQL += " FROM Answers";
+        SQL += " WHERE IssueKey = ''";
+        AnswersTable = db.Table(SQL);
+        foreach (DataRow AnswerRow in AnswersTable.Rows)
+        {
+          int Len = AnswerRow["QuestionKey"].ToString().Length;
+          string IssueKey = AnswerRow["QuestionKey"].ToString().Substring(0, Len - 6);
+          string Sql_Update = string.Empty;
+          Sql_Update = "UPDATE Answers";
+          Sql_Update += " SET IssueKey=" + db.SQLLit(IssueKey);
+          Sql_Update += " WHERE QuestionKey=" + db.SQLLit(AnswerRow["QuestionKey"].ToString());
+          Sql_Update += " AND IssueKey=''";
+          db.ExecuteSQL(Sql_Update);
+        }
+#endif
+        Msg.Text = db.Ok("Answers Table Updated.");
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void ButtonFix2_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region Deletes all ElectionsOffices rows where there is no matching OfficeKey in Offices Table
+        var electionsRowsDeleted = 0;
+        const string sql = "SELECT * FROM ElectionsOffices";
+        var electionsOfficesTable = db.Table(sql);
+        foreach (DataRow electionsOfficesRow in electionsOfficesTable.Rows)
+        {
+          var officeKey = electionsOfficesRow["OfficeKey"].ToString();
+          if (!Offices.OfficeKeyExists(officeKey))
+          {
+            //SQL = "SELECT COUNT(*)";
+            //SQL += " FROM ElectionsOffices";
+            //SQL += " WHERE ElectionsOffices.OfficeKey = "
+            //  + db.SQLLit(ElectionsOfficesRow["OfficeKey"].ToString());
+            electionsRowsDeleted += db.Rows("ElectionsOffices"
+            , "OfficeKey", officeKey);
+
+            var sqlDelete = "DELETE FROM ElectionsOffices WHERE OfficeKey ="
+              + db.SQLLit(officeKey);
+            db.ExecuteSql(sqlDelete);
+          }
+        }
+        Msg.Text = db.Ok(electionsRowsDeleted + " ElectionsOffices Rows deleted.");
+
+        #endregion Deletes all ElectionsOffices rows where there is no matching OfficeKey in Offices Table
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void ButtonFix3_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region Deletes all ElectionsPoliticians rows where there is no matching OfficeKey in Offices Table
+        var electionsPoliticiansRowsDeleted = 0;
+        const string sql = "SELECT * FROM ElectionsPoliticians";
+        var electionsPoliticiansTable = db.Table(sql);
+        foreach (DataRow electionsPoliticiansRow in electionsPoliticiansTable.Rows)
+        {
+          var officeKey = electionsPoliticiansRow["OfficeKey"].ToString();
+          if (!Offices.OfficeKeyExists(officeKey))
+          {
+            //SQL = "SELECT COUNT(*)";
+            //SQL += " FROM ElectionsPoliticians";
+            //SQL += " WHERE ElectionsPoliticians.OfficeKey = "
+            //  + db.SQLLit(ElectionsPoliticiansRow["OfficeKey"].ToString());
+            electionsPoliticiansRowsDeleted += db.Rows("ElectionsPoliticians"
+            , "OfficeKey", officeKey);
+
+            var sqlDelete = "DELETE FROM ElectionsPoliticians WHERE OfficeKey ="
+              + db.SQLLit(officeKey);
+            db.ExecuteSql(sqlDelete);
+          }
+        }
+        Msg.Text = db.Ok(electionsPoliticiansRowsDeleted + " ElectionsPoliticians Rows deleted with non-matching OfficeKey.");
+
+        #endregion Deletes all ElectionsPoliticians rows where there is no matching OfficeKey in Offices Table
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void ButtonFix4_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region Deletes all ElectionsPoliticians rows where there is no matching PoliticianKey in Politicians Table
+        var electionsPoliticiansRowsDeletedForPoliticians = 0;
+        const string sql = "SELECT * FROM ElectionsPoliticians";
+        var electionsPoliticiansTable = db.Table(sql);
+        foreach (DataRow electionsPoliticiansRow in electionsPoliticiansTable.Rows)
+        {
+          if (!Politicians.IsValid(electionsPoliticiansRow["PoliticianKey"].ToString()))
+          {
+            electionsPoliticiansRowsDeletedForPoliticians += db.Rows("ElectionsPoliticians"
+            , "PoliticianKey", electionsPoliticiansRow["PoliticianKey"].ToString());
+
+            var sqlDelete = "DELETE FROM ElectionsPoliticians WHERE PoliticianKey ="
+              + db.SQLLit(electionsPoliticiansRow["PoliticianKey"].ToString());
+            db.ExecuteSql(sqlDelete);
+          }
+        }
+        Msg.Text = db.Ok(electionsPoliticiansRowsDeletedForPoliticians + " ElectionsPoliticians Rows deleted with non-matching PoliticianKey.");
+
+        #endregion Deletes all ElectionsPoliticians rows where there is no matching PoliticianKey in Politicians Table
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void ButtonFix5_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region Deletes all OfficesOfficials rows where there is no matching OfficeKey in Offices Table
+        #region replaced
+        //int OfficesOfficials_Rows_Deleted = 0;
+        //string SQL = "SELECT * FROM OfficesOfficials";
+        //DataTable OfficesOfficialsTable = db.Table(SQL);
+        //foreach (DataRow OfficesOfficialsRow in OfficesOfficialsTable.Rows)
+        //{
+        //  string OfficeKey = OfficesOfficialsRow["OfficeKey"].ToString();
+        //  if (OfficesOfficialsRow["OfficeKey"].ToString().Trim() != string.Empty)
+        //  {
+        //    if (!db.Is_Valid_Office(OfficesOfficialsRow["OfficeKey"].ToString()))
+        //    {
+        //      //SQL = "SELECT COUNT(*)";
+        //      //SQL += " FROM OfficesOfficials";
+        //      //SQL += " WHERE OfficesOfficials.OfficeKey = "
+        //      //  + db.SQLLit(OfficesOfficialsRow["OfficeKey"].ToString());
+        //      //OfficesOfficials_Rows_Deleted += db.Rows_Sql(SQL);
+        //      OfficesOfficials_Rows_Deleted += db.Rows("OfficesOfficials"
+        //      , "OfficeKey", OfficesOfficialsRow["OfficeKey"].ToString());
+
+        //      string sql_delete = "DELETE FROM OfficesOfficials WHERE OfficeKey ="
+        //        + db.SQLLit(OfficesOfficialsRow["OfficeKey"].ToString());
+        //      db.ExecuteSQL(sql_delete);
+        //    }
+        //  }
+        //}
+        //Msg.Text = db.Ok(OfficesOfficials_Rows_Deleted.ToString() + " OfficesOfficials Rows deleted with non-matching OfficeKey.");
+        #endregion replaced
+
+        Server.ScriptTimeout = 60000;// = 1000 min = 16 hrs
+
+        var deleteCount = 0;
+        const string sqlOfficesOfficials = "select OfficeKey from OfficesOfficials";
+        var officesOfficialsTable = db.Table(sqlOfficesOfficials);
+        foreach (DataRow officesOfficialsRow in officesOfficialsTable.Rows)
+        {
+          if (officesOfficialsRow["OfficeKey"].ToString().Trim() != string.Empty)
+          {
+            if (!Offices.OfficeKeyExists(officesOfficialsRow["OfficeKey"].ToString()))
+            {
+              OfficesOfficials_Delete(officesOfficialsRow["OfficeKey"].ToString());
+              Msg.Text += "<br>Deleted:" + officesOfficialsRow["OfficeKey"];
+              deleteCount++;
+            }
+          }
+        }
+        Msg.Text += db.Ok("<br>" + deleteCount + " OfficesOfficials Rows deleted with non-matching OfficeKey.");
+
+        #endregion Deletes all OfficesOfficials rows where there is no matching OfficeKey in Offices Table
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void ButtonFix6_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        var msgReturn = string.Empty;
+        string sqlUpdate;
+        #region Update ElectionKeyCounty, ElectionKeyLocal,ElectionKeyFederal in ElectionsOffices & ElectionsPoliticians Tables
+        //ElectionsOffices & ElectionsPoliticians
+        //Set ElectionKey_State = ElectionKey
+
+        #region ElectionsOffices
+        var sql = "SELECT * FROM ElectionsOffices";
+        var electionsOfficesTable = db.Table(sql);
+        foreach (DataRow electionsOfficesRow in electionsOfficesTable.Rows)
+        {
+          sqlUpdate = "UPDATE ElectionsOffices SET ElectionKeyState ="
+            + db.SQLLit(db.ElectionKey_State(electionsOfficesRow["ElectionKey"].ToString()));
+          sqlUpdate += " WHERE ElectionKey=" + db.SQLLit(electionsOfficesRow["ElectionKey"].ToString());
+          sqlUpdate += " AND OfficeKey=" + db.SQLLit(electionsOfficesRow["OfficeKey"].ToString());
+          db.ExecuteSql(sqlUpdate);
+
+          string electionKeyCounty;
+          if (electionsOfficesRow["CountyCode"].ToString().Trim() != string.Empty)
+            electionKeyCounty = electionsOfficesRow["ElectionKeyState"]
+              + electionsOfficesRow["CountyCode"].ToString();
+          else
+            electionKeyCounty = string.Empty;
+
+          sqlUpdate = "UPDATE ElectionsOffices SET ElectionKeyCounty =" + db.SQLLit(electionKeyCounty);
+          sqlUpdate += " WHERE ElectionKey=" + db.SQLLit(electionsOfficesRow["ElectionKey"].ToString());
+          sqlUpdate += " AND OfficeKey=" + db.SQLLit(electionsOfficesRow["OfficeKey"].ToString());
+          db.ExecuteSql(sqlUpdate);
+
+          string electionKeyLocal;
+          if (electionsOfficesRow["LocalCode"].ToString().Trim() != string.Empty)
+            electionKeyLocal = electionsOfficesRow["ElectionKeyState"]
+              + electionsOfficesRow["CountyCode"].ToString()
+              + electionsOfficesRow["LocalCode"];
+          else
+            electionKeyLocal = string.Empty;
+
+          sqlUpdate = "UPDATE ElectionsOffices SET ElectionKeyLocal =" + db.SQLLit(electionKeyLocal);
+          sqlUpdate += " WHERE ElectionKey=" + db.SQLLit(electionsOfficesRow["ElectionKey"].ToString());
+          sqlUpdate += " AND OfficeKey=" + db.SQLLit(electionsOfficesRow["OfficeKey"].ToString());
+          db.ExecuteSql(sqlUpdate);
+
+          var electionKeyFederal = string.Empty;
+          var officeClass = Offices.GetOfficeClass(electionsOfficesRow["OfficeKey"].ToString());
+          if (officeClass.IsFederal())
+            switch (officeClass)
+            {
+              case OfficeClass.USPresident:
+                electionKeyFederal = ElectionKey_USPres(electionsOfficesRow["ElectionKeyState"].ToString());
+                break;
+              case OfficeClass.USSenate:
+                electionKeyFederal = ElectionKey_USSenate(electionsOfficesRow["ElectionKeyState"].ToString());
+                break;
+              case OfficeClass.USHouse:
+                electionKeyFederal = ElectionKey_USHouse(electionsOfficesRow["ElectionKeyState"].ToString());
+                break;
+            }
+          else
+            electionKeyFederal = string.Empty;
+
+          sqlUpdate = "UPDATE ElectionsOffices SET ElectionKeyFederal =" + db.SQLLit(electionKeyFederal);
+          sqlUpdate += " WHERE ElectionKey=" + db.SQLLit(electionsOfficesRow["ElectionKey"].ToString());
+          sqlUpdate += " AND OfficeKey=" + db.SQLLit(electionsOfficesRow["OfficeKey"].ToString());
+          db.ExecuteSql(sqlUpdate);
+        }
+        msgReturn += "<br> ElectionKeyCounty, ElectionKeyLocal,ElectionKeyFederal Updated in ElectionsOffices";
+        #endregion ElectionsOffices
+
+        #region ElectionsPoliticians
+        sql = "SELECT * FROM ElectionsPoliticians";
+        var electionsPoliticiansTable = db.Table(sql);
+        foreach (DataRow electionsPoliticiansRow in electionsPoliticiansTable.Rows)
+        {
+          sqlUpdate = "UPDATE ElectionsPoliticians SET ElectionKeyState ="
+            + db.SQLLit(db.ElectionKey_State(electionsPoliticiansRow["ElectionKey"].ToString()));
+          sqlUpdate += " WHERE ElectionKey=" + db.SQLLit(electionsPoliticiansRow["ElectionKey"].ToString());
+          sqlUpdate += " AND OfficeKey=" + db.SQLLit(electionsPoliticiansRow["OfficeKey"].ToString());
+          db.ExecuteSql(sqlUpdate);
+
+          string electionKeyCounty;
+          if (electionsPoliticiansRow["CountyCode"].ToString().Trim() != string.Empty)
+            electionKeyCounty = electionsPoliticiansRow["ElectionKeyState"].ToString()
+              + electionsPoliticiansRow["CountyCode"];
+          else
+            electionKeyCounty = string.Empty;
+
+          sqlUpdate = "UPDATE ElectionsPoliticians SET ElectionKeyCounty =" + db.SQLLit(electionKeyCounty);
+          sqlUpdate += " WHERE ElectionKey=" + db.SQLLit(electionsPoliticiansRow["ElectionKey"].ToString());
+          sqlUpdate += " AND OfficeKey=" + db.SQLLit(electionsPoliticiansRow["OfficeKey"].ToString());
+          db.ExecuteSql(sqlUpdate);
+
+          string electionKeyLocal;
+          if (electionsPoliticiansRow["LocalCode"].ToString().Trim() != string.Empty)
+            electionKeyLocal = electionsPoliticiansRow["ElectionKeyState"].ToString()
+              + electionsPoliticiansRow["CountyCode"]
+              + electionsPoliticiansRow["LocalCode"];
+          else
+            electionKeyLocal = string.Empty;
+
+          sqlUpdate = "UPDATE ElectionsPoliticians SET ElectionKeyLocal =" + db.SQLLit(electionKeyLocal);
+          sqlUpdate += " WHERE ElectionKey=" + db.SQLLit(electionsPoliticiansRow["ElectionKey"].ToString());
+          sqlUpdate += " AND OfficeKey=" + db.SQLLit(electionsPoliticiansRow["OfficeKey"].ToString());
+          db.ExecuteSql(sqlUpdate);
+
+          var electionKeyFederal = string.Empty;
+          var officeClass = Offices.GetOfficeClass(electionsPoliticiansRow["OfficeKey"].ToString());
+          if (officeClass.IsFederal())
+            switch (officeClass)
+            {
+              case OfficeClass.USPresident:
+                electionKeyFederal = ElectionKey_USPres(electionsPoliticiansRow["ElectionKeyState"].ToString());
+                break;
+              case OfficeClass.USSenate:
+                electionKeyFederal = ElectionKey_USSenate(electionsPoliticiansRow["ElectionKeyState"].ToString());
+                break;
+              case OfficeClass.USHouse:
+                electionKeyFederal = ElectionKey_USHouse(electionsPoliticiansRow["ElectionKeyState"].ToString());
+                break;
+            }
+          else
+            electionKeyFederal = string.Empty;
+
+          sqlUpdate = "UPDATE ElectionsPoliticians SET ElectionKeyFederal =" + db.SQLLit(electionKeyFederal);
+          sqlUpdate += " WHERE ElectionKey=" + db.SQLLit(electionsPoliticiansRow["ElectionKey"].ToString());
+          sqlUpdate += " AND OfficeKey=" + db.SQLLit(electionsPoliticiansRow["OfficeKey"].ToString());
+          db.ExecuteSql(sqlUpdate);
+        }
+        msgReturn += "<br> ElectionKeyCounty, ElectionKeyLocal,ElectionKeyFederal Updated in ElectionsPoliticians";
+        #endregion ElectionsPoliticians
+        #endregion Set ElectionKey_County, ElectionKeyLocal,ElectionKeyFederal in ElectionsOffices & ElectionsPoliticians Tables
+
+        #region Updates ElectionKey for County and Local elections on ElectionsOffices & ElectionsPoliticians
+        //if ElectionKey_County, ElectionKeyLocal not empty Set ElectionKey = ElectionKeyLocal 
+        //if ElectionKey_County not empty Set ElectionKey = ElectionKey_County 
+        #region ElectionsOffices
+
+        sql = "SELECT * FROM ElectionsOffices";
+        electionsOfficesTable = db.Table(sql);
+        foreach (DataRow electionsOfficesRow in electionsOfficesTable.Rows)
+        {
+          if (
+            (electionsOfficesRow["ElectionKeyCounty"].ToString().Trim() != string.Empty)
+            && (electionsOfficesRow["ElectionKeyLocal"].ToString().Trim() != string.Empty)
+            )
+          {
+            sqlUpdate = "UPDATE ElectionsOffices SET ElectionKey =" + db.SQLLit(electionsOfficesRow["ElectionKeyLocal"].ToString().Trim());
+            sqlUpdate += " WHERE ElectionKey=" + db.SQLLit(electionsOfficesRow["ElectionKey"].ToString());
+            sqlUpdate += " AND OfficeKey=" + db.SQLLit(electionsOfficesRow["OfficeKey"].ToString());
+            db.ExecuteSql(sqlUpdate);
+          }
+          else if (
+            (electionsOfficesRow["ElectionKeyCounty"].ToString().Trim() != string.Empty)
+            && (electionsOfficesRow["ElectionKeyLocal"].ToString().Trim() == string.Empty)
+            )
+          {
+            sqlUpdate = "UPDATE ElectionsOffices SET ElectionKey =" + db.SQLLit(electionsOfficesRow["ElectionKeyCounty"].ToString().Trim());
+            sqlUpdate += " WHERE ElectionKey=" + db.SQLLit(electionsOfficesRow["ElectionKey"].ToString());
+            sqlUpdate += " AND OfficeKey=" + db.SQLLit(electionsOfficesRow["OfficeKey"].ToString());
+            db.ExecuteSql(sqlUpdate);
+          }
+        }
+        msgReturn += "<br> ElectionKey updated for county and local elections in ElectionsOffices";
+        #endregion ElectionsOffices
+
+        #region ElectionsPoliticians
+        sql = "SELECT * FROM ElectionsPoliticians";
+        electionsPoliticiansTable = db.Table(sql);
+        foreach (DataRow electionsPoliticiansRow in electionsPoliticiansTable.Rows)
+        {
+          if (
+            (electionsPoliticiansRow["ElectionKeyCounty"].ToString().Trim() != string.Empty)
+            && (electionsPoliticiansRow["ElectionKeyLocal"].ToString().Trim() != string.Empty)
+            )
+          {
+            sqlUpdate = "UPDATE ElectionsPoliticians SET ElectionKey =" + db.SQLLit(electionsPoliticiansRow["ElectionKeyLocal"].ToString().Trim());
+            sqlUpdate += " WHERE ElectionKey=" + db.SQLLit(electionsPoliticiansRow["ElectionKey"].ToString());
+            sqlUpdate += " AND OfficeKey=" + db.SQLLit(electionsPoliticiansRow["OfficeKey"].ToString());
+            db.ExecuteSql(sqlUpdate);
+          }
+          else if (
+            (electionsPoliticiansRow["ElectionKeyCounty"].ToString().Trim() != string.Empty)
+            && (electionsPoliticiansRow["ElectionKeyLocal"].ToString().Trim() == string.Empty)
+            )
+          {
+            sqlUpdate = "UPDATE ElectionsPoliticians SET ElectionKey =" + db.SQLLit(electionsPoliticiansRow["ElectionKeyCounty"].ToString().Trim());
+            sqlUpdate += " WHERE ElectionKey=" + db.SQLLit(electionsPoliticiansRow["ElectionKey"].ToString());
+            sqlUpdate += " AND OfficeKey=" + db.SQLLit(electionsPoliticiansRow["OfficeKey"].ToString());
+            db.ExecuteSql(sqlUpdate);
+          }
+        }
+        msgReturn += "<br> ElectionKey updated for county and local elections in ElectionsPoliticians";
+        #endregion ElectionsPoliticians
+
+        #endregion Updates ElectionKey for County and Local elections on ElectionsOffices & ElectionsPoliticians
+
+        Msg.Text = db.Ok(msgReturn);
+
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void ButtonFix7_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        var msgReturn = string.Empty;
+        #region Deletes all Elections, ElectionsOffices and ElectionsPoliticians rows where there are no 1) ElectionsOffices rows (on the ballot) and 2) no Referendum rows for the ElectionKey
+        var electionsRowsDeleted = 0;
+        //int Referendums_Rows_Deleted = 0;
+        var sql = "SELECT * FROM Elections";
+        sql += " Where (SUBSTRING(ElectionKey,1,2) <> 'U1')";
+        sql += " And (SUBSTRING(ElectionKey,1,2) <> 'U2')";
+        sql += " and (SUBSTRING(ElectionKey,1,2) <> 'U3')";
+        sql += " and (SUBSTRING(ElectionKey,1,2) <> 'U4')";
+        var electionsTable = db.Table(sql);
+        foreach (DataRow electionsRow in electionsTable.Rows)
+        {
+          sql = "ElectionsOffices WHERE ElectionsOffices.ElectionKey = "
+            + db.SQLLit(electionsRow["ElectionKey"].ToString());
+          var electionsOfficesRows = db.Rows_Count_From(sql);
+
+          var referendumRows = db.Rows("Referendums"
+          , "ElectionKey", electionsRow["ElectionKey"].ToString());
+
+          if ((electionsOfficesRows == 0) && (referendumRows == 0))
+          {
+            var sqlDelete = "DELETE FROM Elections WHERE ElectionKey ="
+              + db.SQLLit(electionsRow["ElectionKey"].ToString());
+            db.ExecuteSql(sqlDelete);
+
+            //sql_delete = "DELETE FROM ReportsElections WHERE ElectionKey ="
+            //  + db.SQLLit(ElectionsRow["ElectionKey"].ToString());
+            //db.ExecuteSQL(sql_delete);
+
+            sqlDelete = "DELETE FROM ElectionsPoliticians WHERE ElectionKey ="
+              + db.SQLLit(electionsRow["ElectionKey"].ToString());
+            db.ExecuteSql(sqlDelete);
+
+            sqlDelete = "DELETE FROM ElectionsOffices WHERE ElectionKey ="
+              + db.SQLLit(electionsRow["ElectionKey"].ToString());
+            db.ExecuteSql(sqlDelete);
+
+            electionsRowsDeleted++;
+
+            msgReturn += "<br>Election rows deleted for: " + electionsRow["ElectionKey"];
+          }
+
+        }
+        msgReturn += "<br>" + electionsRowsDeleted + " Elections Deleted and removing all Elections, ElectionsOffices, ElectionsPoliticians, ReportsElections Table rows for these elections.";
+        #endregion Delete all Elections rows where there are no ElectionsOffices rows for the ElectionKey
+
+        Msg.Text = db.Ok(msgReturn);
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void ButtonSetAllViewable_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        var sql = string.Empty;
+        sql += " UPDATE Elections";
+        sql += " SET IsViewable = 1";
+        sql += " WHERE ElectionDate <= " + db.SQLLit(Db.DbToday);
+        db.ExecuteSql(sql);
+
+        Msg.Text = db.Ok("All previous elections have been set to being VIEWABLE.");
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void ButtonDeleteUserErrorLogs_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        //SQL = "truncate table LogErrorsAdmin";
+        //db.ExecuteSQL(SQL);
+        DB.VoteLog.LogErrorsAdmin.TruncateTable();
+
+        //SQL = "truncate table Log301Redirect";
+        //db.ExecuteSQL(SQL);
+        DB.VoteLog.Log301Redirect.TruncateTable();
+
+        //SQL = "truncate table Log302Redirect";
+        //db.ExecuteSQL(SQL);
+        DB.VoteLog.Log302Redirect.TruncateTable();
+
+        //SQL = "truncate table Log404PageNotFound";
+        //db.ExecuteSQL(SQL);
+        DB.VoteLog.Log404PageNotFound.TruncateTable();
+
+        Msg.Text = db.Ok("The Log Tables have been truncated.");
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void RadioButtonList_Log_301_404_Errors_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        if (RadioButtonList_Log_301_404_Errors.SelectedValue == "T")
+        {
+          Master_Update_Bool("IsLog301And404Errors", true);
+          Msg.Text = db.Msg("Logging of 301, 404 and unhandled errors has been set ON.");
+        }
+        else
+        {
+          Master_Update_Bool("IsLog301And404Errors", false);
+          Msg.Text = db.Msg("Logging of 301, 404 and unhandled errors has been set OFF.");
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void Button_Update_ElectionsOffices_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        var sql = " SELECT OfficeKey,DistrictCode";
+        sql += " FROM Offices";
+        sql += " WHERE OfficeLevel = 3";
+        sql += " OR OfficeLevel = 5";
+        sql += " OR OfficeLevel = 6";
+        sql += " OR OfficeLevel = 7";
+        sql += " OR OfficeLevel = 17";
+        sql += " OR OfficeLevel = 21";
+        sql += " GROUP BY OfficeKey,DistrictCode";
+        var tableOffices = db.Table(sql);
+        foreach (DataRow rowOffices in tableOffices.Rows)
+        {
+          db.ElectionsOffices_Update_DistrictCode(
+            rowOffices["OfficeKey"].ToString()
+          , rowOffices["DistrictCode"].ToString()
+          );
+        }
+
+        Msg.Text += db.Ok("<br>Done");
+      }
+      catch (Exception ex)
+      {
+        #region
+
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Button_Update_Politician_Names_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        const string sql = "SELECT PoliticianKey, FName, MName, Nickname, LName, LName, Suffix, AddOn FROM Politicians";
+        var tablePoliticians = db.Table(sql);
+        foreach (DataRow rowPolitician in tablePoliticians.Rows)
+        {
+          //FName
+          if (rowPolitician["FName"].ToString().Length > 0)
+          {
+            var fName = rowPolitician["FName"].ToString();
+            //FName = db.Str_Remove_SpecialChars_All_Except_Spaces(FName);
+            //FName = db.Str_ReCase(FName);
+            //FName = db.Str_Fix_Name_First_Char(FName);
+            Validation.FixGivenName(fName);
+            db.Politicians_Update_Str(rowPolitician["PoliticianKey"].ToString(), "FName", fName);
+          }
+
+          //MName
+          if (rowPolitician["MName"].ToString().Length > 0)
+          {
+            var mName = rowPolitician["MName"].ToString();
+            //MName = db.Str_Remove_SpecialChars_All_Except_Spaces(MName);
+            //MName = db.Str_ReCase(MName);
+            //MName = db.Str_Fix_Name_First_Char(MName);
+            Validation.FixGivenName(mName);
+            db.Politicians_Update_Str(rowPolitician["PoliticianKey"].ToString(), "MName", mName);
+          }
+
+          //Nickname
+          if (rowPolitician["Nickname"].ToString().Length > 0)
+          {
+            var nickname = rowPolitician["Nickname"].ToString();
+            //Nickname = db.Str_Remove_SpecialChars_All_Except_Spaces(Nickname);
+            //Nickname = db.Str_ReCase(Nickname);
+            Validation.FixNickname(nickname);
+            db.Politicians_Update_Str(rowPolitician["PoliticianKey"].ToString(), "Nickname", nickname);
+          }
+
+          //LName
+          if (rowPolitician["LName"].ToString().Length > 0)
+          {
+            var lName = rowPolitician["LName"].ToString();
+            //LName = db.Str_Remove_SpecialChars_All_Except_Spaces(LName);
+            //LName = db.Str_ReCase(LName);
+            Validation.FixLastName(lName);
+            db.Politicians_Update_Str(rowPolitician["PoliticianKey"].ToString(), "LName", lName);
+          }
+
+          //Suffix
+          if (rowPolitician["Suffix"].ToString().Length > 0)
+          {
+            var suffix = rowPolitician["Suffix"].ToString();
+            //Suffix = db.Str_Remove_Non_Key_Chars(Suffix);
+            //Suffix = db.Str_Fix_Name_Suffix(Suffix);
+            //if (db.Is_Valid_Name_Suffix(Suffix))
+            //{
+            //  db.Politicians_Update_Str(Row_Politician["PoliticianKey"].ToString(), "Suffix", Suffix);
+            //}
+            //else
+            //{
+            //  db.Politicians_Update_Str(Row_Politician["PoliticianKey"].ToString(), "Suffix", string.Empty);
+            //}
+            Validation.FixNameSuffix(suffix);
+            db.Politicians_Update_Str(rowPolitician["PoliticianKey"].ToString(), "Suffix", suffix);
+          }
+
+          //AddOn
+          // no editing
+          //if (Row_Politician["AddOn"].ToString().Length > 0)
+          //{
+          //  string AddOn = Row_Politician["AddOn"].ToString();
+          //  AddOn = db.Str_Remove_SpecialChars_All_Except_Spaces(AddOn);
+          //  db.Politicians_Update_Str(Row_Politician["PoliticianKey"].ToString(), "AddOn", AddOn);
+          //}
+
+        }
+        Msg.Text += db.Ok("<br>Done");
+      }
+      catch (Exception ex)
+      {
+        #region
+
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Button_Remake_Party_Email_Passwords_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        const string sql = "Select PartyEmail from PartiesEmails";
+        var tableEmails = db.Table(sql);
+        foreach (DataRow rowEmail in tableEmails.Rows)
+        {
+          var uniquePassword = db.MakeUniquePassword();
+          var updateSql = "UPDATE PartiesEmails"
+          + " SET PartyPassword = " + db.SQLLit(uniquePassword)
+          + " WHERE PartyEmail = " + db.SQLLit(rowEmail["PartyEmail"].ToString());
+          db.ExecuteSql(updateSql);
+        }
+        Msg.Text += db.Ok("<br>Done");
+      }
+      catch (Exception ex)
+      {
+        #region
+
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void Button_Add_User_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        var sqlSecurityInsert = string.Empty;
+        sqlSecurityInsert += "INSERT INTO Security";
+        sqlSecurityInsert += "(";
+        sqlSecurityInsert += "UserName";
+        sqlSecurityInsert += ",UserPassword";
+        sqlSecurityInsert += ",UserSecurity";
+        sqlSecurityInsert += ",UserDesignCode";
+        sqlSecurityInsert += ",UserOrganizationCode";
+        sqlSecurityInsert += ")";
+        sqlSecurityInsert += "VALUES";
+        sqlSecurityInsert += "(";
+        sqlSecurityInsert += db.SQLLit(TextBox_UserName.Text.Trim());
+        sqlSecurityInsert += "," + db.SQLLit(TextBox_Password.Text.Trim());
+        sqlSecurityInsert += ",'MASTER'";
+        sqlSecurityInsert += ",'Vote-USA'";
+        sqlSecurityInsert += ",'VOTEUSA'";
+        sqlSecurityInsert += ")";
+        db.ExecuteSql(sqlSecurityInsert);
+
+        Msg.Text = db.Ok("The volunteer user has been added.");
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void ButtonDeleteEmailAddress_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        var deletedEmail = false;
+
+        var sql = string.Empty;
+        sql += " SELECT PoliticianKey";
+        sql += " FROM Politicians";
+        sql += " WHERE EmailAddr = " + db.SQLLit(TextBoxEmailAddr.Text.Trim());
+        var rowPolitician = db.Row_First_Optional(sql);
+        if (rowPolitician != null)
+        {
+          sql = string.Empty;
+          sql += " UPDATE Politicians";
+          sql += " SET EmailAddr = ''";
+          sql += " WHERE PoliticianKey = " + db.SQLLit(rowPolitician["PoliticianKey"].ToString());
+          db.ExecuteSql(sql);
+          deletedEmail = true;
+        }
+        else
+        {
+          sql = string.Empty;
+          sql += " SELECT PoliticianKey";
+          sql += " FROM Politicians";
+          sql += " WHERE StateEmailAddr = " + db.SQLLit(TextBoxEmailAddr.Text.Trim());
+          rowPolitician = db.Row_First_Optional(sql);
+          if (rowPolitician != null)
+          {
+            sql = string.Empty;
+            sql += " UPDATE Politicians";
+            sql += " SET StateEmailAddr = ''";
+            sql += " WHERE PoliticianKey = " + db.SQLLit(rowPolitician["PoliticianKey"].ToString());
+            db.ExecuteSql(sql);
+            deletedEmail = true;
+          }
+          else
+          {
+            sql = string.Empty;
+            sql += " SELECT PoliticianKey";
+            sql += " FROM Politicians";
+            sql += " WHERE EmailAddrVoteUSA = " + db.SQLLit(TextBoxEmailAddr.Text.Trim());
+            rowPolitician = db.Row_First_Optional(sql);
+            if (rowPolitician != null)
+            {
+              sql = string.Empty;
+              sql += " UPDATE Politicians";
+              sql += " SET EmailAddrVoteUSA = ''";
+              sql += " WHERE PoliticianKey = " + db.SQLLit(rowPolitician["PoliticianKey"].ToString());
+              db.ExecuteSql(sql);
+              deletedEmail = true;
+            }
+            else
+            {
+              sql = string.Empty;
+              sql += " SELECT PoliticianKey";
+              sql += " FROM Politicians";
+              sql += " WHERE CampaignEmail = " + db.SQLLit(TextBoxEmailAddr.Text.Trim());
+              rowPolitician = db.Row_First_Optional(sql);
+              if (rowPolitician != null)
+              {
+                sql = string.Empty;
+                sql += " UPDATE Politicians";
+                sql += " SET CampaignEmail = ''";
+                sql += " WHERE PoliticianKey = " + db.SQLLit(rowPolitician["PoliticianKey"].ToString());
+                db.ExecuteSql(sql);
+                deletedEmail = true;
+              }
+              //else
+              //{
+              //  sql = string.Empty;
+              //  sql += " SELECT PoliticianKey";
+              //  sql += " FROM Politicians";
+              //  sql += " WHERE LDSEmailAddr = " + db.SQLLit(TextBoxEmailAddr.Text.Trim());
+              //  rowPolitician = db.Row_First_Optional(sql);
+              //  if (rowPolitician != null)
+              //  {
+              //    sql = string.Empty;
+              //    sql += " UPDATE Politicians";
+              //    sql += " SET LDSEmailAddr = ''";
+              //    sql += " WHERE PoliticianKey = " + db.SQLLit(rowPolitician["PoliticianKey"].ToString());
+              //    db.ExecuteSql(sql);
+              //    deletedEmail = true;
+              //  }
+              //}
+            }
+          }
+        }
+
+        Msg.Text = deletedEmail 
+          ? db.Ok(TextBoxEmailAddr.Text.Trim() + " email address has been deleted.") 
+          : db.Fail(TextBoxEmailAddr.Text.Trim() + " email address was not found and deleted.");
+
+        TextBoxEmailAddr.Text = string.Empty;
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void ButtonDeleteWebAddress_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        var sql = " UPDATE Politicians";
+        sql += " SET WebAddr = ''";
+        sql += " WHERE WebAddr = " + db.SQLLit(TextBoxWebAddress.Text.Trim());
+        db.ExecuteSql(sql);
+
+        sql = " UPDATE Politicians";
+        sql += " SET StateWebAddr = ''";
+        sql += " WHERE StateWebAddr = " + db.SQLLit(TextBoxWebAddress.Text.Trim());
+        db.ExecuteSql(sql);
+
+        sql = " UPDATE Politicians";
+        sql += " SET LDSWebAddr = ''";
+        sql += " WHERE LDSWebAddr = " + db.SQLLit(TextBoxWebAddress.Text.Trim());
+        db.ExecuteSql(sql);
+
+        Msg.Text = db.Ok("ALL " + TextBoxWebAddress.Text.Trim()
+          + " website addresses have been deleted.");
+
+        TextBoxWebAddress.Text = string.Empty;
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+      if (!IsPostBack)
+      {
+        // Handled by superclass
+        //if (!SecurePage.IsMasterUser)
+        //  VoteSecurePage.HandleSecurityException();
+
+        //If Master is restricted to a single State redirect to that State
+        // Don't do this -- use ADMIN security
+        //if (!string.IsNullOrEmpty(db.Security_Str(db.User_Name(), "UserStateCode")))
+        //  Response.Redirect(db.Url_Admin_Default(
+        //    db.Security_Str(db.User_Name(), "UserStateCode"))
+        //    );
+
+        Page.Title = "Master";
+
+        try
+        {
+          PageTitle.Text = "MASTER Administration";
+
+          #region Unrestricted Master Ron
+          //if (SecurePage.IsSuperUser)
+          //  UnrestrictedMaster.Visible = true;
+          //else
+          UnrestrictedMaster.Visible = IsSuperUser;
+          #endregion Unrestricted Master Ron
+
+          #region Session["UserStateCode"] Notes
+          //Session["UserStateCode"] gets set at Login then:
+          //Here is the only place Session["UserStateCode"] gets reset to string.Empty.
+          //The only place it gets set to a StateCode when entering /Admin/Default.aspx
+          #endregion Session["UserStateCode"] Notes
+          Session["UserStateCode"] = string.Empty;
+
+          //LabelStateAdminHomeLinks.Text = db.Master_Str("StateAdminHomeLinks");
+
+          if (UnrestrictedMaster.Visible)
+          {
+            #region Load labels, checkboxes and radion buttons
+            #region Labels
+            //LabelNationalLinks.Text = National_Links();
+
+            //LabelIssueLinks.Text = db.Master_Str("MasterIssueLinksLine");
+
+            //LabelIssueReportsLinks.Text = db.Master_Str("MasterIssueReportsLinksLine");
+            //Label_Issue_Anchors.Text = db.Master_Str("IssuesAnchors");
+
+            //LabelDomainDesigns.Text = db.Master_Str("DesignCodeLinksLine");
+            //LabelDomainOrganizations.Text = db.Master_Str("OrganizationCodeLinksLine");
+            //LabelPartyLinks.Text = db.Master_Str("PoliticalPartyLinksLine");
+            #endregion Labels
+
+            #region Radio Button Lists
+            RadioButtonListDebugMode.SelectedValue = Master_Bool("IsDebugMode") ? "T" : "F";
+
+            RadiobuttonlistTestMode.SelectedValue = Master_Bool("IsTestMode") ? "T" : "F";
+
+            //if (db.Master_Bool("IsCachePages"))
+            //  RadioButtonListCachePages.SelectedValue = "T";
+            //else
+            //  RadioButtonListCachePages.SelectedValue = "F";
+
+            RadioButtonListMasterControls.SelectedValue = Master_Bool("IsMasterControlsVisible") ? "T" : "F";
+
+            RadioButtonList_Zip_Lookup.SelectedValue = Master_Bool("IsZipLookupUseDbTables") ? "T" : "F";
+
+            RadioButtonList_Log_301_404_Errors.SelectedValue = Master_Bool("IsLog301And404Errors") ? "T" : "F";
+
+            //FutureSampleBallotDialog.SelectedValue =
+            //  DB.Vote.Master.GetPresentGetFutureSampleBallotsDialog(false) ? "T" : "F";
+            #endregion Radio Button Lists
+
+            //#region Navbar CheckBoxes
+            //if (db.Master_IsOmitAnchorGlobalElectionReport())
+            //  CheckBox_Omit_Anchor_Global_Election_Report.Checked = true;
+            //else
+            //  CheckBox_Omit_Anchor_Global_Election_Report.Checked = false;
+
+            //if (db.Master_IsOmitAnchorGlobalElectedReport())
+            //  CheckBox_Omit_Anchor_Global_Elected_Report.Checked = true;
+            //else
+            //  CheckBox_Omit_Anchor_Global_Elected_Report.Checked = false;
+
+            //if (db.Master_IsOmitNavbarFederal())
+            //  CheckBox_Omit_Navbar_Federal.Checked = true;
+            //else
+            //  CheckBox_Omit_Navbar_Federal.Checked = false;
+
+            //if (db.Master_IsOmitNavbarState())
+            //  CheckBox_Omit_Navbar_State.Checked = true;
+            //else
+            //  CheckBox_Omit_Navbar_State.Checked = false;
+
+            //if (db.Master_IsOmitAnchorsSampleBallot())
+            //  CheckBox_Omit_Anchors_Sample_Ballot.Checked = true;
+            //else
+            //  CheckBox_Omit_Anchors_Sample_Ballot.Checked = false;
+
+            //#endregion Navbar CheckBoxes
+
+            #region diabled
+            //if (db.Master_Bool("IsNewImageMethods"))
+            //  RadioButtonList_Image_Method.SelectedValue = "T";
+            //else
+            //  RadioButtonList_Image_Method.SelectedValue = "F";
+            #endregion diabled
+            #endregion load, checkboxes labels and radion buttons
+
+            #region Bulk Report Update Dates
+            //Label_BulkUpdateElectionsUpcomingUS.Text
+            //  = db.Master_Date_Str("BulkUpdateElectionsUpcomingUS");
+            //Label_BulkUpdateElectionsUpcomingStates.Text
+            //  = db.Master_Date_Str("BulkUpdateElectionsUpcomingStates");
+            //Label_BulkUpdateElectionsUpcomingCounties.Text
+            //  = db.Master_Date_Str("BulkUpdateElectionsUpcomingCounties");
+            //Label_BulkUpdateElectionsUpcomingLocals.Text
+            //  = db.Master_Date_Str("BulkUpdateElectionsUpcomingLocals");
+            //Label_BulkUpdateElectionsPreviousUS.Text
+            //  = db.Master_Date_Str("BulkUpdateElectionsPreviousUS");
+            //Label_BulkUpdateElectionsPreviousStates.Text
+            //  = db.Master_Date_Str("BulkUpdateElectionsPreviousStates");
+            //Label_BulkUpdateElectionsPreviousCounties.Text
+            //  = db.Master_Date_Str("BulkUpdateElectionsPreviousCounties");
+            //Label_BulkUpdateElectionsPreviousLocals.Text
+            //  = db.Master_Date_Str("BulkUpdateElectionsPreviousLocals");
+            //Label_BulkUpdateOfficialsUS.Text
+            //  = db.Master_Date_Str("BulkUpdateOfficialsUS");
+            //Label_BulkUpdateOfficialsStates.Text
+            //  = db.Master_Date_Str("BulkUpdateOfficialsStates");
+            //Label_BulkUpdateOfficialsCounties.Text
+            //  = db.Master_Date_Str("BulkUpdateOfficialsCounties");
+            //Label_BulkUpdateOfficialsLocals.Text
+            //  = db.Master_Date_Str("BulkUpdateOfficialsLocals");
+            #endregion Bulk Report Update Dates
+
+            #region Load Email Dates and Numbers
+
+            Label_Emails_Date_All_Rosters.Text =
+              Master_Date("EmailsDateALLRosters").ToString(CultureInfo.InvariantCulture);
+            Label_Emails_Sent_All_Rosters.Text =
+              Master_Int("EmailsSentALLRosters").ToString(CultureInfo.InvariantCulture);
+
+            Label_Emails_Date_Primary_Rosters.Text =
+              Master_Date("EmailsDateAllPrimaryRosters").ToString(CultureInfo.InvariantCulture);
+            Label_Emails_Sent_Primary_Rosters.Text =
+              Master_Int("EmailsSentAllPrimaryRosters").ToString(CultureInfo.InvariantCulture);
+
+            Label_Emails_Date_All_Candidates.Text =
+              Master_Date("EmailsDateAllCandidates").ToString(CultureInfo.InvariantCulture);
+            Label_Emails_Sent_All_Candidates.Text =
+              Master_Int("EmailsSentAllCandidates").ToString(CultureInfo.InvariantCulture);
+            #endregion Load Email Dates and Numbers
+
+            #region Is Election Deletion Permitted
+            RadioButtonListPermitElectionDeletions.SelectedValue = Master_Bool("IsElectionDeletionPermitted") ? "T" : "F";
+
+            //if (db.User_Name().ToLower() == "ron")
+            RadioButtonListPermitElectionDeletions.Enabled = IsSuperUser;
+            #endregion
+          }
+        }
+
+        catch (Exception ex)
+        {
+          #region
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+          #endregion
+        }
+      }
+    }
+
+    protected DataTable TableEmails(string stateCode, string emailAddrColumn)
+    {
+      var sql = string.Empty;
+      sql += "SELECT EmailAddr,StateEmailAddr,EmailAddrVoteUSA," /*"LDSEmailAddr,"*/ + "FName,MName,Nickname,LName,Suffix,Address,CityStateZip,StateAddress,StateCityStateZip,LDSCityStateZip";
+      sql += " FROM Politicians";
+      sql += " WHERE StateCode = " + db.SQLLit(stateCode);
+      sql += " AND " + emailAddrColumn + " != ''";
+
+      return db.Table(sql);
+    }
+
+    protected string LName(DataRow rowEmail)
+    {
+      var lName = string.Empty;
+      if (!string.IsNullOrEmpty(rowEmail["MName"].ToString()))
+        lName += rowEmail["MName"] + " ";
+      lName += rowEmail["LName"] + " ";
+      if (!string.IsNullOrEmpty(rowEmail["Suffix"].ToString()))
+        lName += rowEmail["Suffix"].ToString();
+      lName = lName.Trim();
+
+      return lName;
+    }
+
+    protected bool Address_CityStateZip(
+      DataRow rowEmail
+      , string address1Column
+      , string cityStateZip1Column
+      , string address2Column
+      , string cityStateZip2Column
+      , ref string address
+      , ref string cityStateZip
+      )
+    {
+      var isInsertEmail = false;
+      if (
+        (!string.IsNullOrEmpty(rowEmail[address1Column].ToString()))
+        && (!string.IsNullOrEmpty(rowEmail[cityStateZip1Column].ToString()))
+        )
+      {
+        isInsertEmail = true;
+        address = rowEmail[address1Column].ToString();
+        cityStateZip = rowEmail[cityStateZip1Column].ToString();
+      }
+      else if (
+        (!string.IsNullOrEmpty(rowEmail[address2Column].ToString()))
+        && (!string.IsNullOrEmpty(rowEmail[cityStateZip2Column].ToString()))
+        )
+      {
+        isInsertEmail = true;
+        address = rowEmail[address2Column].ToString();
+        cityStateZip = rowEmail[cityStateZip2Column].ToString();
+      }
+      return isInsertEmail;
+    }
+
+    protected int Insert_Temp_Email_Addresses(
+      string emailAddress,
+      string fName,
+      string lName,
+      string address,
+      string cityStateZip
+      )
+    {
+      var sqlInsert = string.Empty;
+      sqlInsert += "INSERT INTO votetemp.tempemailaddresses";
+      sqlInsert += "(";
+      sqlInsert += "EmailAddress";
+      sqlInsert += ",Contact";
+      sqlInsert += ",PoliticianKey";
+      sqlInsert += ",OfficeKey";
+      sqlInsert += ",ElectionKey";
+      sqlInsert += ",StateCode";
+      sqlInsert += ",PartyKey";
+      sqlInsert += ",FName";
+      sqlInsert += ",LName";
+      sqlInsert += ",Title";
+      sqlInsert += ",Address";
+      sqlInsert += ",CityStateZip";
+      sqlInsert += ")";
+      sqlInsert += " VALUES";
+      sqlInsert += "(";
+      sqlInsert += db.SQLLit(emailAddress);
+      sqlInsert += ",''";
+      sqlInsert += ",''";
+      sqlInsert += ",''";
+      sqlInsert += ",''";
+      sqlInsert += ",''";
+      sqlInsert += ",''";
+      sqlInsert += "," + db.SQLLit(fName);
+      sqlInsert += "," + db.SQLLit(lName);
+      sqlInsert += ",''";
+      sqlInsert += "," + db.SQLLit(address);
+      sqlInsert += "," + db.SQLLit(cityStateZip);
+      sqlInsert += ")";
+
+      try
+      {
+        db.ExecuteSql(sqlInsert);
+        return 1;
+      }
+      catch
+      {
+        //fails if there is a duplicate email
+        //so just ignore
+        return 0;
+      }
+    }
+
+    protected void ButtonBuildTempEmails_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region checks
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBoxStateCode);
+        if (!StateCache.IsValidStateCode(TextBoxStateCode.Text.Trim()))
+          throw new ApplicationException("The state code is invalid.");
+        #endregion checks
+
+        var emails = 0;
+
+        const string sql = "Truncate Table votetemp.tempemailaddresses";
+        db.ExecuteSql(sql);
+
+        #region EmailAddr column with email addresses
+        var tableEmails = TableEmails(TextBoxStateCode.Text.Trim(), "EmailAddr");
+
+        foreach (DataRow rowEmail in tableEmails.Rows)
+        {
+          var emailAddress = rowEmail["EmailAddr"].ToString();
+
+          var fName = rowEmail["FName"].ToString();
+
+          var lName = LName(rowEmail);
+
+          #region address & cityStateZip
+          var address = string.Empty;
+          var cityStateZip = string.Empty;
+          var isInsertEmail = Address_CityStateZip(
+            rowEmail
+            , "Address"
+            , "CityStateZip"
+            , "StateAddress"
+            , "StateCityStateZip"
+            , ref  address
+            , ref  cityStateZip
+            );
+          #endregion address & cityStateZip
+
+          if (isInsertEmail)
+          {
+            emails += Insert_Temp_Email_Addresses(
+                   emailAddress,
+                   fName,
+                   lName,
+                   address,
+                   cityStateZip
+                  );
+          }
+        }
+        #endregion EmailAddr column with email addresses
+
+        #region StateEmailAddr column with email address
+        tableEmails = TableEmails(TextBoxStateCode.Text.Trim(), "StateEmailAddr");
+
+        foreach (DataRow rowEmail in tableEmails.Rows)
+        {
+          var emailAddress = rowEmail["StateEmailAddr"].ToString();
+
+          var fName = rowEmail["FName"].ToString();
+          var lName = LName(rowEmail);
+
+          #region address & cityStateZip
+          var address = string.Empty;
+          var cityStateZip = string.Empty;
+          var isInsertEmail = Address_CityStateZip(
+            rowEmail
+            , "StateAddress"
+            , "StateCityStateZip"
+            , "Address"
+            , "CityStateZip"
+            , ref  address
+            , ref  cityStateZip
+            );
+          #endregion address & cityStateZip
+
+          if (isInsertEmail)
+          {
+            emails += Insert_Temp_Email_Addresses(
+                   emailAddress,
+                   fName,
+                   lName,
+                   address,
+                   cityStateZip
+                  );
+          }
+        }
+
+        #endregion StateEmailAddr column with email address
+
+        #region EmailAddrVoteUSA column with email address
+        tableEmails = TableEmails(TextBoxStateCode.Text.Trim(), "EmailAddrVoteUSA");
+
+        foreach (DataRow rowEmail in tableEmails.Rows)
+        {
+          var emailAddress = rowEmail["EmailAddrVoteUSA"].ToString();
+
+          var fName = rowEmail["FName"].ToString();
+
+          var lName = LName(rowEmail);
+
+          #region address & cityStateZip
+          var address = string.Empty;
+          var cityStateZip = string.Empty;
+          var isInsertEmail = Address_CityStateZip(
+            rowEmail
+            , "Address"
+            , "CityStateZip"
+            , "StateAddress"
+            , "StateCityStateZip"
+            , ref  address
+            , ref  cityStateZip
+            );
+          #endregion address & cityStateZip
+
+          if (isInsertEmail)
+          {
+            emails += Insert_Temp_Email_Addresses(
+                   emailAddress,
+                   fName,
+                   lName,
+                   address,
+                   cityStateZip
+                  );
+          }
+        }
+
+        #endregion EmailAddrVoteUSA column with email address
+
+        #region LDSEmailAddr column with email addresses
+        //tableEmails = TableEmails(TextBoxStateCode.Text.Trim(), "LDSEmailAddr");
+
+        //foreach (DataRow rowEmail in tableEmails.Rows)
+        //{
+        //  var emailAddress = rowEmail["LDSEmailAddr"].ToString();
+
+        //  var fName = rowEmail["FName"].ToString();
+
+        //  var lName = LName(rowEmail);
+
+        //  #region address & cityStateZip
+        //  var address = string.Empty;
+        //  var cityStateZip = string.Empty;
+        //  var isInsertEmail = Address_CityStateZip(
+        //    rowEmail
+        //    , "LDSEmailAddr"
+        //    , "LDSCityStateZip"
+        //    , "Address"
+        //    , "CityStateZip"
+        //    , ref  address
+        //    , ref  cityStateZip
+        //    );
+        //  #endregion address & cityStateZip
+
+        //  if (isInsertEmail)
+        //  {
+        //    emails += Insert_Temp_Email_Addresses(
+        //           emailAddress,
+        //           fName,
+        //           lName,
+        //           address,
+        //           cityStateZip
+        //          );
+        //  }
+        //}
+        #endregion LDSEmailAddr column with email addresses
+
+        Msg.Text = db.Ok("The votetemp.tempemailaddresses Table has been created with "
+          + emails + " email addresses.");
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void TextBoxEmailAddr_TextChanged(object sender, EventArgs e)
+    {
+
+    }
+
+    protected void ButtonDeleteEmail_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        var rows = db.Rows_Count_From("Addresses WHERE Email = "
+          + db.SQLLit(TextBoxDeleteEmail.Text.Trim()));
+        if (rows == 1)
+        {
+          var sql = string.Empty;
+          if (CheckBoxListDeleteEmail.SelectedValue == "Row")
+          {
+            sql += "DELETE";
+            sql += " FROM Addresses";
+            sql += " WHERE Email = " + db.SQLLit(TextBoxDeleteEmail.Text.Trim());
+            db.ExecuteSql(sql);
+
+            Msg.Text = db.Ok("The Addresses Table Row with and Email of: "
+              + TextBoxDeleteEmail.Text.Trim() + " has been deleted.");
+          }
+          else
+          {
+            //SelectedValue == "Email"
+            sql += "UPDATE Addresses";
+            sql += " SET Email = ''";
+            sql += " WHERE Email = " + db.SQLLit(TextBoxDeleteEmail.Text.Trim());
+            db.ExecuteSql(sql);
+
+            Msg.Text = db.Ok("Only the Email: "
+              + TextBoxDeleteEmail.Text.Trim() + " has been deleted in the Addresses Table.");
+          }
+
+          TextBoxDeleteEmail.Text = string.Empty;
+        }
+        else
+        {
+          Msg.Text = db.Fail("There is no row in the Addresses Table with and Email of: "
+            + TextBoxDeleteEmail.Text.Trim());
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+
+    }
+
+    protected void CheckBoxListDeleteEmail_SelectedIndexChanged(object sender, EventArgs e)
+    {
+
+    }
+  }
+
+}

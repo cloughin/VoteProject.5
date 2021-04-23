@@ -1,0 +1,54 @@
+﻿using System;
+
+namespace Vote
+{
+  public partial class ForCandidatesPage : PublicPage // not CacheablePage due to Captcha
+  {
+    private const string TitleTagAllStatesDomain =
+      "Free Candidate Advertising & Promotion in Elections";
+
+    private const string MetaDescriptionAllStatesDomain =
+      "Free candidate promotion in elections for voters including pictures, bios, social links and candidate’s positions and views on the issues.";
+
+    private const string MetaKeywordsAllStatesDomain =
+      "candidate, candidates, candidate promotion, candidates promotion, candidate advertising, candidates advertising, election promotion, elections promotion";
+
+    private const string TitleTagSingleStateDomain =
+      "Free Candidate Advertising & Promotion in [[state]] Elections";
+
+    private const string MetaDescriptionSingleStateDomain =
+      "Free candidate promotion in [[state]] elections for voters including pictures, bios, social links and candidate’s positions and views on the issues.";
+
+    private const string MetaKeywordsSingleStateDomain =
+      "[[state]] candidate, [[state]] candidates, [[state]] candidate promotion, [[state]] candidates promotion, [[state]] candidate advertising, [[state]] candidates advertising, [[state]] election promotion, [[state]] elections promotion";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+        if (DomainData.IsValidStateCode) // Single state
+        {
+          if (DomainDesign.IncludeTitleForSingleState)
+            Title = TitleTagSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForSingleState)
+            MetaDescription = MetaDescriptionSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForSingleState)
+            MetaKeywords = MetaKeywordsSingleStateDomain.Substitute();
+        }
+        else
+        {
+          if (DomainDesign.IncludeTitleForAllStates)
+            Title = TitleTagAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForAllStates)
+            MetaDescription = MetaDescriptionAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForAllStates)
+            MetaKeywords = MetaKeywordsAllStatesDomain.Substitute();
+        }
+
+      VoteUsaAddress.NoBreak = true;
+      EmailForm.ToEmailAddress = "mgr@Vote-USA.org";
+      EmailForm.SetItems(
+        "I am a candidate -- I need my logon credentials and instructions");
+
+    }
+  }
+}

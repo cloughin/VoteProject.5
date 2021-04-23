@@ -1,0 +1,82 @@
+using System;
+
+namespace Vote
+{
+  public partial class AboutUsPageX : CacheablePage
+  {
+    public AboutUsPageX()
+    {
+      NoUrlEdit = true;
+    }
+
+   #region Caching support
+
+    protected override bool SuppressCaching
+    {
+      get { return true; }
+    }
+
+    protected override string GetCacheKey()
+    {
+      var key = UrlManager.GetStateCodeFromHostName();
+      var siteId = UrlManager.CurrentQuerySiteId;
+      if (!string.IsNullOrEmpty(siteId))
+        key += "." + siteId;
+
+      return key;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "AboutUs";
+    }
+
+    #endregion Caching support
+
+    private const string TitleTagAllStatesDomain =
+      "About Vote-USA.org’s Operations, Mission, Funding and History";
+
+    private const string MetaDescriptionAllStatesDomain =
+      "About Vote-USA.org and its current operations, mission, funding and history.";
+
+    private const string MetaKeywordsAllStatesDomain =
+      "sample ballot, sample ballots, ballot, ballots, vote, voting, election, primary, elections, candidates";
+
+    private const string TitleTagSingleStateDomain =
+      "About Vote-[[StateCode]].org and its current operations, mission, funding and history.";
+
+    private const string MetaDescriptionSingleStateDomain =
+      "About Vote-[[StateCode]].org and its current operations, mission, funding and history.";
+
+    private const string MetaKeywordsSingleStateDomain =
+      "[[state]] sample ballot, [[state]] sample ballots, [[state]] ballot, ballots, [[state]] vote, [[state]] voting, [[state]] election, [[state]] primary, [[state]] elections, [[state]] candidates";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/SecondaryCommon.css");
+
+      if (!IsPostBack)
+        if (DomainData.IsValidStateCode) // Single state
+        {
+          if (DomainDesign.IncludeTitleForSingleState)
+            TitleTag.Text = TitleTagSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForSingleState)
+            MetaDescriptionTag.Content =
+              MetaDescriptionSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForSingleState)
+            MetaKeywordsTag.Content = MetaKeywordsSingleStateDomain.Substitute();
+        }
+        else
+        {
+          if (DomainDesign.IncludeTitleForAllStates)
+            TitleTag.Text = TitleTagAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForAllStates)
+            MetaDescriptionTag.Content =
+              MetaDescriptionAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForAllStates)
+            MetaKeywordsTag.Content = MetaKeywordsAllStatesDomain.Substitute();
+        }
+    }
+  }
+}

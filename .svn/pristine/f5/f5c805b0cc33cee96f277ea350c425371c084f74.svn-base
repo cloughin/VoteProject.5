@@ -1,0 +1,458 @@
+using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+
+namespace Vote.Admin
+{
+  public partial class QuestionAnswers : SecureAdminPage
+  {
+    protected DataRow Row_Question_Optional(string QuestionKey)
+    {
+      string SQL = string.Empty;
+      SQL += " SELECT ";
+      SQL += " Questions.QuestionKey ";
+      SQL += " ,Questions.IssueKey ";
+      SQL += " ,Questions.QuestionOrder ";
+      SQL += " ,Questions.Question ";
+      SQL += " ,Questions.IsQuestionOmit ";
+      SQL += " FROM Questions ";
+      SQL += " WHERE QuestionKey = " + db.SQLLit(QuestionKey);
+      return (db.Row_Optional(SQL));
+    }
+
+    protected void Reasign_Answer_To_Question_Moving_To(string PoliticianKey)
+    {
+      string issueKey_for_Move_To_QuestionKey = db.Questions_Str(
+        Textbox_QuestionKey_Move_Answers_To.Text.Trim(),
+        "IssueKey");
+
+      string SQLUPDATE = string.Empty;
+      SQLUPDATE += "UPDATE Answers";
+      SQLUPDATE += " SET QuestionKey = " + db.SQLLit(Textbox_QuestionKey_Move_Answers_To.Text.Trim());
+      SQLUPDATE += " ,IssueKey = " + db.SQLLit(issueKey_for_Move_To_QuestionKey);
+      SQLUPDATE += " WHERE QuestionKey = " + db.SQLLit(Textbox_QuestionKey_Move_Answers_From.Text.Trim());
+      SQLUPDATE += " AND PoliticianKey = " + db.SQLLit(PoliticianKey);
+      db.ExecuteSql(SQLUPDATE);
+    }
+
+    protected void Delete_Answer(string PoliticianKey, string QuestionKey)
+    {
+      string SQLDELETE = string.Empty;
+      SQLDELETE += "DELETE FROM Answers";
+      SQLDELETE += " WHERE PoliticianKey = " + db.SQLLit(PoliticianKey);
+      SQLDELETE += " AND QuestionKey = " + db.SQLLit(QuestionKey);
+      db.ExecuteSql(SQLDELETE);
+    }
+
+    protected void ButtonMoveQuestion_Click1(object sender, EventArgs e)
+    {
+      try
+      {
+        #region Checks
+        db.Throw_Exception_TextBox_Script(Textbox_QuestionKey_Move_Question_From);
+        db.Throw_Exception_TextBox_Html(Textbox_QuestionKey_Move_Question_From);
+
+        db.Throw_Exception_TextBox_Script(Textbox_IssueKey_Move_To);
+        db.Throw_Exception_TextBox_Html(Textbox_IssueKey_Move_To);
+
+        //if (db.Row_Optional(sql.Question(Textbox_QuestionKey_Move_Question_From.Text.Trim())) == null)
+        if (Row_Question_Optional(Textbox_QuestionKey_Move_Question_From.Text.Trim()) == null)
+          throw new ApplicationException("The QuestionKey(" + Textbox_QuestionKey_Move_Question_From.Text.Trim() + ") does not exist");
+
+        if (db.Row_Optional(sql.Issue(Textbox_IssueKey_Move_To.Text.Trim())) == null)
+          throw new ApplicationException("The IssueKey(" + Textbox_IssueKey_Move_To.Text.Trim() + ") does not exist.");
+        #endregion
+
+        #region Remove all Cached pages for IssueKey - Needs to be done first before old question is deleted
+        #region Remove Issue.aspx cached pages
+        //db.Cache_Remove_Issue_Pages(Textbox_IssueKey_Move_To.Text.Trim());
+        //db.Cache_Remove_Issue_Pages(db.Questions_IssueKey(Textbox_QuestionKey_Move_Question_From.Text.Trim()));
+        #endregion
+
+        #region Remove PoliticianIssue.aspx cached pages
+        //db.Cache_Remove_PoliticianIssue_Issue(Textbox_IssueKey_Move_To.Text.Trim());
+        //db.Cache_Remove_PoliticianIssue_Issue(db.Questions_IssueKey(Textbox_QuestionKey_Move_Question_From.Text.Trim()));
+        #endregion
+        #endregion
+
+        string SQL = string.Empty;
+        //Create a new QuestionKey for the new Issue
+        string NewQuestionKey = Textbox_IssueKey_Move_To.Text.ToString().Trim();
+        NewQuestionKey += db.MakeUnique6Digits();
+
+        //if (db.Row_Optional(sql.Question(NewQuestionKey)) != null)
+        if (Row_Question_Optional(NewQuestionKey) != null)
+          throw new ApplicationException("The new QuestionKey (" + NewQuestionKey + ") already exist");
+
+        //Update Questions with new QuestionKey and IssueKey
+        SQL = "UPDATE Questions";
+        SQL += " SET QuestionKey = " + db.SQLLit(NewQuestionKey);
+        SQL += " ,IssueKey = " + db.SQLLit(Textbox_IssueKey_Move_To.Text.Trim());
+        SQL += " WHERE QuestionKey = " + db.SQLLit(Textbox_QuestionKey_Move_Question_From.Text.Trim());
+        db.ExecuteSql(SQL);
+
+        //Update all the Answers with the new QuestionKey
+        SQL = "UPDATE Answers";
+        SQL += " SET QuestionKey = " + db.SQLLit(NewQuestionKey);
+        SQL += " ,IssueKey = " + db.SQLLit(Textbox_IssueKey_Move_To.Text.Trim());
+        SQL += " WHERE QuestionKey = " + db.SQLLit(Textbox_QuestionKey_Move_Question_From.Text.Trim());
+        db.ExecuteSql(SQL);
+
+        DB.VoteLog.LogPoliticianAnswers.UpdateIssueKeyByQuestionKey(
+          Textbox_IssueKey_Move_To.Text.Trim(), 
+          Textbox_QuestionKey_Move_Question_From.Text.Trim()
+          );
+        DB.VoteLog.LogPoliticianAnswers.UpdateQuestionKeyByQuestionKey(
+          NewQuestionKey, Textbox_QuestionKey_Move_Question_From.Text.Trim()
+          );
+
+        Msg.Text = db.Ok("Question: ("
+          + db.Questions_Str(
+              NewQuestionKey
+              , "Question"
+              )
+          + ") has been moved to Issue ("
+          + db.Issues_Issue(Textbox_IssueKey_Move_To.Text.Trim()) + ")");
+
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+      finally
+      {
+        //ShowReport(db.QueryString("IssueLevel"), db.QueryString("State").Trim());
+      }
+    }
+
+    protected void ButtonMoveAnswers_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region Checks
+        db.Throw_Exception_TextBox_Script(Textbox_QuestionKey_Move_Answers_From);
+        db.Throw_Exception_TextBox_Html(Textbox_QuestionKey_Move_Answers_From);
+
+        db.Throw_Exception_TextBox_Script(Textbox_QuestionKey_Move_Answers_To);
+        db.Throw_Exception_TextBox_Html(Textbox_QuestionKey_Move_Answers_To);
+
+        //if (db.Row_Optional(sql.Question(Textbox_QuestionKey_Move_Answers_From.Text.Trim())) == null)
+        if (Row_Question_Optional(Textbox_QuestionKey_Move_Answers_From.Text.Trim()) == null)
+          throw new ApplicationException("The QuestionKey (" + Textbox_QuestionKey_Move_Answers_From.Text.Trim() + ") does not exist");
+
+        //if (db.Row_Optional(sql.Question(Textbox_QuestionKey_Move_Answers_To.Text.Trim())) == null)
+        if (Row_Question_Optional(Textbox_QuestionKey_Move_Answers_To.Text.Trim()) == null)
+          throw new ApplicationException("The QuestionKey (" + Textbox_QuestionKey_Move_Answers_To.Text.Trim() + ") does not exist");
+        #endregion
+
+        #region Remove Issue.aspx and PoliticianIssue.aspx cached pages - Needs to be done first before any Question Rows are deleted
+        //db.Cache_Remove_Issue_Pages(db.Questions_IssueKey(Textbox_QuestionKey_Move_Answers_From.Text.Trim()));
+        //db.Cache_Remove_Issue_Pages(db.Questions_IssueKey(Textbox_QuestionKey_Move_Answers_To.Text.Trim()));
+
+        //db.Cache_Remove_PoliticianIssue_Issue(db.Questions_IssueKey(Textbox_QuestionKey_Move_Answers_From.Text.Trim()));
+        //db.Cache_Remove_PoliticianIssue_Issue(db.Questions_IssueKey(Textbox_QuestionKey_Move_Answers_To.Text.Trim()));
+        #endregion
+
+        #region inits
+        string SQL = string.Empty;
+        string SQLDELETE = string.Empty;
+        string SQLINSERT = string.Empty;
+        string SQLUPDATE = string.Empty;
+        DataRow Row_Answer_By_Politician_To_Question = null;
+        #endregion inits
+
+        #region Table of Answers to move
+        SQL = string.Empty;
+        SQL += " SELECT ";
+        SQL += " Answers.PoliticianKey ";
+        SQL += ",Answers.QuestionKey ";
+        SQL += ",Answers.StateCode ";
+        SQL += ",Answers.IssueKey ";
+        SQL += ",Answers.Answer ";
+        SQL += ",Answers.Source ";
+        SQL += ",Answers.DateStamp ";
+        SQL += ",Answers.UserName ";
+        SQL += ",Answers.YouTubeUrl ";
+        SQL += ",Answers.YouTubeDate ";
+        SQL += " FROM Answers ";
+        SQL += " WHERE Answers.QuestionKey = "
+          + db.SQLLit(Textbox_QuestionKey_Move_Answers_From.Text.Trim());
+        SQL += " ORDER BY PoliticianKey";
+        DataTable Table_Answers_To_Move = db.Table(SQL);
+        #endregion Table of Answers to move
+
+        foreach (DataRow Row_Answer_To_Move in Table_Answers_To_Move.Rows)
+        {
+          #region Process each Answer being moved
+
+          #region possible existing answer to question by politician
+          SQL = string.Empty;
+          SQL += " SELECT ";
+          SQL += " Answers.PoliticianKey ";
+          SQL += ",Answers.QuestionKey ";
+          SQL += ",Answers.StateCode ";
+          SQL += ",Answers.IssueKey ";
+          SQL += ",Answers.Answer ";
+          SQL += ",Answers.Source ";
+          SQL += ",Answers.DateStamp ";
+          SQL += ",Answers.UserName ";
+          SQL += ",Answers.YouTubeUrl ";
+          SQL += ",Answers.YouTubeDate ";
+          SQL += " FROM Answers";
+          SQL += " WHERE PoliticianKey = "
+            + db.SQLLit(Row_Answer_To_Move["PoliticianKey"].ToString());
+          SQL += " AND QuestionKey = "
+            + db.SQLLit(Textbox_QuestionKey_Move_Answers_To.Text.Trim());
+
+          Row_Answer_By_Politician_To_Question = db.Row_Optional(SQL);
+          #endregion existing answer to question by politician
+
+          //Check if Politician already answered the question
+          if (Row_Answer_By_Politician_To_Question == null)
+          {
+            #region No answer to the same question by the same politician
+            Reasign_Answer_To_Question_Moving_To(
+              Row_Answer_To_Move["PoliticianKey"].ToString()
+              );
+            #endregion No answer to the same question by the same politician
+          }
+          else
+          {
+            #region Politician answered both questions. So keep the most recent answer, delete the other
+            DateTime time_Answer_To_Move = (DateTime)Row_Answer_To_Move["DateStamp"];
+            DateTime time_Answer_Current_For_Politician = (DateTime)Row_Answer_By_Politician_To_Question["DateStamp"];
+
+            if (time_Answer_To_Move > time_Answer_Current_For_Politician)
+            {
+              #region Answer being moved is more current
+              //Delete current answer for politician
+              //then reasign answer to new question for politician
+              Delete_Answer(
+               Row_Answer_To_Move["PoliticianKey"].ToString(),
+               Textbox_QuestionKey_Move_Answers_To.Text.Trim()
+               );
+
+              Reasign_Answer_To_Question_Moving_To(
+               Row_Answer_To_Move["PoliticianKey"].ToString()
+               );
+              #endregion Answer being moved is more current
+            }
+            else
+            {
+              #region Answer being moved is older
+              //delete the answer being moved
+              Delete_Answer(
+                Row_Answer_To_Move["PoliticianKey"].ToString(),
+                Textbox_QuestionKey_Move_Answers_From.Text.Trim()
+                );
+              #endregion Answer being moved is older
+            }
+
+            #endregion Politician answered both questions. So keep the most recent answer, delete the other
+          }
+          #endregion Process each Answer being moved
+        }
+
+        #region Msg
+        Msg.Text = db.Ok("All Answers for Question ID ("
+          + Textbox_QuestionKey_Move_Answers_From.Text.Trim()
+          + " - "
+          //+ QuestionBeingDeleted
+          + db.Questions_Str(Textbox_QuestionKey_Move_Answers_From.Text.Trim(), "Question")
+          + ") have been moved to Question ID ("
+          + Textbox_QuestionKey_Move_Answers_To.Text.Trim()
+           + " - "
+          + db.Questions_Str(Textbox_QuestionKey_Move_Answers_To.Text.Trim(), "Question")
+         + ")"
+         );
+        #endregion Msg
+
+        #region Needs to be done after Msg - delete question of the answers being moved
+        SQLDELETE = string.Empty;
+        SQLDELETE += "DELETE FROM Questions";
+        SQLDELETE += " WHERE QuestionKey = " + db.SQLLit(
+          Textbox_QuestionKey_Move_Answers_From.Text.Trim()
+          );
+        db.ExecuteSql(SQLDELETE);
+        #endregion delete question of the answers being moved
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+      finally
+      {
+        //ShowReport(ViewState["IssueLevel"].ToString(), ViewState["StateCode"].ToString());
+      }
+    }
+
+    protected void ButtonMatchKeys_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region Table of Answers to move
+        string SQL = string.Empty;
+        SQL += " SELECT ";
+        SQL += " Answers.PoliticianKey ";
+        SQL += ",Answers.QuestionKey ";
+        SQL += ",Answers.IssueKey ";
+        SQL += " FROM Answers ";
+        DataTable Table_Answers = db.Table(SQL);
+
+        int count_changes = 0;
+        int count_answers_deleted = 0;
+        foreach (DataRow Row_Answer in Table_Answers.Rows)
+        {
+          if (db.Is_Valid_Question(Row_Answer["QuestionKey"].ToString()))
+          {
+            #region QuestionKey exists in Questions Table
+            string correct_issueKey = db.Questions_Str(
+              Row_Answer["QuestionKey"].ToString(),
+              "IssueKey");
+            if (correct_issueKey != Row_Answer["IssueKey"].ToString())
+            {
+              count_changes++;
+              string SQLUPDATE = string.Empty;
+              SQLUPDATE += "UPDATE Answers";
+              SQLUPDATE += " SET IssueKey = " + db.SQLLit(correct_issueKey);
+              SQLUPDATE += " WHERE PoliticianKey = " + db.SQLLit(Row_Answer["PoliticianKey"].ToString());
+              SQLUPDATE += " AND QuestionKey = " + db.SQLLit(Row_Answer["QuestionKey"].ToString());
+              db.ExecuteSql(SQLUPDATE);
+            }
+            #endregion QuestionKey exists in Questions Table
+          }
+          else
+          {
+            #region No Question row for QuestionKey
+            count_answers_deleted++;
+            Delete_Answer(
+              Row_Answer["PoliticianKey"].ToString(),
+              Row_Answer["QuestionKey"].ToString()
+              );
+            #endregion region No Question row for QuestionKey
+          }
+        }
+            #endregion Table of Answers to move
+
+        Msg.Text = db.Ok(count_changes.ToString() + " IssueKeys were changed. "
+          + count_answers_deleted.ToString() + " Answers were deleted.");
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    private void Page_Load(object sender, System.EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        Page.Title = "Move Questions and Answers";
+        #region Security Check and Values for ViewState["StateCode"] ViewState["CountyCode"] ViewState["LocalCode"]
+
+        ViewState["StateCode"] = db.State_Code();
+        ViewState["CountyCode"] = db.County_Code();
+        ViewState["LocalCode"] = db.Local_Code();
+        if (!db.Is_User_Security_Ok())
+          SecurePage.HandleSecurityException();
+
+        #endregion Security Check and Values for ViewState["StateCode"] ViewState["CountyCode"] ViewState["LocalCode"]
+
+        #region ViewState Values
+        #region note
+        //Level A = StateCode LL - indicating all politicians
+        //Level B = StateCode US - National Issues
+        //Level C and higher = StateCode - State Issues
+        #endregion note
+        ViewState["IssueLevel"] = string.Empty;
+        ViewState["StateCode"] = string.Empty;
+
+        #region QueryStrings: ViewState["IssueLevel"]  ViewState["StateCode"]
+        if (!string.IsNullOrEmpty(GetQueryString("IssueLevel")))
+          ViewState["IssueLevel"] = GetQueryString("IssueLevel");
+        if (!string.IsNullOrEmpty(VotePage.QueryState))
+          ViewState["StateCode"] = VotePage.QueryState;
+        //if(ViewState["IssueLevel"].ToString() == "C")
+        //  //At State level Group and StateCode are the same
+        //  Session["UserStateCode"] = db.QueryString("State");
+        #endregion
+        #endregion ViewState Values
+
+        #region Additional Security Checks
+        if ((ViewState["IssueLevel"].ToString() == string.Empty)
+         || (ViewState["StateCode"].ToString() == string.Empty))
+          HandleFatalError("The IssueLevel and/or StateCode is missing"); 
+        #endregion Security Checks
+
+        try
+        {
+
+          #region PageTitle commented out
+          //PageTitle.Text = "Move Questions and Answers";
+          //switch (ViewState["IssueLevel"].ToString())
+          //{
+          //  case "A":
+          //    PageTitle.Text += "<br>for ALL Candidates";
+          //    break;
+          //  case "B":
+          //    PageTitle.Text += "<br>for NATIONAL Office Candidates";
+          //    break;
+          //  case "C":
+          //    PageTitle.Text += "<br>for "
+          //      + db.States_Str(ViewState["StateCode"].ToString(), "State").ToUpper()
+          //      + " Office Candidates";
+          //    break;
+          //  case "D":
+          //    PageTitle.Text += "<br>for "
+          //      + db.States_Str(ViewState["StateCode"].ToString(), "State").ToUpper()
+          //      + " Office Candidates";
+          //    break;
+          //}
+          #endregion
+
+          PageTitle.Text = db.PageTitle_QuestionAnswers(ViewState["StateCode"].ToString(), ViewState["IssueLevel"].ToString());
+
+          //HyperLinkReport.NavigateUrl = "/Admin/IssuesReport.aspx"
+          //+ "?IssueLevel=" + ViewState["IssueLevel"].ToString()
+          //+ "&StateCode=" + ViewState["StateCode"].ToString();
+          HyperLinkReport.NavigateUrl = db.Url_Admin_IssuesReport(
+            ViewState["IssueLevel"].ToString()
+          , ViewState["StateCode"].ToString());
+
+          //ShowReport(ViewState["IssueLevel"].ToString(), ViewState["StateCode"].ToString());
+        }
+        catch (Exception ex)
+        {
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+        }
+      }
+    }
+
+    protected void Page_PreRender(object sender, EventArgs e)
+    {
+      try
+      {
+        if (Session["ErrNavBarAdmin"].ToString() != string.Empty)
+          Msg.Text = db.Fail(Session["ErrNavBarAdmin"].ToString());
+      }
+      catch /*(Exception ex)*/
+      {
+      }
+    }
+  }
+}

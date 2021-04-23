@@ -1,0 +1,14 @@
+﻿#main-tabs #tab-social div.medium input
+{
+  margin-top: 2px;
+}
+
+#main-tabs #tab-upload .masker2
+{
+  display: block;
+  filter: alpha(opacity: 0);
+  height: 26px;
+  left: -155px;
+  opacity: 0;
+  width: 155px;
+}

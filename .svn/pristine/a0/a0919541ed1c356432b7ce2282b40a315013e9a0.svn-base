@@ -1,0 +1,1951 @@
+﻿namespace Vote
+{
+// ReSharper disable InconsistentNaming
+  public static partial class db
+// ReSharper restore InconsistentNaming
+  {
+
+    //public static DateTime Elections_Date(
+    //  string ElectionKey
+    //  , string Column)
+    //{
+    //  if (ElectionKey != string.Empty)
+    //    return db.Single_Key_Date("Elections", Column, "ElectionKey", ElectionKey);
+    //  else
+    //    return DateTime.MinValue;
+    //}
+
+    //#region Referendums SELECT
+    //public static string Referendums(string ElectionKey, string ReferendumKey, string Column)
+    //{
+    //  if (db.Is_Valid_Election(ElectionKey))
+    //  {
+    //    if (ReferendumKey != string.Empty)
+    //      return db.Double_Key_Str("Referendums", Column, "ElectionKey", ElectionKey, "ReferendumKey", ReferendumKey);
+    //    else
+    //      return string.Empty;
+    //  }
+    //  else
+    //  {
+    //    return string.Empty;
+    //  }
+    //}
+    //#endregion
+
+    //public static void Double_Key_Update_Int(string Table, string Column, int ColumnValue, string KeyName1, string KeyValue1, string KeyName2, string KeyValue2)
+    //{
+    //  string UpdateSQL = "UPDATE " + Table
+    //    + " SET " + Column + " = " + ColumnValue.ToString()
+    //    + " WHERE " + KeyName1 + " = " + db.SQLLit(KeyValue1)
+    //    + " AND " + KeyName2 + " = " + db.SQLLit(KeyValue2);
+    //  db.ExecuteSQL(UpdateSQL);
+    //}
+
+    //public static void Double_Key_Update_Bool(string Table, string Column, bool ColumnValue, string KeyName1, string KeyValue1, string KeyName2, string KeyValue2)
+    //{
+    //  string UpdateSQL = "UPDATE " + Table
+    //    + " SET " + Column + " = " + Convert.ToUInt16(ColumnValue).ToString()
+    //    + " WHERE " + KeyName1 + " = " + db.SQLLit(KeyValue1)
+    //    + " AND " + KeyName2 + " = " + db.SQLLit(KeyValue2);
+    //  db.ExecuteSQL(UpdateSQL);
+    //}
+
+    //public static int Double_Key_Int(string Table, string Column, string KeyName1, string KeyValue1, string KeyName2, string KeyValue2)
+    //{
+    //  string SQL = "SELECT " + Column.Trim() + " FROM " + Table.Trim()
+    //    + " WHERE " + KeyName1.Trim() + " = " + db.SQLLit(KeyValue1.Trim())
+    //    + " AND " + KeyName2.Trim() + " = " + db.SQLLit(KeyValue2.Trim());
+    //  DataTable table = db.Table(SQL);
+    //  if (table.Rows.Count == 1)
+    //  {
+    //    return (int) table.Rows[0][Column];
+    //  }
+    //  else
+    //  {
+    //    throw new ApplicationException(db.DBErrorMsg(SQL, "Did not find a single row"));
+    //  }
+    //}
+
+    //public static bool Double_Key_Bool(string Table, string Column, string KeyName1, string KeyValue1, string KeyName2, string KeyValue2)
+    //{
+    //  string SQL = "SELECT " + Column.Trim() + " FROM " + Table.Trim()
+    //    + " WHERE " + KeyName1.Trim() + " = " + db.SQLLit(KeyValue1.Trim())
+    //    + " AND " + KeyName2.Trim() + " = " + db.SQLLit(KeyValue2.Trim());
+    //  DataRow Row = db.Row(SQL);
+    //  if (Row != null)
+    //  {
+    //    return (bool) Row[Column];
+    //  }
+    //  else
+    //  {
+    //    throw new ApplicationException(db.DBErrorMsg(SQL, "Did not find a single row"));
+    //  }
+    //}
+    //public static bool Is_Election_Previous(
+    //  string electionKey)
+    //{
+    //  if (db.Elections_Date(electionKey, "ElectionDate") < DateTime.Now)
+    //    return true;
+    //  else
+    //    return false;
+    //}
+
+    //public static DateTime Elections_ElectionDate(
+    // string ElectionKey)
+    //{
+    //  return db.Elections_Date(ElectionKey, "ElectionDate");
+    //}
+    //public static string ElectionKey_Local(string ElectionKey, string StateCode, string CountyCode, string LocalCode)
+    //{
+    //  if ((ElectionKey != string.Empty) && (StateCode != string.Empty) && (CountyCode != string.Empty) && (LocalCode != string.Empty))
+    //  {
+    //    return db.ElectionKey_State(ElectionKey, StateCode) + CountyCode + LocalCode;
+    //  }
+    //  else
+    //    return string.Empty;
+    //}
+    //public static string ElectionKey_County(string ElectionKey, string StateCode, string CountyCode)
+    //{
+    //  if (
+    //    (ElectionKey != string.Empty)
+    //    && (StateCode != string.Empty)
+    //    && (CountyCode != string.Empty)
+    //    )
+    //  {
+    //    return db.ElectionKey_State(ElectionKey, StateCode) + CountyCode;
+    //  }
+    //  else
+    //    return string.Empty;
+    //}
+
+    //#region Referendums UPDATE
+    //public static void ReferendumsUpdate(string ElectionKey, string ReferendumKey, string Column, string ColumnValue)
+    //{
+    //  db.Double_Key_Update_Str("Referendums", Column, ColumnValue, "ElectionKey", ElectionKey, "ReferendumKey", ReferendumKey);
+    //}
+    //public static void ReferendumsUpdateBool(string ElectionKey, string ReferendumKey, string Column, bool ColumnValue)
+    //{
+    //  db.Double_Key_Update_Bool("Referendums", Column, ColumnValue, "ElectionKey", ElectionKey, "ReferendumKey", ReferendumKey);
+    //}
+    //public static void ReferendumsUpdateInt(string ElectionKey, string ReferendumKey, string Column, int ColumnValue)
+    //{
+    //  db.Double_Key_Update_Int("Referendums", Column, ColumnValue, "ElectionKey", ElectionKey, "ReferendumKey", ReferendumKey);
+    //}
+    //#endregion
+    //public static bool ReferendumsBool(string ElectionKey, string ReferendumKey, string Column)
+    //{
+    //  if (db.Is_Valid_Election(ElectionKey))
+    //  {
+    //    if (ReferendumKey != string.Empty)
+    //      return db.Double_Key_Bool("Referendums", Column, "ElectionKey", ElectionKey, "ReferendumKey", ReferendumKey);
+    //    else
+    //      return false;
+    //  }
+    //  else
+    //  {
+    //    return false;
+    //  }
+    //}
+    //public static int ReferendumsInt(string ElectionKey, string ReferendumKey, string Column)
+    //{
+    //  if (db.Is_Valid_Election(ElectionKey))
+    //  {
+    //    if (ReferendumKey != string.Empty)
+    //      //return db.Single_Key_Int("Referendums", Column, "ReferendumKey", ReferendumKey);
+    //      return db.Double_Key_Int("Referendums", Column, "ElectionKey", ElectionKey, "ReferendumKey", ReferendumKey);
+    //    else
+    //      return 0;
+    //  }
+    //  else
+    //  {
+    //    return 0;
+    //  }
+    //}
+    //public static string Anchor_Admin_Referendums(string electionKey,
+    //  string referendumKey)
+    //{
+    //  string anchor = string.Empty;
+    //  anchor += "<a href=";
+    //  anchor += "\"";
+    //  anchor += "/Admin/Referendum.aspx";
+    //  anchor += "?Election=" + electionKey;
+    //  anchor += "&Referendum=" + referendumKey;
+    //  anchor += "\"";
+
+    //  anchor += " title=";
+    //  anchor += "\"";
+    //  anchor += db.Referendums(electionKey, referendumKey, "ReferendumTitle");
+    //  anchor += " Description, Details and Full Text";
+    //  anchor += "\"";
+
+    //  anchor += ">";
+
+    //  anchor += db.Referendums(electionKey, referendumKey, "ReferendumTitle");
+    //  anchor += "</a>";
+    //  return anchor;
+    //}
+    ////------------------------
+    //#region Email Addresses & Anchors
+
+    //public static string Politician_Email_Addr_Any_For_Textbox(PageCache cache,
+    //  string politicianKey)
+    //{
+    //  string Email_Addr =
+    //    cache.Politicians.GetPublicEmail(politicianKey);
+    //  if (!string.IsNullOrEmpty(Email_Addr))
+    //  {
+    //    Email_Addr = db.Str_Remove_Http(Email_Addr);
+    //    Email_Addr = db.Str_Remove_MailTo(Email_Addr);
+    //  }
+    //  return Email_Addr;
+    //}
+    //#endregion Email Addresses & Anchors
+    ////------------------------
+    //public const string No_Email = "no email";
+
+    //public static string Politician_Email_Addr_Any_For_Label_Anchor_Mailto(
+    //  PageCache cache, string politicianKey)
+    //{
+    //  string emailAddress = db.Politician_Email_Addr_Any_For_Textbox(cache,
+    //    politicianKey);
+
+    //  if (!string.IsNullOrEmpty(emailAddress))
+    //    return db.Anchor_Mailto_Email(emailAddress);
+    //  else
+    //    return db.No_Email;
+    //}
+
+    //public static bool Is_Party_Code_Empty(PageCache cache, string partyKey)
+    //{
+    //  string partyCode = cache.Parties.GetPartyCode(partyKey);
+    //  return string.IsNullOrEmpty(partyCode);
+    //  //if (
+    //  //  (!db.Is_Valid_Party(PartyKey))
+    //  //  || (string.IsNullOrEmpty(db.Parties_PartyCode(PartyKey)))
+    //  //  )
+    //  //  return true;
+    //  //else
+    //  //  return false;
+    //}
+
+    //public static bool Triple_Key_Bool(string Table, string Column, string KeyName1, string KeyValue1, string KeyName2, string KeyValue2, string KeyName3, string KeyValue3)
+    //{
+    //  string SQL = "SELECT " + Column.Trim() + " FROM " + Table.Trim()
+    //    + " WHERE " + KeyName1.Trim() + " = " + db.SQLLit(KeyValue1.Trim())
+    //    + " AND " + KeyName2.Trim() + " = " + db.SQLLit(KeyValue2.Trim())
+    //  + " AND " + KeyName3.Trim() + " = " + db.SQLLit(KeyValue3.Trim());
+    //  DataRow Row = db.Row(SQL);
+    //  if (Row != null)
+    //  {
+    //    return (bool) Row[Column];
+    //  }
+    //  else
+    //  {
+    //    throw new ApplicationException(db.DBErrorMsg(SQL, "Did not find a single row"));
+    //  }
+    //}
+    ////=====================
+    //#region /Admin/OfficeWinner.aspx Urls
+
+    //public static string Url_Admin_OfficeWinner()
+    //{
+    //  return "/Admin/OfficeWinner.aspx";
+    //}
+    //#endregion /Admin/OfficeWinner.aspx Urls
+    ////=====================
+
+    //#region /Admin/OfficeContest.aspx URLs
+
+    //public static string Url_Admin_OfficeContest()
+    //{
+    //  return "/Admin/OfficeContest.aspx";
+    //}
+
+    //#endregion /Admin/OfficeContest.aspx URLs
+
+    //#region ElectionsPoliticians SELECT
+    //public static bool ElectionsPoliticians_Bool(
+    //  string ElectionKey
+    //  , string OfficeKey
+    //  , string PoliticianKey
+    //  , string Column)
+    //{
+    //  return db.Triple_Key_Bool("ElectionsPoliticians",
+    //    Column,
+    //    "ElectionKey", ElectionKey,
+    //    "OfficeKey", OfficeKey,
+    //    "PoliticianKey", PoliticianKey
+    //    );
+    //}
+
+
+    //#endregion
+    //public static void ElectionsOffices_Update_Bool(string ElectionKey, string OfficeKey, string Column, bool ColumnValue)
+    //{
+    //  db.Double_Key_Update_Bool("ElectionsOffices", Column, ColumnValue, "ElectionKey", ElectionKey, "OfficeKey", OfficeKey);
+    //}
+
+    //public static bool Is_Election_Upcoming(PageCache cache, string electionKey)
+    //{
+    //  return cache.Elections.GetElectionDate(electionKey) >= DateTime.Today;
+    //}
+
+    //public static string Politician_Email_Addr_Any_For_Label_Anchor_Mailto(
+    //  string politicianKey)
+    //{
+    //  return Politician_Email_Addr_Any_For_Label_Anchor_Mailto(
+    //    VotePage.GetPageCache(), politicianKey);
+    //}
+
+    //public static string Url_Admin_OfficeWinner(
+    //  string electionKey
+    //  , string officeKey
+    //  , string politicianKey
+    //  )
+    //{
+    //  string url = db.Url_Admin_OfficeWinner();
+
+    //  if (!string.IsNullOrEmpty(electionKey))
+    //    url += "&Election=" + electionKey;
+
+    //  if (!string.IsNullOrEmpty(officeKey))
+    //    url += "&Office=" + officeKey;
+
+    //  if (!string.IsNullOrEmpty(politicianKey))
+    //    url += "&Id=" + politicianKey;
+
+    //  //Url += db.Url_Add_Security_Codes(PoliticianKey);
+    //  return db.Fix_Url_Parms(url);
+    //}
+
+    //public static string Url_Admin_OfficeContest(
+    //  string electionKey
+    //  , string officeKey
+    //  , string politicianKey
+    //  , string mode
+    //  )
+    //{
+    //  string url = db.Url_Admin_OfficeContest();
+
+    //  if (!string.IsNullOrEmpty(electionKey))
+    //    url += "&Election=" + electionKey;
+
+    //  if (!string.IsNullOrEmpty(officeKey))
+    //    url += "&Office=" + officeKey;
+
+    //  if (!string.IsNullOrEmpty(politicianKey))
+    //    url += "&Id=" + politicianKey;
+
+    //  if (!string.IsNullOrEmpty(mode))
+    //    url += "&Mode=" + mode;
+
+    //  //Url += db.Url_Add_Security_Codes(PoliticianKey);
+    //  return db.Fix_Url_Parms(url);
+    //}
+
+    //#region /Parties.aspx URLs & Anchors (ok)
+
+    //public static string Anchor_Party(PageCache cache, string partyKey, string target)
+    //{
+    //  string anchor;
+    //  //if (
+    //  //  (PartyKey.ToUpper() == "X")//No Party
+    //  //  || (PartyKey.ToUpper() == "N")//Non-Partisan
+    //  //  || (PartyKey.Trim() == string.Empty)
+    //  //  )
+    //  if (db.Is_Party_Code_Empty(cache, partyKey))
+    //    // space if X Party Code or empty code
+    //    anchor = db.No_PartyCode;
+    //  else if (!cache.Parties.Exists(partyKey))
+    //    //space if there is no PartyKey
+    //    anchor = db.No_PartyCode;
+    //  else if (cache.Parties.GetPartyUrl(partyKey).Trim() == string.Empty)//no website url
+    //    //if no party url use partyKey as text
+    //    anchor = cache.Parties.GetPartyCode(partyKey);
+    //  else
+    //  {
+    //    #region commented out -return an anchor
+    //    //Anchor = "<a href=";
+    //    //Anchor += "\"";
+    //    //Anchor += db.Http();
+    //    //Anchor += db.Parties_Str(PartyKey, "PartyURL");
+    //    //Anchor += "\"";
+
+    //    //Anchor += "title=";
+    //    //Anchor += "\"";
+    //    //Anchor += db.Parties_Str(PartyKey, "PartyName") + " Website";
+    //    //Anchor += "\"";
+
+    //    //Anchor += " target=_self";
+    //    //Anchor += ">";
+
+    //    //Anchor += db.Parties_Str(PartyKey, "PartyCode");
+
+    //    //Anchor += "</a>";
+    //    #endregion commented out -return an anchor
+
+    //    anchor = "<a href=";
+    //    anchor += "\"";
+    //    anchor += VotePage.NormalizeUrl(cache.Parties.GetPartyUrl(partyKey));
+    //    anchor += "\"";
+
+    //    anchor += "title=";
+    //    anchor += "\"";
+    //    anchor += cache.Parties.GetPartyName(partyKey) + " Website";
+    //    anchor += "\"";
+
+    //    if (target != string.Empty)
+    //    {
+    //      anchor += " target=";
+    //      anchor += "\"";
+    //      anchor += target;
+    //      anchor += "\"";
+    //    }
+
+    //    anchor += ">";
+
+    //    anchor += cache.Parties.GetPartyCode(partyKey);
+
+    //    anchor += "</a>";
+
+    //    return anchor;
+    //  }
+    //  return anchor;
+    //}
+    //#endregion
+
+    //#region Report_Election_Update Methods
+    //public static void Add_Td_Party_Code(
+    //  PageCache cache,
+    //  ref HtmlTableRow htmlTrPolitician,
+    //  string politicianKey,
+    //  bool isRunningMate)
+    //{
+    //  string partyCode;
+    //  //Running Mate Pary Code always shows because
+    //  //some States have Lt Governors of different parties
+    //  //Commented out to reinstate
+    //  //Running Mates don't show party
+    //  //if (!IsRunningMate)
+    //  partyCode = db.Anchor_Party(cache,
+    //    cache.Politicians.GetPartyKey(politicianKey), "view");
+    //  if (string.IsNullOrEmpty(partyCode))
+    //    partyCode = "&nbsp";
+    //  //To force border on table cell
+    //  db.Add_Td_To_Tr(
+    //    htmlTrPolitician
+    //    , partyCode
+    //    , "tdReportDetail"
+    //    , "center"
+    //    );
+    //}
+
+    //public static void Add_Td_Phone(
+    //  ref HtmlTableRow htmlTrPolitician
+    //  , string politicianKey
+    //  , db.ReportUser reportUser
+    //  )
+    //{
+    //  //string Phone = string.Empty;
+    //  //if (ReportUser == db.ReportUser.Public)
+    //  //  Phone = db.Politician_Phone_Candidate_Or_NA(PoliticianKey);
+    //  //else
+    //  //  Phone = db.Politician_Phone_State_Or_NA(PoliticianKey);
+    //  //Phone = db.Br_First_Blank_After_Position(Phone, db.Position_Break_Phone);//<br> after 20 positions
+    //  string phone = db.Politician_Phone_Any_For_Label(
+    //    politicianKey
+    //  );
+    //  db.Add_Td_To_Tr(htmlTrPolitician
+    //    , phone
+    //    , "tdReportDetail"
+    //    //, "center"
+    //    );
+    //}
+    //public static void Add_Td_Address(
+    //  ref HtmlTableRow htmlTrPolitician
+    //  , string politicianKey
+    //  , db.ReportUser reportUser
+    //  )
+    //{
+    //  string streetAddress;
+    //  string cityStateZip;
+    //  if (reportUser == db.ReportUser.Public)
+    //  {
+    //    streetAddress = db.Politician_Address_Any_For_Label(
+    //      politicianKey
+    //      );
+    //    cityStateZip = db.Politician_CityStateZip_Any_For_Label(
+    //      politicianKey
+    //      );
+    //  }
+    //  else
+    //  {
+    //    streetAddress = db.Politician_Address_Any_For_Label(
+    //      politicianKey
+    //      );
+    //    cityStateZip = db.Politician_CityStateZip_Any_For_Label(
+    //      politicianKey
+    //      );
+    //  }
+
+    //  db.Add_Td_To_Tr(htmlTrPolitician, streetAddress
+    //    + cityStateZip, "tdReportDetail");
+    //}
+
+    //public static void Add_Td_Email_WebAddress(
+    //  ref HtmlTableRow htmlTrPolitician
+    //  , string politicianKey
+    //  , db.ReportUser reportUser
+    //  )
+    //{
+    //  #region Email Address
+
+    //  string emailAddr = db.Politician_Email_Addr_Any_For_Label_Anchor_Mailto(
+    //    politicianKey);
+    //  #endregion Email Address
+
+    //  #region Web Address
+
+    //  string webAddressAnchor = db.Politician_WebAddress_Public_Anchor(
+    //    politicianKey
+    //    , string.Empty
+    //    , Politicians.GetFormattedName(politicianKey) + " Website"
+    //    , "view"
+    //    );
+
+    //  #endregion Web Address
+
+    //  if (reportUser == db.ReportUser.Public)
+    //    db.Add_Td_To_Tr(htmlTrPolitician
+    //      , emailAddr + "<br><br>" + webAddressAnchor
+    //      , "tdReportDetailBold"
+    //      );
+    //  else
+    //    db.Add_Td_To_Tr(htmlTrPolitician
+    //      , emailAddr + "<br>" + webAddressAnchor
+    //      , "tdReportDetail"
+    //      );
+    //}
+
+    //#endregion Report_Election_Update Methods
+
+    //#region 1 Politician
+    //public static void Add_Td_Politician_Name(
+    //  ref HtmlTableRow htmlTrPolitician
+    //  , db.ReportUser reportUser
+    //  , string politicianAnchor
+    //  )
+    //{
+    //  if (reportUser == db.ReportUser.Public)
+    //    db.Add_Td_To_Tr(
+    //    htmlTrPolitician
+    //    , politicianAnchor
+    //    , "tdReportDetailLargeBold"
+    //    );
+    //  else
+    //    db.Add_Td_To_Tr(
+    //    htmlTrPolitician
+    //    , politicianAnchor
+    //    , "tdReportDetail"
+    //    );
+    //}
+
+    //#endregion
+
+    //public static void Update_ElectionsOffices_Is_All_Winners_Identified(string ElectionKey, string OfficeKey)
+    //{
+    //  //True if the number of office positions 
+    //  //equals the number of elected officials.
+    //  int officePositions = db.Offices_Int(OfficeKey, "Incumbents");
+    //  string sql = string.Empty;
+    //  sql += "OfficesOfficials";
+    //  sql += " WHERE OfficeKey =" + db.SQLLit(OfficeKey);
+    //  int electedOfficials = db.Rows_Count_From(sql);
+
+    //  if (officePositions == electedOfficials)
+    //    db.ElectionsOffices_Update_Bool(
+    //      ElectionKey,
+    //      OfficeKey,
+    //      "IsWinnerIdentified",
+    //      true
+    //      );
+    //  else
+    //    db.ElectionsOffices_Update_Bool(
+    //      ElectionKey,
+    //      OfficeKey,
+    //      "IsWinnerIdentified",
+    //      false
+    //      );
+    //}
+    //public static bool Is_Election_Previous_Most_Recent(
+    //  string electionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += "SELECT";
+    //  SQL += " ElectionKey";
+    //  SQL += " FROM vote.Elections";
+    //  SQL += " WHERE ElectionDate < " + db.SQLLit(Db.DbToday);
+    //  SQL += " AND StateCode = " + db.SQLLit(Elections.GetStateCodeFromKey(electionKey));
+    //  SQL += " ORDER BY ElectionDate DESC";
+    //  DataRow rowElection = db.Row_First_Optional(SQL);
+    //  if (rowElection["ElectionKey"].ToString() == electionKey)
+    //    return true;
+    //  else
+    //    return false;
+    //}
+
+    //public static bool Is_Election_Upcoming(string electionKey)
+    //{
+    //  return Is_Election_Upcoming(VotePage.GetPageCache(), electionKey);
+    //}
+
+    //public static string ElectionKey_State_From_ElectionKey_Federal(string ElectionKey, string StateCode)
+    //{
+    //  #region replaced
+    //  //#region Note
+    //  ////Converts Federal ElectionKey_Federal with U1, U2, U3 as StateCode 
+    //  ////to State Election ElectionKey_Federal
+    //  //#endregion Note
+    //  //if (
+    //  //  (ElectionKey_Federal != string.Empty)
+    //  //  && (db.ElectionKey_Length_Federal == ElectionKey_Federal.Length)
+    //  //  && (StateCode.Length == db.ElectionKey_Length_StateCode)
+    //  //  )
+    //  //{
+    //  //  return StateCode
+    //  //    + ElectionKey_Federal.Substring(
+    //  //      db.ElectionKey_Length_StateCode
+    //  //      , ElectionKey_Federal.Length - db.ElectionKey_Length_StateCode);
+    //  //}
+    //  //else
+    //  //  return string.Empty;
+    //  #endregion replaced
+
+    //  #region Note
+    //  //Converts any ElectionKey into a State ElectionKey
+    //  #endregion Note
+
+    //  return StateCode + ElectionKey.Remove(0, 2);
+    //}
+
+    //#region Update OfficesOfficials Incumbent
+    //public static int Office_ElectedOfficials(string officeKey)
+    //{
+    //  string sql = " SELECT PoliticianKey FROM OfficesOfficials";
+    //  sql += " WHERE OfficeKey = " + db.SQLLit(officeKey);
+    //  return db.Rows(sql);
+    //}
+    //#endregion
+
+    //#region /Admin/OfficeWinner.aspx Anchors
+    //public static string Anchor_Admin_OfficeWinner(
+    //  string electionKey
+    //  , string officeKey
+    //  , string anchorText
+    //  , string target
+    //  , string politicianKey
+    //  )
+    //{
+    //  string Anchor = string.Empty;
+    //  Anchor += "<a href=";
+    //  Anchor += "\"";
+    //  Anchor += db.Url_Admin_OfficeWinner(electionKey, officeKey, politicianKey);
+    //  Anchor += "\"";
+    //  Anchor += " target=";
+    //  Anchor += "\"";
+    //  if (target != string.Empty)
+    //    Anchor += target;
+    //  else
+    //    Anchor += "_officewinner";
+    //  Anchor += "\"";
+
+    //  if (!string.IsNullOrEmpty(politicianKey))
+    //  {
+    //    Anchor += " title=";
+    //    Anchor += "\"";
+    //    Anchor += Politicians.GetFormattedName(politicianKey) + " administration data edit form";
+    //    Anchor += "\"";
+    //  }
+
+    //  Anchor += ">";
+
+    //  Anchor += anchorText;
+
+    //  Anchor += "</a>";
+    //  return Anchor;
+    //}
+
+    //#endregion /Admin/OfficeWinner.aspx Anchors
+    ////=====================
+    //public static string Url_Admin_OfficeContest(
+    //  string electionKey
+    //  , string officeKey
+    //  )
+    //{
+    //  return db.Url_Admin_OfficeContest(electionKey, officeKey, string.Empty, string.Empty);
+    //}
+
+    //public static string Anchor_Admin_Office_UPDATE_Office(
+    //  string officeKey
+    //  , string anchorText
+    //  )
+    //{
+    //  return db.Anchor_Admin_Office_UPDATE_Office(officeKey, anchorText, string.Empty);
+    //}
+
+    //public static bool Is_Incumbent_For_Election(
+    //  string politicianKey,
+    //  string officeKey,
+    //  string electionKey
+    //  )
+    //{
+    //  return db.ElectionsPoliticians_Bool(
+    //    electionKey,
+    //    officeKey,
+    //    politicianKey,
+    //    "IsIncumbent");
+    //}
+
+    //public static int ElectionsPoliticians_Rows(string ElectionKey, string OfficeKey, string PoliticianKey)
+    //{
+    //  string SQL = "ElectionsPoliticians";
+    //  SQL += " WHERE ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND OfficeKey = " + db.SQLLit(OfficeKey);
+    //  SQL += " AND PoliticianKey = " + db.SQLLit(PoliticianKey);
+    //  return db.Rows_Count_From(SQL);
+    //}
+    //public static void ElectionsPoliticians_Delete(string ElectionKey, string OfficeKey, string PoliticianKey)
+    //{
+    //  string SQL = "DELETE FROM ElectionsPoliticians";
+    //  SQL += " WHERE ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND OfficeKey = " + db.SQLLit(OfficeKey);
+    //  SQL += " AND PoliticianKey = " + db.SQLLit(PoliticianKey);
+    //  db.ExecuteSQL(SQL);
+    //}
+    //public static string RunningMateKey(string ElectionKey, string OfficeKey, string PoliticianKey)
+    //{
+    //  string theRunningMateKey = string.Empty;
+    //  if (Offices.IsRunningMateOffice(OfficeKey))
+    //  {
+    //    string SQL = string.Empty;
+    //    SQL += " SELECT ";
+    //    SQL += " ElectionsPoliticians.RunningMateKey";
+    //    SQL += " FROM ElectionsPoliticians ";
+    //    //SQL += " WHERE ElectionsPoliticians.Election = " + db.SQLLit(ElectionKey);
+    //    SQL += " WHERE ElectionsPoliticians.ElectionKey = " + db.SQLLit(ElectionKey);
+    //    SQL += " AND ElectionsPoliticians.OfficeKey = " + db.SQLLit(OfficeKey);
+    //    SQL += " AND ElectionsPoliticians.PoliticianKey = " + db.SQLLit(PoliticianKey);
+    //    SQL += " AND ElectionsPoliticians.RunningMateKey != ''";
+    //    DataRow ElectionsPoliticiansRow = db.Row_First_Optional(SQL);
+    //    if (ElectionsPoliticiansRow != null)
+    //      theRunningMateKey = ElectionsPoliticiansRow["RunningMateKey"].ToString();
+    //  }
+    //  return theRunningMateKey;
+    //}
+
+    //public static void Log_ElectionsPoliticians_Changes(string addOrDelete,
+    //  string electionKey, string officeKey, string politicianKey)
+    //{
+    //  DB.VoteLog.LogElectionPoliticianAddsDeletes.Insert(
+    //    DateTime.Now,
+    //    addOrDelete.Trim(),
+    //    SecurePage.UserSecurityClass,
+    //    SecurePage.UserName,
+    //    electionKey,
+    //    politicianKey,
+    //    Offices.GetStateCodeFromKey(electionKey),
+    //    string.Empty,
+    //    string.Empty,
+    //    officeKey,
+    //    0);
+    //}
+
+    //#region ElectionsPoliticians INSERT
+    //public static void ElectionsPoliticians_INSERT(
+    //  string ElectionKey
+    //  , string OfficeKey
+    //  , string PoliticianKey
+    //  , string DistrictCode
+    //  , int OrderOnBallot
+    //  )
+    //{
+    //  #region DistrictCode column needs to be deleted in table
+    //  //if (db.Is_Electoral_District(OfficeKey))
+    //  //{
+    //  //  #region District Offices only
+    //  //  if (string.IsNullOrEmpty(DistrictCode))
+    //  //    throw new ApplicationException(
+    //  //      "The office class requires DistrictCode");
+    //  //  #endregion District Offices only
+    //  //}
+    //  //else
+    //  //{
+    //  //  if (!string.IsNullOrEmpty(DistrictCode))
+    //  //    throw new ApplicationException(
+    //  //      "The office class has an empty string DistrictCode");
+    //  //}
+    //  #endregion DistrictCode
+
+    //  #region Incumbent flag set when office contest is created
+
+    //  var isIncumbent = db.Is_Incumbent(
+    //    PoliticianKey,
+    //    OfficeKey);
+
+    //  #endregion Incumbent flag set when office contest is created
+
+    //  string SQL = "INSERT INTO ElectionsPoliticians";
+    //  SQL += "(";
+    //  SQL += " ElectionKey";
+    //  SQL += ",OfficeKey";
+    //  SQL += ",PoliticianKey";
+    //  SQL += ",RunningMateKey";
+    //  SQL += ",ElectionKeyState";
+    //  SQL += ",ElectionKeyFederal";
+    //  SQL += ",ElectionKeyCounty";
+    //  SQL += ",ElectionKeyLocal";
+    //  SQL += ",StateCode";
+    //  SQL += ",CountyCode";
+    //  SQL += ",LocalCode";
+    //  SQL += ",DistrictCode";
+    //  SQL += ",OrderOnBallot";
+    //  SQL += ",IsIncumbent";
+    //  SQL += ",IsWinner";
+    //  SQL += ")";
+    //  SQL += " VALUES(";
+    //  SQL += db.SQLLit(ElectionKey);
+    //  SQL += "," + db.SQLLit(OfficeKey);
+    //  SQL += "," + db.SQLLit(PoliticianKey);
+    //  SQL += "," + db.SQLLit(db.RunningMateKey(ElectionKey, OfficeKey, PoliticianKey));
+    //  SQL += "," + db.SQLLit(db.ElectionKey_State(ElectionKey));
+    //  SQL += "," + db.SQLLit(db.ElectionKey_Federal(ElectionKey, OfficeKey));
+    //  SQL += "," + db.SQLLit(db.ElectionKey_County(ElectionKey, OfficeKey));
+    //  SQL += "," + db.SQLLit(db.ElectionKey_Local(ElectionKey, OfficeKey));
+    //  SQL += "," + db.SQLLit(Elections.GetStateCodeFromKey(ElectionKey));
+    //  SQL += "," + db.SQLLit(Elections.GetCountyCodeFromKey(ElectionKey));
+    //  SQL += "," + db.SQLLit(Elections.GetLocalCodeFromKey(ElectionKey));
+    //  SQL += "," + db.SQLLit(DistrictCode);
+    //  SQL += "," + OrderOnBallot.ToString();
+    //  if (isIncumbent)
+    //    SQL += ",1";
+    //  else
+    //    SQL += ",0";
+    //  SQL += ",0";
+    //  SQL += ")";
+    //  db.ExecuteSQL(SQL);
+
+    //  db.Log_ElectionsPoliticians_Changes(
+    //    "A"
+    //  , ElectionKey
+    //  , OfficeKey
+    //  , PoliticianKey
+    //  );
+    //}
+    //#endregion ElectionsPoliticians INSERT
+    //public static void ElectionsPoliticians_Delete_Transaction(string ElectionKey, string OfficeKey, string PoliticianKey)
+    //{
+    //  if (db.ElectionsPoliticians_Rows(ElectionKey, OfficeKey, PoliticianKey) > 0)
+    //  {
+    //    db.ElectionsPoliticians_Delete(ElectionKey, OfficeKey, PoliticianKey);
+
+    //    db.Log_ElectionsPoliticians_Changes(
+    //      "D"
+    //        , ElectionKey
+    //        , OfficeKey
+    //        , PoliticianKey
+    //        );
+
+    //    //db.ElectionsPoliticians_Invalidate(ElectionKey, OfficeKey, PoliticianKey);
+
+    //    //db.Report_Election_Set_Current_Not(ElectionKey);
+    //  }
+    //}
+
+    //#region ElectionPoliticians Ballot Order
+
+    //public static int BallotOrder_Candidate_Next(string ElectionKey, string OfficeKey)
+    //{
+    //  DataRow ElectionsPoliticiansRow = db.Row_First_Optional(
+    //    sql.Elections_Politicians_Office_DESC(
+    //      ElectionKey
+    //      , OfficeKey)
+    //    );
+    //  if (ElectionsPoliticiansRow != null)
+    //    return Convert.ToInt16(ElectionsPoliticiansRow["OrderOnBallot"].ToString()) + 10;
+    //  else
+    //    return 10;
+    //}
+    //#endregion ElectionPoliticians Ballot Order
+    //public static void ElectionsPoliticians_INSERT_And_Whether_Incumbent(
+    //  string ElectionKey
+    //  , string OfficeKey
+    //  , string PoliticianKey
+    //  , int OrderOnBallot)
+    //{
+    //  db.ElectionsPoliticians_Delete_Transaction(
+    //    ElectionKey
+    //    , OfficeKey
+    //    , PoliticianKey)
+    //    ;
+
+    //  db.ElectionsPoliticians_INSERT(
+    //    ElectionKey
+    //    , OfficeKey
+    //    , PoliticianKey
+    //    , string.Empty
+    //    , OrderOnBallot
+    //    );
+
+    //  db.Log_ElectionsPoliticians_Changes(
+    //    "A"
+    //      , ElectionKey
+    //      , OfficeKey
+    //      , PoliticianKey
+    //      );
+
+    //  //db.ElectionsPoliticians_Invalidate(ElectionKey, OfficeKey, PoliticianKey);
+
+    //  //db.Report_Election_Set_Current_Not(ElectionKey);
+    //}
+    //public static void ElectionsPoliticians_INSERT_And_Whether_Incumbent(
+    //  string ElectionKey
+    //  , string OfficeKey
+    //  , string PoliticianKey
+    //  , string Ballot_Order)
+    //{
+    //  #region checks
+    //  if (string.IsNullOrEmpty(ElectionKey))
+    //    throw new ApplicationException("The ElectionKey is empty.");
+    //  if (string.IsNullOrEmpty(OfficeKey))
+    //    throw new ApplicationException("The OfficeKey is empty.");
+    //  if (string.IsNullOrEmpty(PoliticianKey))
+    //    throw new ApplicationException("The PoliticianKey is empty.");
+    //  #endregion checks
+
+    //  if (!string.IsNullOrEmpty(Ballot_Order))
+    //  {
+    //    #region Use Ballot order passed
+    //    db.ElectionsPoliticians_INSERT_And_Whether_Incumbent(
+    //      ElectionKey
+    //      , OfficeKey
+    //      , PoliticianKey
+    //      , Convert.ToInt16(Ballot_Order)
+    //      );
+    //    #endregion Use Ballot order  passed
+    //  }
+    //  else
+    //  {
+    //    #region Next Ballot Order
+    //    int BallotOrder = db.BallotOrder_Candidate_Next(ElectionKey, OfficeKey);
+
+    //    db.ElectionsPoliticians_INSERT_And_Whether_Incumbent(
+    //      ElectionKey
+    //      , OfficeKey
+    //      , PoliticianKey
+    //      , BallotOrder
+    //      );
+    //    #endregion Next Ballot Order
+    //  }
+
+    //  db.Politician_Update_Transaction_Str(PoliticianKey,
+    //    Politician_Column.TemporaryOfficeKey, OfficeKey);
+    //}
+
+    //public static void Triple_Key_Update_Int(string Table, string Column, int ColumnValue, string KeyName1, string KeyValue1, string KeyName2, string KeyValue2, string KeyName3, string KeyValue3)
+    //{
+    //  string UpdateSQL = "UPDATE " + Table
+    //    + " SET " + Column + " = " + ColumnValue.ToString()
+    //    + " WHERE " + KeyName1 + " = " + db.SQLLit(KeyValue1)
+    //    + " AND " + KeyName2 + " = " + db.SQLLit(KeyValue2)
+    //  + " AND " + KeyName3 + " = " + db.SQLLit(KeyValue3);
+    //  db.ExecuteSQL(UpdateSQL);
+    //}
+
+    //public static string Triple_Key_Str_Optional(string Table, string Column, string KeyName1, string KeyValue1, string KeyName2, string KeyValue2, string KeyName3, string KeyValue3)
+    //{
+    //  string SQL = "SELECT " + Column.Trim() + " FROM " + Table.Trim()
+    //  + " WHERE " + KeyName1.Trim() + " = " + db.SQLLit(KeyValue1.Trim())
+    //  + " AND " + KeyName2.Trim() + " = " + db.SQLLit(KeyValue2.Trim())
+    //  + " AND " + KeyName3.Trim() + " = " + db.SQLLit(KeyValue3.Trim());
+    //  DataTable table = db.Table(SQL);
+    //  switch (table.Rows.Count)
+    //  {
+    //    case 1://KeyValue
+    //      return (string) table.Rows[0][Column].ToString().Trim();
+    //    case 0://no row
+    //      return string.Empty;
+    //    default:
+    //      return string.Empty;
+    //  }
+    //}
+
+    //#region Election Report Columns
+    //public const int Columns_Without_BallotOrder_Or_Pic = 5;
+    //public const int Columns_With_BallotOrder_Or_Pic = 6;
+    //public const int Columns_Officials = 6;
+    ////public const int Columns_Officials = 5;
+
+    //#endregion Election Report Columns
+
+    //#region Election Report CURRENT
+
+    //public static int Columns_Report_Election(db.ReportUser reportUser, string electionKey)
+    //{
+    //  if (reportUser == db.ReportUser.Public)
+    //  {
+    //    //return db.Columns_Without_BallotOrder_Or_Pic;
+    //    return db.Columns_With_BallotOrder_Or_Pic;
+    //  }
+    //  else
+    //  {
+    //    //Only Admin and Master Users for upcoming election have ballot order
+    //    if (db.Is_Election_Upcoming(electionKey))
+    //      return db.Columns_With_BallotOrder_Or_Pic;
+    //    else
+    //      return db.Columns_Without_BallotOrder_Or_Pic;
+    //  }
+    //}
+    //#endregion Election Report CURRENT
+
+    //public static void ElectionsPoliticians_INSERT_And_Whether_Incumbent(
+    //  string ElectionKey
+    //  , string OfficeKey
+    //  , string PoliticianKey)
+    //{
+    //  db.ElectionsPoliticians_INSERT_And_Whether_Incumbent(
+    //    ElectionKey
+    //    , OfficeKey
+    //    , PoliticianKey
+    //    , string.Empty
+    //    );
+    //}
+    //public static void ElectionsPoliticians_Delete_Log_Invalidate(string ElectionKey, string OfficeKey, string PoliticianKey)
+    //{
+    //  string SQL = "DELETE FROM ElectionsPoliticians";
+    //  SQL += " WHERE ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND OfficeKey = " + db.SQLLit(OfficeKey);
+    //  SQL += " AND PoliticianKey = " + db.SQLLit(PoliticianKey);
+    //  db.ExecuteSQL(SQL);
+
+    //  db.Log_ElectionsPoliticians_Changes(
+    //    "D"
+    //  , ElectionKey
+    //  , OfficeKey
+    //  , PoliticianKey
+    //  );
+
+    //  //ElectionsPoliticians_Invalidate(
+    //  //ElectionKey
+    //  //, OfficeKey
+    //  //, PoliticianKey
+    //  //  );
+    //}
+    //public static void ElectionsPoliticians_Update_Str(string ElectionKey, string OfficeKey, string PoliticianKey, string Column, string ColumnValue)
+    //{
+    //  db.Triple_Key_Update_Str("ElectionsPoliticians", Column, ColumnValue, "ElectionKey", ElectionKey, "OfficeKey", OfficeKey, "PoliticianKey", PoliticianKey);
+    //}
+
+    //public static void ElectionsPoliticians_Update_Int(string ElectionKey, string OfficeKey, string PoliticianKey, string Column, int ColumnValue)
+    //{
+    //  db.Triple_Key_Update_Int("ElectionsPoliticians", Column, ColumnValue, "ElectionKey", ElectionKey, "OfficeKey", OfficeKey, "PoliticianKey", PoliticianKey);
+    //}
+
+    //public static string ElectionsPoliticians_Optional(
+    //  string ElectionKey
+    //  , string OfficeKey
+    //  , string PoliticianKey
+    //  , string Column)
+    //{
+    //  return db.Triple_Key_Str_Optional("ElectionsPoliticians", Column, "ElectionKey", ElectionKey, "OfficeKey", OfficeKey, "PoliticianKey", PoliticianKey);
+    //}
+    //public static string ElectionsPoliticians_Str(
+    //  string ElectionKey
+    //  , string OfficeKey
+    //  , string PoliticianKey
+    //  , string Column)
+    //{
+    //  return db.Triple_Key_Str("ElectionsPoliticians",
+    //    Column,
+    //    "ElectionKey", ElectionKey,
+    //    "OfficeKey", OfficeKey,
+    //    "PoliticianKey", PoliticianKey
+    //    );
+    //}
+
+    //public static string Anchor_Admin_OfficeContest(
+    //  string electionKey
+    //  , string officeKey
+    //  , string anchorText
+    //  , string target
+    //  , string politicianKey
+    //  , string mode
+    //  )
+    //{
+    //  string anchor = string.Empty;
+    //  anchor += "<a href=";
+    //  anchor += "\"";
+    //  anchor += db.Url_Admin_OfficeContest(electionKey, officeKey, politicianKey, mode);
+    //  anchor += "\"";
+    //  anchor += " target=";
+    //  anchor += "\"";
+    //  if (target != string.Empty)
+    //    anchor += target;
+    //  else
+    //    anchor += "_officecontest";
+    //  anchor += "\"";
+
+    //  anchor += " title=";
+    //  anchor += "\"";
+    //  anchor += Politicians.GetFormattedName(politicianKey) + " administration data edit form";
+    //  anchor += "\"";
+
+    //  anchor += ">";
+
+    //  anchor += anchorText;
+
+    //  anchor += "</a>";
+    //  return anchor;
+    //}
+    //public static void Ballot_Order_Check(string ballotOrder)
+    //{
+    //  if (
+    //    (ballotOrder.Trim() != string.Empty)
+    //    && (!db.Is_Valid_Integer(ballotOrder.Trim()))
+    //    )
+    //    throw new ApplicationException("The Ballot Order needs to be a whole number.");
+    //}
+
+    //public static string Insert_BR(string str, int at)
+    //{
+    //  //if (str.Length > at)
+    //  //  str = str.Insert(at, "<br>");
+    //  //if (str.Length > 2* at)
+    //  //  str = str.Insert(2* at, "<br>");
+    //  //if (str.Length > 3 * at)
+    //  //  str = str.Insert(3 * at, "<br>");
+    //  //return str;
+
+    //  int i = 1;
+    //  while (str.Length > at * i)
+    //  {
+    //    str = str.Insert(at * i, "<br>");
+    //    i++;
+    //  }
+    //  return str;
+    //}
+
+    //public static string Str_Remove_Last_Char(string str2Fix)
+    //{
+    //  if (str2Fix.Trim().EndsWith(","))
+    //    return str2Fix.Trim().Remove(str2Fix.Trim().Length - 1, 1);
+    //  else
+    //    return str2Fix;
+    //}
+
+    //public static bool Is_Valid_ElectionsPoliticians(string electionKey, string officeKey, string politicianKey)
+    //{
+    //  string sql = string.Empty;
+    //  sql += "ElectionsPoliticians ";
+    //  sql += " WHERE ElectionKey = " + db.SQLLit(electionKey);
+    //  sql += " AND OfficeKey = " + db.SQLLit(officeKey);
+    //  sql += " AND (PoliticianKey = " + db.SQLLit(politicianKey);
+    //  sql += " OR RunningMateKey = " + db.SQLLit(politicianKey) + ")";
+
+    //  return db.Rows_Count_From(sql) != 0;
+    //}
+
+    //public static DateTime No_Date()
+    //{
+    //  return Convert.ToDateTime("1900-01-01 00:00:00");
+    //}
+
+    //public static bool Is_Election_Upcoming_Viewable(string ElectionKey)
+    //{
+    //  string SQL = string.Empty;
+    //  SQL += " Elections";
+    //  SQL += " WHERE ElectionKey = " + db.SQLLit(ElectionKey);
+    //  SQL += " AND IsViewable = 1";
+    //  int x = db.Rows_Count_From(SQL);
+    //  if (db.Rows_Count_From(SQL) == 1)
+    //    return true;
+    //  else
+    //    return false;
+    //}
+
+    //#region Elections UPDATE
+    ////int
+    //public static void Elections_Update_Int(
+    //  string ElectionKey
+    //  , string Column
+    //  , int ColumnValue)
+    //{
+    //  db.Single_Key_Update_Int("Elections", Column, ColumnValue, "ElectionKey", ElectionKey);
+    //}
+
+    ////date
+    //public static void Elections_Update_Date(
+    //  string ElectionKey
+    //  , string Column
+    //  , DateTime ColumnValue)
+    //{
+    //  db.Single_Key_Update_Date("Elections", Column, ColumnValue, "ElectionKey", ElectionKey);
+    //}
+    //#endregion
+
+
+    //public static bool Elections_Bool(string ElectionKey, string Column)
+    //{
+    //  return db.Single_Key_Bool("Elections", Column, "ElectionKey", ElectionKey);
+    //}
+    //public static string Elections_Date_Str(
+    //  string Election_Key
+    //  , string Column)
+    //{
+    //  if (db.Elections_Date(Election_Key, Column)
+    //      != db.No_Date())
+    //    return db.Elections_Date(Election_Key, Column).ToString();
+    //  else
+    //    return string.Empty;
+    //}
+
+    //public static string PartyCode4ElectionKey(string ElectionKey)
+    //{
+    //  //if (db.Is_Valid_Election(ElectionKey))
+    //  //{
+    //  string PartyCode;
+    //  if (
+    //    Elections.GetElectionTypeFromKey(ElectionKey) == "O"
+    //    || Elections.GetElectionTypeFromKey(ElectionKey) == "S"
+    //    )
+    //    PartyCode = "ALL";
+    //  else//ElectionType = B or P for Primary
+    //    PartyCode = Elections.GetStateCodeFromKey(ElectionKey) +
+    //      Elections.GetNationalPartyCodeFromKey(ElectionKey);
+    //  return PartyCode;
+    //}
+    //public static void States_Update_Date(string StateCode, string Column, DateTime ColumnValue)
+    //{
+    //  db.Single_Key_Update_Date("States", Column, ColumnValue, "StateCode", StateCode);
+    //}
+    //public static void States_Update_Int(string StateCode, string Column, int ColumnValue)
+    //{
+    //  db.Single_Key_Update_Int("States", Column, ColumnValue, "StateCode", StateCode);
+    //}
+
+    ////Date
+    //public static void Master_Update_Date(string Column, DateTime ColumnValue)
+    //{
+    //  string SQL = "UPDATE Master "
+    //    + " SET " + Column + " = " + db.SQLLit(Db.DbDateTime(ColumnValue))
+    //    + " WHERE ID = 'MASTER' ";
+    //  db.ExecuteSQL(SQL);
+    //}
+    ////Int
+    //public static void Master_Update_Int(string Column, int ColumnValue)
+    //{
+    //  string SQL = "UPDATE Master "
+    //    + " SET " + Column + " = " + Convert.ToUInt16(ColumnValue).ToString()
+    //    + " WHERE ID = 'MASTER' ";
+    //  db.ExecuteSQL(SQL);
+    //}
+    //public static string Master_Date_Str(string Column)
+    //{
+    //  if (db.Master_Date(Column)
+    //      != db.No_Date())
+    //    return db.Master_Date(Column).ToString();
+    //  else
+    //    return string.Empty;
+    //}
+    //public static bool Is_Has_Http(string str2Check)
+    //{
+    //  if (
+    //    (str2Check.ToLower().IndexOf("http://", 0, str2Check.Length) != -1)
+    //    || (str2Check.ToLower().IndexOf("https://", 0, str2Check.Length) != -1)
+    //    )
+    //    return true;
+    //  else
+    //    return false;
+    //}
+
+    //#region /Admin/ElectionCreate.aspx URLs & Anchors
+    //public static string Url_Admin_ElectionCreate()
+    //{
+    //  //return db.Url_Admin_ElectionCreate(string.Empty);
+    //  return "/Admin/ElectionCreate.aspx";
+    //}
+    //#endregion /Admin/ElectionCreate.aspx URLs & Anchors
+
+    //#region ElectionKey Build to convert from old format
+    //public static string ElectionKey_Build(
+    //  string StateCode
+    //  , string CountyCode
+    //  , string LocalCode
+    //  , string Date
+    //  , string ElectionType
+    //  , string NationalPartyCode
+    //  )
+    //{
+    //  #region Election Key Construction
+    //  //12 chars if State or Federal Election
+    //  //15 chars if County Election
+    //  //17 chars if Local Election
+
+    //  //2 char - StateCode or FederalCode  0:2
+    //  //        Federal Codes are: UU, US,U1,U2,U3,u4 
+    //  //        UU indicates all 51 states, one state at a time
+    //  //        US is for a national presidential contest, one big country wide state
+    //  //        U1,U2,U3,u4 are used when generating national reports
+    //  //            U1=US President, U2=US Senate, U3=US House, U4=Governors
+    //  //            so they can be treated as a national election
+    //  //        StateCode is used for State election reports
+    //  //8 char - Date (YYYYMMDD) 2:8
+    //  //1 char - Election Type (either A, B, G, O, S, or P) 10:1
+    //  //        National Contest/Election:
+    //  //            A - National Presidential Party Contest
+    //  //                       only presidential candidates still in race in a particular party
+    //  //                       don't need an address for ballot
+    //  //                        not reflection of ballot
+    //  //                        only 1 election row created
+    //  //        State Elections:
+    //  //            B - State Presidential Party Primary 
+    //  //                        all Pres candidates on ballot whether still in race or not
+    //  //                        don't need an address for ballot
+    //  //                        51 different elections
+    //  //                        only 1 party
+    //  //            G - National General Election with All States and All parties
+    //  //                (need an address)
+    //  //                    All Election Types Created at State level in ADMIN/Default.aspx
+    //  //            O - Off Year Scheduled State Election
+    //  //                (need an address, all office levels except US President)
+    //  //            S - Special Unscheduled State Election
+    //  //                (need an address, all office levels except US President, only a couple of offices)
+    //  //            P - General Statewide Party Primary
+    //  //                (need an address, all office levels, only 1 party)
+
+    //  //1 char - National Party Code 11:1
+    //  //         Used as the code shown on ballots
+    //  //        (A = All parties, G=Green, L= Libertarian, X= Nonpartisan, R=Republican, D=Democratic)
+    //  //3 digits or empty- County Code if it is a County Election 12:3
+    //  //2 digits or empty- LocalCode or TownCode if it is a Local or Town election 15:2      
+    //  #endregion Election Key Construction
+
+    //  #region checks
+    //  if (StateCode.Trim() == string.Empty)
+    //    throw new ApplicationException("StateCode Missing!");
+    //  if (Date.Trim() == string.Empty)
+    //    throw new ApplicationException("The election date Missing!");
+    //  if (!db.Is_Valid_Date(Date.Trim()))//bad date
+    //    throw new ApplicationException("Making ElectionKey: Date is bad!");
+    //  if (ElectionType.Trim() == string.Empty)
+    //    throw new ApplicationException("Election Type is empty!");
+    //  if (NationalPartyCode.Trim() == string.Empty)
+    //    throw new ApplicationException("NationalPartyCode is empty!");
+    //  #endregion checks
+
+
+    //  string ElectionKey = string.Empty;
+    //  //StateCode
+    //  ElectionKey += StateCode.Trim();
+    //  //YYYYMMDD
+    //  ElectionKey += Convert.ToDateTime(Date).ToString("yyyyMMdd");
+    //  //Type
+    //  ElectionKey += ElectionType;
+    //  //Party
+    //  ElectionKey += NationalPartyCode;
+    //  //CountyCode
+    //  if (CountyCode.Trim() != string.Empty)
+    //    ElectionKey += CountyCode.Trim();
+    //  //LocalCode
+    //  if (LocalCode.Trim() != string.Empty)
+    //    ElectionKey += LocalCode.Trim();
+
+    //  return ElectionKey;
+    //}
+    //#endregion ElectionKey
+
+
+    //public static string Url_Admin_ElectionCreate(
+    //  string stateCode
+    //  , string electionType
+    //  , string partyCode
+    //  , DateTime electionDate
+    //  , string description
+    //  )
+    //{
+    //  string url = db.Url_Admin_ElectionCreate();
+    //  url += "&State=" + stateCode;
+    //  url += "&Type=" + electionType;
+    //  url += "&Party=" + partyCode;
+    //  url += "&Date=" + electionDate.ToString("MM/dd/yyyy");
+    //  url += "&Desc=" + description;
+    //  return db.Fix_Url_Parms(url);
+    //}
+
+    //public static string Anchor(string url, string anchorText)
+    //{
+    //  return db.Anchor(url, anchorText, string.Empty, string.Empty);
+    //}
+    //public static string Str_Election_Description(
+    //  string electionType
+    //  , string partyCode
+    //  , string electionDate
+    //  , string stateCode
+      //)
+    // Elections.FormatElectionDescription
+    //{
+    //  if (electionDate == null) throw new ArgumentNullException("electionDate");
+    //  electionDate = Convert.ToDateTime(electionDate).ToString("MMMM d, yyyy");
+
+    //  string stateName = string.Empty;
+    //  if (StateCache.IsValidStateCode(stateCode))
+    //    stateName += " " + StateCache.GetStateName(stateCode);
+
+    //  string partyName = string.Empty;
+    //  if (
+    //    (electionType.ToUpper() != "G") //General Election
+    //    && (partyCode.ToUpper() != "A") //All Parties
+    //    && (!string.IsNullOrEmpty(Parties.GetNationalPartyDescription(partyCode)))
+    //    )
+    //    partyName = " " + Parties.GetNationalPartyDescription(partyCode);
+
+    //  return electionDate + stateName + partyName
+    //    + " " + db.Str_Election_Type_Description(electionType, stateCode);
+    //}
+
+    //#region (mode: UPDATE ElectionsOffices Table)
+    //public static string Url_Admin_Office_UPDATE_Election(string electionKey, string officeKey, string politicianKey)
+    //{
+    //  string url = db.Ur4AdminOffice();
+    //  url += "&Election=" + electionKey;
+    //  url += "&Office=" + officeKey;
+    //  if (politicianKey != string.Empty)
+    //    url += "&Politician=" + politicianKey;
+    //  //url += db.xUrl_Add_ViewState_DataCodes_OfficeKey(officeKey);
+    //  return db.Fix_Url_Parms(url);
+    //}
+    //#endregion (mode: UPDATE ElectionsOffices Table)
+    //public static string Url_Admin_Office_UPDATE_Election(string electionKey, string officeKey)
+    //{
+    //  return Url_Admin_Office_UPDATE_Election(electionKey, officeKey, string.Empty);
+    //}
+    //public static void ElectionsOffices_INSERT(
+    //  string ElectionKey
+    //  , string OfficeKey
+    //  )
+    //{
+    //  //DistrictCode
+    //  db.ElectionsOffices_INSERT(
+    //    ElectionKey
+    //    , OfficeKey
+    //    //, string.Empty
+    //    //, db.xDistrictCode_In_OfficeKey(OfficeKey)
+    //    , Offices.GetValidDistrictCode(OfficeKey)
+    //    );
+    //}
+
+    //#region Elections INSERT
+    //public static void Elections_Insert_And_Report_Election_Update(string stateCode,
+    //  string countyCode, string localCode, string electionDate,
+    //  string electionType, string nationalPartyCode, string partyCode,
+    //  string electionDesc, string electionAdditionalInfo, string ballotInstructions)
+    //{
+    //  string electionKey = db.ElectionKey_Build(
+    //    stateCode
+    //  , countyCode
+    //  , localCode
+    //  , electionDate
+    //  , electionType
+    //  , nationalPartyCode
+    //  );
+
+    //  if (db.Is_Valid_Election(electionKey))
+    //    throw new ApplicationException("An election already exists with ElectionKey: "
+    //      + electionKey);
+
+    //  string SQL = string.Empty;
+    //  SQL += "INSERT INTO Elections(";
+    //  SQL += "ElectionKey";
+    //  SQL += ",StateCode";
+    //  SQL += ",CountyCode";
+    //  SQL += ",LocalCode";
+    //  SQL += ",ElectionDate";
+    //  SQL += ",ElectionYYYYMMDD";
+    //  SQL += ",ElectionType";
+    //  SQL += ",NationalPartyCode";
+    //  SQL += ",PartyCode";
+    //  SQL += ",ElectionStatus";
+    //  SQL += ",ElectionDesc";
+    //  SQL += ",ElectionAdditionalInfo";
+    //  SQL += ",ElectionResultsSource";
+    //  SQL += ",ElectionResultsDate";
+    //  SQL += ",BallotInstructions";
+    //  SQL += ",EmailsDateElectionRoster";
+    //  SQL += ",EmailsDateElectionCompletion";
+    //  SQL += ",EmailsDateCandidatesLogin";
+    //  SQL += ",EmailsDatePartiesLogin";
+    //  SQL += ",ElectionKeyCanonical";
+    //  SQL += ")VALUES(";
+    //  //SQL += db.SQLLit(db.ElectionKey_Build(
+    //  //            StateCode
+    //  //          , CountyCode
+    //  //          , LocalCode
+    //  //          , ElectionDate
+    //  //          , ElectionType
+    //  //          , NationalPartyCode
+    //  //          ));
+    //  SQL += db.SQLLit(electionKey);
+    //  SQL += "," + db.SQLLit(stateCode);
+    //  SQL += "," + db.SQLLit(countyCode);
+    //  SQL += "," + db.SQLLit(localCode);
+    //  SQL += "," + db.SQLLit(Db.DbDateTime(Convert.ToDateTime(electionDate)));
+    //  SQL += "," + db.SQLLit(Convert.ToDateTime(electionDate).ToString("yyyyMMdd"));
+    //  SQL += "," + db.SQLLit(electionType);
+    //  SQL += "," + db.SQLLit(nationalPartyCode);
+    //  SQL += "," + db.SQLLit(partyCode);
+    //  SQL += ",''";
+    //  SQL += "," + db.SQLLit(electionDesc);
+    //  SQL += "," + db.SQLLit(electionAdditionalInfo);
+    //  SQL += ",''";
+    //  SQL += ",'1900-01-01'";
+    //  SQL += "," + db.SQLLit(ballotInstructions);
+    //  SQL += ",'1900-01-01'";
+    //  SQL += ",'1900-01-01'";
+    //  SQL += ",'1900-01-01'";
+    //  SQL += ",'1900-01-01'";
+    //  SQL += ",''";
+    //  SQL += ")";
+
+    //  db.ExecuteSQL(SQL);
+
+    //  //db.Report_Election_Update(cache, electionKey);
+    //}
+    //#endregion Elections INSERT
+    //public static string ElectionKey_County(string ElectionKey)
+    //{
+    //  if (
+    //    (!string.IsNullOrEmpty(ElectionKey))
+    //    && (ElectionKey.Length >= Elections.ElectionKeyLengthCounty)
+    //    )
+    //    return ElectionKey.Substring(0, Elections.ElectionKeyLengthCounty);
+    //  else
+    //    return string.Empty;
+    //}
+
+    //#region (mode: UPDATE ElectionsOffices Table)
+    //public static string Anchor_Admin_Office_UPDATE_Election(string electionKey,
+    //  string officeKey, string anchorText)
+    //{
+    //  string anchor = string.Empty;
+    //  anchor += "<a href=";
+    //  anchor += "\"";
+    //  anchor += db.Url_Admin_Office_UPDATE_Election(electionKey, officeKey);//(mode: EditOffice4Election)
+    //  anchor += "\"";
+
+    //  anchor += " target=";
+    //  anchor += "\"";
+    //  //Anchor += "_edit";
+    //  anchor += "_office";
+    //  anchor += "\"";
+
+    //  anchor += ">";
+
+    //  //Anchor += "<nobr>" + AnchorText + "</nobr>";
+    //  anchor += anchorText;
+    //  anchor += "</a>";
+    //  return anchor;
+    //}
+    //#endregion (mode: UPDATE ElectionsOffices Table)
+
+    //public static void ElectionsPoliticians_INSERT(
+    //  string ElectionKey
+    //  , string OfficeKey
+    //  , string PoliticianKey
+    //  , int OrderOnBallot
+    //  )
+    //{
+    //  db.ElectionsPoliticians_INSERT(
+    //   ElectionKey
+    //   , OfficeKey
+    //   , PoliticianKey
+    //   , string.Empty
+    //   , OrderOnBallot
+    //   );
+    //}
+    ////string
+    //public static void Elections_Update_Str(
+    //  string ElectionKey
+    //  , string Column
+    //  , string ColumnValue)
+    //{
+    //  db.Single_Key_Update_Str("Elections", Column, ColumnValue, "ElectionKey", ElectionKey);
+    //}
+    //public static bool Is_StateCode_All_51_States(string stateCode)
+    //{
+    //  return stateCode.ToUpper() == "UU";
+    //}
+
+    //#region Election Types
+    ////State Elections
+    //public const string Election_Type_StateGeneral_G = "G";
+    //public const string Election_Type_StateOffYear_O = "O";
+    //public const string Election_Type_StateSpecial_S = "S";
+    //public const string Election_Type_StatePartyPrimary_P = "P";
+    //public const string Election_Type_StatePresidentialPartyPrimary_B = "B";
+    //#endregion Election Types
+    //public static string Path_OrEmpty_(string Path_Full)
+    //{
+    //  //use when server full path is known
+    //  if (File.Exists(Path_Full))
+    //  {
+    //    return Path_Full;
+    //  }
+    //  else
+    //    return string.Empty;
+    //}
+    ////css
+    //public static string Path_Part_Css_Custom(string DesignCode, string FileNameWithExtn)
+    //{
+    //  //return db.Path_PartCssCustomNoFile(DesignCode) + FileNameWithExtn;
+    //  return @"css\Designs\" + DesignCode + @"\" + FileNameWithExtn;
+    //}
+    //public static string Path_OrEmpty(string Path_Part)
+    //{
+    //  return db.Path_OrEmpty_(VotePage.GetServerPath() + Path_Part);
+    //}
+    ////css
+    //public static string Url_Css_Custom(string DesignCode, string CssFile)
+    //{
+    //  return @"/css/Designs/" + DesignCode + @"/" + CssFile;
+    //}
+
+    //#region /Admin/Emails.aspx
+    //public static string Url_Admin_Emails()
+    //{
+    //  return @"/Admin/Emails.aspx";
+    //}
+
+    //#endregion /Admin/Emails.aspx
+
+    //public static string Anchor_Admin_OfficeWinner(
+    //  string electionKey
+    //  , string officeKey
+    //  , string anchorText
+    //  , string target
+    //  )
+    //{
+    //  return db.Anchor_Admin_OfficeWinner(
+    //   electionKey
+    //  , officeKey
+    //  , anchorText
+    //  , target
+    //  , string.Empty
+    //  );
+    //}
+    //public static void ElectionsPoliticians_INSERT(
+    //  string ElectionKey
+    //  , string OfficeKey
+    //  , string PoliticianKey
+    //  )
+    //{
+    //  db.ElectionsPoliticians_INSERT(
+    //    ElectionKey
+    //    , OfficeKey
+    //    , PoliticianKey
+    //    , string.Empty
+    //    , db.BallotOrder_Candidate_Next(
+    //          ElectionKey, OfficeKey)
+    //    );
+    //}
+    ////bool
+    //public static void Elections_Update_Bool(
+    //  string ElectionKey
+    //  , string Column
+    //  , bool ColumnValue)
+    //{
+    //  db.Single_Key_Update_Bool("Elections", Column, ColumnValue, "ElectionKey", ElectionKey);
+    //}
+
+    //public static int Elections_Int(string ElectionKey, string Column)
+    //{
+    //  if (db.Is_Valid_Election(ElectionKey))
+    //    return db.Single_Key_Int("Elections", Column, "ElectionKey", ElectionKey);
+    //  else
+    //    return 0;
+    //}
+
+    //#region CountyCode LocalCode in Elections Row
+
+    //public static string CountyCode_In_Elections_Row(string ElectionKey)
+    //{
+    //  if (ElectionKey != string.Empty)
+    //  {
+    //    string StateCode = db.Elections_Str(ElectionKey, "StateCode");
+    //    string CountyCode = db.Elections_Str(ElectionKey, "CountyCode");
+
+    //    if (CountyCache.CountyExists(StateCode, CountyCode))
+    //      return CountyCode;
+    //    else
+    //      return string.Empty;
+    //  }
+    //  else
+    //    return string.Empty;
+    //}
+
+    //#endregion CountyCode LocalCode in Elections Row
+    //public static int Referendums_In_Election(string ElectionKey)
+    //{
+    //  string sql = string.Empty;
+    //  sql += "Referendums";
+    //  sql += " WHERE ElectionKey = " + db.SQLLit(ElectionKey);
+    //  return db.Rows_Count_From(sql);
+    //}
+
+    //#region Path - css
+    //public static void Path_Css_Custom_Href_Set(ref HtmlLink Href, string DesignCode, string CssFile)
+    //{
+    //  //string a = db.Path_OrEmpty(db.Path_Part_Css_Custom(DesignCode, CssFile));
+    //  //string b = db.Url_Css_Custom(DesignCode, CssFile);
+    //  if (db.Path_OrEmpty(db.Path_Part_Css_Custom(DesignCode, CssFile)) != string.Empty)
+    //    Href.Href = db.Url_Css_Custom(DesignCode, CssFile);
+    //}
+    //#endregion Path - css
+    //public static string Url_Admin_Emails(
+    //  string StateCode
+    //  , string ElectionKey)
+    //{
+    //  string Url = db.Url_Admin_Emails();
+    //  if (StateCode != string.Empty)
+    //    Url += "&State=" + StateCode;
+    //  if (ElectionKey != string.Empty)
+    //    Url += "&Election=" + ElectionKey;
+    //  return db.Fix_Url_Parms(Url);
+    //}
+    //public static string Anchor_Admin_OfficeWinner(
+    //  string electionKey
+    //  , string officeKey
+    //  , string anchorText
+    //  )
+    //{
+    //  return db.Anchor_Admin_OfficeWinner(
+    //   electionKey
+    //  , officeKey
+    //  , anchorText
+    //  , string.Empty
+    //  );
+    //}
+
+    //#region Counties Table
+
+    //public static void CountiesUpdate(string StateCode, string CountyCode, string Column, string ColumnValue)
+    //{
+    //  db.Double_Key_Update_Str("Counties", Column, ColumnValue, "StateCode", StateCode, "CountyCode", CountyCode);
+    //}
+
+    //#endregion
+
+    //#region Either States, Counties, LocalDistricts Tables
+    //public static void States_Counties_LocalDistricts_Update(
+    //  string StateCode
+    //  , string CountyCode
+    //  , string LocalCode
+    //  , string Column
+    //  , string Value
+    //  , string FromValue
+    //  , bool IsLogUpdate
+    //  )
+    //{
+    //  if (!string.IsNullOrEmpty(StateCode))
+    //  {
+    //    if (!string.IsNullOrEmpty(LocalCode))
+    //    {
+    //      db.LocalDistrictsUpdate(
+    //        StateCode
+    //        , CountyCode
+    //        , LocalCode
+    //        , Column
+    //        , Value
+    //        );
+    //    }
+    //    else if (!string.IsNullOrEmpty(CountyCode))
+    //    {
+    //      db.CountiesUpdate(
+    //        StateCode
+    //        , CountyCode
+    //        , Column
+    //        , Value
+    //        );
+    //    }
+    //    else
+    //    {
+    //      db.States_Update_Str(
+    //        StateCode
+    //        , Column
+    //        , Value
+    //        );
+    //    }
+    //  }
+    //  //--------
+    //  if (IsLogUpdate)
+    //    DB.VoteLog.LogAdminData.Insert(
+    //      DateTime.Now
+    //      , SecurePage.UserSecurityClass
+    //      , SecurePage.UserName
+    //      , Column
+    //      , FromValue
+    //      , Value
+    //      );
+
+    //}
+    //#endregion Either States, Counties, LocalDistricts Tables
+
+    //public static string GetLocalDistricts(string StateCode, string CountyCode, string LocalCode, string Column)
+    //{
+    //  db.LocalDistricts_Row_Insert_Empty(StateCode, CountyCode, LocalCode);
+    //  return db.Triple_Key_Str("LocalDistricts", Column, "StateCode", StateCode, "CountyCode", CountyCode, "LocalCode", LocalCode);
+    //}
+
+    //public static string Counties(string StateCode, string CountyCode, string Column)
+    //{
+    //  return db.Double_Key_Str("Counties", Column, "StateCode", StateCode, "CountyCode", CountyCode);
+    //  //Double_Key_Str_Optional
+    //}
+
+    //#region /Organization/ URLs and Anchors
+    //public static string Url_OrganizationDefault(string OrganizationCode)
+    //{
+    //  return "/Organization/Default.aspx?Organization=" + OrganizationCode;
+    //}
+    //#endregion /Organization/ URLs and Anchors
+    //public static string Url_Party_Default(string PartyKey)
+    //{
+    //  string Url = @"/Party/Default.aspx";
+    //  Url += "?Party=" + PartyKey;
+    //  return Url;
+    //}
+    //public static string Anchor_OrganizationDefault(string OrganizationCode)
+    //{
+    //  string Anchor = string.Empty;
+    //  Anchor += "<a href=";
+    //  Anchor += "\"";
+    //  Anchor += db.Url_OrganizationDefault(OrganizationCode);
+    //  Anchor += "\"";
+    //  Anchor += ">";
+    //  Anchor += "<nobr>" + OrganizationCode + "</nobr>";
+    //  Anchor += "</a>";
+    //  return Anchor;
+    //}
+    //public static string Anchor_AdminQuestionAnswers(string anchorText,
+    // string issueLevel, string stateCode)
+    //{
+    //  string anchor = string.Empty;
+    //  anchor += "<a href=";
+    //  anchor += "\"";
+    //  //Anchor += "/Admin/QuestionAnswers.aspx";
+    //  //Anchor += "?IssueLevel=" + IssueLevel;
+    //  //Anchor += "&StateCode=" + StateCode;
+    //  anchor += db.Url_Admin_QuestionAnswers(issueLevel, stateCode);
+    //  anchor += "\"";
+    //  anchor += ">";
+    //  anchor += "<nobr>" + anchorText + "</nobr>";
+    //  //Anchor += AnchorText;
+    //  anchor += "</a>";
+    //  return anchor;
+    //}
+    //public static string Anchor_Admin_Issues(string stateCode, string anchorText)
+    //{
+    //  return db.Anchor_Admin_Issues(stateCode, string.Empty, anchorText);
+    //}
+    //public static string Url_Admin_LocalDistricts(string countyCode, string localCode)
+    //{
+    //  string url = "/Admin/Districts.aspx";
+    //  //if (StateCode != string.Empty)
+    //  //  Url += "&State=" + StateCode;
+    //  if (countyCode != string.Empty)
+    //    url += "&County=" + countyCode;
+    //  if (localCode != string.Empty)
+    //    url += "&Local=" + localCode;
+    //  return db.Fix_Url_Parms(url);
+    //}
+
+    //public static bool Is_Valid_Organization(string organizationCode)
+    //{
+    //  return db.Rows("Organizations", "OrganizationCode", organizationCode) == 1;
+    //}
+    //public static string Anchor_Admin_Parties(
+    //  string stateCode
+    //  , string anchorText
+    //  )
+    //{
+    //  return db.Anchor_Admin_Parties(
+    //   stateCode
+    //  , string.Empty
+    //  , string.Empty
+    //  , anchorText
+    //  );
+    //}
+    //public static string Anchor_Party_Default(string PartyKey)
+    //{
+    //  string stateName = StateCache.GetStateName(Parties.GetStateCodeFromKey(PartyKey));
+    //  string Anchor = string.Empty;
+    //  Anchor += "<a href=";
+    //  Anchor += "\"";
+    //  Anchor += db.Url_Party_Default(PartyKey);
+    //  Anchor += "\"";
+    //  Anchor += " target=";
+    //  Anchor += "\"";
+    //  Anchor += "_self";
+    //  Anchor += "\"";
+    //  Anchor += ">";
+    //  Anchor += stateName;
+    //  Anchor += "</a>";
+    //  return Anchor;
+    //}
+
+    //#region Multiple URLs and Anchors
+    //public static string OrganizationCodeLinks()
+    //{
+    //  string OrganizationCodeLinks = string.Empty;
+    //  DataTable OrganizationCodeTable = db.Table(sql.OrganizationCodes());
+    //  foreach (DataRow OrganizationRow in OrganizationCodeTable.Rows)
+    //  {
+    //    OrganizationCodeLinks += " | ";
+    //    OrganizationCodeLinks += db.Anchor_OrganizationDefault(
+    //      OrganizationRow["OrganizationCode"].ToString().Trim());
+    //  }
+    //  OrganizationCodeLinks += " | ";
+    //  return OrganizationCodeLinks;
+    //}
+    //public static string Issue_Anchors()
+    //{
+    //  string Issue_Links = string.Empty;
+    //  Issue_Links += db.Anchor_Admin_Issues("LL", "ALL Candidates");
+    //  Issue_Links += " | ";
+    //  Issue_Links += db.Anchor_Admin_Issues("US", "National");
+    //  DataTable StatesTable = db.Table(sql.States_51());
+    //  foreach (DataRow StateURLRow in StatesTable.Rows)
+    //  {
+    //    string StateName = StateURLRow["State"].ToString().Trim();
+    //    string StateCode = StateURLRow["StateCode"].ToString().Trim();
+    //    Issue_Links += " | ";
+    //    Issue_Links += db.Anchor_Admin_Issues(StateCode, StateName);
+    //  }
+    //  return Issue_Links;
+    //}
+    //public static string IssueReportsLinks()
+    //{
+    //  string IssueReportsLinks = string.Empty;
+    //  IssueReportsLinks += db.Anchor_AdminQuestionAnswers("National", "B", "US");
+    //  DataTable StatesTable = db.Table(sql.States_51());
+    //  foreach (DataRow StateURLRow in StatesTable.Rows)
+    //  {
+    //    string StateName = StateURLRow["State"].ToString().Trim();
+    //    string StateCode = StateURLRow["StateCode"].ToString().Trim();
+    //    IssueReportsLinks += " | ";
+    //    IssueReportsLinks += db.Anchor_AdminQuestionAnswers(StateName, "C", StateCode);
+    //  }
+    //  return IssueReportsLinks;
+    //}
+
+    //#endregion Multiple URLs and Anchors
+  }
+}

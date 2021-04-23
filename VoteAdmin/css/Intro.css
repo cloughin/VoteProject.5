@@ -1,0 +1,489 @@
+
+.trPoliticianInfoTop
+{
+  margin: 0;
+}
+
+.tdPoliticianInfoBio
+{
+  text-align: left;
+  vertical-align: top;
+}
+
+.tdPoliticianInfoPoliticianTitle
+{
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 18px;
+  margin: 0;
+  padding: 3px 10px 3px 10px;
+}
+
+#mainContent .tdOfficeName
+{
+  font-size: 18px;
+  line-height: normal;
+  padding: 8px 10px 0 10px;
+}
+
+#mainContent .tdElectionName
+{
+  font-size: 14px;
+  line-height: normal;
+  padding: 0 10px 3px 10px;
+}
+
+#mainContent .bioTable
+{
+  width: 600px;
+}
+
+#mainContent .trPoliticianInfoContact td
+{
+  padding-top: 6px;
+}
+
+#mainContent .trPoliticianInfoContactAge td
+{
+  padding-top: 10px;
+}
+
+.tdPoliticianInfoContactHeading
+{
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 3px 10px 3px 10px;
+}
+
+#mainContent .tdPoliticianInfoContactHeading
+{
+  font-size: 11px;
+  font-weight: normal;
+  padding-left: 0;
+  padding-right: 0; /*text-transform: lowercase;*/
+  width: 120px;
+}
+
+#mainContent .tdPoliticianInfoContactHeading span
+{
+  padding-left: 50px;
+}
+
+.tdPoliticianInfoContactDetail
+{
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: normal;
+  text-align: left;
+  padding: 0;
+}
+
+#mainContent .tdPoliticianInfoContactDetail
+{
+  color: Black;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 120%;
+  width: 480px;
+}
+
+#mainContent .tdPoliticianInfoContactDetail a
+{
+  color: Black;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 120%;
+}
+
+#mainContent .tdPoliticianInfoContactDetail a:hover
+{
+  color: #A00000;
+  text-decoration: underline;
+}
+
+#mainContent .socialMedia
+{
+  padding-top: 8px;
+}
+
+.tdPoliticianInfoImage
+{
+  text-align: right;
+  vertical-align: top;
+}
+
+/* --- Intro Title --- */
+.trIntroTop
+{
+	margin: 0px;
+}
+.tdIntroBio
+{
+	text-align: left;
+	vertical-align: top;
+}
+.trIntroPoliticianName
+{
+}
+.tdIntroPoliticianName
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 20px;
+	font-weight: normal;
+	margin: 0px;
+	font-weight: bold;
+	color: #373737;
+	padding: 10px 10px 3px 10px;
+}
+.trIntroPoliticianTitle
+{
+	margin: 0px;
+}
+.tdIntroPoliticianStatus
+{
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0px;
+	font-size: 14px;
+	line-height: 18px;
+	font-weight: bold;
+	color: #373737;
+	padding: 3px 10px 3px 10px;
+}
+/*--Contact Info--*/
+.trIntroContact
+{
+}
+/*
+.tdIntroContactHeading
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	color: #373737;
+	padding: 3px 10px 3px 10px;
+}
+*/
+.tdIntroContactDetail, 
+.tdIntroContactDetail a:link, 
+.tdIntroContactDetail a:visited, 
+.tdIntroContactDetail a:hover
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-weight: normal;
+	line-height: 110%;
+	color: #373737;
+	padding: 3px 10px 2px 30px;
+	display:block;
+}
+ .tdIntroContactDetail a:hover
+{
+	text-decoration: underline;
+	color: #A00000;
+}
+.tdWebSiteDetail
+,  .tdWebSiteDetail a:link
+,  .tdWebSiteDetail a:visited
+,  .tdWebSiteDetail a:hover
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	font-weight: bold;
+	line-height: 150%;
+	color: #A00000;
+	text-decoration: underline;
+	padding: 3px 10px 3px 30px;
+}
+.tdSocialMediaDetail
+{
+	padding: 3px 10px 3px 30px;
+}
+/*--
+.tdIntroContactDetail
+{
+	padding: 3px 10px 3px 10px;
+}
+#mainContent .tdIntroContactDetail
+{
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 120%;
+	width: 480px;
+	padding: 3px 10px 3px 10px;
+}
+#mainContent .tdIntroContactDetail a
+{
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 120%;
+	padding: 3px 10px 3px 10px;
+}
+#mainContent .tdIntroContactDetail a:hover
+{
+	text-decoration: underline;
+	color: #A00000;
+}
+--*/
+.trIntroAssignmentsDetail
+{
+}
+.tdIntroAssignmentsHeading
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	color: #373737;
+	padding: 3px 10px 3px 10px;
+}
+.tdIntroAssignmentsDetail
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+	color: #373737;
+	padding: 3px 10px 3px 10px;
+}
+.tdIntroImage
+{
+	text-align: right;
+	vertical-align: top;
+}
+/*--Issue Links--*/
+/*#tableIntroIssueLinks
+{
+margin:0px;
+background-color: #26466D;
+border-width:10px;
+border-style:solid;
+border-color:#26466D;
+}
+*/
+.trIntroIssueLinksHeading
+{
+	margin: 0px;
+	background-color: #365e77;
+	padding: 10px;
+	border-style: solid;
+	border-color: #365e77;
+}
+.tdIntroIssueLinksHeading, .tdIntroIssueLinksHeading a:link, .tdIntroIssueLinksHeading a:visited, .tdIntroIssueLinksHeading a:hover
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	font-size: 16px;
+	color: #fff;
+	text-align: center;
+	text-decoration: none;
+}
+.tdIntroIssueLinksHeading a:hover
+{
+	text-decoration: underline;
+}
+.tdIntroIssueLinksHeading
+{
+	padding-top: 10px;
+	padding-bottom: 5px;
+}
+.trIntroIssueLinks
+{
+	margin: 0px;
+	background-color: #365e77;
+	border-width: 10px;
+	border-style: solid;
+	border-color: #26466D;
+}
+.tdIntroIssueLinks, .tdIntroIssueLinks a:link, .tdIntroIssueLinks a:visited, .tdIntroIssueLinks a:hover
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-size: 14px;
+	line-height: 18px;
+	font-weight: bold;
+	color: #fff;
+	text-align: left;
+}
+.tdIntroIssueLinks
+{
+	padding: 3px;
+}
+/*--Profile--*/
+.trProfileHeading
+{
+}
+.tdProfileHeading
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	font-weight: bold;
+	color: #393939;
+	background-color: #E3E3E3;
+	border-bottom: 1px solid #fff;
+	margin: 0px;
+	height: 26px;
+	text-align: left;
+	padding: 5px 10px 5px 10px;
+}
+.trIntroProfileHeading
+{
+}
+.tdIntroProfileHeading
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	font-weight: bold;
+	color: #393939;
+	padding: 10px 10px 3px 10px;
+}
+.trIntroProfileDetail
+{
+}
+.tdIntroProfileDetail
+{
+	font-family: Arial, Helvetica, sans-serif; /*font-size: 13px;*/
+	font-size: 14px;
+	color: #393939;
+	padding: 10px 10px 3px 10px;
+}
+/*--Footer--*/
+.trIntroFooter
+{
+}
+.tdIntroFooter
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	background-color: #f2f2f2;
+	color: black;
+	padding: 10px 10px 3px 10px;
+}
+
+
+.tdReportQuestion
+{
+	font-family: Arial, Helvetica, sans-serif;
+	vertical-align: top;
+	font-size: 14px;
+	font-weight: bold;
+	color: #373737;
+	border-right: solid 1px Gray;
+	border-bottom: solid 1px Gray;
+	vertical-align: top;
+	width: 300px;
+	padding: 10px;
+}
+.tdReportDetail
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-weight: normal;
+	color: #373737;
+	border-right: solid 1px Gray;
+	border-bottom: solid 1px Gray;
+	vertical-align: top;
+	padding: 5px;
+}
+/*
+#mainContent .socialMedia
+{
+	padding-top: 4px;
+	display:inline-block;
+}
+*/
+
+#mainContent .tdIntroIssueLinksHeading
+{
+	font-weight: bold;
+	text-align: left;
+	padding-left: 10px;
+	font-size: 16px;
+}
+#mainContent .subheading
+{
+	font-size: 75%;
+	font-weight: normal;
+	color: #aaa;
+}
+#mainContent .tdIntroIssueLinksHeading a
+{
+	font-weight: bold;
+}
+#mainContent .tdIntroIssueLinks
+{
+	padding-left: 10px;
+	font-weight: normal;
+}
+#mainContent .tdIntroIssueLinks a
+{
+	font-weight: normal;
+	text-decoration: none;
+	border-bottom: 1px solid white;
+}
+#mainContent .tdIntroIssueLinks a:visited
+{
+	color: #aaa;
+}
+#mainContent .tdIntroIssueLinks a:hover
+{
+	text-decoration: none;
+	border-bottom: 3px solid white;
+	color: White;
+}
+#mainContent .tdIntroIssueLinks a:first-child
+{
+	font-weight: bold;
+}
+#mainContent .tdIntroProfileDetail
+{
+	line-height: 120%;
+}
+#mainContent .trIntroPoliticianName, #mainContent .trProfileHeading
+{
+	display: none;
+}
+#mainContent .trIntroContact td
+{
+	padding-top: 6px;
+}
+/*
+#mainContent .trIntroContactAge td
+{
+	padding-top: 10px;
+}
+*/
+#mainContent .bioTable
+{
+	width: 600px;
+}
+/*
+#mainContent .tdIntroContactHeading
+{
+	font-size: 11px;
+	font-weight: normal;
+	text-transform: lowercase;
+	width: 120px;
+	padding-left: 0;
+	padding-right: 0;
+}
+#mainContent .tdIntroContactHeading span
+{
+	padding-left: 50px;
+}
+*/
+#mainContent .tdOfficeName
+{
+	font-size: 18px;
+	line-height: normal;
+	padding: 8px 10px 0px 10px;
+}
+#mainContent .tdElectionName
+{
+	font-size: 14px;
+	line-height: normal;
+	padding: 0px 10px 3px 10px;
+}
+

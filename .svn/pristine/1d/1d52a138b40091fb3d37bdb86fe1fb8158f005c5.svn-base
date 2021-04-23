@@ -1,0 +1,9 @@
+﻿#main-tabs #tab-bulkemail-emailoptions .masker2
+{
+  display: block;
+  filter: alpha(opacity: 0);
+  height: 26px;
+  left: -155px;
+  opacity: 0;
+  width: 155px;
+}

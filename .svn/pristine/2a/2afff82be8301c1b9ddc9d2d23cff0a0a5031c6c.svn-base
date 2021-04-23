@@ -1,0 +1,282 @@
+﻿/***********************************************/
+/* Entire page                                 */
+/***********************************************/
+
+body.admin-page #outer
+{
+  position: relative;
+}
+
+body.admin-page .sub-heading.headings
+{
+  float: left;
+}
+
+body.admin-page .sub-heading.change-button
+{
+  position: absolute;
+  right: 0;
+  top: 10px;
+}
+
+body.admin-page h2.jurisdiction-message
+{
+  margin: 0;
+}
+
+body.admin-page h4.credential-message
+{
+  font-size: 12px;
+  font-style: italic;
+}
+
+body.admin-page .update-controls
+{
+  margin: 4px 0 0 0;
+  position: relative;
+}
+
+.vusa-office-candidate-boxed-group
+{
+  margin-top: 20px;
+}
+.vusa-office-candidate-boxed-group .col1
+{
+  float: left;
+}
+.vusa-office-candidate-boxed-group .col2
+{
+  float: right;
+}
+.vusa-candidates-dropdown
+{
+  margin-left: 20px !important;
+}
+
+.vs-election-boxed-group
+{
+  margin-top: 20px;
+}
+.vs-election-boxed-group .refresh
+{
+  float: right;
+}
+.vs-election-boxed-group .refresh-elections-date
+{
+  text-align: right;
+}
+
+.vs-candidate-boxed-group
+{
+  margin-top: 20px;
+}
+.vs-candidate-boxed-group .refresh
+{
+  float: right;
+}
+.vs-candidate-boxed-group .refresh-candidates-date
+{
+  text-align: right;
+}
+
+.data-comparison-boxed-group
+{
+  margin-top: 20px;
+}
+.data-comparison-boxed-group .button-group-1
+{
+  width: 453px;
+  float: left;
+}
+.data-comparison-boxed-group .copy-empty-button
+{
+  float: right;
+}
+.data-comparison-boxed-group .update-button
+{
+  float: left;
+}
+.data-comparison-boxed-group .refresh
+{
+  float: right;
+  margin-bottom: 10px;
+}
+.data-comparison-boxed-group .refresh-candidate-date
+{
+  text-align: right;
+}
+.data-comparison-boxed-group .comparison
+{
+  clear: both;
+}
+.data-comparison-boxed-group .comparison h3
+{
+  background-color: #2254aa;
+  font-size: 9pt;
+  color: #fff;
+  padding: 0 5px;
+  margin: 0;
+}
+.data-comparison-boxed-group .name.comparison h3
+{
+  background-color: #fff;
+  font-size: 13pt;
+  color: #2254aa;
+  margin-bottom: 5px;
+}
+.data-comparison-boxed-group .name.comparison .img
+{
+  float: right;
+}
+.data-comparison-boxed-group .value
+{
+  font-family: "Trebuchet MS", Geneva, Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 16px;
+}
+.data-comparison-boxed-group .vusa-data
+{
+  float: left;
+  width: 453px;
+  margin-right: 2px;
+}
+.data-comparison-boxed-group .vusa-data textarea
+{
+  margin: 2px 0;
+  min-height: 64px;
+  width: 447px;
+  resize: vertical;
+}
+.data-comparison-boxed-group input[type=text]
+{
+  margin: 2px 0;
+  width: 441px;
+}
+.data-comparison-boxed-group .copy-buttons
+{
+  width: 14px;
+  min-height: 1px;
+  float: left;
+  margin-top: 20px;
+}
+.data-comparison-boxed-group .photo .copy-buttons
+{
+  margin-top: 3px;
+}
+.data-comparison-boxed-group .photo .vs-data .value
+{
+  display: none;
+}
+.data-comparison-boxed-group .vs-data
+{
+  float: left;
+  width: 453px;
+}
+.data-comparison-boxed-group .vs-data .value
+{
+  border: 1px solid #aaa;
+  margin: 2px 0;
+  padding: 0 2px;
+  resize: vertical;
+}
+.data-comparison-boxed-group .vs-data .value.mismatch
+{
+  background: yellow;
+}
+.data-comparison-boxed-group .vs-data textarea.value
+{
+  min-height: 64px;
+  background: #fff;
+  resize: vertical;
+  width: 447px;
+  min-height: 64px;
+}
+.data-comparison-boxed-group .vusa-data.linked .value
+{
+  margin-top: 2px;
+  width: 410px;
+}
+.data-comparison-boxed-group .vs-data.linked .value
+{
+  margin-top: 5px;
+  width: 416px;
+}
+.data-comparison-boxed-group .icon-box
+{
+  border: 1px solid #ccc;
+  margin: 1px 0 0 5px;
+  padding: 2px;
+  float: right;
+}
+.data-comparison-boxed-group .icon-box a
+{
+  display: block;
+  width: 20px;
+  height: 20px;
+  background: #fff url(/images/socialsprite.png);
+}
+.data-comparison-boxed-group a.icon.disabled
+{
+  background-position: 0 0;
+  cursor: default;
+}
+.data-comparison-boxed-group .email a.icon
+{
+  background-position: -280px 0;
+}
+.data-comparison-boxed-group .email a.icon:hover
+{
+  background-position: -280px -20px;
+}
+.data-comparison-boxed-group .email a.icon.disabled
+{
+  background-position: -280px -40px;
+}
+.data-comparison-boxed-group .website a.icon
+{
+  background-position: 0 0;
+}
+.data-comparison-boxed-group .website a.icon:hover
+{
+  background-position: 0 -20px;
+}
+.data-comparison-boxed-group .website a.icon.disabled
+{
+  background-position: 0 -40px;
+}
+.data-comparison-boxed-group .facebook a.icon
+{
+  background-position: -20px 0;
+}
+.data-comparison-boxed-group .facebook a.icon:hover
+{
+  background-position: -20px -20px;
+}
+.data-comparison-boxed-group .facebook a.icon.disabled
+{
+  background-position: -20px -40px;
+}
+.data-comparison-boxed-group .twitter a.icon
+{
+  background-position: -80px 0;
+}
+.data-comparison-boxed-group .twitter a.icon:hover
+{
+  background-position: -80px -20px;
+}
+.data-comparison-boxed-group .twitter a.icon.disabled
+{
+  background-position: -80px -40px;
+}
+.data-comparison-boxed-group .youtube a.icon
+{
+  background-position: -40px 0;
+}
+.data-comparison-boxed-group .youtube a.icon:hover
+{
+  background-position: -40px -20px;
+}
+.data-comparison-boxed-group .youtube a.icon.disabled
+{
+  background-position: -40px -40px;
+}

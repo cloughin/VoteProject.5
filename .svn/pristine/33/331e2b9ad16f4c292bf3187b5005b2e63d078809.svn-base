@@ -1,0 +1,205 @@
+﻿using System;
+using System.Web;
+
+namespace Vote
+{
+  // This contains the final info from the LDS table.
+  // We make this an immutable object because it goes in a Dictionary
+  // as a key. We also override the equality operators and GetHashCode 
+  // for the same reason.
+  public class LdsInfo
+  {
+    static readonly LdsInfo MissingValue = new LdsInfo("XX", "000", "000", "000", "000");
+
+    readonly string _StateCode;
+    readonly string _Congress;
+    readonly string _StateSenate;
+    readonly string _StateHouse;
+    readonly string _County;
+
+    public LdsInfo(string stateCode, string congress, string stateSenate,
+      string stateHouse, string county)
+    {
+      if (stateCode == null || congress == null || stateSenate == null ||
+        stateHouse == null || county == null)
+        throw new ArgumentNullException();
+
+      if (congress.Length > 3 || stateSenate.Length > 3 ||
+        stateHouse.Length > 3 || county.Length > 3 || stateCode.Length != 2)
+        throw new ArgumentException();
+
+      _StateCode = stateCode;
+      _Congress = congress.ZeroPad(3);
+      _StateSenate = stateSenate.ZeroPad(3);
+      _StateHouse = stateHouse.ZeroPad(3);
+      _County = county.ZeroPad(3);
+    }
+
+    public void ApplyToResult(AddressFinderResult result)
+    {
+      result.Congress = Congress;
+      result.StateSenate = StateSenate;
+      result.StateHouse = StateHouse;
+      result.County = County;
+      result.State = StateCode;
+
+      var votersUrl = MakeSetCookiesUrl(
+        UrlManager.GetForVotersPageUri(StateCode), result.OriginalInput, result.Remember);
+      result.RedirectUrl = votersUrl;
+      result.SuccessMessage = "Redirecting to the " + StateCache.GetStateName(StateCode) + " 'for Voters' page";
+
+      //string electedOfficialsUrl = MakeSetCookiesUrl(
+      //  UrlManager.GetElectedPageUri(
+      //  StateCode, Congress, StateSenate, StateHouse, County));
+
+      //ElectionsTable futureElectionsTable =
+      //  Elections.GetFutureViewableDisplayDataByStateCode(StateCode);
+
+      //if (futureElectionsTable.Count == 0)
+      //{
+      //  result.RedirectUrl = electedOfficialsUrl;
+      //  result.SuccessMessage = "Redirecting to your elected officials page";
+      //}
+      //else
+      //{
+      //  //redirectUri = UrlManager.GetBallotPageUri(StateCode,
+      //  //  Congress, StateSenate, StateHouse, County);
+      //  HtmlGenericControl span = new HtmlGenericControl("span");
+      //  span.Attributes["class"] = "selectOne";
+      //  span.Controls.Add(new LiteralControl("Select "));
+      //  HtmlAnchor a = new HtmlAnchor();
+      //  span.Controls.Add(a);
+      //  a.HRef = electedOfficialsUrl;
+      //  a.InnerText = "Current elected officials";
+      //  a.Title = a.InnerText;
+      //  span.Controls.Add(new LiteralControl(" or sample ballot for:"));
+      //  foreach (var row in futureElectionsTable)
+      //  {
+      //    span.Controls.Add(new LiteralControl("<br />"));
+      //    a = new HtmlAnchor();
+      //    span.Controls.Add(a);
+      //    Uri uri = UrlManager.GetBallotPageUri(row.ElectionKey,
+      //      Congress, StateSenate, StateHouse, County);
+      //    a.HRef = MakeSetCookiesUrl(uri);
+      //    a.InnerText = row.ElectionDesc;
+      //    a.Title = a.InnerText;
+      //  }
+      //  result.SuccessMessage = db.RenderToString(span);
+      //}
+    }
+
+    private string MakeSetCookiesUrl(Uri uri, string address = null, bool remember = true)
+    {
+      var qsc = new QueryStringCollection
+      {
+        {"Congress", Congress},
+        {"StateSenate", StateSenate},
+        {"StateHouse", StateHouse},
+        {"County", County},
+        {"Page", HttpUtility.UrlEncode(uri.ToString())},
+        {"Address", address}
+      };
+      if (!remember) qsc.Add("Remember", "n");
+      return UrlManager.GetStateUri(StateCode, "SetCookies.aspx", qsc).ToString();
+    }
+
+    public string Congress
+    {
+      get { return _Congress; }
+    }
+
+    public string County
+    {
+      get { return _County; }
+    }
+
+    public bool IsMissing
+    {
+      get { return this == MissingValue; }
+    }
+
+    public static LdsInfo Missing
+    {
+      get { return MissingValue; }
+    }
+
+    public string StateCode
+    {
+      get { return _StateCode; }
+    }
+
+    public string StateHouse
+    {
+      get { return _StateHouse; }
+    }
+
+    public string StateSenate
+    {
+      get { return _StateSenate; }
+    }
+
+    #region Override GetHashCode and equality methods
+
+    public override int GetHashCode()
+    {
+      return
+        _StateCode.GetHashCode() ^
+        _Congress.GetHashCode() ^
+        _StateSenate.GetHashCode() ^
+        _StateHouse.GetHashCode() ^
+        _County.GetHashCode();
+    }
+
+    public static bool Equals(LdsInfo x, LdsInfo y)
+    {
+      return
+        x._StateCode == y._StateCode &&
+        x._Congress == y._Congress &&
+        x._StateSenate == y._StateSenate &&
+        x._StateHouse == y._StateHouse &&
+        x._County == y._County;
+    }
+
+    public override bool Equals(Object obj)
+    {
+      // If parameter is null return false.
+      if (obj == null) return false;
+
+      // If parameter cannot be cast to LdsInfo return false.
+      var other = obj as LdsInfo;
+      if ((object) other == null) return false;
+
+      // Return true if the fields match:
+      return Equals(this, other);
+    }
+
+    //public bool Equals(LdsInfo other)
+    //{
+    //  // If parameter is null return false:
+    //  if ((object) other == null) return false;
+
+    //  // Return true if the fields match:
+    //  return Equals(this, other);
+    //}
+
+    public static bool operator ==(LdsInfo a, LdsInfo b)
+    {
+      // If both are null, or both are same instance, return true.
+      if (ReferenceEquals(a, b)) return true;
+
+      // If one is null, but not both, return false.
+      if (((object) a == null) || ((object) b == null))
+        return false;
+
+      // Return true if the fields match:
+      return Equals(a, b);
+    }
+
+    public static bool operator !=(LdsInfo a, LdsInfo b)
+    {
+      return !(a == b);
+    }
+
+    #endregion Override GetHashCode and equality methods
+  }
+}

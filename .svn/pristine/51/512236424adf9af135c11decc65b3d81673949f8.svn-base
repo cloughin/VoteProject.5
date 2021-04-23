@@ -1,0 +1,136 @@
+﻿#outer
+{
+  /*background: #cbdbdb url(/images/homebg.gif) repeat-x;*/
+  background: #cbdbdb url(/images/newbg.gif) repeat-x;
+  /*background: #cbdbdb;*/
+}
+#mainContent
+{
+  background: url(/images/flagbg.jpg) no-repeat top right;
+}
+#informedBlock
+{
+  width: 100%;
+  overflow: auto; /* to clear floats */
+}
+#peopleVoting
+{
+  float:left;
+}
+#becomingInformed
+{
+  float:left;
+  padding-left:21px;
+}
+#becomingInformedTitle
+{
+  /*padding: 21px 0 0 2px;*/
+  padding: 14px 0 0 2px;
+}
+#becomingInformedText
+{
+  padding: 22px 0 0 0;
+}
+#becomingInformedText div
+{
+  width: 358px;
+  color: #ffffff;
+  font-family: Georgia;
+  font-size: 14px;
+  line-height: 18px;
+}
+#getStarted
+{
+  padding: 20px 0 0 129px;
+}
+a.getStartedButton
+{
+  display: block;
+  height: 40px;
+  width: 230px;
+  background: url(/images/getstarted.png);
+  overflow: hidden;
+	text-indent: -10000px;
+	font-size: 0px;
+	line-height: 0px;
+  cursor: pointer;
+}
+a:hover.getStartedButton
+{
+  background-position: 0 -40px;
+}
+#missionBlock
+{
+  width: 100%;
+  overflow: auto; /* to clear floats */
+  background: #ffffff;
+}
+#ourMission
+{
+  float: left;
+  padding-top: 12px;
+  padding-left: 25px;
+}
+#ourMission div
+{
+  width: 115px;
+  font-family: Georgia;
+  font-size: 18px;
+  font-weight: bold;
+  font-style: italic;
+  color: #a1000e;
+  text-align: right;
+  margin-right:20px;
+  line-height: 120%;
+}
+#missionStatement
+{
+  float: left;
+  margin-right: 10px;
+  padding: 14px 0 0 0;
+}
+#missionStatement div
+{
+  width: 550px;
+  font-family: Georgia;
+  font-size: 12px;
+  color: #333333;
+  line-height: 19px;
+}
+#missionSidebar
+{
+  float: left;
+  padding-top: 13px;
+  text-align: right;
+  background: url(/images/pullbg.png) no-repeat top left;
+}
+#missionSidebar div.pullQuote
+{
+  width: 185px;
+  padding-right: 35px;
+  font-family: Georgia;
+  font-size: 18px;
+  font-style: italic;
+  color: #999;
+  line-height: 22px;
+}
+#missionSidebar div.forVoters
+{
+  margin-left:12px;
+}
+#missionSidebar div.forVoters a
+{
+  display: block;
+  height: 162px;
+  width: 195px;
+  background: url(/images/forvoters.png);
+  overflow: hidden;
+	text-indent: -10000px;
+	font-size: 0px;
+	line-height: 0px;
+  cursor: pointer;
+}
+#missionSidebar div.forVoters a:hover
+{
+  background-position: 0 -162px;
+}

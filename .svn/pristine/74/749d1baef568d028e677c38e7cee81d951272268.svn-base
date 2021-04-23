@@ -1,0 +1,182 @@
+﻿using System;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB.Vote;
+using Vote.Reports;
+
+namespace Vote
+{
+  public partial class OfficialsNew : CacheablePage
+  {
+    protected OfficialsNew()
+    {
+      No404OnUrlNormalizeError = true;
+    }
+
+    #region Caching support
+
+    protected override string GetCacheKey()
+    {
+      var key = UrlManager.GetStateCodeFromHostName() + "." + QueryReport + "." +
+        QueryState + "." + QueryCounty + "." + QueryLocal;
+      var siteId = UrlManager.CurrentQuerySiteId;
+      if (!string.IsNullOrEmpty(siteId))
+        key += "." + siteId;
+
+      return key;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "Officials";
+    }
+
+    #endregion Caching support
+
+    private string _StateCode;
+    private string _CountyCode;
+    private string _LocalCode;
+    private ElectoralClass _ElectoralClass;
+    private string _ElectoralClassDescription;
+
+    private const string TitleTagAllStatesDomain =
+      "Federal Elected Officials’ Pictures, Bios, Social Media and Issue Positions";
+
+    private const string MetaDescriptionAllStatesDomain =
+      "Federal elected officials’ pictures, bios, social media and positions on the issues; plus your customized sample ballot.";
+
+    private const string MetaKeywordsAllStatesDomain =
+      "sample ballot, sample ballots, vote, voter, ballot, election, voting, candidates";
+
+    private const string TitleTagSingleStateDomain =
+      "{0} Elected Officials’ Pictures, Bios, Social Media and Issue Positions";
+
+    private const string MetaDescriptionSingleStateDomain =
+      "{0} and Federal elected officials’ pictures, bios, social media and positions on the issues; plus your customized sample ballot.";
+
+    private const string MetaKeywordsSingleStateDomain =
+      "{0} sample ballot, {0} sample ballots, {0} vote, {0} voter, {0} ballot, {0} election, {0} voting, {0} candidates";
+
+    private string GetDirectoryName()
+    {
+      switch (_ElectoralClass)
+      {
+        case ElectoralClass.USSenate:
+          return "Directory of Currently Elected U.S. Senators";
+        case ElectoralClass.USHouse:
+          return "Directory of Currently Elected U.S. House Members";
+        case ElectoralClass.USGovernors:
+          return "Directory of Currently Elected State Governors";
+        case ElectoralClass.State:
+          return
+            "Directory of Currently Elected State and Federal Elected Representatives";
+        case ElectoralClass.County:
+          return "Directories of Currently Elected County Representatives";
+        case ElectoralClass.Local:
+          return "Directories of Currently Elected Local District Representatives";
+        default:
+          return string.Empty;
+      }
+    }
+
+    private void PopulateMetaTags()
+    {
+      if (DomainData.IsValidStateCode) // Single state
+      {
+        Title = TitleTagSingleStateDomain;
+        MetaDescription = MetaDescriptionSingleStateDomain;
+        MetaKeywords = MetaKeywordsSingleStateDomain;
+      }
+      else
+      {
+        Title = TitleTagAllStatesDomain;
+        MetaDescription = MetaDescriptionAllStatesDomain;
+        MetaKeywords = MetaKeywordsAllStatesDomain;
+      }
+
+      Title = string.Format(Title, _StateCode);
+      MetaDescription = string.Format(MetaDescription,
+        _StateCode);
+      MetaKeywords = string.Format(MetaKeywords, _StateCode);
+      if (string.IsNullOrEmpty(UrlManager.CurrentQuerySiteId)) return;
+      ForVotersLink.HRef = UrlManager.GetForVotersPageUri(_StateCode)
+        .ToString();
+    }
+
+    private string GetReportTitle()
+    {
+      switch (_ElectoralClass)
+      {
+        case ElectoralClass.USPresident:
+          return "Current US President and Vice President";
+        case ElectoralClass.USSenate:
+          return "Current US Senators";
+        case ElectoralClass.USHouse:
+          return "Current US House Members";
+        case ElectoralClass.USGovernors:
+          return "Current State Governors and Lieutenant Governors";
+        case ElectoralClass.State:
+          return string.Format("Current {0} Elected Representatives",
+            StateCache.GetStateName(_StateCode));
+        case ElectoralClass.County:
+          return "Current County Representatives";
+        case ElectoralClass.Local:
+          return "Current Local District Representatives";
+        default:
+          return string.Empty;
+      }
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      // The OnPreInit method of the parent class handles serving from cache, 
+      // in which case this method is never called.
+
+      if (Report.SignedInReportUser != ReportUser.Public)
+      {
+        this.IncludeCss("~/css/MainCommon.css");
+        this.IncludeCss("~/css/SecondaryCommon.css");
+        this.IncludeCss("~/css/All.css");
+        this.IncludeCss("~/css/Officials.css");
+      }
+
+      if (HasUrlError)
+      {
+        InnerContent.Controls.Clear();
+        var p = new HtmlGenericControl("p").AddTo(InnerContent, "not-found-error");
+        new LiteralControl("We could not show the information you requested: " +
+          UrlError).AddTo(p);
+        return;
+      }
+
+      _StateCode = QueryReport;
+      if (string.IsNullOrWhiteSpace(_StateCode))
+        _StateCode = QueryState;
+      if (StateCache.IsValidStateCode(_StateCode))
+      {
+        _CountyCode = QueryCounty;
+        _LocalCode = QueryLocal;
+      }
+      else
+      {
+        _CountyCode = string.Empty;
+        _LocalCode = string.Empty;
+      }
+
+      _ElectoralClass = Offices.GetElectoralClass(_StateCode, _CountyCode,
+        _LocalCode);
+      _ElectoralClassDescription = Offices.GetElectoralClassDescription(
+        _StateCode, _CountyCode, _LocalCode);
+
+      PopulateMetaTags();
+      PageHeading.MainHeadingText = GetReportTitle();
+      Control report;
+      if (Report.SignedInReportUser != ReportUser.Public)
+        report = OfficialsReport.GetReport(Report.SignedInReportUser, _StateCode, _CountyCode,
+        _LocalCode);
+      else
+        report = OfficialsReportResponsive.GetReport(_StateCode, _CountyCode, _LocalCode);
+      report.AddTo(ReportPlaceHolder);
+    }
+  }
+}

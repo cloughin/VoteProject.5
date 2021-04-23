@@ -1,0 +1,80 @@
+<%@ Page Language="C#" EnableSessionState="True" AutoEventWireup="true" 
+Codebehind="xAboutUs.aspx.cs" Inherits="Vote.AboutUsPageX" %>
+
+<%@ Register Src="/Controls/SocialMediaButtons.ascx" TagName="SocialMediaButtons" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonateBanner.ascx" TagName="DonateBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainBanner.ascx" TagName="MainBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainNavigation.ascx" TagName="MainNavigation" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainFooter.ascx" TagName="MainFooter" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeading.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntry.ascx" TagName="AddressEntry" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonationRequest.ascx" TagName="DonationRequest" TagPrefix="user" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+  <title runat="server" id="TitleTag" >About Us</title>
+  <meta runat="server" id="MetaDescriptionTag" content="" name="description" />
+  <meta runat="server" id="MetaKeywordsTag" content="" name="keywords" />
+</head>
+<body class="about-page">
+    <form id="form1" runat="server" enableviewstate="True">
+    <div id="outer">
+    <div id="container">
+      <user:SocialMediaButtons ID="SocialMediaButtons1" runat="server" />
+      <user:DonateBanner ID="DonateBanner1" runat="server" />
+      <user:MainBanner ID="MainBanner1" runat="server" />
+      <user:MainNavigation ID="MainNavigation1" runat="server" />
+      <div id="mainContent">
+        <user:PageHeading ID="PageHeading" runat="server" 
+          MainHeadingText="About Us" />
+        <div class="intro">
+          <p>In 2003, the founder of this project went to the polls to 
+          vote for the Virginia State Senate and State House offices.  He found 
+          that he didn’t have the slightest idea who any of the candidates were, 
+          or anything about their positions and views, or any knowledge about the 
+          ballot measures. Some candidate names, found on the clutter of street and 
+          lawn posters, seemed familiar. He questioned the value of voting if voters 
+          knew nothing about what they were voting for. This seemed like a major 
+          flaw in our representative democracy.</p>
+
+          <p>Most American citizens are also aware that there are other significant 
+          problems with our representative democracy. Money and special interest 
+          groups have too much influence in elections and government. Political 
+          advertising is often deceptive and misleading. There is little or no 
+          media coverage of county and local elections. Voter turnout is low. 
+          To help address these problems the Vote-USA project was launched.</p>
+
+          <p>The project’s goal was to provide a better way. Using the Internet, 
+          he felt that he could provide voters with information they needed to 
+          vote on a more informed basis and to provide candidates with the means 
+          to easily communicate with voters, free of charge. By the time of the 
+          2004 General Election, Vote-USA.org was able to provide a customized 
+          sample ballot for any address in the country that allowed voters to 
+          compare the candidates’ bios, pictures, and, most importantly, their 
+          positions and views on the issues in an easy side-by-side format.</p>
+
+          <p>Since 2004, Vote-USA.org has covered all general elections in all 
+          states and most off-year, special and primary elections. We have 
+          provided voters with over 20 million candidate comparison pages.</p> 
+
+          <p>Operations are funded exclusively through contributions from private 
+          citizens and all contributions are 100% tax-deductible. To date, the 
+          level of donations has limited the depth of information which we can 
+          provide and the number of local elections which we can cover. We would 
+          be grateful for your support in helping us truly make American government 
+          “of the people, by the people, and for the people.”</p>
+        </div>
+
+        <user:MainFooter ID="MainFooter1" runat="server" />
+      </div> <!-- id="mainContent" -->
+    </div> <!-- id="container" -->
+    </div> <!-- id="outer" -->
+
+    <user:AddressEntry ID="AddressEntry1" runat="server" />
+    <user:DonationRequest ID="DonationRequest1" runat="server" />
+
+    </form>
+</body>
+</html>

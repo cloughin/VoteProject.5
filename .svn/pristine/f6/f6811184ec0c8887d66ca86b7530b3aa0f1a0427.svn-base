@@ -1,0 +1,13 @@
+﻿<?xml version="1.0"?>
+<configuration>
+  <appSettings>
+    <add key="VoteUseLiveDomains" value="false" />
+    <add key="TestDb" value="Server=ron-pc;Uid=ron;Pwd=p17134;Database=vote" />
+    <add key="LiveDb" value="Server=votesql.c3fj3t5d5d77.us-east-1.rds.amazonaws.com;Uid=ron;Pwd=p17134;Database=vote" />
+    <add key="TestTempDb" value="Server=ron-pc;Uid=ron;Pwd=p17134;Database=votetemp" />
+    <add key="LiveTempDb" value="Server=votesql.c3fj3t5d5d77.us-east-1.rds.amazonaws.com;Uid=ron;Pwd=p17134;Database=votetemp" />
+  </appSettings>
+  <startup>
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/>
+  </startup>
+</configuration>

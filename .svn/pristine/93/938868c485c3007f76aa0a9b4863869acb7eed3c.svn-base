@@ -1,0 +1,380 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using DB;
+using DB.Vote;
+using Vote.Politician;
+
+namespace Vote.Reports
+{
+  internal class ResponsiveIssuesReport : ResponsiveReport
+  {
+    #region Private
+
+    private const int MoreMin = 250;
+    private const int MoreMax = 350;
+    private const int MoreMinForIntro = 750;
+    private const int MoreMaxForIntro = 1000;
+
+    protected ResponsiveIssuesReport()
+    {
+      ReportContainer.AddCssClasses("issues-report");
+    }
+
+    private static void EmbedVideo(Control container, string youTubeId, string youTubeDescription, 
+      TimeSpan youTubeRunningTime, string youTubeSource, string youTubeSourceUrl, DateTime youTubeDate, 
+      Control heading = null)
+    {
+      if (!string.IsNullOrWhiteSpace(youTubeId))
+      {
+        var videoWrapper = new HtmlDiv().AddTo(container, "video-wrapper");
+        var videoWrapperInner = new HtmlDiv().AddTo(videoWrapper, "video-wrapper-inner");
+        var iframe = new HtmlGenericControl("iframe").AddTo(videoWrapperInner);
+        iframe.Attributes.Add("width", "420");
+        iframe.Attributes.Add("height", "236");
+        iframe.Attributes.Add("src",
+          //"https://www.youtube.com/embed/" + youTubeId + "?rel=0&controls=0&showinfo=0");
+          "https://www.youtube.com/embed/" + youTubeId + "?rel=0&showinfo=0");
+        iframe.Attributes.Add("frameborder", "0");
+        iframe.Attributes.Add("allowfullscreen", "allowfullscreen");
+      }
+      if (heading != null) heading.AddTo(container);
+      //var description = youTubeDescription.ReplaceNewLinesWithParagraphs(false);
+      var description = youTubeDescription.ReplaceNewLinesWithSpaces();
+      if (youTubeRunningTime != default(TimeSpan))
+        description = "<span class=\"duration\">[" + youTubeRunningTime.ToString(
+          youTubeRunningTime.TotalHours >= 1
+          ? @"h\:mm\:ss"
+          : @"m\:ss") + "]</span> " + description;
+      if (youTubeDate != VotePage.DefaultDbDate)
+        description += " <span class=\"date\">" + "(" + youTubeDate.ToString("M/d/yyyy") + ")";
+      new HtmlP { InnerHtml = description }.AddTo(container);
+      if (!string.IsNullOrWhiteSpace(youTubeSource))
+      {
+        var sourceTag = new HtmlP().AddTo(container, "video-source");
+        new HtmlSpan{ InnerText = "Source: " }.AddTo(sourceTag);
+        if (string.IsNullOrWhiteSpace(youTubeSourceUrl))
+          new HtmlAnchor
+          {
+            HRef = VotePage.NormalizeUrl(youTubeSourceUrl),
+            InnerHtml = youTubeSource,
+            Target = "view"
+          }.AddTo(sourceTag);
+        else
+          new LiteralControl(youTubeSource).AddTo(sourceTag);
+      }
+    }
+
+    private static Control FormatAnswerForDisplay(QuestionAndAnswer qa, bool forIntro)
+    {
+      if (qa == null || string.IsNullOrWhiteSpace(qa.Answer) && 
+        (string.IsNullOrWhiteSpace(qa.YouTubeUrl) || !string.IsNullOrWhiteSpace(qa.YouTubeAutoDisable)))
+        return new LiteralControl("<p><em>No response</em></p>");
+      if (string.IsNullOrWhiteSpace(qa.Answer))
+        return new PlaceHolder();
+      var min = forIntro
+        ? MoreMinForIntro
+        : MoreMin;
+      var max = forIntro
+        ? MoreMaxForIntro
+        : MoreMax;
+      var key = string.Format("{0}:{1}:{2}", qa.PoliticianKey, qa.QuestionKey, qa.Sequence);
+      return VotePage.GetMorePart1(qa.Answer, min, max, "answer", key);
+    }
+
+    private static void ReportAnswers(Control container, DataRow candidate, IList<QuestionAndAnswer> qas,
+      bool forIntro = false)
+    {
+      // sort qas on date descending: AnswerDate if there's an answer else YouTubeDate
+      qas = qas.OrderByDescending(a => string.IsNullOrWhiteSpace(a.Answer)
+        ? a.YouTubeDate
+        : a.AnswerDate).ToList();
+      if (qas.Count == 0) qas.Add(null); // To force empty cell for running mate with no answers
+      var content = new HtmlDiv().AddTo(container, "answer-cell");
+      var inner = new HtmlDiv().AddTo(content, "answer-cell-inner");
+
+      var firstAnswer = true;
+      foreach (var qa in qas)
+      {
+        content = new HtmlDiv().AddTo(inner, "answer-cell-answer clearfix");
+        var haveText = qa != null && !string.IsNullOrWhiteSpace(qa.Answer);
+        var haveYouTube = qa != null && !string.IsNullOrWhiteSpace(qa.YouTubeUrl) && 
+          string.IsNullOrWhiteSpace(qa.YouTubeAutoDisable);
+
+        if (firstAnswer && candidate != null && !forIntro)
+        {
+          var nameContainer = new HtmlDiv().AddTo(content, "answer-name");
+          FormatCandidateNameAndParty(nameContainer, candidate, false, false);
+
+          var imageContainer = new HtmlDiv().AddTo(content, "answer-image");
+          CreatePoliticianImageTag(candidate.PoliticianKey(), ImageSize100, false, string.Empty)
+            .AddTo(imageContainer);
+        }
+
+        if (haveYouTube)
+        {
+          var youTube = new HtmlDiv().AddTo(content, "answer-youtube clearfix");
+          var anchor = new HtmlAnchor
+          {
+            HRef = VotePage.NormalizeUrl(qa.YouTubeUrl),
+            Target = "YouTube"
+          }.AddTo(youTube, "yt-icon");
+          new HtmlImage {Src = "/images/yt-icon.png"}.AddTo(anchor);
+
+          var youTubeId = qa.YouTubeUrl.GetYouTubeId();
+          EmbedVideo(youTube, youTubeId, qa.YouTubeDescription, qa.YouTubeRunningTime, 
+            qa.YouTubeSource, qa.YouTubeSourceUrl, qa.YouTubeDate);
+
+          //var description = qa.YouTubeDescription.ReplaceNewLinesWithParagraphs(false);
+          //if (qa.YouTubeDate != VotePage.DefaultDbDate)
+          //  description += " (" + qa.YouTubeDate.ToString("MM/dd/yyyy") + ")";
+          //new HtmlP { InnerHtml = description }.AddTo(youTube);
+        }
+
+        if (haveText && haveYouTube)
+          new HtmlHr().AddTo(content, "separator-rule");
+
+        if (haveText || !haveYouTube)
+        {
+          var answerDiv = new HtmlDiv() 
+            .AddTo(content, "answer-answer");
+          FormatAnswerForDisplay(qa, forIntro).AddTo(answerDiv);
+
+          if (qa != null && (!string.IsNullOrWhiteSpace(qa.AnswerSource) || 
+            qa.AnswerDate != VotePage.DefaultDbDate))
+          {
+            var p = new HtmlP().AddTo(content, "answer-source");
+            if (!string.IsNullOrWhiteSpace(qa.AnswerSource))
+            {
+              if (VotePage.IsValidUrl(qa.AnswerSource))
+              {
+                var anchor = new HtmlAnchor
+                {
+                  HRef = VotePage.NormalizeUrl(qa.AnswerSource),
+                  Target = "_blank"
+                }.AddTo(p);
+                //new HtmlSpan { InnerHtml = "Source: " }.AddTo(anchor);
+                new LiteralControl(Validation.StripWebProtocol(qa.AnswerSource)).AddTo(anchor);
+              }
+              else
+                new LiteralControl(/*"Source: " +*/ qa.AnswerSource).AddTo(p);
+            }
+            if (qa.AnswerDate != VotePage.DefaultDbDate)
+              new LiteralControl(" (" + qa.AnswerDate.ToString("MM/dd/yyyy") + ")").AddTo(p);
+          }
+        }
+
+        firstAnswer = false;
+      }
+
+    }
+
+    private static IEnumerable<QuestionAndAnswer> GetPoliticianAnswers(
+      IEnumerable<QuestionAndAnswer> answers,
+      string politicianKey)
+    {
+      return answers.Where(a => a.PoliticianKey.IsEqIgnoreCase(politicianKey))
+        .OrderByDescending(a => a.AnswerDate);
+    }
+
+    private static void ReportIssue(Control container, bool isRunningMateOffice, string issue,
+      IEnumerable<QuestionAndAnswer> qAndAs, List<DataRow> keys, bool forIntro = false)
+    {
+      new HtmlDiv { InnerHtml = issue }.AddTo(container, "issue-header accordion-header");
+      var content = new HtmlDiv().AddTo(container, "issues-content accordion-content");
+      var questions = qAndAs.GroupBy(qa => qa.QuestionKey);
+      foreach (var question in questions)
+      {
+        var answers = question.ToList();
+        var q = answers.First();
+        new HtmlDiv { InnerHtml = q.Question }.AddTo(content, "question-header accordion-header");
+        var answerContainer = new HtmlDiv().AddTo(content, "question-content accordion-content");
+        foreach (var candidate in keys.Where(k => k != null &&
+          (!k.ContainsColumn("IsRunningMate") || !k.IsRunningMate())))
+        {
+          var c = candidate;
+          var cont = answerContainer;
+          if (isRunningMateOffice)
+            cont = new HtmlDiv().AddTo(cont, "answer-ticket");
+          ReportAnswers(cont, c, GetPoliticianAnswers(answers, c.PoliticianKey()).ToList(), forIntro);
+          if (isRunningMateOffice)
+          {
+            var runningMate = keys.FirstOrDefault(k => k != null && k.PoliticianKey().IsEqIgnoreCase(c.RunningMateKey()));
+            ReportAnswers(cont, runningMate, GetPoliticianAnswers(answers, c.RunningMateKey()).ToList(), forIntro);
+          }
+        }
+      }
+    }
+
+    private static void ReportOneIssue(Control container, bool isRunningMateOffice, 
+      IGrouping<string, DataRow> issue, List<DataRow> keys, bool forIntro = false)
+    {
+      ReportIssue(container, isRunningMateOffice, issue.First().Issue(),
+        issue.Select(i => new QuestionAndAnswer
+        {
+          PoliticianKey = i.PoliticianKey(),
+          QuestionKey = i.QuestionKey(),
+          Sequence = i.Sequence(),
+          Question = i.Question(),
+          Answer = i.Answer(),
+          AnswerSource = i.AnswerSource(),
+          AnswerDate = i.AnswerDate(),
+          YouTubeDescription = i.YouTubeDescription(),
+          YouTubeRunningTime = i.YouTubeRunningTime(),
+          YouTubeSource = i.YouTubeSource(),
+          YouTubeSourceUrl = i.YouTubeSourceUrl(),
+          YouTubeUrl = i.YouTubeUrl(),
+          YouTubeDate = i.YouTubeDate(VotePage.DefaultDbDate),
+          YouTubeAutoDisable = i.YouTubeAutoDisable()
+        }), keys, forIntro);
+    }
+
+    #endregion
+
+    #region Protected
+
+    #region ReSharper disable
+
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable VirtualMemberNeverOverriden.Global
+
+    #endregion ReSharper disable
+
+    protected void ReportIssues(List<DataRow> candidates, IList<DataRow> issuesData,
+      bool isRunningMateOffice = false, int candidateCount = 0, bool forIntro = false)
+    {
+      var issues = issuesData.GroupBy(r => r.IssueKey()).ToList();
+      if (candidateCount == 0) candidateCount = candidates.Count;
+      var issuesContainer = new HtmlDiv()
+        .AddTo(ReportContainer, "issues-container candidates-" + candidateCount);
+      if (!issues.Any())
+      {
+        var messageContainer = new HtmlDiv().AddTo(ReportContainer,
+          "issues-message") as HtmlGenericControl;
+        var appendText = forIntro ? "" : " for any of the candidates";
+        messageContainer.InnerHtml = "We have no biographical information or issue responses" + 
+          appendText + ".";
+      }
+      else
+      {
+        ReportVideoSummary(issuesContainer, isRunningMateOffice, issuesData, candidates, forIntro);
+        foreach (var issue in issues)
+          ReportOneIssue(issuesContainer, isRunningMateOffice, issue, candidates, forIntro);
+      }
+    }
+
+    private void ReportVideoSummary(HtmlControl container, bool isRunningMateOffice, 
+      IList<DataRow> issuesData, IList<DataRow> keys, bool forIntro)
+    {
+      var videoGroups = issuesData
+        //.Select(row => new {row, id = row.YouTubeUrl().GetYouTubeId()})
+        .Where(r => (!r.ContainsColumn("IsRunningMate") || !r.IsRunningMate()) &&
+          !string.IsNullOrWhiteSpace(r.YouTubeUrl().GetYouTubeId()))
+        .GroupBy(r => r.PoliticianKey().ToUpper())
+        .ToList();
+      var runningMateGroups = issuesData
+        //.Select(row => new { row, id = row.YouTubeUrl().GetYouTubeId() })
+        .Where(r => isRunningMateOffice && r.ContainsColumn("IsRunningMate") && r.IsRunningMate() &&
+          !string.IsNullOrWhiteSpace(r.YouTubeUrl().GetYouTubeId()))
+        .GroupBy(r => r.PoliticianKey().ToUpper())
+        .ToList();
+      if (videoGroups.Any() || runningMateGroups.Any())
+      {
+        var title = "<span class=\"logo\"></span>";
+        title += forIntro
+          ? "All Videos"
+          : "Videos by Candidate";
+        new HtmlDiv { InnerHtml = title }.AddTo(container, "issue-header youtube-header accordion-header");
+        var content = new HtmlDiv().AddTo(container, "youtube-content accordion-content");
+        if (!forIntro) content.AddCssClasses("issues-content");
+        foreach (var candidate in keys.Where(k => k != null &&
+          (!k.ContainsColumn("IsRunningMate") || !k.IsRunningMate())))
+        {
+          var videos = videoGroups.FirstOrDefault(g => g.Key == candidate.PoliticianKey().ToUpper());
+          var runningMateVideos =
+            runningMateGroups.FirstOrDefault(
+              g => g.Key == candidate.RunningMateKey().SafeString().ToUpper());
+          if (videos != null || runningMateVideos != null)
+          {
+            var name = Politicians.FormatName(candidate);
+            var headerName = name;
+            string runningMateName = null;
+            var runningMate = isRunningMateOffice
+              ? keys.FirstOrDefault(
+                k => k.PoliticianKey().IsEqIgnoreCase(candidate.RunningMateKey()))
+              : null;
+            if (runningMate != null)
+            {
+              runningMateName = Politicians.FormatName(runningMate);
+              headerName += " / " + runningMateName;
+            }
+            var videoContent = content;
+            if (!forIntro)
+            {
+              // add candidate-level accordion
+              new HtmlDiv { InnerHtml = headerName }.AddTo(content, "issue-header accordion-header");
+              videoContent = new HtmlDiv().AddTo(content, "accordion-content");
+            }
+            if (videos != null)
+              ReportCandidateVideos(videoContent, videos, name, isRunningMateOffice);
+            if (runningMateVideos != null)
+              ReportCandidateVideos(videoContent, runningMateVideos, runningMateName, isRunningMateOffice);
+          }
+        }
+      }
+    }
+
+    private static void ReportCandidateVideos(HtmlControl content, IEnumerable<DataRow> videos, 
+      string name, bool isRunningMateOffice)
+    {
+      if (isRunningMateOffice)
+        new HtmlDiv {InnerText = name}.AddTo(content, "answer-name");
+      foreach (var video in videos)
+      {
+        var outerWrapper = new HtmlDiv().AddTo(content, "video-wrapper-outer answer-youtube");
+        var question = UpdateIntroPage.AlternateTabLabels.ContainsKey(video.QuestionKey())
+          ? UpdateIntroPage.AlternateTabLabels[video.QuestionKey()].ReplaceBreakTagsWithSpaces()
+          : video.Question();
+        var heading = new HtmlP { InnerText = video.Issue() + ": " + question };
+        EmbedVideo(outerWrapper, video.YouTubeUrl().GetYouTubeId(), video.YouTubeDescription(), 
+          video.YouTubeRunningTime(), video.YouTubeSource(), video.YouTubeSourceUrl(), 
+          video.YouTubeDate(), heading);
+      }
+    }
+
+    #region ReSharper restore
+
+    // ReSharper restore VirtualMemberNeverOverriden.Global
+    // ReSharper restore MemberCanBePrivate.Global
+
+    #endregion ReSharper restore
+
+    #endregion Protected
+
+    #region Public
+
+    private sealed class QuestionAndAnswer
+    {
+      public string PoliticianKey;
+      public string QuestionKey;
+      public int Sequence;
+      public string Question;
+      public string Answer;
+      public string AnswerSource;
+      public DateTime AnswerDate = VotePage.DefaultDbDate;
+      public string YouTubeUrl;
+      public string YouTubeDescription;
+      public TimeSpan YouTubeRunningTime;
+      public string YouTubeSource;
+      public string YouTubeSourceUrl;
+      public DateTime YouTubeDate;
+      public string YouTubeAutoDisable;
+    }
+
+    #endregion
+  }
+}

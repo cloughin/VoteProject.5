@@ -1,0 +1,131 @@
+using System;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB.Vote;
+
+namespace Vote
+{
+  public partial class ReferendumPageX : CacheablePage
+  {
+    protected ReferendumPageX()
+    {
+      NoUrlEdit = true; /* bacause disabled */
+      NoIndex = true; /* bacause disabled */
+    }
+
+    #region Caching support
+
+    protected override string GetCacheKey()
+    {
+      var key = UrlManager.GetStateCodeFromHostName() + "." + QueryState + "." +
+        QueryElection + "." + QueryReferendum;
+      var siteId = UrlManager.CurrentQuerySiteId;
+      if (!string.IsNullOrEmpty(siteId))
+        key += "." + siteId;
+
+      return key;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "Referendum";
+    }
+
+    #endregion Caching support
+
+    private readonly string _ElectionKey = QueryElection;
+    private readonly string _ReferendumKey = QueryReferendum;
+    private string _ElectionDescription;
+    private ReferendumsRow _Referendum;
+
+    private string GetPageTitle()
+    {
+      return
+        PageCache.Referendums.GetReferendumTitle(_ElectionKey, _ReferendumKey) +
+          ", " +
+          StateCache.GetStateName(Referendums.GetStateCodeFromKey(_ReferendumKey)) +
+          " Ballot Measure / Referendum" + ", " + _ElectionDescription;
+    }
+
+    private static Control CreateAnchor(string url, string anchorText)
+    {
+      return new HtmlAnchor
+        {
+          HRef = NormalizeUrl(url),
+          InnerHtml = anchorText,
+          Target = "view"
+        };
+    }
+
+    private void CreateReport()
+    {
+      LabelReferendum.Text =
+        _Referendum.ReferendumTitle.ReplaceNewLinesWithBreakTags();
+      LabelTitle.Text =
+        StateCache.GetStateName(Referendums.GetStateCodeFromKey(_ReferendumKey)) +
+          " Ballot Measure / Referendum";
+      LabelElection.Text = _ElectionDescription;
+
+      var referendumDescription = _Referendum.ReferendumDescription;
+      if (string.IsNullOrWhiteSpace(referendumDescription))
+        DescriptionRow.Visible = false;
+      else
+        ReferendumDesc.Text = referendumDescription.ReplaceNewLinesWithBreakTags();
+
+      var detail = _Referendum.ReferendumDetail;
+      var detailUrl = _Referendum.ReferendumDetailUrl;
+      if (string.IsNullOrWhiteSpace(detailUrl) && string.IsNullOrWhiteSpace(detail))
+        DetailRow.Visible = false;
+      else
+      {
+        LabelReferendumDetail.Text = string.IsNullOrWhiteSpace(detailUrl)
+          ? "Detail:"
+          : CreateAnchor(detailUrl, "Detail:")
+            .RenderToString();
+
+        if (string.IsNullOrWhiteSpace(detailUrl)) ReferendumDetail.Visible = false;
+        else ReferendumDetail.Text = detail.ReplaceNewLinesWithBreakTags();
+      }
+
+      var fullText = _Referendum.ReferendumFullText;
+      var fullTextUrl = _Referendum.ReferendumFullTextUrl;
+      if (string.IsNullOrWhiteSpace(fullTextUrl) &&
+        string.IsNullOrWhiteSpace(fullText)) FullTextRow.Visible = false;
+      else
+      {
+        LabelReferendumFullText.Text = string.IsNullOrWhiteSpace(fullTextUrl)
+          ? "Full Text:"
+          : CreateAnchor(fullTextUrl, "Full Text:")
+            .RenderToString();
+
+        if (string.IsNullOrWhiteSpace(fullText))
+          ReferendumFullText.Visible = false;
+        else ReferendumFullText.Text = fullText.ReplaceNewLinesWithBreakTags();
+      }
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      // The OnPreInit method of the parent class handles serving from cache, 
+      // in which case this method is never called.
+
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/SecondaryCommon.css");
+      this.IncludeCss("~/css/All.css");
+      this.IncludeCss("~/css/Referendum.css");
+
+      _ElectionDescription = PageCache.Elections.GetElectionDesc(_ElectionKey);
+      var table = Referendums.GetData(_ElectionKey, _ReferendumKey);
+      if (table.Count == 1)
+        _Referendum = table[0];
+
+      var pageTitle = GetPageTitle();
+      TitleTag.Text = pageTitle;
+      MetaDescriptionTag.Content = pageTitle;
+      MetaKeywordsTag.Content = pageTitle;
+
+      if (_Referendum != null)
+        CreateReport();
+    }
+  }
+}

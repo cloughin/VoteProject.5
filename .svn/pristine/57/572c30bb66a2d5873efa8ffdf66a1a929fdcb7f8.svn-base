@@ -1,0 +1,32 @@
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Linq;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using MySql.Data.MySqlClient;
+using Vote;
+
+namespace DB.Vote
+{
+  public partial class BallotPediaCsvsRow {}
+
+  public partial class BallotPediaCsvs
+  {
+    #region Public
+
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable MemberCanBeProtected.Global
+    // ReSharper disable UnusedMember.Global
+    // ReSharper disable UnusedMethodReturnValue.Global
+    // ReSharper disable UnusedAutoPropertyAccessor.Global
+
+    // ReSharper restore UnusedAutoPropertyAccessor.Global
+    // ReSharper restore UnusedMethodReturnValue.Global
+    // ReSharper restore UnusedMember.Global
+    // ReSharper restore MemberCanBeProtected.Global
+    // ReSharper restore MemberCanBePrivate.Global
+
+    #endregion Public
+  }
+}

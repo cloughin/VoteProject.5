@@ -1,0 +1,175 @@
+using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+
+namespace Vote.Master
+{
+  public partial class FixIssues : VotePage
+  {
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!SecurePage.IsMasterUser)
+        SecurePage.HandleSecurityException();
+
+      try
+      {
+        PageTitle.Text = "Fix IssueKey in Answers, Questions, SitemapIssuesElections & SitemapIssuesPoliticians";
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Button_Bad_Issue_Keys_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region IssueKeys_Good Table
+        string sql_IssueKeys_Good = string.Empty;
+        sql_IssueKeys_Good += "SELECT IssueKey";
+        sql_IssueKeys_Good += " FROM Issues";
+        sql_IssueKeys_Good += " WHERE IssueLevel = 'A' ";
+        sql_IssueKeys_Good += " OR IssueLevel = 'B'";
+        sql_IssueKeys_Good += " ORDER BY IssueLevel,IssueKey";
+
+        DataTable IssueKeys_Good_Table = db.Table(sql_IssueKeys_Good);
+        int Index = 0;
+        foreach (DataRow IssueKeys_Good_Row in IssueKeys_Good_Table.Rows)
+        {
+          ListBox_Good_IssueKeys.Items.Add(new ListItem());
+          ListBox_Good_IssueKeys.Items[Index].Text = IssueKeys_Good_Row["IssueKey"].ToString();
+          Index++;
+        }
+        #endregion IssueKeys_Good Table
+
+        db.ExecuteSql("TRUNCATE TABLE IssueKeysBad");
+
+        #region IssueKeys_Bad_Answers Table
+        string sql_Answers = string.Empty;
+        sql_Answers += "SELECT IssueKey";
+        sql_Answers += " FROM Answers";
+        sql_Answers += " WHERE SUBSTRING(IssueKey,1,1) = 'A'";
+        sql_Answers += " OR SUBSTRING(IssueKey,1,1) = 'B'";
+        sql_Answers += " GROUP BY IssueKey";
+        sql_Answers += " ORDER BY IssueKey";
+        DataTable Answers_Table = db.Table(sql_Answers);
+        Index = 0;
+        foreach (DataRow Answers_Row in Answers_Table.Rows)
+        {
+          int Rows_Issues = db.Rows("SELECT IssueKey FROM Issues WHERE IssueKey = "
+            + db.SQLLit(Answers_Row["IssueKey"].ToString()));
+          if (Rows_Issues == 0)
+          {
+            int Rows_IssuesKeyBad = db.Rows("SELECT IssueKey FROM IssueKeysBad WHERE IssueKey ="
+              + db.SQLLit(Answers_Row["IssueKey"].ToString()));
+            if (Rows_IssuesKeyBad == 0)
+            {
+              string sql_Insert_IssuesKeyBad = "INSERT INTO IssueKeysBad(IssueKey)"
+              + "VALUES(" + db.SQLLit(Answers_Row["IssueKey"].ToString())+")";
+              db.ExecuteSql(sql_Insert_IssuesKeyBad);
+            }
+          }
+        }
+        #endregion IssueKeys_Bad_Answers Table
+
+        #region IssueKeys_Bad_Questions Table
+        string sql_Questions = string.Empty;
+        sql_Questions += "SELECT IssueKey";
+        sql_Questions += " FROM Questions";
+        sql_Questions += " WHERE SUBSTRING(IssueKey,1,1) = 'A'";
+        sql_Questions += " OR SUBSTRING(IssueKey,1,1) = 'B'";
+        sql_Questions += " GROUP BY IssueKey";
+        sql_Questions += " ORDER BY IssueKey";
+        DataTable Questions_Table = db.Table(sql_Questions);
+        Index = 0;
+        foreach (DataRow Questions_Row in Questions_Table.Rows)
+        {
+          int Rows_Issues = db.Rows("SELECT IssueKey FROM Issues WHERE IssueKey = "
+            + db.SQLLit(Questions_Row["IssueKey"].ToString()));
+          if (Rows_Issues == 0)
+          {
+            int Rows_IssuesKeyBad = db.Rows("SELECT IssueKey FROM IssueKeysBad WHERE IssueKey ="
+              + db.SQLLit(Questions_Row["IssueKey"].ToString()));
+            if (Rows_IssuesKeyBad == 0)
+            {
+              string sql_Insert_IssuesKeyBad = "INSERT INTO IssueKeysBad(IssueKey)"
+              + "VALUES(" + db.SQLLit(Questions_Row["IssueKey"].ToString()) + ")";
+              db.ExecuteSql(sql_Insert_IssuesKeyBad);
+            }
+          }
+        }
+        #endregion IssueKeys_Bad_Questions Table
+
+        #region Show Bad IssueKeys
+        string sql_IssuesKeyBad = "SELECT IssueKey FROM IssueKeysBad ORDER BY IssueKey";
+        DataTable IssuesKeyBad_Table = db.Table(sql_IssuesKeyBad);
+        Index = 0;
+        foreach (DataRow IssuesKeyBad_Row in IssuesKeyBad_Table.Rows)
+        {
+          ListBox_Bad_IssueKeys.Items.Add(new ListItem());
+          ListBox_Bad_IssueKeys.Items[Index].Text = IssuesKeyBad_Row["IssueKey"].ToString();
+          Index++;
+        }
+        #endregion Show Bad IssueKeys
+
+        Msg.Text = db.Ok("Answers, & Questions Tables have been checked for bad IssueKeys");
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+
+    }
+
+    protected void ListBox_Bad_IssueKeys_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        TextBox_IssueKey_From.Text = ListBox_Bad_IssueKeys.SelectedValue;
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+
+    }
+
+    protected void ListBox_Good_IssueKeys_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        TextBox_IssueKey_To.Text = ListBox_Good_IssueKeys.SelectedValue;
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+
+    }
+
+    protected void Button_Make_IssueKey_Change_Click(object sender, EventArgs e)
+    {
+      try
+      {
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+
+    }
+  }
+}

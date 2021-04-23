@@ -1,0 +1,309 @@
+﻿.main-tab .mode-label-line {
+  margin-top: 10px;
+}
+
+.main-tab .mode-label {
+  font-size: 9pt;
+  margin-right: 16px;
+  font-weight: bold;
+}
+
+.main-tab.change-mode .mode-label:before {
+  content: "In Change Mode"
+}
+
+.main-tab.change-mode .mode-button:before {
+  content: "Switch to Add Mode"
+}
+
+.main-tab:not(.change-mode) .change-only {
+  display: none;
+}
+
+.main-tab.change-mode .add-only {
+  display: none;
+}
+
+.main-tab.add-mode .mode-label:before {
+  content: "In Add Mode"
+}
+
+.main-tab.add-mode .mode-button:before {
+  content: "Switch to Change Mode"
+}
+
+.main-tab.has-changes .save-button:before {
+  content: "Save Changes"
+}
+
+.main-tab:not(.has-changes) .save-button:before {
+  content: "No Changes to Save"
+}
+
+.main-tab .col {
+  float: left;
+}
+
+.main-tab .col2,
+.main-tab .col3 {
+  margin-left: 20px;
+}
+
+.main-tab .col1,
+.main-tab .col3 {
+  max-width: 250px;
+}
+
+  .main-tab .col2 .fieldlabel,
+  .main-tab .col3 .fieldlabel {
+    margin-top: 14px;
+    color: #bf9241;
+    font-weight: bold;
+  }
+
+.main-tab input[type=text] {
+  width: 300px;
+}
+
+.main-tab .drag-box {
+  width: 250px;
+  min-height: 100px;
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid #aaa;
+  margin-top: 5px;
+  padding: 3px;
+}
+
+  .main-tab .drag-box.disabled {
+    background-color: #ddd;
+  }
+
+  .main-tab .drag-box.can-select .selected {
+    color: #fff;
+    background-color: #00f;
+  }
+
+  .main-tab .drag-box p {
+    padding-left: 16px;
+    text-indent: -16px;
+  }
+
+    .main-tab .drag-box p.omitted {
+      color: #aaa;
+    }
+
+.main-tab .info {
+  font-size: 8pt;
+  margin-top: 3px;
+  line-height: 120%;
+}
+
+.main-tab .bottom-button {
+  margin-top: 5px;
+}
+
+.main-tab .add-button {
+  margin-top: 15px;
+}
+
+#main-tabs .div-button {
+  cursor: pointer;
+}
+
+#main-tabs .save-button {
+  margin-right: 16px;
+}
+
+.main-tab input[type="radio"],
+.main-tab input[type="checkbox"] {
+  display: none;
+}
+
+.main-tab .included-container:not(.included) .included-only {
+  display: none;
+}
+
+.main-tab .included-container.included .excluded-only {
+  display: none;
+}
+
+.main-tab:not(.filter-all) .filter-all-only {
+  display: none;
+}
+
+.main-tab.filter-all .not-filter-all {
+  display: none;
+}
+
+.main-tab .filter-message {
+  margin: 4px 0 2px 0;
+  font-size: 8pt;
+  font-weight: bold;
+}
+
+.main-tab .jurisdictions-area {
+  margin-left: 20px;
+}
+
+.main-tab .jurisdiction-selection {
+  margin-left: 20px;
+}
+
+.main-tab .jurisdiction-selection-radio {
+  width: 150px;
+}
+
+.main-tab .jurisdiction-selection-radio,
+.main-tab .jurisdiction-selection-button {
+  display: inline-block;
+}
+
+#tab-issuegroups
+{
+  display: none;
+}
+
+#tab-issues .col1,
+#tab-issues .col3
+{
+  width: 420px;
+  max-width: none;
+}
+
+#tab-issues .input-area {
+  border: 1px solid #888;
+  padding: 3px 8px 8px 8px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+  #tab-issues .input-area .issue-name {
+    margin-top: 5px;
+    width: 390px;
+  }
+
+  #tab-issues .input-area .fieldlabel {
+    margin-top: 5px;
+  }
+
+  #tab-issues .input-area select {
+    margin-top: 5px;
+    width: 400px;
+  }
+
+#tab-issues .input-area .the-checkbox {
+  margin-top: 12px;
+                                      }
+
+#tab-issues .issues-filter {
+  width: 100%;
+                                      }
+
+#tab-issues .order-by
+{
+  font-size: 8pt;
+  font-weight: normal;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 10px;
+  color: blue;
+}
+
+#tab-issues .issues,
+#tab-issues .issue-questions {
+  width: 98%;
+}
+
+#tab-issuegroups .mode-label-line,
+#tab-issuegroups .mode-label-line + hr,
+#tab-issuegroups .col2
+{
+  display: none;
+}
+
+#tab-issuegroups .change-button-line {
+  margin-top: 10px;
+}
+
+#tab-issuegroups .col3 {
+  margin-top: -15px;
+  width: 580px;
+  max-width: none;
+}
+
+#tab-issuegroups .issue-groups-issues {
+  width: 100%;
+}
+
+#tab-questions .col1 {
+  width: 425px;
+  max-width: none;
+                     }
+
+#tab-questions .col2 {
+  width: 415px;
+                     }
+
+#tab-questions .topics-filter {
+  width: 420px;
+}
+
+#tab-questions .drag-box {
+  width: 412px;
+                         }
+
+#tab-questions .issue {
+  max-width: 100%;
+                           }
+
+#tab-questions .topic-name {
+  width: 400px;
+                           }
+
+.jurisdictions-dialog .inner {
+  padding: 10px;
+}
+
+.jurisdictions-dialog .jurisdictions-ok-button {
+  margin-top: 10px;
+}
+
+.no-of-answers-msg span
+{
+  text-decoration: underline;
+  color: blue;
+  cursor: pointer;
+}
+
+#tab-consolidatetopics .fieldlabel
+{
+  margin-top: 0;
+}
+
+#tab-consolidatetopics .col
+{
+  width: 400px;
+  max-width: 400px;
+}
+
+#tab-consolidatetopics .drag-box {
+  width: 350px;
+}
+#tab-consolidatetopics .consolidate-topics-button{
+  margin-top: 12px;
+}
+
+#answer-dates-dialog .answer-dates-radios
+{
+  text-align: left;
+  margin: 0 0 20px 0;
+
+}
+#answer-dates-dialog .answer-date-item {
+  display: inline-block;
+}
+#answer-dates-dialog .answer-date-from-item
+ {
+  margin-left: 40px;
+ }

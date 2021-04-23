@@ -1,0 +1,79 @@
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+
+namespace Vote
+{
+  public partial class Public : MasterPage
+  {
+    private void SetupMainBanner()
+    {
+      MainBannerImageTag.Src = DomainDesign.GetImageUri("lgbanner.png")
+        .ToString();
+      MainBannerHomeLink.HRef = UrlManager.CurrentSiteUri.ToString();
+
+      if (DomainData.IsValidStateCode)
+      {
+        var stateCode = DomainData.FromQueryStringOrDomain;
+        var stateName = StateCache.GetStateName(stateCode);
+        var title = "Go to the Official " + stateName +
+                    " Election Authority Website";
+        MainBannerStateSiteLink.InnerText = title + " →";
+        MainBannerStateSiteLink.HRef = StateCache.GetUri(stateCode)
+          .ToString();
+        StateName.InnerText = stateName;
+      }
+      else
+      {
+        StateSite.Visible = false;
+        StateName.InnerText = "Select a state";
+        MainBannerStateBanner.AddCssClasses("no-state");
+      }
+      StateLinks.Controls.Clear();
+      HtmlControl div = null;
+      var breaks = new[] {0, 17, 34};
+      var count = 0;
+      foreach (var st in StateCache.All51StateCodes)
+      {
+        if (breaks.Contains(count++))
+          div = new HtmlGenericControl().AddTo(StateLinks, "states-menu-col");
+        Debug.Assert(div != null, "div != null");
+        if (count == 1)
+          new HtmlAnchor {InnerText = "Vote-USA Home", HRef = UrlManager.GetSiteUri().ToString()}.AddTo(
+            div);
+        (new HtmlAnchor
+        {
+          InnerText = StateCache.GetStateName(st),
+          HRef = UrlManager.GetStateUri(st).ToString()
+        }).AddTo(div);
+      }
+    }
+
+
+    private void SetupSocialMedia()
+    {
+      //var votePublicPage = Page as PublicPage;
+      //if (votePublicPage != null && votePublicPage.NoSocialMedia)
+      //  AddThisButtons.Visible = false;
+      //else
+      AddThisButtons.Visible = true;
+    }
+
+    private void SetupSpecialLinks()
+    {
+      SpecialLink.Visible = true;
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        SetupSocialMedia();
+        SetupSpecialLinks();
+      }
+      SetupMainBanner();
+    }
+  }
+}

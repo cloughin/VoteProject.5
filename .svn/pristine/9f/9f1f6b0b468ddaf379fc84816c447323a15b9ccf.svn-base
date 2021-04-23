@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace LocalCacheInvalidation
+{
+  class Program
+  {
+    static void Main(string[] args)
+    {
+      Console.WriteLine("Begin LocalCacheInvalidation");
+      Vote.LocalCacheInvalidation.ProcessPendingTransactions();
+      Console.WriteLine("End LocalCacheInvalidation");
+    }
+  }
+}

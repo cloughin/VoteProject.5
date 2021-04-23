@@ -1,0 +1,2658 @@
+<%@ Page ValidateRequest="false" Language="C#" AutoEventWireup="true" 
+ MasterPageFile="~/Master/Admin.Master"
+CodeBehind="Default.aspx.cs" Inherits="Vote.Master.DefaultPage" %>
+
+<%@ Register TagPrefix="user" Namespace="Vote" Assembly="Vote" %>
+
+<asp:Content ID="HeadContent" ContentPlaceHolderID="MasterHeadContent" runat="server">
+  <link href="/css/AllAdmin.css" type="text/css" rel="stylesheet" />
+  <meta content="Microsoft Visual Studio .NET 7.1" name="GENERATOR"/>
+  <meta content="C#" name="CODE_LANGUAGE"/>
+  <meta content="JavaScript" name="vs_defaultClientScript"/>
+  <meta content="http://schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema"/>
+  <style type="text/css">
+    .style1
+    {
+      font-family: Verdana, Arial, Helvetica, sans-serif;
+      font-weight: bold;
+      color: #26466D;
+      font-size: 13px;
+      text-align: center;
+      height: 24px;
+      border: 1px solid gray;
+      padding: 3px;
+      background-color: #E0E0E0;
+    }
+  </style>
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+
+  <asp:UpdatePanel ID="UpdatePanel" runat="server">
+    <ContentTemplate>
+  <table class="tableAdmin" id="TableOuter" cellspacing="0" cellpadding="0">
+    <tr align="left">
+      <td class="HLarge">
+        <asp:Label ID="PageTitle" runat="server"></asp:Label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <asp:Label ID="Msg" runat="server"></asp:Label>
+      </td>
+    </tr>
+  </table>
+  <!-- Table -->
+  <table class="tableAdmin" id="Table1" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="center" colspan="2" class="H">
+        State Elections, Elected Offices &amp; Officials, Candidates, Legislative Districts,
+        Political Parties and Emails
+      </td>
+    </tr>
+    <tr>
+      <td align="center" colspan="2" class="HSmall">
+        State Maintenance</td>
+    </tr>
+    <tr>
+      <td align="left" colspan="2" class="T">
+        Select a state from <strong>State Admin ></strong> in the menu bar above.
+      </td>
+    </tr>
+    <%--
+    <tr>
+      <td align="left" colspan="2" class="T">
+        Use the links below to add, change or delete: elections, elected offices, elected
+        officials, politicians, candidates, legislative districts, political parties, and
+        to send emails for a particular state. Use the Emails Section below to send emails to ALL states. 
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" class="T">
+        <asp:Label ID="LabelStateAdminHomeLinks" runat="server"></asp:Label>
+      </td>
+    </tr>
+    <tr>
+      <td class="T">
+        <asp:Button ID="ButtonStateLinks" runat="server" Text="Update Links" OnClick="ButtonStateLinks_Click1"
+          Width="100px" Height="25px" CssClass="Buttons"></asp:Button>
+      </td>
+      <td align="left" rowspan="" width="100%" class="T">
+       If any of the above links are broken click the button to fix the problem.
+      </td>
+    </tr>
+    --%>
+    <tr>
+      <td align="left" colspan="2" class="HSmall">
+        Candidates and Elected Officials Maintenance</td>
+    </tr>
+    <tr>
+      <td align="left" colspan="2" class="T">
+        Select a party and state from <strong>Parties > | Candidates and Incumbents ></strong> in the menu bar above.
+      </td>
+    </tr>
+    <%--
+    <tr>
+      <td align="left" colspan="2" class="T">
+        This section allows you to edit candidates and elected officials for a 
+        particular political party in a state. It provides a form which details the data 
+        we have for all elected politicians and candidates in upcoming elections. The 
+        form makes it easy to enter and edit politician information that is provided to 
+        party officials and volunteers. To use this capability first select a political 
+        party. This will then provide links for all states. Then click one of these 
+        state links.<asp:RadioButtonList ID="RadioButtonListParty" runat="server" 
+          AutoPostBack="True" CssClass="RadioButtons" 
+          onselectedindexchanged="RadioButtonListParty_SelectedIndexChanged" 
+          RepeatDirection="Horizontal">
+          <asp:ListItem Value="D">Democratic Party</asp:ListItem>
+          <asp:ListItem Value="R">Republican Party</asp:ListItem>
+          <asp:ListItem Value="L">Liberatarian Party</asp:ListItem>
+          <asp:ListItem Value="G">Green Party</asp:ListItem>
+        </asp:RadioButtonList>
+      </td>
+    </tr>
+    <tr>
+      <td align="left" colspan="2" class="T">
+        <asp:Label ID="LabelStatePartyLinks" runat="server"></asp:Label>
+      </td>
+    </tr>
+    --%>
+  </table>
+  <!-- Table -->
+  <div id="UnrestrictedMaster" runat="server">
+    <table class="tableAdmin" id="TableNational" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center" class="H">
+          Federal Officials and Federal Election Contests State-By-State
+        </td>
+      </tr>
+      <tr>
+        <td align="left" colspan="2" class="T">
+          Make a selection from <strong>Federal ></strong> in the menu bar above.
+        </td>
+      </tr>
+      <%--
+      <tr>
+        <td align="center" class="HSmall">
+          Federal Maintenance</td>
+      </tr>
+      <tr>
+        <td class="T">
+          Use the links below to maintain currently elected federal officials and 
+          elections.</td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Label ID="LabelNationalLinks" runat="server"></asp:Label>
+        </td>
+      </tr>
+      --%>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table38" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center" colspan="2" class="H">
+          Create 
+          51 Elections, One for Each State in One Operation
+         </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="T">
+          Nationwide 2 year General and Off-Year Elections are created for all states by the
+          link below as a single operation and for all the state-by-state reports (U1...U4
+          StateCodes, that are treated as a special election just for reporting purposes).
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="T">
+          <asp:HyperLink ID="HyperLinkCreateGeneralElection" runat="server" CssClass="HyperLink"
+            NavigateUrl="/Admin/ElectionCreate.aspx?State=UU">Create Nationwide 2 Year General or Off-Year Election in Each State</asp:HyperLink>
+          <br />
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table42" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center" colspan="2" class="H">
+          Politician
+          Utilities
+        </td>
+      </tr>
+      <tr>
+        <td align="left" colspan="2" class="T">
+          Make a selection from <strong>Politicians ></strong> in the menu bar above.
+        </td>
+      </tr>
+      <%--
+      <tr>
+        <td class="HSmall">
+          <asp:HyperLink ID="HyperLink8" runat="server" CssClass="HyperLink" NavigateUrl="/Master/PoliticianFind.aspx"
+            Target="find">Find Politician's PoliticianKey (Username) and Password</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          The link above provides a form to enter State code and last name to find a politician's
+          Username (PoliticianKey), Password and the email text.
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall">
+          <asp:HyperLink ID="HyperLink7" runat="server" CssClass="Hyperlink" NavigateUrl="/Master/PoliticianEmail.aspx"
+            Target="find">Modify Email Content Sent to a Politician</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          The link above provides a form to edit the content of the emails to a politician.
+        </td>
+      </tr>
+      --%>
+    </table>
+    <!-- Table -->
+    <%--
+    <table class="tableAdmin" id="Table29" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="HSmall">
+          <asp:HyperLink ID="HyperLink10" runat="server" CssClass="HyperLink" NavigateUrl="~/Master/ImagesHeadshots.aspx"
+            Target="_edit">Politician Profile and Headshots Images</asp:HyperLink><br />
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          Use this link to create headshot images for politician images that have not been
+          processed for headshots.
+        </td>
+      </tr>
+    </table>
+    --%>
+    <!-- Table -->
+    <!-- Table -->
+    <table class="tableAdmin" id="Table41" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center" colspan="2" class="H">
+          Issues and 
+          Issue Questions
+        </td>
+      </tr>
+      <tr>
+        <td align="left" colspan="2" class="T">
+          Make a selection from <strong>Issues ></strong> in the menu bar above.
+        </td>
+      </tr>
+      <%--
+      <tr>
+        <td colspan="2" class="HSmall">
+          Maintenance of Issues and Issue Questions</td>
+      </tr>
+      <tr>
+        <td colspan="2" class="T">
+          Use the links below to add, change, delete, 
+          order, omit and delete candidate issues and issue questions.
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="T">
+          <asp:Label ID="Label_Issue_Anchors" runat="server"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <asp:Button ID="Button_Update_Issue_Links" runat="server" CssClass="Buttons" Height="25px"
+            OnClick="Button_Update_Issue_Links_Click1" Text="Update Links" Width="100px" />
+        </td>
+        <td align="left" width="100%" class="T">
+          If any of the above links are broken click the button to fix the problem.
+        </td>
+      </tr>
+      --%>
+    </table>
+    <!-- Table -->
+    <%--
+    <table class="tableAdmin" id="Table_Old_Issue_Reports" cellspacing="0" cellpadding="0"
+      runat="server">
+      <tr>
+        <td align="center" colspan="2" class="HSmall">Move and Delete Questions and Answers</td>
+      </tr>
+      <tr>
+        <td colspan="2" class="T">
+          Use the links below to obtain a report. Using the report you can 1) Move 
+          questions from one issue to another; 2) Move question answers from one quetion 
+          to another; 3) Delete a question that have no associated answers.</td>
+      </tr>
+      <tr>
+        <td colspan="2" class="T">
+          <asp:Label ID="LabelIssueReportsLinks" runat="server"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <asp:Button ID="ButtonIssueReportsLinks" runat="server" CssClass="Buttons" Text="Update Links "
+            OnClick="ButtonIssueReportsLinks_Click1" Width="100px" Height="25px"></asp:Button>
+        </td>
+        <td width="100%" class="T">
+          If any of the above links are broken click the button to fix the problem.
+        x the problem.
+         </td>
+      </tr>
+    </table>
+    --%>
+    <!-- Table -->
+    <!-- Table -->
+    <%--
+    <table class="tableAdmin" id="Table14" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left" class="H" colspan="2">
+          Default Design &amp; Content
+        </td>
+      </tr>
+      <tr>
+        <td class="T" colspan="2">
+          Use this link to change the default content and design for all public pages, regardless
+          of domain or DesignCode.
+        </td>
+      </tr>
+      <tr>
+        <td class="T" colspan="2">
+          <asp:HyperLink ID="HyperLinkDesignDefaults" runat="server" CssClass="HyperLink" NavigateUrl="/Master/DesignDefaults.aspx">Default Design & Content of Pages</asp:HyperLink>
+          <br />
+          &nbsp;&nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td class="H" colspan="2">
+          Custom Design &amp; Content
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="T">
+          Every domain can have a custom design based on a DesignCode. Use these DesignCode
+          links to edit a specific custom design. This includes a custom style sheet, custom
+          banner, and various custom content on all the pages.
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="T">
+          <asp:Label ID="LabelDomainDesigns" runat="server"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <asp:Button ID="ButtonUpdateDomainDesignLinks" runat="server" CssClass="Buttons"
+            OnClick="ButtonUpdateDomainDesignLinks_Click" Text="Update Links" Width="100px"
+            Height="25px" />
+        </td>
+        <td width="100%" class="T">
+          If any of the above links are broken click the button to fix the problem.
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table9" cellspacing="0" cellpadding="0">
+      <tr>
+        <td colspan="2" class="HSmall">
+         Add a Custom Design
+        </td>
+      </tr>
+      <tr>
+        <td class="T" style="height: 26px">
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBox_New_Custom_Design" runat="server" AutoPostBack="True" CssClass="InputTextBox"
+            OnTextChanged="TextBox_New_Custom_Design_TextChanged"></user:TextBoxWithNormalizedLineBreaks>
+          &nbsp;&nbsp;
+        </td>
+        <td class="T" colspan="1" style="height: 26px">
+          To create a new custom design, enter a new custom design code in the textbox and
+          then click any where outside the textbox. The new design code should appear as a
+          link above. Clicking this link will allow you to proceed with the custom design.&nbsp;
+         </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table22" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="HSmall" colspan="2" style="height: 19px">
+          Design of Administration Pages
+        </td>
+      </tr>
+      <tr>
+        <td class="T" colspan="2" style="height: 39px">
+          <asp:HyperLink ID="HyperLinkAdminStyleSheet" runat="server" CssClass="HyperLink"
+            NavigateUrl="/Master/DesignAllAdminStyleSheet.aspx">Admin Style Sheet</asp:HyperLink>
+          Modify the style sheet for all Administration Pages (css/AdminAll.css). Content
+          of Administration Pages is on forms.
+        </td>
+      </tr>
+    </table>
+    --%>
+    <!-- Table -->
+    <%--
+    <table class="tableAdmin" id="Table10" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="H" align="center">
+          Domains
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          Assign and edit DesignCodes, DataCodes and Organization Codes for Domains.
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:HyperLink ID="HyperLink1" runat="server" CssClass="HyperLink" NavigateUrl="/Master/Domains.aspx">Domain Maintenance</asp:HyperLink>
+        </td>
+      </tr>
+    </table>
+    --%>
+    <!-- Table -->
+    <!-- Table -->
+    <%--
+    <table class="tableAdmin" id="Table13" cellspacing="0" cellpadding="0">
+      <tr>
+        <td colspan="2" align="center" class="H">
+          Organizations
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <!-- Table -->
+    <table class="tableAdmin" id="Table24" cellspacing="0" cellpadding="0">
+      <tr>
+        <td colspan="2" class="T">
+          Edit the orgaization's name, url and email address. Every domain has an Organization
+          and OrganizationCode.
+        </td>
+      </tr>
+      <tr>
+        <td class="T" colspan="2">
+          <asp:Label ID="LabelDomainOrganizations" runat="server"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1">
+          <asp:Button ID="ButtonUpdateDomainOrganizationLinks" runat="server" CssClass="Buttons"
+            Text="Update Links" OnClick="ButtonUpdateDomainOrganizationLinks_Click" Width="100px"
+            Height="25px" />
+        </td>
+        <td width="100%" class="T">
+          If any of the above links are broken click the button to fix the problem.
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table25" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="HSmall" colspan="2">
+         Add an Organization
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBox_Add_Organization" runat="server" AutoPostBack="True" 
+            OnTextChanged="TextBox_Add_Organization_TextChanged" CssClass="InputTextBox"></user:TextBoxWithNormalizedLineBreaks>
+        </td>
+        <td class="T">
+          To add a new organization, enter a new organization code in the textbox and then
+          click any where outside the textbox. The new organization code should appear as
+          a link above. Clicking this link will allow you to proceed with entering information
+          about this organization.&nbsp;
+         </td>
+      </tr>
+    </table>
+    --%>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table43" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center" class="style1">
+          Volunteers
+        </td>
+      </tr>
+      <tr>
+        <td align="left" colspan="2" class="T">
+          Select <strong>Site Admin > | Volunteers</strong> in the menu bar above.
+        </td>
+      </tr>
+      <%--
+      <tr>
+        <td class="T">
+          Add, change 
+          and delete volunteers. Also assign a state and political party. 
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:HyperLink ID="HyperLinkVolunteers" runat="server" CssClass="HyperLink" 
+            NavigateUrl="~/Master/Volunteers.aspx" Target="_edit">Volunteers Maintenance</asp:HyperLink>
+          <br />
+&nbsp;
+        </td>
+      </tr>
+      --%>
+      </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table28" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center" colspan="2" class="H">
+          Political Parties
+        </td>
+      </tr>
+      <tr>
+        <td align="left" colspan="2" class="T">
+          Make a selection from <strong>Parties > | Party Info ></strong> in the menu bar above.
+        </td>
+      </tr>
+      <%--
+      <tr>
+        <td colspan="2" class="T">
+          Add, change and delete information about political parties including addresses,
+          contacts and email addresses.
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="T">
+          <asp:Label ID="LabelPartyLinks" runat="server"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <asp:Button ID="ButtonPoliticalPartyLinks" runat="server" CssClass="Buttons" OnClick="ButtonPoliticalPartyLinks_Click1"
+            Text="Update Links" Width="100px" Height="25px" />
+        </td>
+        <td width="100%" class="T">
+          If any of the above links are broken click the button to fix the problem.
+        </td>
+      </tr>
+      --%>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table30" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="T">
+          Use this link to create a text file of political party address for Word letters
+          and lables
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:HyperLink ID="HyperLinkPartiesFile" runat="server" CssClass="HyperLink" NavigateUrl="/Master/WordTextFile4Letters.aspx?File=Parties"
+            Target="_edit">Political Party Addresses</asp:HyperLink><br />
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <!-- Table -->
+    <table class="tableAdmin" id="Table11" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="H">
+          Emails to All States
+        </td>
+      </tr>
+      <tr>
+        <td class="T" style="height: 13px">
+          Use the link below to send emails to all recipients for various purposes in ALL
+          states. Use the state links in the first section above to send emails to certain
+          recipients for various purposes in a SINGLE state.
+        </td>
+      </tr>
+      <tr>
+        <td class="T" style="height: 13px">
+          <asp:HyperLink ID="HyperlinkSendEmail" runat="server" CssClass="HyperLink" Target="_edit"
+            NavigateUrl="/Admin/Emails.aspx">Send Emails</asp:HyperLink>
+        </td>
+      </tr>
+      <tr style="color: #373737">
+        <td class="T" style="height: 11px">
+          These are the dates and number of emails that have been sent for the various purposes.
+        </td>
+      </tr>
+      <tr>
+        <td class="T" style="height: 11px">
+          Request Primary Election Roster(s) from ALL States:
+          <asp:Label ID="Label_Emails_Date_Primary_Rosters" runat="server" CssClass="TColor"></asp:Label>&nbsp;
+          <asp:Label ID="Label_Emails_Sent_Primary_Rosters" runat="server" CssClass="TColor"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td class="T" style="height: 11px">
+          Request General Election Roster from ALL States:
+          <asp:Label ID="Label_Emails_Date_All_Rosters" runat="server" CssClass="TColor"></asp:Label>&nbsp;
+          <asp:Label ID="Label_Emails_Sent_All_Rosters" runat="server" CssClass="TColor"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td class="T" style="height: 11px">
+          Message to ALL Candidtes in ALL States for ALL Upcoming Elections:
+          <asp:Label ID="Label_Emails_Date_All_Candidates" runat="server" CssClass="TColor"></asp:Label>&nbsp;
+          <asp:Label ID="Label_Emails_Sent_All_Candidates" runat="server" CssClass="TColor"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td class="T" style="height: 11px">
+          Use the link below to view the LogEmailsSent Table.
+        </td>
+      </tr>
+      <tr>
+        <td class="TBold" style="height: 11px">
+          <asp:HyperLink ID="HyperlinkViewEmails" runat="server" CssClass="HyperLink" NavigateUrl="/Master/EmailLog.aspx"
+            Target="view">View Email Log</asp:HyperLink>
+          <br />
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall">
+          Text Files
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:HyperLink ID="HyperLinkStatesFile" runat="server" CssClass="HyperLink" NavigateUrl="/Master/WordTextFile4Letters.aspx?File=States"
+            Width="482px">Text File of State Authority Addresses for Word Letters & Labels</asp:HyperLink>
+          &nbsp;<br />
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+    
+    <%-- 
+    <table class="tableAdmin" id="Table7" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="H" colspan="2">
+          For ALL Bulk Updates Below
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" colspan="2">
+          <strong>Normal Procedure:</strong>&nbsp;<br />
+          Click Test Mode Off.<br />
+          Click "Report When Last Updated" to insure reports need to be reconstructed.&nbsp;<br />
+          Click "Set All Not Current"<br />
+          Click "Bulk Update..." Button.<br />
+          Click "Report When Last Updated" to insure all reports were reconstructed.<br />
+          Click "Bulk Update..."&nbsp; / "Report When Last Updated" Buttons any number of
+          times till all reports are done.
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" colspan="2">
+          <strong>Set TEST MODE Off:</strong> When Test Mode is off reconstruction of repots
+          will start with the first Sate not current. This is the normal case.
+        </td>
+      </tr>
+      <tr>
+        <td align="center" class="H" colspan="2">
+          Upcoming Election Reports - Bulk Updates
+        </td>
+      </tr>
+    </table>
+
+    <table class="tableAdmin" id="Table20" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center" class="HSmall">
+          Set All Not Current
+        </td>
+        <td align="center" class="HSmall">
+          Bulk Update Election Reports
+        </td>
+        <td class="HSmall" width="100%">
+          Reports&nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T">
+          Forces all reports to be updated for bulk updates and makes all [Update Report]
+          buttons visible.
+        </td>
+        <td align="left" class="T">
+          Only reports not current are updated and the Election.aspx cached pages are cleared.
+        </td>
+        <td class="T" width="100%">
+          Elections last updated, current status and viewable status. Links to /Admin/Election.aspx
+          pages.
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonNotCurrentElectionsUS" runat="server" Text="US Pres, US Senate, US House"
+            Width="200px" CssClass="Buttons" OnClick="ButtonNotCurrentElectionsUS_Click" ForeColor="Green" />
+        </td>
+        <td class="T">
+          <asp:Button ID="ButtonUSRpt" runat="server" CssClass="Buttons" Text="US Pres, US Senate, US House"
+            OnClick="ButtonUSRpt_Click1" Width="200px" ForeColor="Green"></asp:Button>
+        </td>
+        <td width="100%" class="T">
+          <asp:HyperLink ID="HyperlinkElectionsNextUS" runat="server" CssClass="HyperLink"
+            Target="view" NavigateUrl="/Master/MgtReports.aspx?Report=ReportStatus&What=ElectionsNextUS"
+            ForeColor="Green">US Pres, US Senate, US House, Governors</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+        </td>
+        <td class="T">
+          Last:
+          <asp:Label ID="Label_BulkUpdateElectionsUpcomingUS" runat="server" Text="Label"></asp:Label>
+        </td>
+        <td class="T" width="100%">
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonNotCurrentElectionsStates" runat="server" Text="All States"
+            Width="200px" CssClass="Buttons" OnClick="ButtonNotCurrentElectionsStates_Click"
+            ForeColor="Green" />
+        </td>
+        <td class="T">
+          <asp:Button ID="ButtonAllStatesRpt" runat="server" CssClass="Buttons" Text="All States"
+            OnClick="ButtonAllStatesRpt_Click1" Width="200px" ForeColor="Green"></asp:Button>
+        </td>
+        <td width="100%" class="T">
+          <asp:HyperLink ID="HyperlinkElectionsNextStates" runat="server" CssClass="HyperLink"
+            Target="view" NavigateUrl="/Master/MgtReports.aspx?Report=ReportStatus&What=ElectionsNextStates"
+            ForeColor="Green">All States</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+        </td>
+        <td class="T">
+          Last:
+          <asp:Label ID="Label_BulkUpdateElectionsUpcomingStates" runat="server" Text="Label"></asp:Label>
+        </td>
+        <td class="T" width="100%">
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonNotCurrentElectionsCounties" runat="server" Text="All Counties in All States"
+            Width="200px" CssClass="Buttons" OnClick="ButtonNotCurrentElectionsCounties_Click"
+            ForeColor="Green" />
+        </td>
+        <td class="T">
+          <asp:Button ID="ButtonAllCountiesRpt" runat="server" CssClass="Buttons" Text="All Counties in All States"
+            OnClick="ButtonAllCountiesRpt_Click1" Width="200px" ForeColor="Green"></asp:Button>
+        </td>
+        <td width="100%" class="T">
+          <asp:HyperLink ID="HyperlinkElectionsNextCounties" runat="server" CssClass="HyperLink"
+            Target="view" NavigateUrl="/Master/MgtReports.aspx?Report=ReportStatus&What=ElectionsNextCounties"
+            ForeColor="Green">All Counties in All States</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+        </td>
+        <td class="T">
+          Last:
+          <asp:Label ID="Label_BulkUpdateElectionsUpcomingCounties" runat="server" Text="Label"></asp:Label>
+        </td>
+        <td class="T" width="100%">
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonNotCurrentUpcomingElectionsLocals" runat="server" Text="All Locals in All States"
+            Width="200px" CssClass="Buttons" OnClick="ButtonNotCurrentUpcomingElectionsLocals_Click"
+            ForeColor="Green" />
+        </td>
+        <td class="T">
+          <asp:Button ID="ButtonAllLocalsRptUpcoming" runat="server" CssClass="Buttons" OnClick="ButtonAllLocalsRptUpcoming_Click1"
+            Text="All Locals in All States" Width="200px" ForeColor="Green" />
+        </td>
+        <td class="T" width="100%">
+          <asp:HyperLink ID="HyperlinkElectionsUpcomingLocals" runat="server" CssClass="HyperLink"
+            NavigateUrl="/Master/MgtReports.aspx?Report=ReportStatus&What=ElectionsNextLocals"
+            Target="view" ForeColor="Green">All Locals in All States</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+        </td>
+        <td class="T">
+          Last:
+          <asp:Label ID="Label_BulkUpdateElectionsUpcomingLocals" runat="server" Text="Label"></asp:Label>
+        </td>
+        <td class="T" width="100%">
+        </td>
+      </tr>
+    </table>
+
+    <table class="tableAdmin" id="Table8" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center" class="H" colspan="2">
+          Previous Election Reports - Bulk Updates
+        </td>
+      </tr>
+      <tr>
+        <td class="T" colspan="2">
+        </td>
+      </tr>
+    </table>
+    --%>
+
+    <table class="tableAdmin" id="Table21" cellspacing="0" cellpadding="0">
+      <%-- 
+      <tr>
+        <td class="HSmall">
+          Set All Not Current
+        </td>
+        <td class="HSmall">
+          Bulk Update Election Reports
+        </td>
+        <td class="HSmall" width="100%">
+          Reports&nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          Forces all reports to be updated and makes all [Update Report] buttons visible.
+        </td>
+        <td class="T">
+          Only reports not current are updated and the Election.aspx cached pages are cleared.
+        </td>
+        <td class="T" width="100%">
+          Elections last updated, current status and viewable status. Links to /Admin/Election.aspx
+          pages.
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonNotCurrentPreviousElectionsUS" runat="server" Text="US Pres, US Senate, US House"
+            Width="200px" OnClick="ButtonNotCurrentPreviousElectionsUS_Click" CssClass="Buttons"
+            ForeColor="Green" />
+        </td>
+        <td class="T">
+          <asp:Button ID="ButtonUSRptPrevious" runat="server" CssClass="Buttons" Text="US Pres, US Senate, US House"
+            OnClick="ButtonUSRptPrevious_Click1" Width="200px" ForeColor="Green"></asp:Button>
+        </td>
+        <td width="100%" class="T">
+          <asp:HyperLink ID="HyperlinkElectionsPreviousUS" runat="server" CssClass="HyperLink"
+            Target="view" NavigateUrl="/Master/MgtReports.aspx?Report=ReportStatus&What=ElectionsPreviousUS"
+            ForeColor="Green">US Pres, US Senate, US House, Governors</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+        </td>
+        <td class="T">
+          Last:
+          <asp:Label ID="Label_BulkUpdateElectionsPreviousUS" runat="server" Text="Label"></asp:Label>
+        </td>
+        <td class="T" width="100%">
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonNotCurrentPreviousElectionsStates" runat="server" Text="All States"
+            Width="200px" CssClass="Buttons" OnClick="ButtonNotCurrentPreviousElectionsStates_Click"
+            ForeColor="Green" />
+        </td>
+        <td class="T">
+          <asp:Button ID="ButtonAllStatesRptPrevious" runat="server" CssClass="Buttons" Text="All States"
+            OnClick="ButtonAllStatesRptPrevious_Click1" Width="200px" ForeColor="Green"></asp:Button>
+        </td>
+        <td width="100%" class="T">
+          <asp:HyperLink ID="HyperlinkElectionsPreviousStates" runat="server" CssClass="HyperLink"
+            Target="view" NavigateUrl="/Master/MgtReports.aspx?Report=ReportStatus&What=ElectionsPreviousStates"
+            ForeColor="Green">All States</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+        </td>
+        <td class="T">
+          Last:
+          <asp:Label ID="Label_BulkUpdateElectionsPreviousStates" runat="server" Text="Label"></asp:Label>
+        </td>
+        <td class="T" width="100%">
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonNotCurrentPreviousElectionsCounties" runat="server" Text="All Counties in All States"
+            Width="200px" CssClass="Buttons" OnClick="ButtonNotCurrentPreviousElectionsCounties_Click"
+            ForeColor="Green" />
+        </td>
+        <td class="T">
+          <asp:Button ID="ButtonAllCountiesRptPrevious" runat="server" CssClass="Buttons" Text="All Counties in All States"
+            OnClick="ButtonAllCountiesRptPrevious_Click1" Width="200px" ForeColor="Green">
+          </asp:Button>
+        </td>
+        <td width="100%" class="T">
+          <asp:HyperLink ID="HyperlinkElectionsPreviousCounties" runat="server" CssClass="HyperLink"
+            Target="view" NavigateUrl="/Master/MgtReports.aspx?Report=ReportStatus&What=ElectionsPreviousCounties"
+            ForeColor="Green">All Counties in All States</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+        </td>
+        <td class="T">
+          Last:
+          <asp:Label ID="Label_BulkUpdateElectionsPreviousCounties" runat="server" Text="Label"></asp:Label>
+        </td>
+        <td class="T" width="100%">
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonNotCurrentPreviousElectionsLocals" runat="server" Text="All Locals in All States"
+            Width="200px" CssClass="Buttons" OnClick="ButtonNotCurrentPreviousElectionsLocals_Click"
+            ForeColor="Green" />
+        </td>
+        <td class="T">
+          <asp:Button ID="ButtonAllLocalsRptPrevious" runat="server" CssClass="Buttons" OnClick="ButtonAllLocalsRptPrevious_Click1"
+            Text="All Locals in All States" Width="200px" ForeColor="Green" />
+        </td>
+        <td width="100%" class="T">
+          <asp:HyperLink ID="HyperlinkElectionsPreviousLocals" runat="server" CssClass="HyperLink"
+            NavigateUrl="/Master/MgtReports.aspx?Report=ReportStatus&What=ElectionsPreviousLocals"
+            Target="view" ForeColor="Green">All Locals in All States</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+        </td>
+        <td class="T">
+          Last:
+          <asp:Label ID="Label_BulkUpdateElectionsPreviousLocals" runat="server" Text="Label"></asp:Label>
+        </td>
+        <td class="T" width="100%">
+        </td>
+      </tr>
+      <tr>
+        <td class="H" colspan="3">
+          Other Election Reports Operations
+        </td>
+      </tr>
+      --%>
+      <tr>
+        <%--
+        <td class="T">
+          <asp:Button ID="ButtonNotCurrentAll" runat="server" Text="All Elections Not Current"
+            Width="200px" CssClass="Buttons" OnClick="ButtonNotCurrentAll_Click" ForeColor="Green" />
+        </td>
+        --%>
+        <td class="T">
+          <asp:Button ID="ButtonSetAllViewable" runat="server" CssClass="Buttons" ForeColor="Green"
+            OnClick="ButtonSetAllViewable_Click" Text="Set All Previous Viewable" Width="200px" />
+        </td>
+        <td class="T" width="100%">
+        </td>
+      </tr>
+
+      <tr>
+        <%-- 
+        <td class="T">
+          Equivilent to clicking all 8 buttons above (both upcoming and previous)
+        </td>
+        --%>
+        <td class="T">
+          Sets all previous repots as viewable. Should be done after a general election.
+        </td>
+        <td class="T" width="100%">
+        </td>
+      </tr>
+    </table>
+
+    <table class="tableAdmin" id="Table17" cellspacing="0" cellpadding="0">
+      <tr>
+        <td colspan="2" class="H" align="center">
+          Elected Officials (Incumbents) Reports<%-- - Bulk Updates --%>
+        </td>
+      </tr>
+    </table>
+
+    <table class="tableAdmin" id="Table12" cellspacing="0" cellpadding="0">
+      <%--
+      <tr>
+        <td class="HSmall" align="center">
+          Set Not Current Elected Officials Reports
+        </td>
+        <td class="HSmall">
+          Bulk Update Elected Officials Reports
+        </td>
+        <td class="HSmall" width="100%">
+          Elected Officials Reports&nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          Forces all reports to be updated and makes all [Update Report] buttons visible.
+        </td>
+        <td class="T">
+          Only reports not current are updated and the Officials.aspx cached pages are cleared.
+        </td>
+        <td class="T" width="100%">
+          When
+          Elected Officials Reports was last updated, current status and viewable status.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <asp:Button ID="ButtonNotCurrentOfficialsFederal" runat="server" CssClass="Buttons"
+            Text="US Pres, US Senate, US House" Width="300px" OnClick="ButtonNotCurrentOfficialsFederal_Click"
+            ForeColor="Green" />
+        </td>
+        <td class="T">
+          <asp:Button ID="ButtonOfficialsRptUpdateFederal" runat="server" CssClass="Buttons"
+            Text="US Pres, US Senate, US House" OnClick="ButtonOfficialsRptUpdateFederal_Click1"
+            Width="300px" ForeColor="Green"></asp:Button>
+        </td>
+        <td width="100%">
+          <asp:HyperLink ID="HyperlinkOfficialsUS" runat="server" CssClass="HyperLink" Target="view"
+            NavigateUrl="/Master/MgtReports.aspx?Report=ReportStatus&What=OfficialsUS" ForeColor="Green">US Pres, US Senate, US House, Governors</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td>
+        </td>
+        <td class="T">
+          Last:
+          <asp:Label ID="Label_BulkUpdateOfficialsUS" runat="server" Text="Label"></asp:Label>
+        </td>
+        <td width="100%">
+        </td>
+      </tr>
+      --%>
+      <tr>
+        <%--
+        <td>
+          <asp:Button ID="ButtonNotCurrentOfficialsStates" runat="server" CssClass="Buttons"
+            Text="All States" Width="300px" OnClick="ButtonNotCurrentOfficialsStates_Click"
+            ForeColor="Green" />
+        </td>
+        <td class="T">
+          <asp:Button ID="ButtonOfficialsRptUpdateState" runat="server" CssClass="Buttons"
+            Text="All States" OnClick="ButtonOfficialsRptUpdateState_Click1" Width="300px"
+            ForeColor="Green"></asp:Button>
+        </td>
+        --%>
+        <td width="100%" class="T">
+          <%-- 
+          <asp:HyperLink ID="HyperlinkOfficialsStates" runat="server" CssClass="HyperLink"
+            Target="view" NavigateUrl="/Master/MgtReports.aspx?Report=ReportStatus&What=OfficialsStates"
+            ForeColor="Green">Elected Officials All States</asp:HyperLink>
+          <br />
+          --%>
+          <asp:HyperLink ID="HyperlinkWinnersStates" runat="server" CssClass="HyperLink"
+            Target="view" NavigateUrl="/Master/MgtReports.aspx?Report=WinnersStatus&amp;What=States"
+            ForeColor="Green">Winners Identified All States</asp:HyperLink>
+        </td>
+      </tr>
+      <%-- 
+      <tr>
+        <td class="T">
+          Just States not current - federal, counties and locals are unchanged
+        </td>
+        <td class="T">
+          Last:
+          <asp:Label ID="Label_BulkUpdateOfficialsStates" runat="server" Text="Label"></asp:Label>
+        </td>
+        <td class="T" width="100%">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <asp:Button ID="ButtonNotCurrentOfficialsCounties" runat="server" CssClass="Buttons"
+            Text="All Counties in All States" Width="300px" OnClick="ButtonNotCurrentOfficialsCounties_Click"
+            ForeColor="Green" />
+        </td>
+        <td class="T">
+          <asp:Button ID="ButtonOfficialsRptUpdateCounties" runat="server" CssClass="Buttons"
+            Text="All Counties in All States" OnClick="ButtonOfficialsRptUpdateCounties_Click1"
+            Width="300px" ForeColor="Green"></asp:Button>
+        </td>
+        <td width="100%" class="T">
+          <asp:HyperLink ID="HyperlinkOfficialsCounties" runat="server" CssClass="HyperLink"
+            Target="view" NavigateUrl="/Master/MgtReports.aspx?Report=ReportStatus&What=OfficialsCounties"
+            ForeColor="Green">All Counties in All States</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td>
+        </td>
+        <td class="T">
+          Last:
+          <asp:Label ID="Label_BulkUpdateOfficialsCounties" runat="server" Text="Label"></asp:Label>
+        </td>
+        <td class="T" width="100%">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <asp:Button ID="ButtonNotCurrentOfficialsLocals" runat="server" CssClass="Buttons"
+            Text="All Local  in All States" Width="300px" OnClick="ButtonNotCurrentOfficialsLocals_Click"
+            ForeColor="Green" />
+        </td>
+        <td class="T">
+          <asp:Button ID="ButtonOfficialsRptUpdateLocals" runat="server" CssClass="Buttons"
+            Text="All Locals in All States" Width="300px" OnClick="ButtonOfficialsRptUpdateLocals_Click"
+            ForeColor="Green" />
+        </td>
+        <td class="T" width="100%">
+          <asp:HyperLink ID="HyperLink9" runat="server" CssClass="HyperLink" ForeColor="Green"
+            NavigateUrl="/Master/MgtReports.aspx?Report=ReportStatus&What=OfficialsLocals"
+            Target="view">All Locals in All States</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td>
+        </td>
+        <td class="T">
+          Last:
+          <asp:Label ID="Label_BulkUpdateOfficialsLocals" runat="server" Text="Label"></asp:Label>
+        </td>
+        <td class="T" width="100%">
+        </td>
+      </tr>
+      <tr>
+        <td class="T" style="height: 26px">
+          <asp:Button ID="ButtonNotCurrentOfficialsAll" runat="server" Text="All " Width="300px"
+            CssClass="Buttons" OnClick="ButtonNotCurrentOfficialsAll_Click" ForeColor="Green" />
+        </td>
+        <td style="height: 26px" class="T">
+        </td>
+        <td class="T" style="height: 26px" width="100%">
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          All federal, state, county and local Elected Officials Report set not current.&nbsp;
+          Equivilent to clicking all 4 buttons above
+        </td>
+        <td class="T">
+        </td>
+        <td class="T" width="100%">
+        </td>
+      </tr>
+      --%>
+    </table>
+    <!-- Table -->
+    <!-- Table -->
+    <!-- Table -->
+    <!-- Table -->
+    <!-- Table -->
+    <table class="tableAdmin" id="Table26" cellspacing="0" cellpadding="0">
+      <tr>
+        <td colspan="2" align="center" class="H">
+          Offices and Politicians Lists - Set All NOT Current
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          Bulk updates of Politician Office and Officials Lists needs to be done at the State
+          level because it takes too long to perform for all 51 States.
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table27" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center" class="H">
+          Politician Lists
+        </td>
+        <td align="left" class="H">
+          Office Lists
+        </td>
+      </tr>
+      <%--
+      <tr>
+        <td align="left" class="T">
+          <asp:Button ID="ButtonNotCurrentStatePoliticians" runat="server" Text="All POLITICIAN Lists Not Current"
+            Width="280px" CssClass="Buttons" ForeColor="Green" OnClick="ButtonNotCurrentStatePoliticians_Click" />&nbsp;
+        </td>
+        <td align="left" class="T">
+          <asp:Button ID="ButtonNotCurrentStateOffices" runat="server" Text="All OFFICE Lists Not Current"
+            Width="280px" CssClass="Buttons" ForeColor="Green" OnClick="ButtonNotCurrentStateOffices_Click" />&nbsp;
+        </td>
+      </tr>
+      --%>
+      <tr>
+        <td align="left" class="T">
+        </td>
+        <td align="left" class="T">
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T">
+        </td>
+        <td align="left" class="T">
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table4" cellspacing="0" cellpadding="0">
+      <tr>
+        <td colspan="2" class="HColor" align="center">
+          ERRORS
+        </td>
+      </tr>
+      <tr>
+        <td align="center" class="H" colspan="2">
+          301 &amp; 404 Error Logs
+        </td>
+      </tr>
+      <tr>
+        <td class="TBold">
+          <asp:RadioButtonList ID="RadioButtonList_Log_301_404_Errors" runat="server" AutoPostBack="True"
+            CssClass="RadioButtons" RepeatDirection="Horizontal" OnSelectedIndexChanged="RadioButtonList_Log_301_404_Errors_SelectedIndexChanged">
+            <asp:ListItem Value="T">On</asp:ListItem>
+            <asp:ListItem Value="F">Off</asp:ListItem>
+          </asp:RadioButtonList>
+        </td>
+        <td class="TLargeBold" style="width: 100%">
+          Logs of 301, 302, 404 and Unhandled Errors and Good Urls:
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonDeleteUserErrorLogs" runat="server" CssClass="Buttons" OnClick="ButtonDeleteUserErrorLogs_Click"
+            Text="Delete User Error Logs" Width="200px" />
+        </td>
+        <td class="T" style="width: 100%">
+          Truncates LogErrorsAdmin, Log301Redirect, Log302Redirect, Log404PageNotFound
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table18" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="H" style="height: 23px">
+          Office(s) Maintenance
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:HyperLink ID="HyperLinkMaintOffices" runat="server" CssClass="HyperLink" NavigateUrl="~/Master/MaintOffices.aspx"
+            Target="_edit">Office(s) Maintenance</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          The link above will present a form where you can do a number of things including:
+          view information about one or two offices; consolidate two offices into one; change
+          the OfficeKey; and delete offices.
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table16" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="H" style="height: 23px">
+          Politician(s) Maintenance
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall">
+          &nbsp;Create a NEW Politician (new PoliticianKey) using an Existing Politician or 
+          Consolidate Two Politicians into One
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          Consolidating politicians&#39; data and pictures is done at the state level. You need
+          to select a state in the first section. Then on the state administration form select
+          the Politicians Link. Then select the Consolidate Politicins Link. This can also 
+          be used to change the state a politician is identified with.</td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <!-- Table -->
+    <!-- Table -->
+    <table class="tableAdmin" id="Table40" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="HSmall">
+          Delete a Politician
+         </td>
+      </tr>
+      <tr>
+        <td class="T">
+          Enter PoliticianKey and click button to completely delete all information about
+          the politician in all tables, including clearing cached pages.
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          PoliticianKey (Login Username):
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBoxDeletePoliticianKey" runat="server" CssClass="TextBoxInput"
+            Width="300px"></user:TextBoxWithNormalizedLineBreaks>&nbsp;<asp:Button ID="ButtonDeletePolitician" runat="server"
+              CssClass="Buttons" OnClick="ButtonDeletePolitician_Click" Text="Delete Politician"
+              Width="150px" />
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall">
+          Edit a Politician&#39;s Intro Page
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          Enter the PoliticianKey and click button to load the hyperlink. Then click the link
+          below the textbox to be presented with the form the politician uses to enter and
+          edit data. 
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+         PoliticianKey (Login Username):
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBoxEditPoliticianKey" runat="server" CssClass="TextBoxInput"
+            Width="300px"></user:TextBoxWithNormalizedLineBreaks>&nbsp;<asp:Button ID="ButtonEditPolitician" runat="server"
+              CssClass="Buttons" OnClick="ButtonEditPolitician_Click" Text="Load HyperLink"
+              Width="150px" />
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:HyperLink ID="HyperLinkEditPolitician" runat="server" CssClass="HyperLink" Enabled="False"
+            Target="_edit">Enter PoliticianKey Above</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall">
+          Erase an Email Addresses in the Politicians Table</td>
+      </tr>
+      <tr>
+        <td class="T">
+          This operation will only erase an email address found in any of these columns 
+          EmailAddr, StateEmailAddr, StateEmailAddr, EmailAddrVoteUSA, CampaignEmail, 
+          LDSEmailAddr in the Politicians Table. 
+          <br />
+         Enter an email address to be erased and click the button.</td>
+      </tr>
+      <tr>
+        <td class="T">
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBoxEmailAddr" runat="server" CssClass="TextBoxInput" 
+            Width="400px" ontextchanged="TextBoxEmailAddr_TextChanged"></user:TextBoxWithNormalizedLineBreaks>
+&nbsp;
+          <asp:Button ID="ButtonDeleteEmailAddress" runat="server" CssClass="Buttons" 
+            onclick="ButtonDeleteEmailAddress_Click" Text="Erase Email Address" />
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall">
+          Erase all Website Address of a Specific Url</td>
+      </tr>
+      <tr>
+        <td class="T">
+          Many politicians use the home page of the State Legislature as a web address. 
+          The following operation will erase all these urls pointing to non-specific 
+          addresses.</td>
+      </tr>
+      <tr>
+        <td class="T">
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBoxWebAddress" runat="server" CssClass="TextBoxInput" 
+            Width="400px"></user:TextBoxWithNormalizedLineBreaks>
+&nbsp;
+          <asp:Button ID="ButtonDeleteWebAddress" runat="server" CssClass="Buttons" 
+            onclick="ButtonDeleteWebAddress_Click" Text="Erase Website Address" />
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall">
+          Build votetemp.tempEmailAddresses Table Email Addresses for All Politicians in a 
+          Statee</td>
+      </tr>
+      <tr>
+        <td class="T">
+          Enter the 2 character state code and click the button to load the 
+          votetemp.TempEmailAddresses with
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBoxStateCode" runat="server" CssClass="TextBoxInput" 
+            Width="25px"></user:TextBoxWithNormalizedLineBreaks>
+&nbsp;
+          <asp:Button ID="ButtonBuildTempEmails" runat="server" CssClass="Buttons" 
+            onclick="ButtonBuildTempEmails_Click" 
+            Text="Build Politicians Email Addresses Table" />
+        </td>
+      </tr>
+
+
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table39" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="H">
+          MARKETING -
+          Email and Postal Addresses
+          for Fund Raising</td>
+      </tr>
+       <tr>
+        <td class="T">
+          This will select rows in the Addresses Table applying filtering criterion like 
+          only rows with a street address but no email address to have an email address 
+          appended.</td>
+      </tr>
+     <tr>
+        <td align="center" class="HSmall">
+          <asp:HyperLink ID="HyperLinkDownloadAddresses" runat="server" 
+            NavigateUrl="~/Master/Addresses.aspx" Target="_edit">Download Addresses to CSV File</asp:HyperLink>
+        </td>
+      </tr>
+     <tr>
+        <td class="T">
+          This will allow you to create a email template to send emails to voters 
+          providing them with their sample ballot.</td>
+      </tr>
+     <tr>
+        <td class="HSmall">
+          <asp:HyperLink ID="HyperLink6" runat="server" 
+            NavigateUrl="~/Master/Emails.aspx" Target="_edit">Send a Batch of Emails to Voters</asp:HyperLink>
+        </td>
+      </tr>
+     <tr>
+        <td class="HSmall">
+          Delete an Address Table Row for an Email Address</td>
+      </tr>
+     <tr>
+        <td class="T">
+          Select whether you want to delete only the email address or the entire address 
+          row conting the email address.<br />
+          Then enter an email address and click the Delete Button.</td>
+      </tr>
+     <tr>
+        <td class="T">
+          <asp:CheckBoxList ID="CheckBoxListDeleteEmail" runat="server" 
+            AutoPostBack="True" CssClass="RadioButtons" 
+            onselectedindexchanged="CheckBoxListDeleteEmail_SelectedIndexChanged" 
+            RepeatDirection="Horizontal">
+            <asp:ListItem Selected="True" Value="Email">Only Delete the email in the Address Table Row</asp:ListItem>
+            <asp:ListItem Value="Row">Delete Address Table Row containing the email</asp:ListItem>
+          </asp:CheckBoxList>
+        </td>
+      </tr>
+     <tr>
+        <td class="T">
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBoxDeleteEmail" runat="server" CssClass="TextBoxInput" 
+            Width="400px"></user:TextBoxWithNormalizedLineBreaks>
+&nbsp;
+          <asp:Button ID="ButtonDeleteEmail" runat="server" CssClass="Buttons" 
+            onclick="ButtonDeleteEmail_Click" 
+            Text="Delete Email Only or Address Row containing email" />
+        </td>
+      </tr>
+      <tr>
+        <td align="center" class="H">
+          Management Reports</td>
+      </tr>
+      <tr>
+        <td align="center" class="HSmall">
+          Future Elections
+         </td>
+      </tr>
+      <tr>
+        <td class="T">
+          The links below provide reports of future elctions without regard to whether the
+          election was created (ElectionsFuture Table). It also provides the early voting
+          and registration dates.
+        </td>
+      </tr>
+      <tr>
+        <td class="TBold">
+          <br />
+          <asp:HyperLink ID="HyperLinkFutureElectionsAll" runat="server" CssClass="HyperLink"
+            NavigateUrl="/Master/MgtReports.aspx?Report=FutureElectionsAll" Target="view">All Future Elections</asp:HyperLink>
+          <br />
+          <asp:HyperLink ID="HyperLinkFuturePresidentialPrimaries" runat="server" CssClass="HyperLink"
+            NavigateUrl="/Master/MgtReports.aspx?Report=FuturePresidentialPrimaries" Target="view">Future Presidential Primaries</asp:HyperLink>
+          <br />
+          <asp:HyperLink ID="HyperLinkFutureStatePrimaries" runat="server" CssClass="HyperLink"
+            NavigateUrl="/Master/MgtReports.aspx?Report=FutureStatePrimaries" Target="view">Future State Primaries</asp:HyperLink>
+          <br />
+          <asp:HyperLink ID="HyperLinkFutureGeneralElections" runat="server" CssClass="HyperLink"
+            NavigateUrl="/Master/MgtReports.aspx?Report=FutureGeneralElections" Target="view">Future General Elections</asp:HyperLink>
+          <br />
+          <br />
+          <asp:HyperLink ID="HyperLinkFutureSpecialElections" runat="server" CssClass="HyperLink"
+            NavigateUrl="/Master/MgtReports.aspx?Report=FutureSpecialElections" Target="view">Future Special Elections</asp:HyperLink>
+          <br />
+        </td>
+      </tr>
+      <tr>
+        <td align="center" class="HSmall">
+          Reports of Logs of Data Entered:
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T">
+          Activity in all the Logs for a user MASTER Login Name and computes payment
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T">
+          <asp:HyperLink ID="HyperLinkLogsUserLogin" runat="server" NavigateUrl="/Master/Logs.aspx"
+            CssClass="HyperLink" Target="view">Transaction for a User (and payment computation)</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T">
+          A report of the answers entered by a login user name, usually a politician
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T">
+          &nbsp;<asp:HyperLink ID="HyperLinkLogAnswers" runat="server" NavigateUrl="/Master/Answers.aspx"
+            CssClass="HyperLink" Target="view">Answers Entered By Login Username</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall">
+          Intro Page Entries and Answer Page Entries
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:HyperLink ID="HyperLink2" runat="server" CssClass="HyperLink" NavigateUrl="/Master/MgtReports.aspx?Report=PoliticianData&State=U1P">US Presidential Primaries</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:HyperLink ID="HyperLink13" runat="server" CssClass="HyperLink" Target="view"
+            NavigateUrl="/Master/MgtReports.aspx?Report=PoliticianData&amp;State=U2">US Senate</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:HyperLink ID="HyperLink14" runat="server" CssClass="HyperLink" Target="view"
+            NavigateUrl="/Master/MgtReports.aspx?Report=PoliticianData&amp;State=U3">US House</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:HyperLink ID="Hyperlink3" runat="server" CssClass="HyperLink" Target="view"
+            NavigateUrl="/Master/MgtReports.aspx?Report=PoliticianAdds">Politician Adds</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          &nbsp; &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall">
+          Add a Volunteer User
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          A MASTER user with only a UserDesignCode of Vote-USA will be created when you enter
+          the volunteer&#39;s username and password and click Add User.
+        </td>
+      </tr>
+      <tr>
+        <td class="TBold">
+          Username:
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBox_UserName" runat="server" CssClass="TextBoxInput" Width="300px"></user:TextBoxWithNormalizedLineBreaks>
+          &nbsp; Password:
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBox_Password" runat="server" CssClass="TextBoxInput" Width="200px"></user:TextBoxWithNormalizedLineBreaks>
+          &nbsp;
+          <asp:Button ID="Button_Add_User" runat="server" CssClass="Buttons" OnClick="Button_Add_User_Click"
+            Text="Add Volunteer User" />
+        </td>
+      </tr>
+      <tr>
+        <td class="H">
+          Reports and Actions to Fix Keys and Cleanup Critical Tables
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          Below are a reports and actions to insure the integrity critical keys in Tables
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall">
+          Offices Table
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          Checks that the rows exist in the States, Counties and LocalDistricts Tables for
+          the StateCode, CountyCode and LocalCode in the Offices Table. It also checks that
+          the LocalCode is empty for county level offices and the CountyCode and LocalCode
+          is empty for State level offices.
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:HyperLink ID="HyperLink4" runat="server" CssClass="HyperLink" NavigateUrl="/Master/MgtReports.aspx?Report=CheckOfficesTableKeys"
+            Target="view">Offices Table's - StateCode, CountyCode, LocalCode</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          This button will run a series of queries to set the CountyCode and LocalCode empty
+          for State level offices and set the LocalCode empty for county level offices.
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonCleanCodes" runat="server" OnClick="ButtonCleanCodes_Click"
+            Text="Clean Offices Table's CountyCode and LocalCode" Width="350px" CssClass="Buttons" />
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall">
+          Politicians Table
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          Every Politician row in Politicians Table should have a valid OfficeKey to create
+          Intro.aspx and PoliticianIssues.aspx pages. This link reports all cases where there
+          is no matching Office row in the Offices Table for the OfficeKey for each politician
+          row.
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:HyperLink ID="HyperLink5" runat="server" CssClass="HyperLink" NavigateUrl="/Master/MgtReports.aspx?Report=CheckPoliticiansTableKeys"
+            Target="view">Politicians Table - OfficeKey</asp:HyperLink>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          For the PoliticianKeys identified having no matching Office Table rows this button
+          will 1) delete all the rows in all the tables (Politicians, ElectionsPoliticians,
+          OfficesOfficials, Answers)&nbsp; 2) clear cach for the Intro.aspx and PoliticianIssue.aspx
+          pages. Upon completion the above report should be run.
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonDeleteBadPoliticianRows" runat="server" CssClass="Buttons"
+            OnClick="ButtonDeleteBadPoliticianRows_Click" Text="Delete All Bad Politician Rows"
+            Width="350px" />
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <!-- Table -->
+    <!-- Table -->
+    <!-- Table -->
+    <table class="tableAdmin" id="Table37" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="H">
+          Zip Code &amp; Legislative Districts
+         </td>
+      </tr>
+      <tr>
+        <td class="T">
+          Select method to convert addresses into legislative districts.
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:RadioButtonList ID="RadioButtonList_Zip_Lookup" runat="server" AutoPostBack="True"
+            CssClass="Checkboxes" OnSelectedIndexChanged="RadioButtonList_Zip_Lookup_SelectedIndexChanged">
+            <asp:ListItem Value="T">Use internally developed database table</asp:ListItem>
+            <asp:ListItem Value="F">Use LDS (Aristotle) API</asp:ListItem>
+          </asp:RadioButtonList>
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          Updates the new incumbents after an election.
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          &nbsp;<asp:HyperLink ID="HyperLinkLDS" runat="server" CssClass="HyperLink" NavigateUrl="/Master/LDSDataUpdate.aspx">Update Data Using LDS/Aristotle Tables</asp:HyperLink><br />
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <!-- Table -->
+    <table class="tableAdmin" id="Table31" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="H">
+          Sitemaps
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          Use the link below to create a new set of sitemaps for search engines.
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          &nbsp;<asp:HyperLink ID="HyperlinkSitemap" runat="server" CssClass="HyperLink" Target="_self"
+            NavigateUrl="/Master/Sitemap.aspx">SiteMaps Creation</asp:HyperLink><br />
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table32" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="H">
+          Security
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          Use the link below to add, change and delete various administrators and their capabilities.
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          &nbsp;<asp:HyperLink ID="HyperLinkSecurity" runat="server" CssClass="HyperLink" NavigateUrl="/Master/Security.aspx"
+            Target="_self">Administrators' Security</asp:HyperLink><br />
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table33" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="H">
+          Misc
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          &nbsp;Deletes ElectionsOffices and ElectionsPoliticians Rows where there is no corresponding
+          rows in the Offices and Politicians Tables. May be run without risk at any time.<br>
+          <asp:Button ID="ButtonCleanElections" runat="server" CssClass="Buttons" Text="Clean ElectionsOffices &amp; ElectionsPoliticians"
+            OnClick="ButtonCleanElections_Click" Width="300px"></asp:Button>Deletes Offices
+          and Politicians Rows where there is no rows in the Offices and Politicians Tables
+          corresponding to an OfficeKey or PoliticianKey in Politicians, ElectionsOffices,
+          ElectionsPoliticians, OfficesOfficials Tables.&nbsp;
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table2" cellspacing="0" cellpadding="0" >
+      <tr>
+        <td align="left" class="HColor" valign="top" colspan="2">
+          Visible MASTER Controls on Forms (Set NOT Visible for production)
+        </td>
+      </tr>
+      <tr>
+        <td align="left" valign="top" class="HSmall">
+          &nbsp;<asp:RadioButtonList ID="RadioButtonListMasterControls" runat="server" CssClass="RadioButtons"
+            AutoPostBack="True" OnSelectedIndexChanged="RadioButtonListMasterControls_SelectedIndexChanged"
+            Width="199px">
+            <asp:ListItem Selected="True" Value="F">MASTER Contols NOT Visible</asp:ListItem>
+            <asp:ListItem Value="T">MASTER Controls Visible</asp:ListItem>
+          </asp:RadioButtonList>
+        </td>
+        <td align="left" valign="top" class="T">
+          Normally, set <strong>MASTER Controls NOT Visible</strong>.<br />
+          When set On the controls entitled MASTER USER ONLY are made visible providing special
+          functionality like:<br />
+          Passwords, Graphic of Election Results, Copy Politicians for Offices of Previous
+          Elections, Email Candidates, Candidate Letters<br />
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table6" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left" class="HColor" colspan="2" valign="top">
+          Debug on Production Server (Set Off for production)
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="top" colspan="2">
+          - Write or Uncomment db.LogDebugWriteLine(..) in methods to view values.
+          <br />
+          - Publish with db.LogDebugWriteLine(&quot;&quot;).<br />
+          - Login as MASTER<br />
+          - Clear the LogDebug Table
+          <br />
+          - Turn Debug On<br />
+          - In a seperate browser execute page<br />
+          - Turn Debug Off so LogDebug Table does not blow up in size.
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall" valign="top">
+          <asp:Button ID="ButtonClearDebugFile" runat="server" OnClick="ButtonClearDebugFile_Click"
+            Text="Clear LogDebug Table" Width="200px" CssClass="Buttons" />
+        </td>
+        <td align="left" class="T" valign="middle" width="100%">
+          Truncates LogDebug Table.
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall" valign="top">
+          <asp:RadioButtonList ID="RadioButtonListDebugMode" runat="server" CssClass="RadioButtons"
+            OnSelectedIndexChanged="RadioButtonListDebugMode_SelectedIndexChanged" AutoPostBack="True">
+            <asp:ListItem Value="F">Off</asp:ListItem>
+            <asp:ListItem Value="T">On</asp:ListItem>
+          </asp:RadioButtonList>
+        </td>
+        <td align="left" class="T" valign="middle">
+          Writes rows to LogDebug Table whenever LogDebugWriteLine() is called.
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table5" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left" class="HColor" valign="top" colspan="2">
+          TEST MODE (Set OFF for production)
+        </td>
+      </tr>
+      <tr>
+        <td align="left" valign="top" class="HSmall">
+          &nbsp;<asp:RadioButtonList ID="RadiobuttonlistTestMode" runat="server" CssClass="RadioButtons"
+            AutoPostBack="True" OnSelectedIndexChanged="RadioButtonListTestMode_SelectedIndexChanged">
+            <asp:ListItem Value="F" Selected="True">Off</asp:ListItem>
+            <asp:ListItem Value="T">On</asp:ListItem>
+          </asp:RadioButtonList>
+        </td>
+        <td align="left" valign="top" class="T">
+          Normally, set <strong>on</strong> for the development server and <strong>off</strong>
+          for the production server.<br />
+          <strong>When set On</strong>:<br />
+          1) The Update Report Buttons Pages are always visible even when reports are current.
+          Otherwise, Update Buttons will show only when a report is not current, regardless
+          of user.&nbsp;<br />
+          2) All bulk update of reports requested on this page will be generated regardless
+          whether the report is current or not.
+        </td>
+      </tr>
+    </table>
+
+    <table class="tableAdmin" id="Table35" cellspacing="0" cellpadding="0" border="1">
+      <%-- 
+      <tr>
+        <td class="HColor" colspan="2" valign="top">
+          Navbars&nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td class="T" colspan="2" valign="top">
+          <strong>Omissions of Navbars and Anchors:</strong> For upcoming elections, the pictures
+          in the various reports may cause slowing of page load time and increases bandwidth.
+          Check any of the checkboxes below to remove the Federal and/or State Navbars. Check
+          either of the Global Navbar checkboxes to eliminate the ability to obtain reports.&nbsp;
+          A good stategy would be to only check the [Omit State Navbar]. Then to remove more
+          load check the [Omit Contests in Upcoming Election] and [Omint State Elected Representatives].
+          When any of the checkbox below are changed all the cached pages are removed to force
+          immediate implementation of the change(s).
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" colspan="2">
+          <strong>Global Navbar:</strong> The Global Navbar is always present and contains
+          anchors: [Other States and DC] [Your Ballot or Elected Representatives] [Contests
+          in Upcoming Election] [State Elected Representatives] [Voters] [Candidates] [Interns]
+          [About Us] [Contact Us] [State Election Authority]<br />
+          <strong>Omission of the Election Report and Elected Report Anchors:</strong> Normally
+          the Global Navbar automatically adds [Contests in Upcoming Election] and [State
+          Elected Representatives] when a State identifies a new upcoming viewable election.
+          Use the checkboxes below to omit either or both anchors.
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" colspan="2">
+          <asp:CheckBox ID="CheckBox_Omit_Anchor_Global_Election_Report" runat="server" AutoPostBack="True"
+            CssClass="Checkboxes" OnCheckedChanged="CheckBox_Omit_Anchor_Global_Election_Report_CheckedChanged"
+            Text="Omit Contests in Upcoming Election Report Anchor" />&nbsp;
+          <br />
+          <asp:CheckBox ID="CheckBox_Omit_Anchor_Global_Elected_Report" runat="server" AutoPostBack="True"
+            CssClass="Checkboxes" Text="Omit State Elected Representatives Report Anchor" OnCheckedChanged="CheckBox_Omit_Anchor_Global_Elected_Report_CheckedChanged" />
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" colspan="2">
+          <strong>Omissions of Federal and State Navbars</strong> For upcoming elections,
+          the pictures in the various reports may cause slowing of page load time and increases
+          bandwidth. Check either of the two checkboxes below to remove the Federal and/or
+          State Navbars.
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" colspan="2">
+          <strong>Federal Navbar:</strong> The Federal Navbar cantains anchors: [Current US
+          President] [Current US Senate] [Current US House] [Most Recent US President Election]
+          [Most Recent US Senate Election] [Most Recent US House Election]. When the checkbox
+          below is checked the entire Federal Navbar will be omitted on all pages of all domains,
+          i.e. Vote-USA.or and Vote-XX.org.
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" colspan="2">
+          <asp:CheckBox ID="CheckBox_Omit_Navbar_Federal" runat="server" AutoPostBack="True"
+            CssClass="CheckBoxes" OnCheckedChanged="CheckBox_Omit_Navbar_Federal_CheckedChanged"
+            Text="Omit Federal Navbar" Enabled="False" />
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" colspan="2">
+          <strong>State Navbar: </strong>The State Navbar cantains anchors: [Most recent 6
+          Viewable State Elections] [State Election Archives] [State Election Authority].
+          When the checkbox below is checked the entire State Navbar will be omitted on all
+          pages of all domains, i.e. Vote-USA.or and Vote-XX.org.
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" colspan="2">
+          <asp:CheckBox ID="CheckBox_Omit_Navbar_State" runat="server" AutoPostBack="True"
+            CssClass="Checkboxes" Text="Omit State Navbar" OnCheckedChanged="CheckBox_Omit_Navbar_State_CheckedChanged" />
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="TColor" colspan="2">
+          <strong>Clearing of Cached Pages:</strong> When any of the checkbox above are changed
+          all the cached pages are removed to force immediate implementation of the change(s).
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" colspan="2">
+          <strong>[Get Your Sample Ballot] Image Anchors: </strong>Included ALWAYS when there
+          is an upcoming viewable election for State domain pages, i.e. Vote-XX.org. But NEVER
+          included on Default.aspx pages or a Vote-USA.org domain pages, regarless whether
+          the checkbox below is checked or not.
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" colspan="2">
+          When there in upcoming viewable election, it the checkbox below is checked the [Get
+          Your Sample Ballot] image anchors will be omitted on all pages of all domains, i.e.
+          both Vote-USA.or and Vote-XX.org.
+        </td>
+      </tr>
+      <tr>
+        <td class="T" valign="top">
+          <asp:CheckBox ID="CheckBox_Omit_Anchors_Sample_Ballot" runat="server" AutoPostBack="True"
+            CssClass="RadioButtons" Text="Omit Your Sample Ballot Image Anchors" OnCheckedChanged="CheckBox_Omit_Anchors_Sample_Ballot_CheckedChanged" />
+        </td>
+        <td class="T" colspan="1" valign="top">
+        </td>
+      </tr>
+      --%>
+      <tr>
+        <td class="H" colspan="2" valign="top">
+          Cached Pages
+        </td>
+      </tr>
+      <tr>
+        <td align="left" colspan="2" class="T">
+          Select <strong>Site Admin > | Page Cache Control</strong> in the menu bar above.
+        </td>
+      </tr>
+      <%-- 
+      <tr>
+        <td class="HSmall" colspan="2" valign="top">
+          Cache Pages (Set ON for production)
+          Use the <a href="/master/cachecontrol.aspx">Page Cache Control</a>
+          page for all cache control operations.
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="top">
+          Cach Pages:
+          <asp:RadioButtonList ID="RadioButtonListCachePages" runat="server" AutoPostBack="True"
+            CssClass="RadioButtons" OnSelectedIndexChanged="RadioButtonListCachePages_SelectedIndexChanged"
+            RepeatDirection="Horizontal">
+            <asp:ListItem Value="T">On</asp:ListItem>
+            <asp:ListItem Value="F">Off</asp:ListItem>
+          </asp:RadioButtonList>
+        </td>
+        <td align="left" class="T" valign="top">
+          Normally on the production server Cache Pages should be turned on.
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall" colspan="2" valign="top">
+          Removing Cached Pages
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" colspan="2" valign="top">
+          <br />
+          All public pages except Default.aspx can be cached.
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="top">
+          <asp:Button ID="ButtonDeleteCachePages" runat="server" OnClick="ButtonDeleteCachePages_Click"
+            Text="Remove All Cached Pages" CssClass="Buttons" Width="300px" /><br />
+          All Pages Last Removed:<asp:Label ID="Label_Cache_Removed_All" runat="server" CssClass="TSmallColor"></asp:Label>
+        </td>
+        <td align="left" class="T" valign="top">
+          Clears <strong>ALL</strong> the Cached Pages in all the Cache Tables.
+          <br />
+          Perform when the construction of either: Global Navbar, Federal Navbar or All State
+          Navbars has been changed<br />
+          Current Cached Pages:<asp:Label ID="Label_Cache_Pages_All" runat="server" CssClass="TSmallColor"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="top">
+          <asp:Button ID="ButtonDeleteBallotPages" runat="server" OnClick="ButtonDeleteBallotPages_Click"
+            Text="Remove Ballot Pages" CssClass="Buttons" Width="300px" /><br />
+          Ballot Pages Last Removed:<asp:Label ID="Label_Cache_Removed_Ballot" runat="server"
+            CssClass="TSmallColor"></asp:Label>
+        </td>
+        <td align="left" class="T" valign="top">
+          Clears all Ballot.aspx cached pages
+          <br />
+          (CacheBallotPages Table)<br />
+          Current Cached Pages:<asp:Label ID="Label_Cache_Pages_Ballot" runat="server" CssClass="TSmallColor"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="top">
+          <asp:Button ID="ButtonDeleteElectedPages" runat="server" OnClick="ButtonDeleteElectedPages_Click"
+            Text="Remove Elected Pages" CssClass="Buttons" Width="300px" /><br />
+          Elected Pages Last Removed:<asp:Label ID="Label_Cache_Removed_Elected" runat="server"
+            CssClass="TSmallColor"></asp:Label>
+        </td>
+        <td align="left" class="T" valign="top">
+          Clears all Elected.aspx cached pages
+          <br />
+          (CacheElectedPages Table)<br />
+          Current Cached Pages:<asp:Label ID="Label_Cache_Pages_Elected" runat="server" CssClass="TSmallColor"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="top">
+          <asp:Button ID="ButtonDeleteIntroPages" runat="server" OnClick="ButtonDeleteIntroPages_Click"
+            Text="Remove Intro Pages" CssClass="Buttons" Width="300px" /><br />
+          Intro Pages Last Removed:<asp:Label ID="Label_Cache_Removed_Intro" runat="server"
+            CssClass="TSmallColor"></asp:Label>
+        </td>
+        <td align="left" class="T" valign="top">
+          Clears all Intro.aspx cached pages
+          <br />
+          (CacheIntroPages Table)<br />
+          Current Cached Pages:<asp:Label ID="Label_Cache_Pages_Intro" runat="server" CssClass="TSmallColor"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="top">
+          <asp:Button ID="ButtonDeletePoliticianIssuePages" runat="server" OnClick="ButtonDeletePoliticianIssuePages_Click"
+            Text="Remove Politician Issue Pages" CssClass="Buttons" Width="300px" /><br />
+          Politician Issue Pages Last Removed:<asp:Label ID="Label_Cache_Removed_PoliticianIssue"
+            runat="server" CssClass="TSmallColor"></asp:Label>
+        </td>
+        <td align="left" class="T" valign="top">
+          Clears all PoliticianIssue.aspx cached pages<br />
+          (CachePoliticianIssuePages Table)<br />
+          Current Cached Pages:<asp:Label ID="Label_Cache_Pages_PoliticianIssue" runat="server"
+            CssClass="TSmallColor"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="top">
+          <asp:Button ID="ButtonDeleteIssuePages" runat="server" OnClick="ButtonDeleteIssuePages_Click"
+            Text="Remove Issue Pages" CssClass="Buttons" Width="300px" /><br />
+          Issue Pages Last Removed:<asp:Label ID="Label_Cache_Removed_Issue" runat="server"
+            CssClass="TSmallColor"></asp:Label>
+        </td>
+        <td align="left" class="T" valign="top">
+          Clears all Issue.aspx cached pages
+          <br />
+          (CacheIssuePages Table)<br />
+          Current Cached Pages:<asp:Label ID="Label_Cache_Pages_Issue" runat="server" CssClass="TSmallColor"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="top">
+          <asp:Button ID="ButtonDeleteReferendumPages" runat="server" OnClick="ButtonDeleteReferendumPages_Click"
+            Text="Remove Referendum Pages" CssClass="Buttons" Width="300px" /><br />
+          Referendum Pages Last Removed:<asp:Label ID="Label_Cache_Removed_Referendum" runat="server"
+            CssClass="TSmallColor"></asp:Label>
+        </td>
+        <td align="left" class="T" valign="top">
+          Clears all Referendum.aspx cached pages
+          <br />
+          (CacheReferendumPages Table)<br />
+          Current Cached Pages:<asp:Label ID="Label_Cache_Pages_Referendum" runat="server"
+            CssClass="TSmallColor"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="top">
+          <asp:Button ID="ButtonDeleteElectionPages" runat="server" OnClick="ButtonDeleteElectionPages_Click"
+            Text="Remove Election Report Pages" CssClass="Buttons" Width="300px" /><br />
+          Election Report Pages Last Removed:<asp:Label ID="Label_Cache_Removed_ElectionReport"
+            runat="server" CssClass="TSmallColor"></asp:Label>
+        </td>
+        <td align="left" class="T" valign="top">
+          Clears all Election.aspx cached pages
+          <br />
+          (CacheElectionPages Table)<br />
+          Current Cached Pages:<asp:Label ID="Label_Cache_Pages_ElectionReport" runat="server"
+            CssClass="TSmallColor"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="top">
+          <asp:Button ID="ButtonDeleteOfficialsPages" runat="server" OnClick="ButtonDeleteOfficialsPages_Click"
+            Text="Remove Elected Officials Report Pages" CssClass="Buttons" Width="300px" /><br />
+          Elected Officials Report Pages Last Removed:<asp:Label ID="Label_Cache_Removed_OfficialsReport"
+            runat="server" CssClass="TSmallColor"></asp:Label>
+        </td>
+        <td align="left" class="T" valign="top">
+          Clears all Officials.aspx cached pages
+          <br />
+          (CacheOfficialsPages Table)<br />
+          Current Cached Pages:<asp:Label ID="Label_Cache_Pages_OfficialsReport" runat="server"
+            CssClass="TSmallColor"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="top">
+          <asp:Button ID="ButtonDeleteArchivePages" runat="server" OnClick="ButtonDeleteArchivePages_Click"
+            Text="Remove Archive Pages" CssClass="Buttons" Width="300px" /><br />
+          Archive Pages Last Removed:<asp:Label ID="Label_Cache_Removed_Archive" runat="server"
+            CssClass="TSmallColor"></asp:Label>
+        </td>
+        <td align="left" class="T" valign="top">
+          Clears all Archive.aspx cached pages
+          <br />
+          (CacheArchivesPages Table)<br />
+          Current Cached Pages:<asp:Label ID="Label_Cache_Pages_Archive" runat="server" CssClass="TSmallColor"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="top">
+          <asp:Button ID="ButtonDeleteGlobalNavbarPages" runat="server" OnClick="ButtonDeleteGlobalNavbarPages_Click"
+            Text="Remove Global Navbar Pages" CssClass="Buttons" Width="300px" />Global Navbar
+          Pages Last Removed:<asp:Label ID="Label_Cache_Removed_GlobalNavbar" runat="server"
+            CssClass="TSmallColor"></asp:Label>
+        </td>
+        <td align="left" class="T" valign="top">
+          Clears all pages because the global navbar is on all pages.<br />
+          Current Cached Pages:<asp:Label ID="Label_Cache_Pages_GlobalNavbar" runat="server"
+            CssClass="TSmallColor"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="T" valign="top">
+          <asp:Button ID="ButtonDeleteMiscPages" runat="server" OnClick="ButtonDeleteMiscPages_Click"
+            Text="Remove Misc Pages" CssClass="Buttons" Width="300px" /><br />
+          Misc Pages Last Removed:
+          <asp:Label ID="Label_Cache_Removed_Misc" runat="server" CssClass="TSmallColor"></asp:Label>
+        </td>
+        <td align="left" class="T" valign="top">
+          Clears Misc. Pages like About Us, Contact Us:<br />
+          Current Cached Pages:<asp:Label ID="Label_Cache_Pages_Misc" runat="server" CssClass="TSmallColor"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top" colspan="2" class="HSmall">
+          Removing Cached Pages for Special Situations
+        </td>
+      </tr>
+      <tr>
+        <td class="T" valign="top">
+          <asp:Button ID="ButtonDeleteIntroPagesAfterElection" runat="server" OnClick="ButtonDeleteIntroPagesAfterElection_Click"
+            Text="Remove Intro Pages After Election" CssClass="Buttons" Width="300px" />
+        </td>
+        <td class="T" valign="top">
+          After an election the links to the Issue.aspx and PoliticianIssue.aspx pages change.
+          This will remove all the Intro.aspx pages in cache only for PREVIOUS elections and
+          since it was last run. Clicking multiple times is harmless.
+        </td>
+      </tr>
+      <tr>
+        <td class="T" valign="top">
+        </td>
+        <td class="T" valign="top">
+        </td>
+      </tr>
+      --%>
+    </table>
+
+    <table class="tableAdmin" id="Table36" cellspacing="0" cellpadding="0" >
+      <tr>
+        <td valign="top" colspan="2" class="H">
+          Election Deletions
+        </td>
+      </tr>
+      <tr>
+        <td align="left" valign="top" class="HSmall" style="width: 232px">
+          <asp:RadioButtonList ID="RadioButtonListPermitElectionDeletions" runat="server" AutoPostBack="True"
+            CssClass="RadioButtons" OnSelectedIndexChanged="RadioButtonListPermitElectionDeletions_SelectedIndexChanged"
+            Width="218px">
+            <asp:ListItem Selected="True" Value="F">DO NOT Permit Election Deletions</asp:ListItem>
+            <asp:ListItem Value="T">Permit Election Deletions</asp:ListItem>
+          </asp:RadioButtonList>
+        </td>
+        <td align="left" valign="top" class="T">
+          The radio button must be set to permit election deletions for any election to be
+          deleted. This is a safety measure to insure that election information is not accidentally
+          deleted.
+        </td>
+      </tr>
+      <tr>
+        <td align="center" style="width: 232px">
+        </td>
+        <td align="center">
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table3" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="H">
+          Misc
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp; &nbsp; &nbsp;&nbsp;
+          <asp:HyperLink ID="HyperLinkAnswers" runat="server" CssClass="T" NavigateUrl="/Master/Answers.aspx">Edit Answers</asp:HyperLink>&nbsp;
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <table class="tableAdmin" id="Table34" cellspacing="0" cellpadding="0" border="1">
+      <tr>
+        <td class="H" colspan="2">
+          One Shot Utilities to fix Database Problems
+        </td>
+      </tr>
+      <tr>
+        <td class="t" colspan="2">
+          The functions below can be run anytime without harm to the database, pages or reports
+        </td>
+      </tr>
+    </table>
+    <!-- Table -->
+    <!-- Table -->
+    <table class="tableAdmin" id="Table23" cellspacing="0" cellpadding="0" border="1">
+      <tr>
+        <td align="center" class="H" colspan="2">
+          Politicians
+        </td>
+      </tr>
+      <tr>
+        <td class="T" style="width: 212px">
+          <asp:Button ID="Button_Delete_Politicians_Report" runat="server" OnClick="Button_Delete_Politicians_Report_Click"
+            Text="Report Politicians to be Deleted" Width="200px" CssClass="Buttons" />
+        </td>
+        <td class="T" style="width: 490px">
+          Reports all the politicians that will be deleted when the button below is clicked.
+        </td>
+      </tr>
+      <tr>
+        <td class="T" style="width: 212px">
+          &nbsp;<asp:Button ID="ButtonBadPoliticianOfficeKeys" runat="server" OnClick="ButtonBadPoliticianOfficeKeys_Click"
+            Text="Delete Politicians" Width="200px" CssClass="Buttons" />
+        </td>
+        <td class="T" style="width: 490px">
+          Deletes Politicians with Bad OfficeKey. Finds all Politicians rows where OfficeKey
+          for politician is not in the Offices Table. Then deletes rows for politician in:
+          Politicians, Answers,ElectionsPoliticians, and OfficesOfficials. Also removes cached
+          pages CacheIntroPages, CachePoliticianIssuePages. If there are rows it reports the
+          PoliticianKey to be fixed manually.<br />
+          Error Like: SELECT OfficeLevel FROM Offices WHERE OfficeKey = 'MSUsSenateForUnexpiredTerm'
+        </td>
+      </tr>
+      <tr>
+        <td class="H" colspan="2">
+          Database Maintenance Utilities
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonFix2" runat="server" CssClass="Buttons" OnClick="ButtonFix2_Click"
+            Text="Delete ElectionsOffices" Width="200px" />
+        </td>
+        <td class="T" style="width: 490px">
+          Deletes all ElectionsOffices rows where there is no matching OfficeKey in Offices
+          Table.
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="Button_Update_ElectionsOffices" runat="server" CssClass="Buttons"
+            OnClick="Button_Update_ElectionsOffices_Click" Text="Update ElectionsOffices" Width="200px" />
+        </td>
+        <td class="T" style="width: 490px">
+          Updates DistrictCode in ElectionsOffices rows to match the DistrictCode in the Offices
+          Table. Only Office District classes 3, 5, 6, 7, 17, 21 are updated.
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonFix3" runat="server" CssClass="Buttons" OnClick="ButtonFix3_Click"
+            Text="Delete ElectionsPoliticians" Width="200px" />
+        </td>
+        <td class="T" style="width: 490px">
+          Deletes all ElectionsPoliticians rows where there is no matching OfficeKey in Offices
+          Table
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonFix4" runat="server" CssClass="Buttons" OnClick="ButtonFix4_Click"
+            Text="Delete ElectionsPoliticians" Width="200px" />
+        </td>
+        <td class="T" style="width: 490px">
+          Deletes all ElectionsPoliticians rows where there is no matching PoliticianKey in
+          Politicians Table
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonFix5" runat="server" CssClass="Buttons" OnClick="ButtonFix5_Click"
+            Text="Delete OfficesOfficials" Width="200px" />
+        </td>
+        <td class="T" style="width: 490px">
+          Deletes all OfficesOfficials rows where there is no matching OfficeKey in Offices
+          Table
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonFix6" runat="server" CssClass="Buttons" OnClick="ButtonFix6_Click"
+            Text="Update ElectionKeys " Width="200px" />
+        </td>
+        <td class="T" style="width: 490px">
+          Updates ElectionKey, ElectionKeyCounty, ElectionKeyLocal,ElectionKeyFederal in ElectionsOffices
+          &amp; ElectionsPoliticians Tables
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonFix7" runat="server" CssClass="Buttons" OnClick="ButtonFix7_Click"
+            Text="Delete Elections" Width="200px" />
+        </td>
+        <td class="T" style="width: 490px">
+          Deletes all Elections, ElectionsOffices and ElectionsPoliticians
+          rows where there are no 1) ElectionsOffices rows (on the ballot) and 2) no Referendum
+          rows for the ElectionKey
+        </td>
+      </tr>
+      <%-- 
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonDeleteReportsElections" runat="server" CssClass="Buttons" OnClick="ButtonDeleteReportsElections_Click"
+            Text="Delete ReportsElections" Width="200px" />
+        </td>
+        <td class="T" style="width: 490px">
+          Deletes all ReportsElections where there are no ElectionsPoliticians rows.
+        </td>
+      </tr>
+      --%>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonUpdateAnswers" runat="server" CssClass="Buttons" OnClick="ButtonUpdateAnswers_Click"
+            Text="Update Answers" Width="200px" />
+        </td>
+        <td class="T" style="width: 490px">
+          Updates IssueKey and DateStamp in Answers Table. Provides correct IssueKey whenever
+          IssueKey is empty. Updates DateStamp containing '1/1/1900' to '1/1/2004'
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="Button_Update_Politician_Names" runat="server" CssClass="Buttons"
+            Enabled="False" OnClick="Button_Update_Politician_Names_Click" Text="Update Politician Names" />
+        </td>
+        <td class="T" style="width: 490px">
+          Clean up all Politician Names (FName, MName, Nickname, LName, Suffix, AddOn columns)
+          in the Polititicians Table, i.e. Re-casing, consistent suffixes.
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="Button_Remake_Party_Email_Passwords" runat="server" CssClass="Buttons"
+            Enabled="False" OnClick="Button_Remake_Party_Email_Passwords_Click" Text="Remake Party Email Passwords"
+            Width="200px" />
+        </td>
+        <td class="T" style="width: 490px">
+          Make new passwords for all emails in the PartiesEmails Table. Done so that tighter
+          security can be maintained on parties who enter data for politicians.
+        </td>
+      </tr>
+      <%-- 
+      <tr>
+        <td class="H" colspan="2">
+          Reports
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonCleanOfficials" runat="server" CssClass="Buttons" OnClick="ButtonCleanOfficials_Click"
+            Text="Delete ReportsOfficials" Width="200px" />
+        </td>
+        <td class="T" style="width: 490px">
+          Deletes all ReportsOfficials rows where there are no OfficesOfficials rows.
+        </td>
+      </tr>
+      --%>
+      <tr>
+        <td class="H" colspan="2">
+          Misc
+        </td>
+      </tr>
+      <tr>
+        <td class="T" style="width: 212px">
+          <asp:Button ID="ButtonCleanData" runat="server" Text="Trim Empty Colums" CssClass="Buttons"
+            OnClick="ButtonCleanData_Click" Width="200px" />
+        </td>
+        <td class="T" style="width: 490px">
+          Changes strings containing all spaces to empty strings in all Tables
+        </td>
+      </tr>
+      <tr>
+        <td class="T" style="width: 212px">
+          &nbsp;</td>
+        <td class="T" style="width: 490px">
+          &nbsp;</td>
+      </tr>
+      <tr>
+        <td class="T" style="width: 212px">
+          <asp:Button ID="ButtonRestructure" runat="server" CssClass="Buttons" Text="Elections Restructure"
+            Enabled="False" OnClick="ButtonRestructure_Click" Width="200px"></asp:Button>
+        </td>
+        <td class="T" style="width: 490px">
+        </td>
+      </tr>
+      <tr>
+        <td class="T" style="width: 212px">
+          <asp:Button ID="ButtonOneShot" runat="server" OnClick="ButtonOneShot_Click" Text="One Shot Utilities"
+            CssClass="Buttons" Width="200px" />
+        </td>
+        <td class="T" style="width: 490px">
+          Special utilities that are commented out after they are executed.&nbsp;
+        </td>
+      </tr>
+    </table>
+    
+    <%--  
+    <table class="tableAdmin" id="Table15" cellspacing="0" cellpadding="0" border="1">
+      <tr>
+        <td class="H" colspan="2">
+          Zip Codes
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall" colspan="2">
+          These operations are only done on the DEVELOPMENT Server, one State at a time, AND
+          only ONCE for the original data. The Tables are then copied to the PRODUCTION Server.
+        </td>
+      </tr>
+      <tr>
+        <td class="T" colspan="2">
+          The ZipCitiesDownloaded Table was imported from D:\$_Vote\Zip Codes\Zip5 Cities\Production\Cities\zip-codes-database-STANDARD.csv.
+          It contains 80,363 unique cities with various Alias and alias abbreviation names
+          for the unique cities.
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall" colspan="2">
+          Loads (using insert or update) ZipCities &amp; ZipCitiesNames Tables for ALL 51
+          States (10 minutes) using the ZipCitiesDownloaded Table. It only needs to be run
+          once.
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:CheckBox ID="CheckBox_Skip_ZipCities" runat="server" CssClass="RadioButtons"
+            Text="Skip" />
+        </td>
+        <td class="T" width="100%">
+          Loads a State's cities into ZipCities and ZipCitiesNames Tables.
+          <br />
+          Reads the ZipCitiesDownloaded Table and adds/updates the ZipCities Table containing
+          unique cities. Each StateCode/CityNameKey (the unique city name) and PreferredLastLineKey
+          (in the ZipCitiesDownloaded) are each unique keys. (3 minutes, 29,759 rows)
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:CheckBox ID="CheckBox_Skip_ZipCitiesNames" runat="server" CssClass="RadioButtons"
+            Text="Skip" />
+          <asp:Button ID="Button_ZipCities" runat="server" CssClass="Buttons" OnClick="Button_ZipCities_Click"
+            Text="Load" Width="100px" />
+        </td>
+        <td class="T">
+          The ZipCitiesDownloaded Table may contain three different city names for the same
+          city in City, CityAliasAbbreviation, and CityAliasName columns. This operation reads
+          the ZipCitiesDownloaded Table and updates the ZipCitiesNames Table adding new city
+          names that are not in the table or updating the PreferredLastLineKey column. The
+          StateCode/City unique key is use to find the unique City in the ZipCities Table
+          using either StateCode/CityNameKey or PreferredLastLineKey) The ZipCities can then
+          be used for the Zip5 value and to identify the unique city for the ZipStreetsRanges
+          Table rows. (8 minutes, 59,652 City rows)
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall" colspan="2">
+          Bulk loads ZipStreetsRanges, ZipStreetsUnique for a SINGLE State (between 30 min
+          to 3 hours for CA). Optionally, ZipStreetsNumbers,and ZipAptSuites Tables could
+          be loaded to produce mailing lists. But for now this consumes too much disc space
+          (1 tara byte).
+        </td>
+      </tr>
+      <tr>
+        <td class="TSmallColor" colspan="2">
+          ZipStatesMaintenanceLog Table is used to keep track of progress of the processing
+          of ZipStreetsDownloaded and ZipStreetsRanges Tables in the two steps below.
+        </td>
+      </tr>
+      <tr>
+        <td class="T" colspan="2">
+          1) Truncate ZipStreetsDownloaded.
+          <br />
+          2) Import Zip-4.csv (<strong>Zip-codes.com $400 Zip+4 Database) </strong>into ZipStreetsDownloaded
+          (First row has column names)<br />
+          3) Run <strong>Load</strong>.
+        </td>
+      </tr>
+      <tr>
+        <td class="TColor" colspan="2">
+          ZipStreetsNumbers,and ZipAptSuites could be created in the second step, but has
+          been skipped to save disc space. Enabling and checking the checkbox below will reinstate
+          the loading of these tables.
+        </td>
+      </tr>
+      <tr>
+        <td class="TColor" colspan="2">
+          <asp:CheckBox ID="CheckBox_ZipStreetNumbers_ZipAptSuites" runat="server" AutoPostBack="True"
+            CssClass="CheckBoxes" Enabled="False" OnCheckedChanged="CheckBox_ZipStreetNumbers_ZipAptSuites_CheckedChanged"
+            Text="Also Build ZipStreetNumbers and ZipAptSuits Tables" />
+        </td>
+      </tr>
+      <tr>
+        <td class="T" style="width: 212px">
+          <asp:CheckBox ID="CheckBox_Skip_ZipSteets" runat="server" CssClass="RadioButtons"
+            Text="Skip" />
+        </td>
+        <td class="T">
+          This step creates the ZipStreetsTemp Table of a SINGLE State, which is then processed
+          in the next step below. It truncates any ZipStreetsTemp Table then reads the ZipStreetsDownloaded
+          Table and bulk inserts into ZipStreetsRanges Table ignoring duplicate keys containing
+          only necessary columns. It obtains the PreferredLastLineKey from the ZipCities Table
+          using PreferredLastLineKey in the ZipStreetsDownloaded Table.(18 minutes/batches
+          of 100 :: 14 min/batches of 1,000:: 1,145,591 State rows::: 15,000 rows/sec)
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="Button_ZipAddresses" runat="server" CssClass="Buttons" OnClick="Button_ZipAddresses_Click"
+            Text="Load" Width="100px" />
+        </td>
+        <td class="T">
+          Reads ZipStreetsTemp Table and bulk inserts the ZipStreetsUnique, ZipStreetsChunks,
+          Tables. For every row in ZipStreetsTemp it creates one or more rows in these Tables.
+          These Tables are added in bulks of 1000 ZipStreetsRanges rows.
+        </td>
+      </tr>
+      <tr>
+        <td class="HSmall" colspan="2">
+          Test the ZipStreetsRanges Table
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:HyperLink ID="HyperLink_Test_Zip_Addresses" runat="server" CssClass="Hyperlink"
+            NavigateUrl="~/Master/TestZipAddresses.aspx">Test</asp:HyperLink>
+        </td>
+        <td class="T">
+          1) Create a query on VoteSQL.VoteColo containing a portion of the LogAddressesGood
+          Table like: SELECT Addr1 ,City ,StateCode ,Zip5 ,Zip4 FROM LogAddressesGood WHERE
+          StateCode = 'VA' AND AddressType = 'USER' AND Addr1 != '' AND Substring(City,1,1)
+          = 'A' ORDER BY DateStamp DESC<br />
+          2) Import into ZipAddressesTesting on VoteColo.<br />
+          3) Truncate and import into ZipAddressesTesting on Sequoiadev.<br />
+          4) Click the link to take you to a page to test the addresss in this table.
+        </td>
+      </tr>
+    </table>
+    --%>
+
+    <table class="tableAdmin" id="Table19" cellspacing="0" cellpadding="0" border="1">
+      <tr>
+        <td class="H" colspan="2">
+          Misc Database Maintenance
+        </td>
+      </tr>
+      <tr>
+        <td class="TBold" colspan="2">
+          <user:TextBoxWithNormalizedLineBreaks ID="TextBoxOfficeKey" runat="server" Width="500px"></user:TextBoxWithNormalizedLineBreaks>
+          OfficeKey
+        </td>
+      </tr>
+      <tr>
+        <td class="T">
+          <asp:Button ID="ButtonDeleteOffice" runat="server" OnClick="ButtonDeleteOffice_Click"
+            Text="Delete Office" Width="200px" CssClass="Buttons" />
+        </td>
+        <td class="T" width="100%">
+          Delete all rows in all tables for a bad OfficeKey supplied in above textbox including:
+          Offices, OfficesOfficials, ElectionsOffices, ElectionsPoliticians Tables<br />
+          Examples: OfficeKey should have been county not local.
+        </td>
+      </tr>
+    </table>
+    <table class="tableAdmin" id="Table44" cellspacing="0" cellpadding="0" border="1">
+      <tr>
+        <td class="H" colspan="2">
+          Nag Dialogs
+        </td>
+      </tr>
+      <tr>
+        <td align="left" colspan="2" class="T">
+          Select <strong>Site Admin > | Nag Dialogs</strong> in the menu bar above.
+        </td>
+      </tr>
+      <%--
+      <tr>
+        <td class="T" colspan="2">
+        <!--
+          The vote.DonationNags Table controls the nag dialogs. You need to manually 
+          change the table to change the behavior of the nags. The message number behaves 
+          as a page counter. The content of the Message Text column is presented in the 
+          donation nag dialog when that page counter is reached and if there is content in 
+          the MessageHeading it will appear as the heading in the dialog instead of the 
+          default heading &quot;We Need Your Help&quot;. The 
+          NextMessageNumber provides a loop back mechanism, whereby when a particular nag 
+          dialog is presented, rather than continue to the next nag it will loop back 
+          (reset the counter) to this number. When the last row in this table has a 
+          NextMessageNumber of 1 the dialogs become a simple loop.<br />
+          <strong>Notes:</strong><br />
+          When the &quot;OK, I&#39;ll Donate&quot; or the &quot;I Alread Donated&quot; buttons are selected the 
+          nag dialogs are effectivly terminated. A selection of &quot;No Thanks&quot; is the only 
+          option that keeps nagging.<br />
+          If the contents of the DonationNags Table is ever changed it will have to be 
+          dumped and loaded to all the web server database instances.
+          -->
+          Use the <a href="/master/nags.aspx">Donation Nags and Sample Ballot Request Dialogs Control</a>
+          page for all nag dialog maintenance.<br /><br/>
+          </td>
+      </tr>
+      <!--
+      <tr>
+        <td align="left" class="T" valign="top">
+          Present &quot;Get Future Sample Ballots Automatically&quot; Dialog: 
+          <asp:RadioButtonList ID="FutureSampleBallotDialog" runat="server"
+            CssClass="RadioButtons"
+            RepeatDirection="Horizontal" AutoPostBack="True" 
+            onselectedindexchanged="FutureSampleBallotDialog_SelectedIndexChanged">
+            <asp:ListItem Value="T">On</asp:ListItem>
+            <asp:ListItem Value="F">Off</asp:ListItem>
+          </asp:RadioButtonList>
+        </td>
+        <td align="left" class="T" valign="top">
+          Normally select On for production server on Off when developing.<br />
+          This ONLY applies to the Ballot pages.</td>
+      </tr>
+      -->
+      --%>
+    </table>
+  </div>
+    </ContentTemplate>
+  </asp:UpdatePanel>
+</asp:Content>

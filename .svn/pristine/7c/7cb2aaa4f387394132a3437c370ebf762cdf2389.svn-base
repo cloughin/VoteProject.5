@@ -1,0 +1,120 @@
+﻿using System;
+using System.Web.UI.HtmlControls;
+using DB.Vote;
+using Vote.Reports;
+
+namespace Vote
+{
+  public partial class CompareCandidates : CacheablePage
+  {
+    #region Caching support
+
+    protected override string GetCacheKey()
+    {
+      return UrlManager.GetStateCodeFromHostName() + "." + QueryState + "." +
+        QueryElection + "." + QueryOffice;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "CompareCandidates";
+    }
+
+    #endregion Caching support
+
+    private readonly string _ElectionKey = QueryElection;
+    private string _ElectionDescription;
+    private readonly string _OfficeKey = QueryOffice;
+    private string _OfficeDescription;
+    private string _ElectionAndOfficeDescription;
+    //private string _PoliticianNames;
+
+    private const string TitleTag = "{0} | Biographical Profiles and Positions on the Issues | {1}";
+    private const string MetaDescriptionTag = "{0}: Compare the candidates biographical profiles and positions on the issues, with pictures and social media links.";
+
+    //private const string TitleTagAllStatesDomain =
+    //  "{0} | Candidates’ Positions on the Issues";
+
+    //private const string TitleTagSingleStateDomain =
+    //  "{0} | {1} | Candidates’ Positions on the Issues";
+
+    //private const string MetaDescriptionAllStatesDomain =
+    //  "Candidate position comparisons on the issues of {2} in {0}";
+
+    //private const string MetaDescriptionSingleStateDomain =
+    //  "Candidate position comparisons on the issues of {2} in {0}, {1}";
+
+    //private const string MetaKeywordsAllStatesDomain = "{0}, {2}";
+
+    //private const string MetaKeywordsSingleStateDomain = "{0}, {1}, {2}";
+
+    private void PopulateMetaTags()
+    {
+      Title = string.Format(TitleTag, _ElectionAndOfficeDescription, Master.SiteName);
+      MetaDescription = string.Format(MetaDescriptionTag, _ElectionAndOfficeDescription);
+      //if (DomainData.IsValidStateCode) // Single state
+      //{
+      //  const string titleTagTemplate = TitleTagSingleStateDomain;
+      //  const string metaDescriptionTemplate = MetaDescriptionSingleStateDomain;
+      //  const string metaKeywordsTemplate = MetaKeywordsSingleStateDomain;
+      //  if (DomainDesign.IncludeTitleForSingleState)
+      //    Title = Substitute(titleTagTemplate);
+      //  if (DomainDesign.IncludeMetaDescriptionForSingleState)
+      //    MetaDescription = Substitute(metaDescriptionTemplate);
+      //  if (DomainDesign.IncludeMetaKeywordsForSingleState)
+      //    MetaKeywords = Substitute(metaKeywordsTemplate);
+      //}
+      //else
+      //{
+      //  const string titleTagTemplate = TitleTagAllStatesDomain;
+      //  const string metaDescriptionTemplate = MetaDescriptionAllStatesDomain;
+      //  const string metaKeywordsTemplate = MetaKeywordsAllStatesDomain;
+      //  if (DomainDesign.IncludeTitleForAllStates)
+      //    Title = Substitute(titleTagTemplate);
+      //  if (DomainDesign.IncludeMetaDescriptionForAllStates)
+      //    MetaDescription = Substitute(metaDescriptionTemplate);
+      //  if (DomainDesign.IncludeMetaKeywordsForAllStates)
+      //    MetaKeywords = Substitute(metaKeywordsTemplate);
+      //}
+    }
+
+    //private string Substitute(string tag)
+    //{
+    //  return string.Format(tag, _ElectionDescription, _OfficeDescription,
+    //   _PoliticianNames);
+    //}
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      Master.MenuPage = "forVoters.aspx";
+
+      _ElectionDescription = PageCache.Elections.GetElectionDesc(_ElectionKey);
+      _OfficeDescription = Offices.GetLocalizedOfficeName(_OfficeKey);
+      //_PoliticianNames =
+      //  ElectionsPoliticians.GetPoliticianListForOfficeInElection(_ElectionKey,
+      //    _OfficeKey);
+
+      if (Elections.GetElectionTypeFromKey(_ElectionKey) ==
+          Elections.ElectionTypeUSPresidentialPrimary)
+      {
+        _ElectionAndOfficeDescription = _ElectionDescription;
+        ElectionTitle.InnerText = _ElectionDescription;
+        OfficeTitle.Visible = false;
+      }
+      else
+      {
+        _ElectionAndOfficeDescription = _ElectionDescription + ", " + _OfficeDescription;
+        new HtmlAnchor
+        {
+          HRef = UrlManager.GetElectionPageUri(_ElectionKey).ToString(),
+          InnerText = _ElectionDescription
+        }.AddTo(ElectionTitle);
+        OfficeTitle.InnerText = "Candidates for " + Offices.GetLocalizedOfficeNameWithElectoralClass(PageCache,
+        _OfficeKey);}
+
+      PopulateMetaTags();
+
+      CompareCandidatesReportResponsive.GetReport(_ElectionKey, _OfficeKey).AddTo(ReportPlaceHolder);
+    }
+  }
+}

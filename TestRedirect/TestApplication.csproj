@@ -1,0 +1,202 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6D46D9C1-EFD2-47D9-A4C2-4500D7EDA501}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TestRedirect</RootNamespace>
+    <AssemblyName>TestRedirect</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MySql.Data, Version=6.3.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\MySQL\MySQL Connector Net 6.3.6\Assemblies\v4.0\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AnalyzeStreets.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AnalyzeStreets.Designer.cs">
+      <DependentUpon>AnalyzeStreets.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BuildZipSingleUSZD.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BuildZipSingleUSZD.Designer.cs">
+      <DependentUpon>BuildZipSingleUSZD.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ControlFactory.cs" />
+    <Compile Include="DataReaderBase.cs" />
+    <Compile Include="DoubleMetaphone.cs" />
+    <Compile Include="FixPoliticianKeys.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FixPoliticianKeys.Designer.cs">
+      <DependentUpon>FixPoliticianKeys.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cache.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cache.Designer.cs">
+      <DependentUpon>Cache.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Instructions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Instructions.Designer.cs">
+      <DependentUpon>Instructions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="POBoxes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="POBoxes.Designer.cs">
+      <DependentUpon>POBoxes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TestFindAddress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestFindAddress.Designer.cs">
+      <DependentUpon>TestFindAddress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TestFindAddressWithTestData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestFindAddressWithTestData.Designer.cs">
+      <DependentUpon>TestFindAddressWithTestData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TestRedirectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestRedirectForm.Designer.cs">
+      <DependentUpon>TestRedirectForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestSmtp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestSmtp.Designer.cs">
+      <DependentUpon>TestSmtp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="XmlTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="XmlTest.Designer.cs">
+      <DependentUpon>XmlTest.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="AnalyzeStreets.resx">
+      <DependentUpon>AnalyzeStreets.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BuildZipSingleUSZD.resx">
+      <DependentUpon>BuildZipSingleUSZD.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cache.resx">
+      <DependentUpon>Cache.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FixPoliticianKeys.resx">
+      <DependentUpon>FixPoliticianKeys.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Instructions.resx">
+      <DependentUpon>Instructions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="POBoxes.resx">
+      <DependentUpon>POBoxes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestFindAddress.resx">
+      <DependentUpon>TestFindAddress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestFindAddressWithTestData.resx">
+      <DependentUpon>TestFindAddressWithTestData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestRedirectForm.resx">
+      <DependentUpon>TestRedirectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="TestSmtp.resx">
+      <DependentUpon>TestSmtp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="XmlTest.resx">
+      <DependentUpon>XmlTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="App.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UtilityLibrary\UtilityLibrary.csproj">
+      <Project>{E05CEB40-9FBB-4013-9D18-400E610C8017}</Project>
+      <Name>UtilityLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Vote\Vote.csproj">
+      <Project>{8A2AF8BE-DADA-4BF6-8F4D-28B93D6E3CBC}</Project>
+      <Name>Vote</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

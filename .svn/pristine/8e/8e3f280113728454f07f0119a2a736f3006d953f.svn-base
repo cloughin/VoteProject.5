@@ -1,0 +1,124 @@
+﻿using System;
+using System.Data;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB;
+using DB.Vote;
+
+namespace Vote.Controls
+{
+  public partial class OfficeControl : UserControl
+  {
+    public string ExpandedNode
+    {
+      set { SelectOfficeExpandedNode.Value = value; }
+    }
+
+    public string Message
+    {
+      get { return FieldLabelMessage.InnerHtml; }
+      set { FieldLabelMessage.InnerHtml = value; }
+    }
+
+    public string OfficeKey
+    {
+      get { return SelectedOfficeKey.Value; }
+      set { SelectedOfficeKey.Value = value; }
+    }
+
+    public Control OfficeTree
+    {
+      get { return PlaceHolderSelectOfficeTree;  }
+    }
+
+    public static int PopulateOfficeTree(DataTable table, Control parent, string stateCode,
+      bool withCheckboxes = false)
+    {
+      parent.Controls.Clear();
+      var tree = new HtmlGenericControl("ul").AddTo(parent);
+      var officeCount = 0;
+
+      var officeClasses = table.Rows.Cast<DataRow>()
+        .GroupBy(row => row.OfficeClass()).ToList();
+      if (officeClasses.Count == 0)
+      {
+        new HtmlGenericControl("li")
+        {
+          InnerHtml = "No offices were found for this jurisdiction"
+        }.AddTo(tree);
+      }
+      else
+        foreach (var officeClass in officeClasses)
+        {
+          var offices = officeClass.ToList();
+          // If there is only one office in the class, don't create a class node
+          officeCount += offices.Count;
+          if (offices.Count == 1)
+            PopulateOfficeTree_CreateNode(tree, offices[0], withCheckboxes);
+          else
+          {
+            // If all OfficeLine1's are identical, don't show them 
+            var hasVariedLine1 =
+              offices.Exists(row => row.OfficeLine1() != offices[0].OfficeLine1());
+            var text = Offices.GetOfficeClassShortDescription(officeClass.Key,
+              stateCode);
+            var classNode =
+              new HtmlGenericControl("li") { InnerHtml = text }.AddTo(tree);
+            var data = "addClass:'office-class'";
+            if (!withCheckboxes)
+              data += ",unselectable:true";
+            classNode.Attributes.Add("data", data);
+            var classSubTree = new HtmlGenericControl("ul").AddTo(classNode);
+            foreach (var office in offices)
+              PopulateOfficeTree_CreateNode(classSubTree, office, withCheckboxes,
+                !hasVariedLine1);
+          }
+        }
+      return officeCount;
+    }
+
+    private static void PopulateOfficeTree_CreateNode(Control parent,
+      DataRow office, bool withCheckboxes, bool useLine2Only = false)
+    {
+      var text = useLine2Only && !String.IsNullOrWhiteSpace(office.OfficeLine2())
+        ? office.OfficeLine2()
+        : Offices.FormatOfficeName(office);
+      var candidateCount = office.Table.Columns.Contains("CandidateCountForOffice")
+        ? office.CandidateCountForOffice()
+        : 0;
+      var data = "key:'" + office.OfficeKey() + "',addClass:'office-name',desc:'" +
+        Offices.FormatOfficeName(office.OfficeKey()).JavascriptEscapeString() + "'";
+      if (candidateCount > 0)
+      {
+        text = String.Format("{0} [{1}]", text, candidateCount);
+        if (withCheckboxes)
+          data += ",candidates:" + candidateCount;
+      }
+      var officeNode =
+        new HtmlGenericControl("li")
+        {
+          InnerHtml = text,
+          ID = "officekey-" + office.OfficeKey()
+        }.AddTo(parent);
+      if (withCheckboxes && office.IsOfficeInElection())
+        data += ",select:true";
+      officeNode.Attributes.Add("data", data);
+    }
+
+    public bool ShowSelectOfficePanel
+    {
+      set { ShowSelectOfficePanelPrivate.Value = value.ToString().ToLowerInvariant(); }
+    }
+
+    public void Update()
+    {
+      UpdatePanelSelectOffice.Update();
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+    }
+  }
+}

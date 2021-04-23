@@ -1,0 +1,112 @@
+﻿using System;
+using System.Data;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB;
+using DB.Vote;
+
+namespace Vote.Reports
+{
+  internal sealed class CompareCandidatesReportResponsive : ResponsiveIssuesReport
+  {
+    #region Private
+
+    private class CandidateFilter : ReportDataManager<DataRow>.FilterBy
+    {
+      private readonly string _PoliticianKey;
+
+      public CandidateFilter(string politicianKey)
+      {
+        _PoliticianKey = politicianKey;
+      }
+
+      public override bool Filter(DataRow row)
+      {
+        return string.Compare(row.PoliticianKey(), _PoliticianKey, StringComparison.OrdinalIgnoreCase) == 0;
+      }
+    }
+
+    private class RunningMateFilter : ReportDataManager<DataRow>.FilterBy
+    {
+      public override bool Filter(DataRow row)
+      {
+        return !row.IsRunningMate();
+      }
+    }
+
+    private readonly CandidatesDataManager _CandidatesDataManager =
+      new CandidatesDataManager();
+
+    private readonly IssuesDataManager _IssuesDataManager =
+      new IssuesDataManager();
+
+    #region Private classes
+
+    private sealed class CandidatesDataManager : RunningMateDataManager
+    {
+      public void GetData(string electionKey, string officeKey)
+      {
+        DataTable = Elections.GetCompareCandidatesReportData(electionKey, officeKey);
+      }
+    }
+
+    private sealed class IssuesDataManager : ReportDataManager<DataRow>
+    {
+      public void GetData(string electionKey, string officeKey)
+      {
+        DataTable = ElectionsPoliticians.GetCompareCandidateIssues(electionKey, officeKey); 
+      }
+    }
+
+    #endregion Private classes
+
+    private Control GenerateReport(string electionKey, string officeKey)
+    {
+      _CandidatesDataManager.GetData(electionKey, officeKey);
+      var candidates = _CandidatesDataManager.GetDataSubset(new RunningMateFilter());
+
+      if (candidates.Count > 0)
+      {
+        var isRunningMateOffice = candidates[0].IsRunningMateOffice() &&
+          !Elections.IsPrimaryElection(electionKey);
+        var candidatesContainer = new HtmlDiv()
+          .AddTo(ReportContainer, "candidates-container");
+        ReportOffice(candidatesContainer, isRunningMateOffice, candidates, _CandidatesDataManager);
+
+        var issueListLink = new HtmlDiv().AddTo(ReportContainer, "issue-list-link");
+        new HtmlAnchor
+        {
+          HRef = UrlManager.GetIssueListPageUri(Offices.GetStateCodeFromKey(officeKey)).ToString(),
+          InnerText = "View a list of all questions available to the candidates"
+        }.AddTo(issueListLink);
+        new LiteralControl(". Questions are included below only if at least one candidate responded.").AddTo(
+          issueListLink);
+
+        // create a list of politicians to reproduce order and create empty cells when 
+        // reporting issues
+        var keys = (isRunningMateOffice  
+          ? candidates.SelectMany(c => new[] { c.PoliticianKey(), c.RunningMateKey() })
+            .Distinct(StringComparer.OrdinalIgnoreCase).ToList()
+          : candidates.Select(c => c.PoliticianKey()).Distinct(StringComparer.OrdinalIgnoreCase))
+          .Select(k => _CandidatesDataManager.GetDataSubset(new CandidateFilter(k)).FirstOrDefault())
+          .ToList();
+
+         _IssuesDataManager.GetData(electionKey, officeKey);
+        var issues = _IssuesDataManager.GetDataSubset().GroupBy(r => r.IssueKey()).ToList();
+
+        ReportIssues(keys, issues, isRunningMateOffice, candidates.Count);
+      }
+
+      return ReportContainer.AddCssClasses("compare-candidates-report");
+    }
+
+    #endregion Private
+
+    public static Control GetReport(string electionKey, string officeKey)
+    {
+      var reportObject = new CompareCandidatesReportResponsive();
+      return reportObject.GenerateReport(electionKey, officeKey);
+    }
+  }
+}

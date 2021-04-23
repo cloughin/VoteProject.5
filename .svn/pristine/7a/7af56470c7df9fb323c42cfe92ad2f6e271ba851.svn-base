@@ -1,0 +1,29 @@
+﻿using System;
+using DB.Vote;
+
+namespace Vote
+{
+  public static class UpdateSingleCandidateContestWinners
+  {
+    public static void Update()
+    {
+      string message;
+
+      try
+      {
+        VotePage.LogInfo("UpdateSingleCandidateContestWinners", "Started");
+
+        message = string.Format("{0} winners updated",
+          ElectionsPoliticians.MarkWinnersForSingleCandidatePastContests(0));
+      }
+      catch (Exception ex)
+      {
+        VotePage.LogException("UpdateSingleCandidateContestWinners", ex);
+        message = string.Format("Exception: {0} [see exception log for details]",
+          ex.Message);
+      }
+
+      VotePage.LogInfo("UpdateSingleCandidateContestWinners", message);
+    }
+  }
+}

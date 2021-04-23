@@ -1,0 +1,148 @@
+html { 
+background: none !important;}
+
+body {
+border-top: 0px solid #80A04A !important;}
+
+#socialMediaButtons {
+display:none !important;}
+
+#donateBanner {
+display:none !important;}
+
+#outer {
+background: #ffffff url(none) repeat-x !important;}
+
+#mainContent .header,
+#mainContent .trIntroIssueLinksHeading,
+#mainContent .trPoliticianIssueLinksHeading { 
+background-color: #80A04A !important;}
+
+#mainContent .trPoliticianIssueLinksHeading .subheading { 
+color: #ccc; }
+
+.trReportHeading, 
+.trReportHeadingLeft, 
+.trReportHeadingColor, 
+.trReportHeadingLeftColor {
+background-color: #80A04A !important;}
+
+.trReportGroupHeading, 
+.trReportGroupHeadingLeft, 
+.trReportGroupHeadingColor, 
+.trReportGroupHeadingLeftColor { 
+background-color: #E6E6E6 !important;}
+
+.trIssueLinks, 
+.trIntroIssueLinks,
+.trPoliticianIssueLinks { 
+background-color: #e3e3e3 !important;}
+
+.tdIssueLinks,
+.tdPoliticianIssueLinks { 
+border-bottom: 1px solid black !important;}
+
+a:link {
+color: #80A04A !important;}
+
+a:active {
+color: #404040 !important;}
+
+a:hover {
+color: #404040 !important;}
+
+a:visited {
+color: #404040 !important;}
+
+a.bigButtonText { 
+color: white !important; }
+
+.TAddress,
+.TPhone,
+.TAge {
+color: #404040 !important;}
+
+.logo a img {
+display:none !important;}
+
+.logo {
+background:url(http://ivn.us/wp-content/uploads/2012/07/votesmart_ivnlogo.png) no-repeat !important;
+width:190px !important;
+height:87px !important;
+padding:0 0 15px 0 !important;}
+
+.logo a {
+width:190px !important;
+height:87px !important;
+display:block !important}
+
+#mainNavigation ul.cssmenu2 li a {
+background: url(http://ivn.us/wp-content/uploads/2012/07/navbar.png) !important;}
+
+#mainNavigation ul.cssmenu2 li.home a {
+width: 127px;
+background-position: 0px 0px !important;}
+  
+#mainNavigation ul.cssmenu2 li.home a:hover {
+background-position: 0px -48px !important;}
+  
+#mainNavigation ul.cssmenu2 li.forVoters a {
+width: 175px !important;
+background-position: -127px 0px !important;}
+
+#mainNavigation ul.cssmenu2 li.forVoters a:hover {
+background-position: -127px -48px !important;}
+
+#mainNavigation ul.cssmenu2 li.forCandidates a {
+width: 214px !important;
+background-position: -302px 0px !important;}
+
+#mainNavigation ul.cssmenu2 li.forCandidates a:hover {
+background-position: -302px -48px !important;}
+
+#mainNavigation ul.cssmenu2 li.forVolunteers a {
+width: 213px !important;
+background-position: -516px 0px !important;}
+
+#mainNavigation ul.cssmenu2 li.forVolunteers a:hover {
+background-position: -516px -48px !important;}
+
+#mainNavigation ul.cssmenu2 li.donate a {
+width: 211px !important;
+background-position: -729px 0px !important;}
+
+#mainNavigation ul.cssmenu2 li.donate a:hover {
+background-position: -729px -48px !important;}
+
+#missionBlock,
+div.supportingOrgsHeader,
+div.supportingOrgs {
+display:none !important;}
+
+#addressEntryDialog .panel1 div.text {
+height: 142px !important;}
+
+#addressEntryDialog div.miniLogo {
+background: url(/images/ivnlogo-small.png) no-repeat !important;
+height: 74px !important;}
+
+#addressEntryDialog div.miniLogo img {
+visibility: hidden;
+background: url(/images/ivnlogo-small.png) no-repeat !important; }
+
+#addressEntryDialog .header,
+#addressEntryEmailDialog .header,
+#addressEntryDialog .panel2 a.find,
+#addressEntryEmailDialog .inner .entry a.emailEnter { 
+background-color: #80A04A !important;}
+
+#addressEntryDialog .panel2 a:hover.find,
+#addressEntryEmailDialog .inner .entry a:hover.emailEnter { 
+background-color: #A3BC71 !important;}
+
+.partners-page a:link.partner,
+.partners-page a:active.partner,
+.partners-page a:hover.partner,
+.partners-page a:visited.partner {
+color: #444 !important; 
+text-decoration: none !important;}

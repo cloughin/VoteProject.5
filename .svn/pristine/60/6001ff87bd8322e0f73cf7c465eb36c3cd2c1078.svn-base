@@ -1,0 +1,222 @@
+﻿namespace Vote.Admin
+{
+  public partial class UpdateOfficesPage
+  {
+    #region Private
+
+    #region DataItem object
+
+    //[PageInitializer]
+    //private class AddOfficeTabItem : OfficesDataItem
+    //{
+    //  private const string GroupName = "AddOffice";
+
+    //  private AddOfficeTabItem(UpdateOfficesPage page) : base(page, GroupName) { }
+
+    //  //protected override string GetCurrentValue()
+    //  //{
+    //  //  return Column == "ChangeLocals" ?
+    //  //    false.ToString() :
+    //  //    base.GetCurrentValue();
+    //  //}
+
+    //  //private static AddOfficeTabItem[] GetTabInfo(UpdateOfficesPage page)
+    //  //{
+    //  //  var changeInfoTabInfo = new AddOfficeTabItem[]
+    //  //    {
+    //  //      //new AddOfficeTabItem(page)
+    //  //      //  {
+    //  //      //    Column = "ElectionDesc",
+    //  //      //    Description = "Election Description",
+    //  //      //    Validator = ValidateDescription
+    //  //      //  },
+    //  //      //new AddOfficeTabItem(page)
+    //  //      //  {
+    //  //      //    Column = "ChangeLocals",
+    //  //      //    Description = "Apply Description to County and Local Elections",
+    //  //      //    ConvertFn = ToBool
+    //  //      //  },
+    //  //      //new AddOfficeTabItem(page)
+    //  //      //  {
+    //  //      //    Column = "ElectionAdditionalInfo",
+    //  //      //    Description = "Additional Election Information"
+    //  //      //  },
+    //  //      //new AddOfficeTabItem(page)
+    //  //      //  {
+    //  //      //    Column = "BallotInstructions",
+    //  //      //    Description = "Special Ballot Instructions"
+    //  //      //  },
+    //  //      //new AddOfficeTabItem(page)
+    //  //      //  {
+    //  //      //    Column = "IsViewable",
+    //  //      //    Description = "Election Is Publicly Viewable",
+    //  //      //    ConvertFn = ToBool
+    //  //      //  }
+    //  //    };
+
+    //  //  foreach (var item in changeInfoTabInfo)
+    //  //    item.InitializeItem(page);
+
+    //  //  InitializeGroup(page, GroupName);
+
+    //  //  return changeInfoTabInfo;
+    //  //}
+
+    //  // ReSharper disable UnusedMember.Local
+    //  // Invoked via Reflection
+    //  //internal static void Initialize(UpdateOfficesPage page)
+    //  //// ReSharper restore UnusedMember.Local
+    //  //{
+    //  //  page._AddOfficeTabInfo = GetTabInfo(page);
+    //  //  if (page.AdminPageLevel != AdminPageLevel.State)
+    //  //  {
+    //  //    //page.InputElementChangeLocals.AddCssClasses("hidden");
+    //  //    //page.InputElementIsViewable.AddCssClasses("hidden");
+    //  //  }
+    //  //}
+
+    //  //protected override void Log(string oldValue, string newValue)
+    //  //{
+    //  //  if (Column != "ChangeLocals")
+    //  //    base.Log(oldValue, newValue);
+    //  //}
+
+    //  //protected override bool Update(object newValue)
+    //  //{
+    //  //  //if (Column == "ChangeLocals") return false;
+    //  //  //// for IsViewable on a state election, we update all corresponding county
+    //  //  //// and local elections too.
+    //  //  //if (Page.AdminPageLevel == AdminPageLevel.State &&
+    //  //  //  Column == "IsViewable")
+    //  //  //{
+    //  //  //  Elections.UpdateIsViewableForElectionFamily((bool) newValue,
+    //  //  //    Page.GetElectionKey());
+    //  //  //  return true;
+    //  //  //}
+    //  //  //// for ElectionDesc on a state election, we update all corresponding county
+    //  //  //// and local elections too if ChangeLocals is checked.
+    //  //  //if (Page.ControlAddOfficeChangeLocals.Checked && Column == "ElectionDesc")
+    //  //  //{
+    //  //  //  Elections.UpdateElectionDescForElectionFamily(newValue as string,
+    //  //  //    Page.GetElectionKey());
+    //  //  //  Page.ControlAddOfficeChangeLocals.Checked = false;
+    //  //  //  return true;
+    //  //  //}
+    //  //  return base.Update(newValue);
+    //  //}
+    //}
+
+    //private AddOfficeTabItem[] _AddOfficeTabInfo;
+
+    #endregion DataItem object
+
+    //private void PopulateOfficeCategories()
+    //{
+    //  // initial office class selection is from Query String as string ordinal
+    //  var initialOfficeClass =
+    //    Offices.GetValidatedOfficeClass(GetQueryString("class"));
+
+    //  // iterator options
+    //  var iteratorOptions = GetOfficeClassesOptions.None;
+    //  switch (AdminPageLevel)
+    //  {
+    //    case AdminPageLevel.State:
+    //      iteratorOptions |= GetOfficeClassesOptions.IncludeCongress |
+    //        GetOfficeClassesOptions.IncludeState;
+    //      break;
+
+    //    case AdminPageLevel.County:
+    //      iteratorOptions |= GetOfficeClassesOptions.IncludeCounty;
+    //      break;
+
+    //    case AdminPageLevel.Local:
+    //      iteratorOptions |= GetOfficeClassesOptions.IncludeLocal;
+    //      break;
+    //  }
+
+    //  // create an entry for each OfficeClass returned by the iterator
+    //  var items = new List<SimpleListItem>();
+    //  var selectedValue = string.Empty;
+    //  //ControlAddOfficeOfficeClass.Items.Clear();
+    //  //ControlAddOfficeOfficeClass.Items.Add(new ListItem
+    //  //{
+    //  //  Value = string.Empty,
+    //  //  Text = "<select an office category>"
+    //  //});
+    //  //foreach (var officeClass in Offices.GetOfficeClasses(iteratorOptions))
+    //  //{
+    //  //  var listItem = new ListItem
+    //  //  {
+    //  //    Value = officeClass.ToInt().ToString(CultureInfo.InvariantCulture),
+    //  //    Text = Offices.GetOfficeClassDescription(officeClass, StateCode),
+    //  //    Selected = officeClass == initialOfficeClass,
+    //  //  };
+    //  //  if (OfficesAllIdentified.GetIsOfficesAllIdentified(StateCode,
+    //  //   officeClass.ToInt(), CountyCode, LocalCode))
+    //  //    listItem.Attributes.Add("disabled", "disabled");
+    //  //  ControlAddOfficeOfficeClass.Items.Add(listItem);
+    //  //}
+    //}
+
+    //private void SetJurisdictionDescription()
+    //{
+    //  var description = "unknown";
+    //  switch (AdminPageLevel)
+    //  {
+    //    case AdminPageLevel.State:
+    //      description = States.GetName(StateCode);
+    //      break;
+
+    //    case AdminPageLevel.County:
+    //      description = Counties.GetFullName(StateCode, CountyCode);
+    //      break;
+
+    //    case AdminPageLevel.Local:
+    //      description = LocalDistricts.GetFullName(StateCode, CountyCode, LocalCode);
+    //      break;
+    //  }
+
+    //  AddOfficeJurisdiction.InnerText = description;
+    //}
+
+    #endregion Private
+
+    #region Event handlers and overrides
+
+    //protected void ButtonAddOffice_OnClick(object sender, EventArgs e)
+    //{
+    //  ////var electionKey = GetElectionKey();
+    //  //switch (AddOfficeReloading.Value)
+    //  //{
+    //  //  case "reloading":
+    //  //    {
+    //  //      AddOfficeReloading.Value = String.Empty;
+    //  //      SetJurisdictionDescription();
+    //  //      PopulateOfficeCategories();
+    //  //      FeedbackAddOffice.AddInfo("Office categories loaded.");
+    //  //    }
+    //  //    break;
+
+    //  //  case "":
+    //  //    {
+    //  //      // normal update
+    //  //      //_AddOfficeTabInfo.ClearValidationErrors();
+    //  //      //var originalDesc = Elections.GetElectionDesc(electionKey);
+    //  //      //_AddOfficeTabInfo.Update(FeedbackAddOffice);
+
+    //  //      //if (originalDesc != Elections.GetElectionDesc(electionKey))
+    //  //      //{
+    //  //      //  SetElectionHeading(HeadingAddOffice);
+    //  //      //  ReloadElectionControl();
+    //  //      //}
+    //  //    }
+    //  //    break;
+
+    //  //  default:
+    //  //    throw new VoteException("Unknown reloading option");
+    //  //}
+    //}
+
+    #endregion Event handlers and overrides
+  }
+}

@@ -1,0 +1,160 @@
+﻿using System;
+using System.Data;
+
+namespace Vote
+{
+// ReSharper disable InconsistentNaming
+  public partial class db // ReSharper restore InconsistentNaming
+  {
+    #region Public
+
+    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable MemberCanBeProtected.Global
+    // ReSharper disable UnusedMember.Global
+
+    public static void ExecuteSQL(string sql, bool reportSQLError)
+    {
+      Db.ExecuteSQL(sql, reportSQLError);
+    }
+
+    //public static int ExecuteSQLInt(string SQL)
+    //{
+    //  return Db.ExecuteSQLInt(SQL);
+    //}
+
+    public static DataTable Table(string sql)
+    {
+      return Db.Table(sql);
+    }
+
+    //public static DataSet Set(string SQL)//Using DataReader
+    //{
+    //  return Db.Set(SQL);
+    //}
+
+    public static int Rows_Count(string sql)
+    {
+      return Db.Rows_Count(sql);
+    }
+
+    public static int Rows_Count_From(string sql)
+    {
+      return Db.Rows_Count_From(sql);
+    }
+
+    public static int Rows_Table(string table)
+    {
+      return Db.Rows_Table(table);
+    }
+
+    public static int Rows(string table, string keyName, string keyValue)
+    {
+      return Db.Rows(table, keyName, keyValue);
+    }
+
+    //public static int Rows(string Table, string keyName, int keyValue)
+    //{
+    //  return Rows(Table, keyName, keyValue);
+    //}
+
+    public static int Rows(string table, string keyName1, string keyValue1,
+      string keyName2, string keyValue2)
+    {
+      return Db.Rows(table, keyName1, keyValue1, keyName2, keyValue2);
+    }
+
+    //public static int Rows(string Table, string keyName1, int keyValue1, string keyName2, string keyValue2)
+    //{
+    //  return Db.Rows(Table, keyName1, keyValue1, keyName2, keyValue2);
+    //}
+
+    public static int Rows(string table, string keyName1, string keyValue1,
+      string keyName2, string keyValue2, string keyName3, string keyValue3)
+    {
+      return Db.Rows(table, keyName1, keyValue1, keyName2, keyValue2, keyName3,
+        keyValue3);
+    }
+
+    //public static int Rows(
+    //  string Table
+    //  , string keyName1
+    //  , string keyValue1
+    //  , string keyName2
+    //  , string keyValue2
+    //  , string keyName3
+    //  , string keyValue3
+    //  , string keyName4
+    //  , string keyValue4
+    //  )
+    //{
+    //  return Db.Rows(Table, keyName1, keyValue1, keyName2, keyValue2, 
+    //    keyName3, keyValue3, keyName4, keyValue4);
+    //}
+
+    //public static int Rows(string Table, string keyName1, int keyValue1, string keyName2, string keyValue2, string keyName3, string keyValue3)
+    //{
+    //  return Db.Rows(Table, keyName1, keyValue1, keyName2, keyValue2,
+    //    keyName3, keyValue3);
+    //}
+
+    //public static int Rows(
+    //  string Table
+    //  , string keyName1
+    //  , string keyValue1
+    //  , string keyName2
+    //  , string keyValue2
+    //  , string keyName3
+    //  , string keyValue3
+    //  , string keyName4
+    //  , string keyValue4
+    //  , string keyName5
+    //  , string keyValue5
+    //  )
+    //{
+    //  return Db.Rows(Table, keyName1, keyValue1, keyName2, keyValue2,
+    //    keyName3, keyValue3, keyName4, keyValue4, keyName5, keyValue5);
+    //}
+
+    public static void Bulk_Insert(string connectionString, DataTable dataTable,
+      string dataTableName)
+    {
+      Db.Bulk_Insert(connectionString, ref dataTable, dataTableName);
+    }
+
+    //public static void Single_Key_Update_Image(
+    //  string Table
+    //  , string Column
+    //  , byte[] Image_Blob
+    //  , string keyName
+    //  , string keyValue
+    //  )
+    //{
+    //  Db.Single_Key_Update_Image(Table, Column, Image_Blob,
+    //    keyName, keyValue);
+    //}
+
+    //public static void LogPoliticiansImagesOriginal_Insert(string politicianKey, 
+    //  byte[] imageBlob, DateTime dateTimeUpload)
+    //{
+    //  Db.LogPoliticiansImagesOriginal_Insert(politicianKey, imageBlob,
+    //    dateTimeUpload);
+    //}
+
+    // ReSharper restore UnusedMember.Global
+    // ReSharper restore MemberCanBeProtected.Global
+    // ReSharper restore MemberCanBePrivate.Global
+
+    #endregion Public
+
+    //public static void LogPoliticiansImagesOriginal_Insert(
+    //  string Politician_Key
+    //  , string Path_Image_File
+    //  , byte[] Image_Blob
+    //  , DateTime DateTime_Upload
+    //  )
+    //{
+    //  Db.LogPoliticiansImagesOriginal_Insert(Politician_Key,
+    //    Path_Image_File, Image_Blob, DateTime_Upload);
+    //}
+  }
+}

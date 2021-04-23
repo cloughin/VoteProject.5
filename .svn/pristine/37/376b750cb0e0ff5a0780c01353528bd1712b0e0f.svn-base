@@ -1,0 +1,21 @@
+﻿.fileinputs .browse-button
+{
+  padding: 0 14px;
+  top: 6px;
+}
+
+.fileinputs .upload-file
+{
+  left: -145px;
+  top: 5px;
+}
+
+.fileinputs .file-name-container
+{
+  left: 92px;
+}
+
+.fileinputs .file-name
+{
+  width: 768px;
+}

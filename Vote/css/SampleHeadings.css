@@ -1,0 +1,59 @@
+.tdHeading1
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 18px;
+font-weight: bold;
+color: #373737;
+margin: 0px;
+padding:10px 10px 0px 10px;
+}
+.tdHeading2
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+font-weight: bold;
+color: #373737;
+margin: 0px;
+padding:2px 10px 0px 10px;
+}
+.tdHeading3
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 14px;
+font-weight: bold;
+color: #373737;
+margin: 0px;
+padding:2px 10px 10px 10px;
+}
+.tdText1
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 13px;
+font-weight: bold;
+color: #373737;
+margin: 0px;
+padding:2px 10px 10px 10px;
+}
+.tdText2
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 12px;
+font-weight: normal;
+color: #373737;
+margin: 0px;
+padding:2px 10px 10px 10px;
+}
+
+
+.trElectedInstruction
+{
+}
+.tdElectedInstruction
+{
+vertical-align: top;
+font-family: Arial, Helvetica, sans-serif;
+padding:10px 10px 10px 10px;
+line-height: 15px;
+font-size: 14px;
+color: #373737;
+}

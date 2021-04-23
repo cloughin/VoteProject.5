@@ -1,0 +1,588 @@
+using System;
+using System.Data;
+using System.Globalization;
+using System.Web.UI.HtmlControls;
+using DB.Vote;
+
+namespace Vote.Party
+{
+  public partial class Default : SecurePartyPage
+  {
+    #region from db
+
+    public const string NoWebsite = "no website";
+    public const string NoAddress = "no address";
+    public const string NoPhone = "no phone";
+
+    public const int ImageSize100Headshot = 100;
+
+    public static string Social_Media_Anchors(PageCache cache, string politicianKey)
+    {
+      return db.RenderToString(SocialMedia.GetAnchors(cache, politicianKey));
+    }
+
+    public static string Politician_WebAddress_Public_Text_Or_Empty(
+      PageCache cache, string politicianId)
+    {
+      var webAddress = cache.Politicians.GetPublicWebAddress(politicianId);
+      if (!string.IsNullOrEmpty(webAddress))
+      {
+        webAddress = db.Str_Remove_Http(webAddress);
+        webAddress = db.Str_Remove_MailTo(webAddress);
+      }
+
+      return webAddress;
+    }
+
+    public static string Elections_ElectionDesc(string electionKey)
+    {
+      return db.Elections_Str(electionKey, "ElectionDesc");
+    }
+
+    public static string Parties_StateCode(string partyKey)
+    {
+      return db.Parties_Str(partyKey, "StateCode");
+    }
+
+    public static string PartyKey_ViewState()
+    {
+      if (IsMasterUser && !string.IsNullOrEmpty(QueryParty))
+        return QueryParty;
+      if (IsPartyUser)
+        //return db.User_Name();
+        return db.PartiesEmails_Str(UserName, "PartyKey");
+      return string.Empty;
+    }
+
+    public static string Politician_WebAddress_Public_Anchor(string politicianId,
+      string anchorText, string toolTip, string target)
+    {
+      return Politician_WebAddress_Public_Anchor(GetPageCache(), politicianId, anchorText, toolTip, target);
+    }
+
+    public static string Politician_WebAddress_Public_Anchor(PageCache cache,
+      string politicianId, string anchorText, string toolTip, string target)
+    {
+      var anchor = Politician_WebAddress_Public_Text_Or_No_Website(cache, politicianId);
+
+      if (!string.IsNullOrEmpty(anchor) && anchor != NoWebsite)
+      {
+        // Candidate website
+        anchor = "<a href=";
+        anchor += "\"" +
+          NormalizeUrl(Politician_WebAddress_Public_Text_Or_Empty(cache, politicianId));
+        anchor += "\"";
+
+        if (toolTip != string.Empty)
+        {
+          anchor += " title=";
+          anchor += "\"";
+          anchor += db.Str_Remove_Single_And_Double_Quotes(toolTip);
+          anchor += "\"";
+          anchor += " ";
+        }
+
+        anchor += " Target=";
+        anchor += "\"";
+        if (target.Trim() != string.Empty)
+          anchor += target;
+        else
+          anchor += "view";
+        anchor += "\"";
+
+        anchor += ">";
+
+        if (anchorText != string.Empty)
+          anchor += anchorText;
+        else
+          anchor += Politician_WebAddress_Public_Text_Or_Empty(cache, politicianId);
+
+        anchor += "</a>";
+      }
+      else
+      {
+        anchor = string.Empty;
+      }
+
+      return anchor;
+    }
+
+    public static string Politician_WebAddress_Public_Text_Or_No_Website(
+      PageCache cache, string politicianId)
+    {
+      var webAddress = Politician_WebAddress_Public_Text_Or_Empty(
+       cache, politicianId);
+
+      return !string.IsNullOrEmpty(webAddress)
+        ? webAddress.ReplaceNewLinesWithBreakTags()
+        : string.Empty;
+    }
+
+
+    public static string Social_Media_Anchors(string politicianKey)
+    {
+      return Social_Media_Anchors(GetPageCache(), politicianKey);
+    }
+
+    public static string Politician_CityStateZip_Any_For_Label(string politicianKey)
+    {
+      return Politician_CityStateZip_Any_For_Label(GetPageCache(), politicianKey);
+    }
+
+    public static string Politician_CityStateZip_Any_For_Label(PageCache cache,
+      string politicianKey)
+    {
+      //Need a street address to show any City,State
+      return Politician_Address_Any_For_Textbox(cache, politicianKey) != string.Empty
+        ? "<br>" + Politician_CityStateZip_Any_For_Textbox(cache,
+          politicianKey)
+        : string.Empty;
+    }
+
+    public static string Politician_CityStateZip_Any_For_Textbox(PageCache cache,
+      string politicianKey)
+    {
+      return cache.Politicians.GetPublicCityStateZip(politicianKey);
+    }
+
+    public static string Politician_Address_Any_For_Label(
+      string politicianKey)
+    {
+      return Politician_Address_Any_For_Label(GetPageCache(), politicianKey);
+    }
+
+    public static string Politician_Address_Any_For_Label(PageCache cache,
+      string politicianKey)
+    {
+      var address = Politician_Address_Any_For_Textbox(cache, politicianKey);
+
+      return !string.IsNullOrEmpty(address)
+        ? address.ReplaceNewLinesWithBreakTags()
+        : NoAddress;
+    }
+
+    public static string Politician_Address_Any_For_Textbox(PageCache cache,
+      string politicianKey)
+    {
+      return cache.Politicians.GetPublicAddress(politicianKey);
+    }
+
+    public static string Politician_Phone_Any_For_Label(string politicianKey)
+    {
+      return Politician_Phone_Any_For_Label(GetPageCache(), politicianKey);
+    }
+
+    public static string Politician_Phone_Any_For_Label(PageCache cache,
+      string politicianKey)
+    {
+      var phone = Politician_Phone_Any_For_Textbox(cache, politicianKey);
+
+      return !string.IsNullOrEmpty(phone)
+        ? phone.ReplaceNewLinesWithBreakTags()
+        : NoPhone;
+    }
+
+    public static string Politician_Phone_Any_For_Textbox(PageCache cache, string politicianKey)
+    {
+      return cache.Politicians.GetPublicPhone(politicianKey);
+    }
+
+    public static string Age(string politicianKey)
+    {
+      return Age(GetPageCache(), politicianKey);
+    }
+
+    public static string Age(PageCache cache, string politicianKey)
+    {
+      var years = string.Empty;
+      var dob = Str_Date_Of_Birth(cache, politicianKey);
+      if (!string.IsNullOrEmpty(dob))
+      {
+        var dateOfBirth = cache.Politicians.GetDateOfBirth(politicianKey);
+        years = dateOfBirth.DayOfYear <= DateTime.Now.DayOfYear
+          ? (DateTime.Now.Year - dateOfBirth.Year).ToString(CultureInfo.InvariantCulture)
+          : (DateTime.Now.Year - dateOfBirth.Year - 1).ToString(CultureInfo.InvariantCulture);
+      }
+      return years;
+    }
+
+    public static string Str_Date_Of_Birth(PageCache cache, string politicianKey)
+    {
+      var dateOfBirth = cache.Politicians.GetDateOfBirth(politicianKey);
+      return dateOfBirth != Convert.ToDateTime("1/1/1900")
+        ? dateOfBirth.ToShortDateString()
+        : string.Empty;
+    }
+
+    public static string Image_Politician_Tag(string politicianKey)
+    {
+      return Image(db.Url_Image_Politician_Or_NoPhoto(
+          politicianKey
+          , ImageSize100Headshot));
+
+    }
+
+    public static string Image(string url)
+    {
+      var imageTag = "<img src=";
+      imageTag += "\"";
+      imageTag += url;
+      imageTag += "\"";
+      imageTag += ">";
+      return imageTag;
+    }
+
+    #endregion from db
+
+    //protected string ElectionKeyOfCandidates()
+    //{
+    //  var electionKey = string.Empty;
+
+    //  //NationalPartyCode = 'X' was added
+    //  //for No Party Preference Primaries like CA
+    //  var sql = string.Empty;
+    //  sql += " SELECT ";
+    //  sql += " ElectionKey";
+    //  sql += " FROM Elections ";
+    //  sql += " WHERE Elections.StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+    //  sql += " AND ElectionType != 'A'";
+    //  //sql += " AND ElectionType != 'B'";
+    //  sql += " AND CountyCode = '' ";
+    //  sql += " AND IsViewable = 1";
+    //  sql += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+    //  sql += " ORDER BY ElectionDate DESC";
+    //  var electionRow = db.Row_First_Optional(sql);
+    //  if (electionRow != null)
+    //    electionKey = electionRow["ElectionKey"].ToString();
+
+    //  return electionKey;
+    //}
+
+    // I made a second version of this because it is called in two places and
+    // maybe the way it was was correct for the other call, but definitely not for this one
+    protected string ElectionKeyOfCandidates2()
+    {
+      var electionKey = string.Empty;
+
+      //NationalPartyCode = 'X' was added
+      //for No Party Preference Primaries like CA
+      var nationalPartyCode = db.Parties_Str(ViewState["PartyKey"].ToString(), "PartyCode");
+      var sql = string.Empty;
+      sql += " SELECT ";
+      sql += " ElectionKey";
+      sql += " FROM Elections ";
+      sql += " WHERE Elections.StateCode = " + db.SQLLit(ViewState["StateCode"].ToString());
+      sql += " AND (NOT ElectionType IN ('B','P') OR  NationalPartyCode IN (" + db.SQLLit(nationalPartyCode) + ",'X'))";
+      sql += " AND ElectionType != 'A'";
+      //sql += " AND ElectionType != 'B'";
+      sql += " AND CountyCode = '' ";
+      sql += " AND IsViewable = 1";
+      sql += " AND ElectionDate >= " + db.SQLLit(Db.DbToday);
+      sql += " ORDER BY ElectionDate DESC";
+      var electionRow = db.Row_First_Optional(sql);
+      if (electionRow != null)
+        electionKey = electionRow["ElectionKey"].ToString();
+
+      return electionKey;
+    }
+    protected void Heading_Row(HtmlTable htmlTablePoliticians)
+    {
+      var trElectedRepresentativesHeader = db.Add_Tr_To_Table_Return_Tr(htmlTablePoliticians, 
+        "trReportGroupHeading");
+
+      //Picture 
+      db.Add_Td_To_Tr(trElectedRepresentativesHeader, "Picture", "tdReportGroupHeading");
+
+      //Current Information Obtained
+      db.Add_Td_To_Tr(trElectedRepresentativesHeader, "Current Information Obtained", 
+        "tdReportGroupHeading");
+
+      //Links to Provide Bio, Picture, Social Media Links and Positions and Views on the Issues
+      db.Add_Td_To_Tr(trElectedRepresentativesHeader, 
+        "Links to Provide Biographical, Picture, Social Media and Positions on the Issues", 
+        "tdReportGroupHeading", "left", "100%", 1);
+    }
+
+    protected void Politician_Row(ref HtmlTable htmlTablePoliticians, DataRow rowPolitician)
+    {
+      var htmlTrPolitician = db.Add_Tr_To_Table_Return_Tr(htmlTablePoliticians, "trReportDetail");
+
+      var politicianKey = rowPolitician["PoliticianKey"].ToString();
+
+      db.Add_Td_To_Tr(htmlTrPolitician, Image_Politician_Tag(politicianKey), "tdReportDetailLargeBold");
+
+      // Information Obtained column
+
+      // Age, Phone, Address, Social Media
+      var politicianAge = Age(politicianKey);
+      if (string.IsNullOrEmpty(politicianAge))
+        politicianAge = "<strong>No DOB to compute Age</strong>";
+
+      var politicianPhone = Politician_Phone_Any_For_Label(politicianKey);
+      if (string.IsNullOrEmpty(politicianPhone)|| politicianPhone == NoPhone)
+        politicianPhone = "<strong>No Phone</strong>";
+
+      var politicianAddress = Politician_Address_Any_For_Label(politicianKey) +
+        Politician_CityStateZip_Any_For_Label(politicianKey);
+      if (string.IsNullOrEmpty(politicianAddress) || politicianAddress == NoAddress)
+        politicianAddress = "<strong>No Address</strong>";
+
+      var socialMedia = Social_Media_Anchors(politicianKey);
+
+      var informationObtained = string.Empty;
+      informationObtained += "<nobr>" + politicianAge + "</nobr>";
+      informationObtained += "<br><nobr>" + politicianPhone + "</nobr>";
+      informationObtained += "<br><nobr>" + politicianAddress + "</nobr>";
+      informationObtained += "<br><nobr>" + socialMedia + "</nobr>";
+
+      var sql = "Answers WHERE PoliticianKey = " + db.SQLLit(politicianKey);
+      var rows = db.Rows_Count_From(sql);
+
+      informationObtained += rows > 0
+        ? "<br><br>" + rows + " Responses to Issue Questions Obtained"
+        : "<br><br><font color = red><strong>No Responses to Issue Questions Obtained</font></strong>";
+
+      db.Add_Td_To_Tr(htmlTrPolitician, informationObtained, "tdReportDetailSmall");
+
+      var anchors = string.Empty;
+      var politicianName = Politicians.GetFormattedName(politicianKey, true, 30);
+      anchors += "<strong>" + politicianName + "</strong>";
+
+      // Office
+      var office = Offices.FormatOfficeName(rowPolitician["OfficeKey"].ToString());
+      anchors += "<br><strong>" + office + "</strong>";
+
+      //Jurisdiction
+      var jurisdiction = Offices.GetElectoralClassDescription(rowPolitician["StateCode"].ToString(), 
+        rowPolitician["CountyCode"].ToString(), rowPolitician["LocalCode"].ToString());
+      anchors += "<br><strong>" + jurisdiction + "</strong>";
+
+      // UpdateIntro Page
+      var title = "Provide a Picture, website link, video link, and Social Media Links for " +
+        politicianName + " Contact and biographical information, as well as candidate’s reasons" +
+        " and objectives can also be provided.";
+      anchors += "<br><br>" + db.Anchor(db.Url_Politician_Intro(politicianKey), title, title, "_politician");
+
+      // UpdateIssues
+      title = "Provide " + politicianName + "’s Positions and Views on Issues.";
+      anchors += "<br><br>" + db.Anchor(db.Url_Politician_IssueQuestions("ALLPersonal", politicianKey),
+        title, title, "_politician");
+
+      // Website
+      title = "View " + politicianName + "’s Website.";
+      var website = Politician_WebAddress_Public_Anchor(politicianKey, title, title, "_website");
+      anchors += website != NoWebsite && !string.IsNullOrEmpty(website)
+        ? "<br><br>" + website
+        : "<br><br>No Website";
+
+      // Introduction Page
+      title = "View our Introduction Page we show voters for " + politicianName + ".";
+      anchors += "<br><br>" + db.Anchor(UrlManager.GetIntroPageUri(politicianKey).ToString(),
+        title, title, "view");
+
+      db.Add_Td_To_Tr(htmlTrPolitician, anchors, "tdReportDetailLarge");
+    }
+
+    protected void Officials_Report()
+    {
+      var htmlTablePoliticians = new HtmlTable();
+      htmlTablePoliticians.Attributes["class"] = "tableAdmin";
+
+      #region SQL for Offices in report
+      var sql = string.Empty;
+      sql += " SELECT Offices.OfficeKey,OfficesOfficials.PoliticianKey";
+      sql += ",Offices.StateCode,Offices.CountyCode,Offices.LocalCode";
+      sql += " FROM OfficesOfficials,Offices,Politicians";
+      sql += " WHERE OfficesOfficials.OfficeKey = Offices.OfficeKey";
+      sql += " AND OfficesOfficials.PoliticianKey = Politicians.PoliticianKey";
+      sql += " AND OfficesOfficials.StateCode = "
+            + db.SQLLit(ViewState["StateCode"].ToString());
+      sql += " AND Politicians.PartyKey = "
+            + db.SQLLit(ViewState["PartyKey"].ToString());
+      sql += " AND Offices.IsOfficeTagForDeletion = 0";
+      sql += " ORDER BY Offices.OfficeLevel,Offices.DistrictCode";
+      #endregion SQL for Offices in report
+
+      var tablePoliticians = db.Table(sql);
+      var politiciansInElection = tablePoliticians.Rows.Count;
+      LabelRepresentatives.Text = politiciansInElection.ToString(CultureInfo.InvariantCulture);
+
+      if (tablePoliticians.Rows.Count > 0)
+      {
+        Heading_Row(htmlTablePoliticians);
+
+        foreach (DataRow rowPolitician in tablePoliticians.Rows)
+        {
+          Politician_Row(ref htmlTablePoliticians, rowPolitician);
+        }
+      }
+      else
+      {
+        #region No Elected Party Members
+        var htmlTr = db.Add_Tr_To_Table_Return_Tr(htmlTablePoliticians, "trReportGroupHeading");
+        db.Add_Td_To_Tr(htmlTr, "No Elected Party Members", "tdReportGroupHeading", "center");
+        #endregion No Elected Party Members
+      }
+
+      Label_Elected_Representatives_Report.Text =
+        db.RenderToString(htmlTablePoliticians);
+    }
+    protected void Election_Report(string partyKey)
+    {
+      var htmlTablePoliticians = new HtmlTable();
+      htmlTablePoliticians.Attributes["class"] = "tableAdmin";
+
+      var politiciansInElection = 0;
+      DataTable tablePoliticians = null;
+
+      var electionKey = ElectionKeyOfCandidates2();
+      if (!string.IsNullOrEmpty(electionKey))
+      {
+        #region SQL for Offices in report
+        var sql = string.Empty;
+        sql += " SELECT";
+        sql += " ElectionsPoliticians.OfficeKey";
+        sql += ",ElectionsPoliticians.PoliticianKey";
+        sql += ",ElectionsPoliticians.StateCode";
+        sql += ",ElectionsPoliticians.CountyCode";
+        sql += ",ElectionsPoliticians.LocalCode";
+        sql += " FROM ElectionsPoliticians,Politicians,Offices";
+        sql += " WHERE ElectionsPoliticians.ElectionKeyState = "
+              + db.SQLLit(electionKey);
+        sql += " AND Offices.OfficeKey != 'USPresident'";
+        sql += " AND Politicians.PartyKey = " + db.SQLLit(partyKey);
+        sql += " AND ElectionsPoliticians.PoliticianKey = Politicians.PoliticianKey";
+        sql += " AND ElectionsPoliticians.OfficeKey = Offices.OfficeKey";
+        sql += " ORDER BY Offices.OfficeLevel,Offices.DistrictCode ";
+        #endregion SQL for Offices in report
+
+        tablePoliticians = db.Table(sql);
+        politiciansInElection = tablePoliticians.Rows.Count;
+        LabelCandidates.Text = politiciansInElection.ToString(CultureInfo.InvariantCulture);
+      }
+
+      if (!string.IsNullOrEmpty(electionKey) && politiciansInElection > 0)
+      {
+        Heading_Row(htmlTablePoliticians);
+        foreach (DataRow rowPolitician in tablePoliticians.Rows)
+        {
+          Politician_Row(ref htmlTablePoliticians, rowPolitician);
+        }
+      }
+      else
+      {
+        #region No Party Candidates in the Election
+        var htmlTr = db.Add_Tr_To_Table_Return_Tr(htmlTablePoliticians, "trReportGroupHeading");
+        db.Add_Td_To_Tr(htmlTr, "No Party Candidates in the Election", "tdReportGroupHeading", "center");
+        #endregion No Party Candidates in the Election
+      }
+
+      Label_Election_Candidates_Report.Text =
+        db.RenderToString(htmlTablePoliticians);
+    }
+
+    protected void Controls_Visible_Reports_None()
+    {
+      Table_Elected_Representatives_Report.Visible = false;
+      Label_Elected_Representatives_Report.Visible = false;
+      Table_Election_Candidates_Report.Visible = false;
+      Label_Election_Candidates_Report.Visible = false;
+    }
+
+    protected void Button_Elected_Representatives_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Table_Elected_Representatives_Report.Visible = true;
+        Label_Elected_Representatives_Report.Visible = true;
+
+        Table_Election_Candidates_Report.Visible = false;
+        Label_Election_Candidates_Report.Visible = false;
+
+        Officials_Report();
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Button_Election_Candidates_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        Table_Elected_Representatives_Report.Visible = false;
+        Label_Elected_Representatives_Report.Visible = false;
+
+        Table_Election_Candidates_Report.Visible = true;
+        Label_Election_Candidates_Report.Visible = true;
+
+        Election_Report(ViewState["PartyKey"].ToString());
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        Page.Title = "Party Politicians";
+
+        ViewState["PartyKey"] = PartyKey_ViewState();
+        ViewState["StateCode"] = db.Parties_Str(ViewState["PartyKey"].ToString(), "StateCode");
+
+        // Security Check and Values for ViewState["PartyKey"]
+
+        // Redirect if Bad Entry
+        if (ViewState["PartyKey"].ToString() == string.Empty)
+          Response.Redirect(db.Url_Vote_XX_org_Default());
+
+        //Party must be in the State
+        if (ViewState["StateCode"].ToString() !=
+          Parties_StateCode(ViewState["PartyKey"].ToString()))
+          Response.Redirect(db.Url_Vote_XX_org_Default());
+
+
+        try
+        {
+          PageTitle.Text = db.Parties_Str(ViewState["PartyKey"].ToString(), "PartyName");
+
+          Controls_Visible_Reports_None();
+
+          var electionKey = ElectionKeyOfCandidates2();
+
+          if (!string.IsNullOrEmpty(electionKey))
+          {
+            Table_Election_Candidates.Visible = true;
+
+            Label_Election_Candidates.Text =
+              Elections_ElectionDesc(electionKey);
+          }
+          else
+          {
+            #region No upcoming viewable election
+            Table_Election_Candidates.Visible = false;
+            #endregion No upcoming viewable election
+          }
+
+
+        }
+        catch (Exception ex)
+        {
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+        }
+      }
+    }
+
+  }
+}

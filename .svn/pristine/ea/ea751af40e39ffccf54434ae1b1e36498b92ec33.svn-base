@@ -1,0 +1,157 @@
+﻿<%@ Page Language="C#" ValidateRequest="false" AutoEventWireup="true" 
+CodeBehind="forPartners.aspx.cs" Inherits="Vote.ForPartnersPage" %>
+
+<%@ Register Src="/Controls/SocialMediaButtons.ascx" TagName="SocialMediaButtons"
+  TagPrefix="user" %>
+<%@ Register Src="/Controls/DonateBanner.ascx" TagName="DonateBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainBanner.ascx" TagName="MainBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainNavigation.ascx" TagName="MainNavigation" TagPrefix="user" %>
+<%@ Register Src="/Controls/EmailForm.ascx" TagName="EmailForm" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainFooter.ascx" TagName="MainFooter" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeading.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntry.ascx" TagName="AddressEntry" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddSampleBallotButtons.ascx" TagName="AddSampleBallotButtons" TagPrefix="user" %>
+<%@ Register Assembly="BotDetect" Namespace="BotDetect.Web.UI" TagPrefix="BotDetect" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+  <title runat="server" id="TitleTag">For Partners</title>
+  <meta runat="server" id="MetaDescriptionTag" content="" name="description" />
+  <meta runat="server" id="MetaKeywordsTag" content="" name="keywords" />
+</head>
+<body class="partners-page">
+  <form id="form1" runat="server" enableviewstate="True">
+  <div id="outer">
+    <div id="container">
+      <user:SocialMediaButtons runat="server" />
+      <user:DonateBanner runat="server" />
+      <user:MainBanner runat="server" />
+      <user:MainNavigation runat="server" />
+      <div id="mainContent">
+        <user:PageHeading ID="PageHeading" runat="server" 
+          MainHeadingText="For Partners" />
+        <div class="intro">
+          <p>
+            We welcome the opportunity to partner with any organizations that can help fulfill
+            our goal of providing voters with as much useful information as possible. Some possibilities
+            are:</p>
+          <p>
+            <b>Non-Partisan Politically Engaged Organizations</b><br />
+            We welcome the opportunity to cooperate with and support 
+            non-partisan organizations that provide valuable electoral and political information. 
+            We help to increase public awareness of these organizations by providing links to their websites. 
+            We can also provide them with tools to communicate their special information, 
+            like voting records and political contributions, to the public.
+          </p>
+
+          <p>Currently we are partnering with the following non-partisan organizations.
+          </p>
+
+          <p>
+          <a class="partner ivn" href="http://www.endpartisanship.com/" title="End Partisanship" target="_blank">
+          The Independent Voter Network (IVN) is an online news platform for 
+          independent-minded voters, public officials, civic leaders, and 
+          journalists. It provides political analysis and commentary in an 
+          effort to elevate the level of our public discourse.</a>
+          </p>
+
+          <p>
+          <a class="partner endpartisanship" href="http://ivn.us/" title="Independent Voter Network" target="_blank">
+          End Partisanship is a coalition of non-partisan organizations advocating for an end to 
+          party control of elections. They believe that representatives should represent people,
+          not parties and are challenging partisan primaries in the courtroom.</a>
+          </p>
+
+          <p>
+          <a class="partner nolabels" href="http://nolabels.org/" target="_blank">
+          No Labels supports reforms, leaders and legislation
+            that will help fix America’s broken government and break the stranglehold that the
+            extremes currently have on our political process. </a>
+          </p>
+
+          <p>
+          <a class="partner recovering" href="http://therecoveringpolitician.com" target="_blank">
+          The Recovering Politician is a post-partisan forum 
+          featuring officials who’ve left the area and lived to write about it. </a>
+          </p>
+
+          <p>
+            <b>Foundations</b><br />
+            We have applied to a number of foundations whose initiatives seem to fit with our
+            objectives. Although to date we have not received any such funding assistance, we
+            would be grateful for the opportunity to work with foundations whose mission it
+            is to strengthen our representative democracy.</p>
+          <p>
+            <b>Media and News Outlets</b><br />
+            We have given newspapers and other media permission to use our pictures and candidate
+            information in their coverage of elections.</p>
+          <p>
+            <b>Political Parties</b><br />
+            We have provided a number of state political parties with the ability to provide
+            information and pictures of their candidates.</p>
+          <p>
+            <b>Politically Engaged Organizations</b><br />
+            We can provide politically engaged organizations with pre-checked sample ballots
+            that highlight endorsed candidates. These customized ballot pages can then be integrated
+            into that organization’s website.
+          </p>
+
+          <p>
+            <b>Support from For-Profit Businesses</b><br />
+            For-profit businesses can support us by donating goods and services. These contributions
+            are considered “in-kind” donations and are tax deductible. We would be grateful
+            for other in-kind donations including data entry, hosting, technical consulting,
+            and assistance with social networking and search engine issues. </p>
+            
+            <p>These are the businesses
+            that have been a great help and support to us to date:
+            </p>
+          
+          <p>
+          <a class="partner bol" href="http://businessol.com"  title="Business OnLine" target="_blank">
+          Business OnLine has provided Vote-USA with substantial expertise involving many
+            technical aspects of our platform. </a>
+           </p>
+
+          <p>
+          <a class="partner infiniden" href="http://www.infiniden.com" title="infiniden Web Presence Design" target="_blank">
+          infiniden has provided Vote-USA with web design.</a>
+          </p>
+
+          <p>
+          <a class="partner google" href="http://google.com" title="Google.com" target="_blank">
+          Vote USA is a recipient of a Google AdWord Grant award.</a>
+          </p>
+          <!--
+          <p>
+            <a href="http://www.aristotle.com" title="Aristotle, Inc - aristotle.com" target="_blank">
+              <img src="images/Aristotle.png" alt="Aristotle, Inc logo" /></a>
+            <br />
+            Aristotle has provided Vote-USA with legislative district data needed in the construction
+            of our customized voter ballots.</p>
+            -->
+          <p>
+          <a class="partner aristotle" href="http://www.aristotle.com" title="Aristotle, Inc - aristotle.com" target="_blank">
+          Aristotle has provided Vote-USA with legislative district data needed in the construction
+            of our customized voter ballots.</a>
+          </p>
+
+          <user:AddSampleBallotButtons ID="AddSampleBallotButtons" runat="server" />
+
+          <p>
+            Please contact us with any ideas regarding how we could help your organization,
+            or how your organization might help us:</p>
+          <user:EmailForm ID="EmailForm" runat="server" />
+        </div>
+        <user:MainFooter runat="server" />
+      </div>
+      <!-- id="mainContent" -->
+    </div>
+    <!-- id="container" -->
+  </div>
+  <!-- id="outer" -->
+  <user:AddressEntry runat="server" />
+  </form>
+</body>
+</html>

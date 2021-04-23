@@ -1,0 +1,354 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C9E79074-C774-4D06-8ED3-C5472C4A9B82}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VoteLibrary</RootNamespace>
+    <AssemblyName>VoteLibrary</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EGIS.ShapeFileLib">
+      <HintPath>..\..\..\Vote\Tiger\Software\Easy GIS .NET Desktop\egis_dt_4_5_6\egis_dt_4_5_6\EGIS.ShapeFileLib.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=11.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.11.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\MySQL\Connector.NET 6.9\Assemblies\v4.5\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DB\Addresses.cs" />
+    <Compile Include="DB\Answers.cs" />
+    <Compile Include="DB\AnswersView.cs" />
+    <Compile Include="DB\BallotpediaCsvs.cs" />
+    <Compile Include="DB\CacheInvalidation.cs" />
+    <Compile Include="DB\CachePages.cs" />
+    <Compile Include="DB\CachePages.Utility.cs" />
+    <Compile Include="DB\CityCouncil.cs" />
+    <Compile Include="DB\ElectionSpreadsheets.cs" />
+    <Compile Include="DB\Organizations.cs" />
+    <Compile Include="DB\OrganizationEmailTags.cs" />
+    <Compile Include="DB\OrganizationNotes.cs" />
+    <Compile Include="DB\OrganizationContacts.cs" />
+    <Compile Include="DB\OrganizationSubTypes.cs" />
+    <Compile Include="DB\OrganizationTypes.cs" />
+    <Compile Include="DB\Questions2.cs" />
+    <Compile Include="DB\Issues2 .cs" />
+    <Compile Include="DB\IssueGroups2.cs" />
+    <Compile Include="DB\SchoolDistrictDistricts.cs" />
+    <Compile Include="DB\CountySupervisors.cs" />
+    <Compile Include="DB\BannerAds.cs" />
+    <Compile Include="DB\Counties.cs" />
+    <Compile Include="DB\Counties.Utility.cs" />
+    <Compile Include="DB\DataRowExtensions.cs" />
+    <Compile Include="DB\Debug.cs" />
+    <Compile Include="DB\Donations.cs" />
+    <Compile Include="DB\DonorsView.cs" />
+    <Compile Include="DB\Elections.cs" />
+    <Compile Include="DB\Elections.Utility.cs" />
+    <Compile Include="DB\ElectionsDefaults.cs" />
+    <Compile Include="DB\ElectionsIncumbentsRemoved.cs" />
+    <Compile Include="DB\ElectionsOffices.cs" />
+    <Compile Include="DB\ElectionsPoliticians.cs" />
+    <Compile Include="DB\ElectionsPoliticians.Utility.cs" />
+    <Compile Include="DB\EmailTemplates.cs" />
+    <Compile Include="DB\EmailTemplates.Utility.cs" />
+    <Compile Include="DB\InstructionalVideos.cs" />
+    <Compile Include="DB\Issues.cs" />
+    <Compile Include="DB\Issues.Utility.cs" />
+    <Compile Include="DB\LocalIdsCodes.cs" />
+    <Compile Include="DB\LocalDistricts.cs" />
+    <Compile Include="DB\LocalDistricts.Utility.cs" />
+    <Compile Include="DB\Local_PoliticiansImagesBlobs.cs" />
+    <Compile Include="DB\Local_PoliticiansImagesData.cs" />
+    <Compile Include="DB\LogAdminData.cs" />
+    <Compile Include="DB\LogDataChange.cs" />
+    <Compile Include="DB\LogEmailBatches.cs" />
+    <Compile Include="DB\LogInfo.cs" />
+    <Compile Include="DB\Log404PageNotFound.cs" />
+    <Compile Include="DB\LogLogins.cs" />
+    <Compile Include="DB\LogSampleBallotRequests.cs" />
+    <Compile Include="DB\Offices.cs" />
+    <Compile Include="DB\Offices.Utility.cs" />
+    <Compile Include="DB\OfficesAdminReportView.cs" />
+    <Compile Include="DB\OfficesOfficials.cs" />
+    <Compile Include="DB\PartiesEmails.cs" />
+    <Compile Include="DB\Parties.cs" />
+    <Compile Include="DB\Parties.Utility.cs" />
+    <Compile Include="DB\Politicians.cs" />
+    <Compile Include="DB\Politicians.Utility.cs" />
+    <Compile Include="DB\PoliticiansAdminReportView.cs" />
+    <Compile Include="DB\PoliticiansImagesBlobs.cs" />
+    <Compile Include="DB\PoliticiansImagesData.cs" />
+    <Compile Include="DB\Questions.cs" />
+    <Compile Include="DB\Referendums.cs" />
+    <Compile Include="DB\Referendums.Utility.cs" />
+    <Compile Include="DB\Security.cs" />
+    <Compile Include="DB\States.Utility.cs" />
+    <Compile Include="DB\TempEmailBatches.cs" />
+    <Compile Include="DB\TigerPlacesCounties.cs" />
+    <Compile Include="DB\VolunteersView.cs" />
+    <Compile Include="DB\Vote.designer.cs" />
+    <Compile Include="DB\VoteCache.designer.cs" />
+    <Compile Include="DB\VoteCacheLocal.designer.cs" />
+    <Compile Include="DB\VoteDb.cs" />
+    <Compile Include="DB\VoteImagesLocal.designer.cs" />
+    <Compile Include="DB\VoteLog.designer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\BallotReferendumReportResponsive.cs" />
+    <Compile Include="Reports\BallotReportResponsive.cs" />
+    <Compile Include="Reports\CompareCandidatesReportResponsive.cs" />
+    <Compile Include="Reports\CountiesReport.cs" />
+    <Compile Include="Reports\CountyJurisdictionsReport.cs" />
+    <Compile Include="Reports\AdminElectionReport.cs" />
+    <Compile Include="Reports\Election2ReportResponsive.cs" />
+    <Compile Include="Reports\IssueReportIssueListNew3.cs" />
+    <Compile Include="Reports\IssueReportIssueListNew.cs" />
+    <Compile Include="Reports\LocalJurisdictionsReport.cs" />
+    <Compile Include="Reports\CountyAndLocalElectionLinksResponsive.cs" />
+    <Compile Include="Reports\CountyAndLocalLinks.cs" />
+    <Compile Include="Reports\CountyAndLocalOfficialsLinks.cs" />
+    <Compile Include="Reports\CountyAndLocalOfficialsLinksResponsive.cs" />
+    <Compile Include="Reports\ElectedReportResponsive.cs" />
+    <Compile Include="Reports\ElectionReportResponsive.cs" />
+    <Compile Include="Reports\IntroIssuesReport.cs" />
+    <Compile Include="Reports\IssueReportIssueList.cs" />
+    <Compile Include="Reports\PartiesEmailReport.cs" />
+    <Compile Include="Reports\PartiesSummaryReport.cs" />
+    <Compile Include="Reports\QuestionsSummaryReport.cs" />
+    <Compile Include="Reports\IssuesSummaryReport.cs" />
+    <Compile Include="Reports\LogsReports.cs" />
+    <Compile Include="Reports\IssuesReport.cs" />
+    <Compile Include="Reports\OfficesAdminReport.cs" />
+    <Compile Include="Reports\OfficialsReport.cs" />
+    <Compile Include="Reports\OfficialsReportResponsive.cs" />
+    <Compile Include="Reports\PartiesElectionReport.cs" />
+    <Compile Include="Reports\PartiesOfficialsReport.cs" />
+    <Compile Include="Reports\PartiesReport.cs" />
+    <Compile Include="Reports\PoliticianInfoResponsive.cs" />
+    <Compile Include="Reports\PoliticiansAdminReport.cs" />
+    <Compile Include="Reports\Report.cs" />
+    <Compile Include="Reports\ResponsiveIssuesReport.cs" />
+    <Compile Include="Reports\ResponsiveReport.cs" />
+    <Compile Include="Reports\TableBasedReport.cs" />
+    <Compile Include="Utility\AlphanumericComparer.cs" />
+    <Compile Include="Utility\CommonCacheInvalidation.cs" />
+    <Compile Include="Utility\CountyCache.cs" />
+    <Compile Include="Utility\DropDownListWithOptionGroup.cs" />
+    <Compile Include="Utility\EmailMsgReader\Decode\Base64.cs" />
+    <Compile Include="Utility\EmailMsgReader\Decode\EncodedWord.cs" />
+    <Compile Include="Utility\EmailMsgReader\Decode\EncodingFinder.cs" />
+    <Compile Include="Utility\EmailMsgReader\Decode\QuotedPrintable.cs" />
+    <Compile Include="Utility\EmailMsgReader\Decode\Rfc2231Decoder.cs" />
+    <Compile Include="Utility\EmailMsgReader\Decode\Rfc2822DateTime.cs" />
+    <Compile Include="Utility\EmailMsgReader\Decode\Utility.cs" />
+    <Compile Include="Utility\EmailMsgReader\Header\ContentTransferEncoding.cs" />
+    <Compile Include="Utility\EmailMsgReader\Header\HeaderExtractor.cs" />
+    <Compile Include="Utility\EmailMsgReader\Header\HeaderFieldParser.cs" />
+    <Compile Include="Utility\EmailMsgReader\Header\MessageHeader.cs" />
+    <Compile Include="Utility\EmailMsgReader\Header\Received.cs" />
+    <Compile Include="Utility\EmailMsgReader\Header\RfcMailAddress.cs" />
+    <Compile Include="Utility\EmailMsgReader\Outlook\DataObject.cs" />
+    <Compile Include="Utility\EmailMsgReader\Outlook\RtfDecompressor.cs" />
+    <Compile Include="Utility\EmailMsgReader\Outlook\Storage.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\Attribute.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\BorderStyle.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\ByteBuffer.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\ColorTable.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\Consts.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DocumentFormatInfo.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DocumentInfo.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DocumentWriter.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomBookmark.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomDocument.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomElement.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomElementList.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomField.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomHeaderFooter.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomImage.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomLineBreak.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomObject.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomPageBreak.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomParagraph.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomShape.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomShapeGroup.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomTable.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomTableCell.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomTableColumn.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomTableRow.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\DomText.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\ElementContainer.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\Enums.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\FontTable.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\LayerInfo.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\Lex.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\ListOverrideTable.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\ListTable.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\Node.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\NodeGroup.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\NodeList.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\ProgressEventHandler.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\RawDocument.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\Reader.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\StringAttribute.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\TextContainer.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\Token.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\Util.cs" />
+    <Compile Include="Utility\EmailMsgReader\Rtf\Writer.cs" />
+    <Compile Include="Utility\EmailUtility.cs" />
+    <Compile Include="Utility\ExtensionMethods.cs" />
+    <Compile Include="Utility\FacebookVideoUtiity.cs" />
+    <Compile Include="Utility\GlobalAsax.cs" />
+    <Compile Include="Utility\GoogleMapsLookup.cs" />
+    <Compile Include="Utility\PoliticianImageManager.cs" />
+    <Compile Include="Utility\ImageUtility.cs" />
+    <Compile Include="Utility\LocalCacheInvalidation.cs" />
+    <Compile Include="Utility\MemCache.cs" />
+    <Compile Include="Utility\PageCache.cs" />
+    <Compile Include="Utility\PageClasses\SecureAdminPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Utility\PageClasses\SecurePage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Utility\PageClasses\SecurePage.FormSupport.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Utility\PageClasses\SecurePartyPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Utility\PageClasses\SecurePoliticianPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Utility\PageClasses\SocialMedia.cs" />
+    <Compile Include="Utility\PageClasses\VotePage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Utility\PageClasses\VotePage.Party.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Utility\PageClasses\VotePage.Politician.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Utility\PageClasses\VotePage.Utility.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Utility\QueryStringCollection.cs" />
+    <Compile Include="Utility\ReportPoliticianSignIns.cs" />
+    <Compile Include="Utility\ReportLogInfoSummary.cs" />
+    <Compile Include="Utility\SimpleCSVWriter2.cs" />
+    <Compile Include="Utility\SitemapManager.cs" />
+    <Compile Include="Utility\StateCache.cs" />
+    <Compile Include="Utility\Str.cs" />
+    <Compile Include="Utility\Substitutions\Substitutions.Conditionals.cs" />
+    <Compile Include="Utility\Substitutions\Substitutions.cs" />
+    <Compile Include="Utility\Substitutions\Substitutions.StaticConstructor.cs" />
+    <Compile Include="Utility\TextBoxWithNormalizedLineBreaks.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utility\TigerLookup.cs" />
+    <Compile Include="Utility\ToSentenceCase.cs" />
+    <Compile Include="Utility\ToTitleCase.cs" />
+    <Compile Include="Utility\UpdateOfficesAlternateOfficeLevel.cs" />
+    <Compile Include="Utility\UpdatePoliticianSearchKeys.cs" />
+    <Compile Include="Utility\UpdatePoliticiansLiveOfficeKey.cs" />
+    <Compile Include="Utility\UpdateSingleCandidateContestWinners.cs" />
+    <Compile Include="Utility\UrlManager.cs" />
+    <Compile Include="Utility\UrlNormalizer.cs" />
+    <Compile Include="Utility\Utility.cs" />
+    <Compile Include="Utility\Validation.cs" />
+    <Compile Include="Utility\VideoUtility.cs" />
+    <Compile Include="Utility\VoteException.cs" />
+    <Compile Include="Utility\YouTubeVideoUtility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Reports\Sandbox\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DB\Vote.xml">
+      <CustomToolNamespace>DB</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DB\VoteCache.xml">
+      <CustomToolNamespace>DB</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DB\VoteCacheLocal.xml">
+      <CustomToolNamespace>DB</CustomToolNamespace>
+    </Content>
+    <Content Include="DB\VoteImagesLocal.xml">
+      <CustomToolNamespace>DB</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DB\VoteLog.xml">
+      <CustomToolNamespace>DB</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

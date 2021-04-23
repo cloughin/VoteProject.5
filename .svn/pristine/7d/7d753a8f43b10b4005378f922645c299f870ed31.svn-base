@@ -1,0 +1,35 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Public.Master" AutoEventWireup="true" CodeBehind="Privacy.aspx.cs" Inherits="Vote.PrivacyPage" %>
+
+<%@ Register Src="/Controls/PageHeadingResponsive.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonationRequestResponsive.ascx" TagName="DonationRequest" TagPrefix="user" %>
+
+<asp:Content ID="HeadTopContent" ContentPlaceHolderID="MasterHeadTopContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="HeadBottomContent" ContentPlaceHolderID="MasterHeadBottomContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+  <user:PageHeading ID="PageHeading" runat="server" MainHeadingText="Privacy Policy" />
+  <div class="intro-copy">
+    <p>Vote-USA uses your 9-digit zip code or address only to provide you 
+    with your customized electoral information, including your sample ballot, 
+    elected representatives, and various election reports. We do not sell, 
+    trade, or otherwise transfer any of this information to any other person, 
+    organization or third party.</p>
+
+    <p>We do not sell, trade, or otherwise transfer any of information we 
+    have about candidates and politicians to any other person, organization 
+    or third party.</p>
+
+    <p>We will honor a request by any candidate to delete any personal 
+    information, including picture, biographical information, and views 
+    on the issues. To maintain the accuracy of Vote-USA election reports, 
+    we will not delete any candidate’s name or offices the candidate sought. 
+    We consider this to be public information.</p>
+  </div>
+</asp:Content>
+
+<asp:Content ID="BottomContent" ContentPlaceHolderID="MasterBottomContent" runat="server">
+  <user:DonationRequest ID="DonationRequest" runat="server" />
+</asp:Content>

@@ -1,0 +1,112 @@
+﻿body.admin-page .navigate-jurisdiction .ui-dialog-titlebar
+{
+  background: #779ad4 url(/images/menubg.gif) repeat-x;
+  height: 23px;
+  padding: 0;
+}
+
+body.admin-page .navigate-jurisdiction .ui-dialog-title
+{
+  color: #ffffee;
+  font-size: 10pt;
+  padding: 1px 12px;
+}
+
+#navigateJurisdiction
+{
+  display: none;
+}
+
+#navigateJurisdiction table
+{
+  margin-top: 6px;
+  padding-top: 8px;
+}
+
+#navigateJurisdiction td,
+#navigateJurisdiction select
+{
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 13px;
+}
+
+#navigateJurisdiction td.col1 > div
+{
+  height: 30px;
+  padding: 0 0 0 10px;
+}
+
+#navigateJurisdiction td.col2 > div
+{
+  padding: 0 10px 0 0;
+}
+
+#navigateJurisdiction td.col4
+{
+  width: 100%;
+}
+
+#navigateJurisdiction td.col4 > div
+{
+  text-align: right;
+  width: 100%;
+}
+
+#navigateJurisdiction td.col4 input[type=button]
+{
+  margin: 0 10px 0 0;
+  width: 70px;
+}
+
+#navigateJurisdiction td .name
+{
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+
+
+#navigateJurisdiction .outer
+{
+  text-align: left;
+  padding: 10px 10px 0 10px;
+  margin-top: 3px;
+}
+#navigateJurisdiction .outer .col
+{
+  float: left;
+}
+#navigateJurisdiction .outer .col.col4
+{
+  float: right;
+}
+#navigateJurisdiction .cell
+{
+  height: 33px;
+}
+#navigateJurisdiction .c1
+{
+  width: 25px;
+}
+#navigateJurisdiction .c2
+{
+  width: 70px;
+  padding-top: 3px;
+  height: 30px;
+}
+#navigateJurisdiction .c3
+{
+  float: left;
+  clear: both;
+}
+#navigateJurisdiction .c3 .name
+{
+  font-weight: bold;
+  white-space: nowrap;
+  padding-top: 3px;
+}
+#navigateJurisdiction .c4 input[type=button]
+{
+  margin: 0 10px 0 0;
+  width: 70px;
+}

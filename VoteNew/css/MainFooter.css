@@ -1,0 +1,65 @@
+﻿#mainFooter
+{
+  width: 100%;
+  overflow: auto; /* to clear floats */
+  background: #ffffff;
+  padding-top: 29px;
+  padding-bottom: 17px;
+  font-family: Arial;
+  font-size: 8pt;
+}
+#mainFooter .oneStop
+{
+  width: 100%;
+  text-align: center;
+}
+#mainFooter a
+{
+  text-decoration: none;
+  color: #666666;
+}
+#mainFooter a:visited
+{
+}
+#mainFooter a:hover
+{
+  color: #000000;
+}
+#mainFooter a:active
+{
+}
+#mainFooter .footerLinks
+{
+  float: left;
+}
+#mainFooter .footerLinks1
+{
+  padding-left: 21px;
+}
+#mainFooter .footerLinks2
+{
+  padding-right: 21px;
+}
+#mainFooter .footerLinks ul
+{
+  width: 159px;
+  padding-top: 23px;
+}
+#mainFooter .footerLinks li
+{
+  width: 159px;
+  padding-top: 2px;
+}
+#mainFooter .footerBlurb
+{
+  float: left;
+  padding-left: 20px;
+  padding-top: 20px;
+}
+#mainFooter .footerBlurb div
+{
+  width: 530px;
+  color: #999999;
+  line-height: 18px;
+}
+

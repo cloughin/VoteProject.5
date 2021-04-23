@@ -1,0 +1,26 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Admin.Master" AutoEventWireup="true" 
+CodeBehind="ReviewYouTubeChannels.aspx.cs" Inherits="Vote.Master.ReviewYouTubeChannelsPage" %>
+
+<asp:Content ID="HeadContent" ContentPlaceHolderID="MasterHeadContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+  <div id="outer">
+    <h1 id="H1" runat="server"></h1>
+    <table class="youtube-table">
+      <thead>
+        <tr>
+          <th>Politician</th>
+          <th>Video Url</th>
+          <th>Channel Url</th>
+          <th>Channel Title</th>
+          <th>Channel Description</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <asp:PlaceHolder ID="BodyPlaceHolder" runat="server"></asp:PlaceHolder>
+      </tbody>
+    </table>
+  </div>
+</asp:Content>

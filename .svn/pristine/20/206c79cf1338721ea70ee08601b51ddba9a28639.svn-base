@@ -1,0 +1,21 @@
+﻿using System;
+
+namespace Vote
+{
+  public partial class Error500PageX : PublicPage
+  {
+    protected Error500PageX()
+    {
+      No404OnUrlNormalizeError = true;
+      NoUrlEdit = true; 
+      NoIndex = true;
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      this.IncludeCss("~/css/MainCommon.css");
+      this.IncludeCss("~/css/SecondaryCommon.css");
+      Response.StatusCode = 500;
+    }
+  }
+}

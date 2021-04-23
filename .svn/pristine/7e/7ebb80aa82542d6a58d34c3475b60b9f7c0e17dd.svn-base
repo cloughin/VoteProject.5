@@ -1,0 +1,85 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Videos.aspx.cs" 
+ MasterPageFile="~/Master/Admin.Master"
+Inherits="Vote.Master.VideosPage" %>
+
+<%@ Register TagPrefix="user" Namespace="Vote" Assembly="Vote" %>
+
+<asp:Content ID="HeadContent" ContentPlaceHolderID="MasterHeadContent" runat="server">
+  <link href="/css/AllAdmin.css" type="text/css" rel="stylesheet" />
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+  <asp:UpdatePanel ID="UpdatePanel" runat="server">
+    <ContentTemplate>
+
+      <h1 id="H1" runat="server"></h1>
+      <%--
+    <table class="tableAdmin" id="TableHeading" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left" class="HLarge" colspan="2">
+          YouTube Video Approval
+            <asp:Label ID="PoliticianName" runat="server" CssClass="TLargeBoldColor"></asp:Label>
+            <asp:Label ID="LabelPoliticianKey" runat="server" CssClass="T"></asp:Label></td>
+      </tr>
+      <tr>
+        <td align="left" class="HLarge">
+        Question:
+          &nbsp;<asp:Label ID="QuestionDescription" runat="server"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" class="HLarge">
+          Video Uploaded:
+          &nbsp;<asp:Label ID="LabelUploadDate" runat="server"></asp:Label>
+        </td>
+      </tr>
+      <tr>
+        <td align="left">
+          <asp:Label ID="Msg" runat="server"></asp:Label>
+        </td>
+      </tr>
+    </table>
+    <table id="Table3" cellpadding="0" cellspacing="0" class="tableAdmin" runat="server">
+    <tr><td class="T">
+      This form is used to review and approve (or reject) videos that have been submitted
+      as a politician's answer to a particular issue question. This form operates in either
+      of two modes, which you can select with the radio button below. The default is New Videos,
+      which allows you to review all videos that have not yet been approved or rejected. Or you
+      can select the Single Politician mode, which will let you review all new videos for a
+      selected politician.</td></tr>
+      <tr>
+        <td class="TBold">
+          <asp:Label ID="RowsRemaining" runat="server" CssClass="TBoldColor"></asp:Label>
+          unprocessed videos remaining</td>
+      </tr>
+      </table>
+    <table id="Table2" cellpadding="0" cellspacing="0" class="tableAdmin" runat="server" border="1">
+      <tr>
+        <td align="left" class="HSmall" colspan="2" width="250">
+          Processing Modes</td>
+      </tr>
+        <tr>
+          <td align="left" class="T" width="250">
+            <asp:RadioButtonList ID="RadioButtonList_ProcessMethod" runat="server" AutoPostBack="True"
+              CssClass="RadioButtons" OnSelectedIndexChanged="RadioButtonList_ProcessMethod_SelectedIndexChanged">
+              <asp:ListItem Value="New" Selected="True">New Videos</asp:ListItem>
+              <asp:ListItem Value="Single">Single Politician</asp:ListItem>
+            </asp:RadioButtonList></td>
+          <td align="left" class="T" valign="top">
+            <strong> New Videos:</strong>
+            This option processes all videos that have not yet been either accepted or rejected.
+            </td>
+        </tr>
+        <tr>
+          <td align="left" class="TBold">
+            Politician key:<br /><user:TextBoxWithNormalizedLineBreaks ID="TextBox_PoliticianKey" runat="server" CssClass="TextBoxInput" Width="201px"></user:TextBoxWithNormalizedLineBreaks></td>
+          <td align="left" class="T" valign="top">
+            <strong>Single Politician: </strong>
+            This option allows you to review new videos
+            for a single politician. Enter the PoliticianKey in the adjacent textbox and click Next.</td>
+        </tr>
+      </table>
+      --%>
+    </ContentTemplate>
+  </asp:UpdatePanel>
+</asp:Content>

@@ -1,0 +1,129 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Public2.master.cs" 
+Inherits="Vote.Public2MasterPage" %>
+
+<!DOCTYPE html>
+
+<html>
+<head id="Head" runat="server">
+  <title></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start':
+          new Date().getTime(),
+        event: 'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-5LB4ZS');
+  </script>
+  <!-- End Google Tag Manager -->
+  <asp:ContentPlaceHolder ID="MasterHeadTopContent" runat="server">
+  </asp:ContentPlaceHolder>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i,900" rel="stylesheet">
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+  <link rel="stylesheet" href="/css/vote/public.min.css?465"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+<%--  <script type="text/javascript" src="/js/jq/jquery.cookie.js"></script>--%>
+  <%--<script type="text/javascript" src="/js/scripts.min.js?465"></script>--%>
+  <script type="text/javascript" src="/js/scripts.js?465"></script>
+  <asp:ContentPlaceHolder ID="MasterHeadBottomContent" runat="server">
+  </asp:ContentPlaceHolder>
+</head>
+<body id="Body" class="no-js disclaimer-hidden" runat="server">
+
+<!-- Google Tag Manager (noscript) -->
+<noscript>
+  <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5LB4ZS"
+          height="0" width="0" style="display: none; visibility: hidden">
+  </iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<form id="form1" runat="server">
+  <div id="page-container">
+    <header class="clearfix">
+      <div class="header-inner outer-element clearfix">
+<%--        <a id="MainBannerHomeLink" class="logo" href="/" title="Go to Vote-USA Home" runat="server">
+          <img runat="server" id="MainBannerImageTag" src="/images/homelogo.png" alt="Vote USA - Connecting voters and candidates"/>
+        </a>--%>
+        <a class="logo2" href="/" title="Go to Vote-USA Home">
+          <img src="/images/logo-checkbox.png" alt="Vote USA - Vote informed"/> 
+          <div>
+            <p id="LogoName" class="vote-usa" runat="server">Vote USA</p>
+            <p class="vote-informed">Vote informed</p>
+          </div>
+        </a>
+        <a class="donate no-print" href="/Donate.aspx" title="Donate to Vote-USA">
+          <div class="dollar-logo">
+            <div>$</div>
+          </div>
+          <div class="message">
+            <div class="line1">Donate</div>
+            <div class="line2">Keep us online</div>
+          </div>
+        </a>
+      </div>
+    </header>
+    <section id="OuterPage" class="outer-page outer-element" runat="server">
+      <div class="content">
+        <asp:ContentPlaceHolder ID="MasterMainContent" runat="server">
+        </asp:ContentPlaceHolder>
+      </div>
+    </section>
+    <footer>
+      <div class="footer-inner outer-element">
+        <div class="footer-top clearfix no-print">
+          <nav class="links">
+            <ul class="set1">
+              <li><a href="/default.aspx">Home</a></li>
+              <li><a href="/aboutus.aspx">About Us</a></li>
+              <li><a href="/contactus.aspx">Contact Us</a></li>
+              <li><a href="/privacy.aspx">Privacy Policy</a></li>
+              <li><a href="/Donate.aspx" title="Donate to Vote-USA">Donate</a></li>
+            </ul>
+            <ul class="set2">
+              <li><a href="/forcandidates.aspx">For Candidates</a></li>
+              <li><a href="/forvolunteers.aspx">For Volunteers</a></li>
+<%--              <li><a href="/forpartners.aspx">For Partners</a></li>--%>
+              <li><a href="/forpoliticalparties.aspx">For Political Parties</a></li>
+              <li><a href="/forelectionauthorities.aspx">For Election Authorities</a></li>
+              <li><a href="/forresearch.aspx">Historical Voter Information</a></li>
+            </ul>
+          </nav>
+          <div class="social">
+            <a class="icon facebook" href="https://www.facebook.com/VoteUSA1/" target="ext"></a>
+            <a class="icon twitter" href="https://mobile.twitter.com/VoteUSA1" target="ext"></a>
+            <a class="icon youtube" href="https://www.youtube.com/channel/UCjXMh5U7WgPpGCNV-HPYhXg" target="ext"></a>
+            <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+              <a class="addthis_button_compact"></a>
+            </div>
+
+          </div>
+        </div>
+        <p ID="Disclaimer" class="disclaimer" runat="server" Visible="false">
+          This website is hosted and maintained by Vote-USA, a Washington DC
+          corporation with a 501(c)(3) IRS non-profit, non-partisan, tax deductible
+          classification. We are not associated with any election authority. 
+        </p>
+      </div>
+    </footer>
+  </div>
+  <script type="text/javascript" src="/js/jq/scrolltotop.js"></script>
+  <asp:ContentPlaceHolder ID="MasterBottomContent" runat="server">
+  </asp:ContentPlaceHolder>
+</form>
+<!-- Go to www.addthis.com/dashboard to customize your tools --> 
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5b3fb6979902e1f3"></script>
+</body>
+</html>

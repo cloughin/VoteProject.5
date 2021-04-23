@@ -1,0 +1,61 @@
+﻿html
+{
+  background: #cbdbdb;
+}
+body
+{
+  border-top: 5px solid #85a6d1;
+  text-align: center;
+  background-color: transparent;
+}
+em
+{
+  font-style:italic;
+}
+strong
+{
+  font-weight:bold;
+}
+#outer
+{
+  width: 100%;
+  /*background: #cbdbdb url(/images/secondarybg.gif) repeat-x;*/
+  background: #cbdbdb url(/images/newbg.gif) repeat-x;
+  /*background: #cbdbdb;*/
+}
+#container
+{
+  margin: 0 auto;
+  width: 940px;
+  text-align: left;
+}
+.header .heading-donate
+{
+  float: right;
+}
+.header .heading-donate a
+{
+  display: block;
+  width: 200px;
+  height: 49px;
+  background: url(/images/heading-donate.png);
+  overflow: hidden;
+	text-indent: -10000px;
+	font-size: 0;
+	line-height: 0;
+	margin-top: 7px
+}
+.header .heading-donate a:hover
+{
+  background-position: 0 -49px;
+}
+.not-found-error
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-weight: normal;
+	line-height: 110%;
+	color: #373737;
+	padding: 25px 10px 2px 30px;
+}
+

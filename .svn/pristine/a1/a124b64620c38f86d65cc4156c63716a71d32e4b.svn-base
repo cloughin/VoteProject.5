@@ -1,0 +1,171 @@
+﻿using System;
+using DB.Vote;
+
+namespace Vote.Admin
+{
+  public partial class UpdateOfficesPage
+  {
+    #region Private
+
+    #region DataItem object
+
+    [PageInitializer]
+    // ReSharper disable once UnusedMember.Local
+    // Invoked via Reflection
+    private class AddCandidatesTabItem : DataItemBase
+    {
+      // The rest of this is in the ManagePoliticiansPanel control
+      // ReSharper disable once UnusedMember.Local
+      internal static void Initialize(UpdateOfficesPage page)
+      {
+        InitializeGroup(page, "SelectOffice");
+        InitializeGroup(page, "AddCandidates");
+      }
+      protected override bool Update(object newValue)
+      {
+        //  var electionKey = Page.GetElectionKey();
+      //  var officeKey = Page.GetOfficeKey();
+
+      //  // parse the new value
+      //  // syntax:
+      //  //   candidate = prefix-<politicianKey>[+<runningMateKey]
+      //  //   candidates = <candidate>[|<candidate>]*
+      //  var value = newValue as string;
+      //  Debug.Assert(value != null, "value != null");
+      //  var newCandidates = value.Split(new[] {'|'},
+      //    StringSplitOptions.RemoveEmptyEntries)
+      //    .Select(candidate =>
+      //    {
+      //      var ids = candidate.Split('+');
+      //      return
+      //        new
+      //        {
+      //          PoliticianKey = ids[0].Substring(ids[0].LastIndexOf('-') + 1),
+      //          RunningMateKey = ids.Length == 2 ? ids[1] : String.Empty
+      //        };
+      //    });
+
+      //  // Get the current slate of candidate for this election/office
+      //  var currentCandidatesTable =
+      //    ElectionsPoliticians.GetDataByElectionKeyOfficeKey(electionKey, officeKey);
+
+      //  // Get the incumbent(s) for this office
+      //  var incumbents =
+      //    Enumerable.Select(OfficesOfficials.GetPoliticianKeysData(officeKey),
+      //      row => row.PoliticianKey)
+      //      .ToList();
+
+      //  // If we process a row, we delete it from this list. What's left needs
+      //  // to be deleted from the DB.
+      //  var rowsToDelete = Enumerable.Select(currentCandidatesTable, row => row)
+      //    .ToList();
+
+      //  var orderOnBallot = 0;
+      //  var federalCode = Offices.GetOfficeClass(officeKey)
+      //    .StateCodeProxy();
+      //  var stateCode = Elections.GetStateCodeFromKey(electionKey);
+      //  if (StateCache.IsValidFederalCode(stateCode, false)) stateCode = string.Empty;
+      //  var countyCode = Elections.GetCountyCodeFromKey(electionKey);
+      //  var localCode = Elections.GetLocalCodeFromKey(electionKey);
+      //  var electionKeyFederal = String.IsNullOrWhiteSpace(federalCode)
+      //    ? String.Empty
+      //    : Elections.GetFederalElectionKeyFromKey(electionKey, federalCode);
+      //  var electionKeyState = Elections.GetStateElectionKeyFromKey(electionKey);
+      //  var electionKeyCounty = Elections.GetCountyElectionKeyFromKey(electionKey);
+      //  var electionKeyLocal = Elections.GetLocalElectionKeyFromKey(electionKey);
+      //  foreach (var candidate in newCandidates)
+      //  {
+      //    orderOnBallot += 10;
+      //    var currentRow =
+      //      currentCandidatesTable.FirstOrDefault(
+      //        row => row.PoliticianKey.IsEqIgnoreCase(candidate.PoliticianKey));
+      //    if (currentRow == null)
+      //    {
+      //      // new candidate, add
+      //      LogDataChange.LogInsert(ElectionsPoliticians.TableName,
+      //        candidate.RunningMateKey, DateTime.UtcNow, electionKey, officeKey,
+      //        candidate.PoliticianKey);
+      //      currentCandidatesTable.AddRow(electionKey, officeKey,
+      //        candidate.PoliticianKey, candidate.RunningMateKey, electionKeyState,
+      //        electionKeyFederal, electionKeyCounty, electionKeyLocal, stateCode,
+      //        countyCode, localCode, String.Empty, orderOnBallot, false,
+      //        incumbents.Contains(candidate.PoliticianKey), false);
+      //    }
+      //    else
+      //    {
+      //      // existing candidate, update if necessary
+      //      if (currentRow.RunningMateKey.IsNeIgnoreCase(candidate.RunningMateKey))
+      //      {
+      //        LogDataChange.LogUpdate(ElectionsPoliticians.Column.RunningMateKey,
+      //          currentRow.RunningMateKey, candidate.RunningMateKey,
+      //          DateTime.UtcNow, electionKey, officeKey, candidate.PoliticianKey);
+      //        currentRow.RunningMateKey = candidate.RunningMateKey;
+      //      }
+      //      if (currentRow.OrderOnBallot != orderOnBallot)
+      //      {
+      //        LogDataChange.LogUpdate(ElectionsPoliticians.Column.OrderOnBallot,
+      //          currentRow.OrderOnBallot, orderOnBallot, DateTime.UtcNow,
+      //          electionKey, officeKey, candidate.PoliticianKey);
+      //        currentRow.OrderOnBallot = orderOnBallot;
+      //      }
+      //      rowsToDelete.Remove(currentRow);
+      //    }
+      //  }
+
+      //  foreach (var row in rowsToDelete)
+      //  {
+      //    LogDataChange.LogDelete(ElectionsPoliticians.TableName, DateTime.UtcNow,
+      //      electionKey, officeKey, row.PoliticianKey);
+      //    row.Delete();
+      //  }
+
+      //  // Update if any changes
+      //  var candidateListChanged =
+      //    currentCandidatesTable.FirstOrDefault(
+      //      row => row.RowState != DataRowState.Unchanged) != null;
+      //  if (candidateListChanged) ElectionsPoliticians.UpdateTable(currentCandidatesTable);
+
+      //  LoadControl();
+      //  return candidateListChanged;
+        return false;
+      }
+    }
+
+    #endregion DataItem object
+
+    #endregion Private
+
+    #region Event handlers and overrides
+
+    protected void ButtonAddCandidates_OnClick(object sender, EventArgs e)
+    {
+      switch (AddCandidatesReloading.Value)
+      {
+        case "reloading":
+        {
+          AddCandidatesReloading.Value = String.Empty;
+          OfficeControl.ShowSelectOfficePanel = false;
+          _ManagePoliticiansPanel.LoadControls();
+          var officeName = Offices.FormatOfficeName(OfficeControl.OfficeKey);
+          if (string.IsNullOrWhiteSpace(officeName)) officeName = "Invalid office";
+          HeadingAddCandidatesOffice.InnerText = officeName;
+          _ManagePoliticiansPanel.ClearAddNewCandidate(true);
+        }
+          break;
+
+        case "":
+        {
+          // normal update
+          _ManagePoliticiansPanel.Update();
+          _ManagePoliticiansPanel.ClearAddNewCandidate();
+        }
+          break;
+
+        default:
+          throw new VoteException("Unknown reloading option");
+      }
+    }
+
+    #endregion Event handlers and overrides
+  }
+}

@@ -1,0 +1,1169 @@
+using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using DB.Vote;
+
+namespace Vote.Admin
+{
+  public partial class JudicialDistrict : VotePage
+  {
+    protected void LoadDistrictCodesAndName()
+    {
+      if (Convert.ToInt16(ViewState["DistrictType"]) == db.Type_Judicial)
+      {
+        TextBoxDistrictCode.Text = db.JudicialDistricts(
+          ViewState["StateCode"].ToString()
+          , ViewState["DistrictCode"].ToString()
+          , ViewState["DistrictCodeAlpha"].ToString()
+          , "DistrictCode");
+        TextBoxAlphaCode.Text = db.JudicialDistricts(
+          ViewState["StateCode"].ToString()
+          , ViewState["DistrictCode"].ToString()
+          , ViewState["DistrictCodeAlpha"].ToString()
+          , "DistrictCodeAlpha");
+        TextBoxDistrict.Text = db.JudicialDistricts(
+          ViewState["StateCode"].ToString()
+          , ViewState["DistrictCode"].ToString()
+          , ViewState["DistrictCodeAlpha"].ToString()
+          , "District");
+      }
+      else if (Convert.ToInt16(ViewState["DistrictType"]) == db.Electoral_Multi_Counties)
+      {
+        TextBoxDistrictCode.Text = db.MultiCountyDistricts(
+          ViewState["StateCode"].ToString()
+          , ViewState["DistrictCode"].ToString()
+          , ViewState["DistrictCodeAlpha"].ToString()
+          , "DistrictCode");
+        TextBoxAlphaCode.Text = db.MultiCountyDistricts(
+          ViewState["StateCode"].ToString()
+          , ViewState["DistrictCode"].ToString()
+          , ViewState["DistrictCodeAlpha"].ToString()
+          , "DistrictCodeAlpha");
+        TextBoxDistrict.Text = db.MultiCountyDistricts(
+          ViewState["StateCode"].ToString()
+          , ViewState["DistrictCode"].ToString()
+          , ViewState["DistrictCodeAlpha"].ToString()
+          , "District");
+      }
+    }
+
+    protected void DistrictRetrievedMsg()
+    {
+      Msg.Text = db.Msg("The District has been retrieved and its name is in the District Name Textbox."
+      + " You may now either: 1) Add a District after this one, 2) Change the District Name, or 3) Delete the District along with its counties and offices."
+      + " Click the appropriate Help Instructions to perform either of these operations.");
+    }
+
+    protected void CheckValidDistrictCode(string DistrictCode, string DistrictCodeAlpha)
+    {
+      if (TextBoxDistrictCode.Text.Trim() != string.Empty)
+      {
+        if (TextBoxDistrictCode.Text.Trim().Length != 3)
+          throw new ApplicationException("When the District Code is present it must be 3 digits.");
+        if (!db.Is_Digits(TextBoxDistrictCode.Text.Trim()))
+          throw new ApplicationException("The District Code must be all digits.");
+      }
+
+      if (TextBoxAlphaCode.Text.Trim() != string.Empty)
+      {
+        if (TextBoxAlphaCode.Text.Trim().Length > 4)
+          throw new ApplicationException("When the District Alpha Code is present it must less than 4 characters.");
+        if (!db.Is_Chars_Upper(TextBoxAlphaCode.Text.Trim().ToUpper()))
+          throw new ApplicationException("The Alpha Code must be all characters.");
+      }
+
+      if (Convert.ToInt16(ViewState["DistrictType"]) == db.Type_Judicial)
+      {
+        if (!db.Is_Valid_Judicial_District(
+          ViewState["StateCode"].ToString()
+          , DistrictCode
+          , DistrictCodeAlpha.Trim().ToUpper()))
+          throw new ApplicationException("The District Code(s) is invalid.");
+      }
+      else//Multi-County Districts
+      {
+        if (!db.Is_Valid_MultiCounty_District(
+          ViewState["StateCode"].ToString()
+          , DistrictCode
+          , DistrictCodeAlpha.Trim().ToUpper()))
+          throw new ApplicationException("The District Code(s) is invalid.");
+      }
+    }
+    protected void CheckIsNewDistrictCode(string DistrictCode)
+    {
+      if (Convert.ToInt16(ViewState["DistrictType"]) == db.Electoral_Multi_Counties)//Multi-County Districts
+      {
+        if (db.Is_Valid_MultiCounty_District(ViewState["StateCode"].ToString()
+          , DistrictCode
+          , TextBoxAlphaCode.Text.Trim().ToUpper()))
+          throw new ApplicationException("The District for this District Code already exists.");
+      }
+      else
+      {
+        if (db.Is_Valid_Judicial_District(ViewState["StateCode"].ToString()
+          , DistrictCode
+          , TextBoxAlphaCode.Text.Trim().ToUpper()))
+          throw new ApplicationException("The District for this District Code already exists.");
+      }
+    }
+
+    protected void Checks4AddOrUpdate()
+    {
+      if (TextBoxDistrictCode.Text.Trim() == string.Empty)
+        throw new ApplicationException("There is no District Code.");
+      if (TextBoxDistrict.Text.Trim() == string.Empty)
+        throw new ApplicationException("There is no District Name.");
+      if (CheckboxesChecked() == 0)
+        throw new ApplicationException("No Counties were checked that comprise this District.");
+    }
+    protected void Checks4Delete()
+    {
+      //if (LabelDistrictCode.Text.Trim() == string.Empty)
+      if (TextBoxDistrictCode.Text.Trim() == string.Empty)
+        throw new ApplicationException("No District has been retrieved. You need to get the District before you can delete it.");
+    }
+    protected void ClearAllCheckboxes()
+    {
+      DataTable CountiesTable = db.Table(sql.Counties(ViewState["StateCode"].ToString()));
+      int index = 0;
+      foreach (DataRow CountyRow in CountiesTable.Rows)
+      {
+        CheckBoxListCounties.Items[index].Selected = false;
+        index++;
+      }
+    }
+    protected void ClearTextboxes()
+    {
+      //LabelDistrictCode.Text = string.Empty;
+      TextBoxDistrictCode.Text = string.Empty;
+      TextBoxDistrict.Text = string.Empty;
+      TextBoxOfficeTitle.Text = string.Empty;
+    }
+
+    protected int CheckboxesChecked()
+    {
+      DataTable CountiesTable = db.Table(sql.Counties(ViewState["StateCode"].ToString()));
+      int index = 0;
+      int CountiesChecked = 0;
+      foreach (DataRow CountyRow in CountiesTable.Rows)
+      {
+        if (CheckBoxListCounties.Items[index].Selected == true)
+          CountiesChecked++;
+        index++;
+      }
+      return CountiesChecked;
+    }
+
+    protected void SetControls4MasterUser()
+    {
+      if (Convert.ToInt16(ViewState["DistrictType"]) == db.Electoral_Multi_Counties)
+      {
+        HyperLinkAddMultiCountyDistricts.Visible = true;
+        HyperLinkAddJudicialDistricts.Visible = false;
+        ViewState["Districts"] = db.Rows(sql.MultiCountyDistricts(ViewState["StateCode"].ToString()));
+      }
+      else
+      {
+        HyperLinkAddMultiCountyDistricts.Visible = false;
+        HyperLinkAddJudicialDistricts.Visible = true;
+        ViewState["Districts"] = db.Rows(sql.JudicialDistricts(ViewState["StateCode"].ToString()));
+      }
+    }
+
+    protected int RecordJudicialCounties(DataRow JudicialDistrictRow)
+    {
+      DataTable CountiesTable = db.Table(sql.Counties(ViewState["StateCode"].ToString()));
+      int CountyIndex = 0;
+      int CountiesInDistrictRecorded = 0;
+
+      #region Delete all counties
+      db.ExecuteSQL(sql.JudicialDistrictCounties_DELETE(ViewState["StateCode"].ToString()
+      , JudicialDistrictRow["DistrictCode"].ToString()));
+      #endregion
+
+      #region add new counties
+      foreach (DataRow CountyRow in CountiesTable.Rows)
+      {
+        if (CheckBoxListCounties.Items[CountyIndex].Selected)
+        {
+          #region Insert the JudicialDistrictCounties Rows
+
+          string SQLINSERT = "INSERT INTO JudicialDistrictCounties "
+              + "("
+              + "StateCode"
+              + ",DistrictCode"
+              + ",DistrictCodeAlpha"
+              + ",CountyCode"
+              + ")"
+              + " VALUES("
+              + db.SQLLit(ViewState["StateCode"].ToString())
+              + "," + db.SQLLit(JudicialDistrictRow["DistrictCode"].ToString())
+              + "," + db.SQLLit(JudicialDistrictRow["DistrictCodeAlpha"].ToString())
+              + "," + db.SQLLit(CountyRow["CountyCode"].ToString())
+              + ")";
+          db.ExecuteSQL(SQLINSERT);
+          CountiesInDistrictRecorded++;
+          #endregion
+        }
+        CountyIndex++;
+      }
+      #endregion
+
+      //ClearAllCheckboxes();
+
+      return CountiesInDistrictRecorded;
+    }
+    protected int RecordMultiCountyCounties(DataRow MultiCountyDistrictRow)
+    {
+      DataTable CountiesTable = db.Table(sql.Counties(ViewState["StateCode"].ToString()));
+      int CountyIndex = 0;
+      int CountiesInDistrictRecorded = 0;
+
+      #region Delete all counties
+      db.ExecuteSQL(sql.MultiCountyDistrictCountiesDelete(ViewState["StateCode"].ToString()
+      , MultiCountyDistrictRow["DistrictCode"].ToString()
+      , MultiCountyDistrictRow["DistrictCodeAlpha"].ToString()));
+      #endregion
+
+      #region add new counties
+      foreach (DataRow CountyRow in CountiesTable.Rows)
+      {
+        if (CheckBoxListCounties.Items[CountyIndex].Selected)
+        {
+          #region Insert the MultiCountyDistrictCounties Rows
+
+          string SQLINSERT = "INSERT INTO MultiCountyDistrictCounties "
+              + "("
+              + "StateCode"
+              + ",DistrictCode"
+              + ",DistrictCodeAlpha"
+              + ",CountyCode"
+              + ")"
+              + " VALUES("
+              + db.SQLLit(ViewState["StateCode"].ToString())
+              + "," + db.SQLLit(MultiCountyDistrictRow["DistrictCode"].ToString())
+              + "," + db.SQLLit(MultiCountyDistrictRow["DistrictCodeAlpha"].ToString())
+              + "," + db.SQLLit(CountyRow["CountyCode"].ToString())
+              + ")";
+          db.ExecuteSQL(SQLINSERT);
+          CountiesInDistrictRecorded++;
+          #endregion
+        }
+        CountyIndex++;
+      }
+      #endregion
+
+      //ClearAllCheckboxes();
+
+      return CountiesInDistrictRecorded;
+    }
+
+    protected void LoadCheckboxes4MultiCountyDistrict()
+    {
+      DataTable DistrictsTable = db.Table(sql.MultiCountyDistricts(ViewState["StateCode"].ToString()));
+      DataRow DistrictRow = DistrictsTable.Rows[Convert.ToInt16(ViewState["CurrentDistrictRow"])];
+
+      DataTable DistrictCountiesTable = null;
+      if (Convert.ToInt16(ViewState["DistrictType"]) == db.Type_Judicial)
+      {
+        DistrictCountiesTable = db.Table(sql.JudicialDistrictCounties(
+         ViewState["StateCode"].ToString()
+         , DistrictRow["DistrictCode"].ToString()
+         , DistrictRow["DistrictCodeAlpha"].ToString()));
+      }
+      else
+      {
+        //not tested
+        DistrictCountiesTable = db.Table(sql.MultiCountyDistrictCounties4StateCodeMultiCountyDistrictCode(
+         ViewState["StateCode"].ToString()
+         , DistrictRow["DistrictCode"].ToString()
+         , DistrictRow["DistrictCodeAlpha"].ToString()));
+      }
+
+      foreach (DataRow DistrictCountiesRow in DistrictCountiesTable.Rows)
+      {
+        DataTable CountiesTable = db.Table(sql.Counties(ViewState["StateCode"].ToString()));
+        int CountyIndex = 0;
+        foreach (DataRow CountyRow in CountiesTable.Rows)
+        {
+          if (CountyRow["CountyCode"].ToString() == DistrictCountiesRow["CountyCode"].ToString())
+          {
+            CheckBoxListCounties.Items[CountyIndex].Selected = true;
+          }
+          CountyIndex++;
+        }
+      }
+    }
+    protected void LoadCheckboxes4JudicialDistrict()
+    {
+      DataTable DistrictsTable = db.Table(sql.JudicialDistricts(ViewState["StateCode"].ToString()));
+      DataRow DistrictRow = DistrictsTable.Rows[Convert.ToInt16(ViewState["CurrentDistrictRow"])];
+      DataTable DistrictCountiesTable = db.Table(sql.JudicialDistrictCounties(
+        ViewState["StateCode"].ToString()
+        , DistrictRow["DistrictCode"].ToString()
+        , DistrictRow["DistrictCodeAlpha"].ToString()));
+      foreach (DataRow DistrictCountiesRow in DistrictCountiesTable.Rows)
+      {
+        DataTable CountiesTable = db.Table(sql.Counties(ViewState["StateCode"].ToString()));
+        int CountyIndex = 0;
+        foreach (DataRow CountyRow in CountiesTable.Rows)
+        {
+          if (CountyRow["CountyCode"].ToString() == DistrictCountiesRow["CountyCode"].ToString())
+          {
+            CheckBoxListCounties.Items[CountyIndex].Selected = true;
+          }
+          CountyIndex++;
+        }
+      }
+    }
+
+    protected void LoadMultiCountyDistrict()
+    {
+      #region get the next District Row
+      DataTable DistrictsTable = db.Table(sql.MultiCountyDistricts(ViewState["StateCode"].ToString()));
+      if (DistrictsTable.Rows.Count < Convert.ToInt16(ViewState["CurrentDistrictRow"]) + 1)
+        throw new ApplicationException("There are no more Multi County Districts.");
+      DataRow DistrictRow = DistrictsTable.Rows[Convert.ToInt16(ViewState["CurrentDistrictRow"])];
+      #endregion
+
+      TextBoxDistrictCode.Text = DistrictRow["DistrictCode"].ToString();
+      TextBoxAlphaCode.Text = DistrictRow["DistrictCodeAlpha"].ToString();
+      TextBoxDistrict.Text = DistrictRow["District"].ToString();
+    }
+    protected void LoadJudicialDistrict()
+    {
+      #region get the District Row
+      DataTable DistrictsTable = db.Table(sql.JudicialDistricts(ViewState["StateCode"].ToString()));
+      if (DistrictsTable.Rows.Count < Convert.ToInt16(ViewState["CurrentDistrictRow"]) + 1)
+        throw new ApplicationException("There are no more Judicial Districts.");
+      DataRow DistrictRow = DistrictsTable.Rows[Convert.ToInt16(ViewState["CurrentDistrictRow"])];
+      #endregion
+
+      TextBoxDistrictCode.Text = DistrictRow["DistrictCode"].ToString();
+      TextBoxDistrict.Text = DistrictRow["District"].ToString();
+      TextBoxAlphaCode.Text = DistrictRow["DistrictCodeAlpha"].ToString();
+    }
+
+    protected void ButtonClearCheckboxes_Click(object sender, EventArgs e)
+    {
+      ClearAllCheckboxes();
+    }
+
+    protected void ButtonGetNext_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        if (Convert.ToInt16(ViewState["CurrentDistrictRow"]) < Convert.ToInt16(ViewState["Districts"]) - 1)
+        {
+          ViewState["CurrentDistrictRow"] = Convert.ToInt16(ViewState["CurrentDistrictRow"]) + 1;
+
+          if (Convert.ToInt16(ViewState["DistrictType"]) == db.Electoral_Multi_Counties)//Multi-County Districts
+          {
+            LoadMultiCountyDistrict();
+            ClearAllCheckboxes();
+            LoadCheckboxes4MultiCountyDistrict();
+          }
+          else // Judicial Districts
+          {
+            LoadJudicialDistrict();
+            ClearAllCheckboxes();
+            LoadCheckboxes4JudicialDistrict();
+          }
+
+          DistrictRetrievedMsg();
+        }
+        else
+        {
+          Msg.Text = db.Fail("This is the last District. There are no more Districts.");
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void ButtonGetPrevious_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        if (Convert.ToInt16(ViewState["CurrentDistrictRow"]) > 0)
+        {
+          ViewState["CurrentDistrictRow"] = Convert.ToInt16(ViewState["CurrentDistrictRow"]) - 1;
+
+          if (Convert.ToInt16(ViewState["DistrictType"]) == db.Electoral_Multi_Counties)//Multi-County Districts
+          {
+            LoadMultiCountyDistrict();
+            ClearAllCheckboxes();
+            LoadCheckboxes4MultiCountyDistrict();
+          }
+          else // Judicial Districts
+          {
+            LoadJudicialDistrict();
+            ClearAllCheckboxes();
+            LoadCheckboxes4JudicialDistrict();
+          }
+
+          DistrictRetrievedMsg();
+        }
+        else
+        {
+          Msg.Text = db.Fail("This is the first District. There are no previous Districts.");
+        }
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void GetDistrictDataAndCounties()
+    {
+      CheckValidDistrictCode(TextBoxDistrictCode.Text.Trim(), TextBoxAlphaCode.Text.Trim());
+
+      int Index = 0;
+      bool Found = false;
+      DataTable DistrictsTable = null;
+
+      if (Convert.ToInt16(ViewState["DistrictType"]) == db.Type_Judicial)
+      {
+        DistrictsTable = db.Table(sql.JudicialDistricts(ViewState["StateCode"].ToString()));
+        foreach (DataRow DistrictRow in DistrictsTable.Rows)
+        {
+          if (
+            (DistrictRow["DistrictCode"].ToString() == TextBoxDistrictCode.Text.ToUpper())
+            && (DistrictRow["DistrictCodeAlpha"].ToString() == TextBoxAlphaCode.Text.ToUpper().Trim())
+            && (!Found)
+            )
+          {
+            Found = true;
+            ViewState["CurrentDistrictRow"] = Index;
+            LoadJudicialDistrict();
+            ClearAllCheckboxes();
+            LoadCheckboxes4JudicialDistrict();
+          }
+          Index++;
+        }
+
+        #region commented out Judicial District Row
+        //DataRow JudicialDistrictRow = db.Row_Optional(
+        //  sql.JudicialDistricts(
+        //  ViewState["StateCode"].ToString()
+        //, ViewState["DistrictCode"].ToString()
+        //, ViewState["DistrictCodeAlpha"].ToString()));
+        //if (JudicialDistrictRow != null)
+        //{
+        //  LoadJudicialDistrict();
+        //  ClearAllCheckboxes();
+        //  LoadCheckboxes4JudicialDistrict();
+        //}
+        //else
+        //{
+        //  Msg.Text = db.Fail("The Judicial District for "
+        //    + TextBoxDistrictCode.Text + TextBoxDistrictCode.Text.Trim()
+        //    + " was NOT found.");
+        //}
+        #endregion commented out Judicial District Row
+      }
+      else //Multi-County Districts
+      {
+        #region commented out
+        //DistrictsTable = db.Table(sql.MultiCountyDistricts(ViewState["StateCode"].ToString()));
+        //foreach (DataRow DistrictRow in DistrictsTable.Rows)
+        //{
+        //  if (DistrictRow["DistrictCode"].ToString() == TextBoxDistrictCode.Text.ToUpper())
+        //  {
+        //    Found = true;
+        //    ViewState["CurrentDistrictRow"] = Index;
+        //    LoadMultiCountyDistrict();
+        //    ClearAllCheckboxes();
+        //    LoadCheckboxes4MultiCountyDistrict();
+        //  }
+        //  Index++;
+        //}
+        #endregion commented out
+      }
+
+      if (Found)
+      {
+        DistrictRetrievedMsg();
+      }
+      else
+      {
+        Msg.Text = db.Fail("The District for District Code " + TextBoxDistrictCode.Text + " was NOT found.");
+      }
+    }
+
+    protected void ButtonGetDistrict_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        GetDistrictDataAndCounties();
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void ButtonDelete_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region Check TextBoxes for Illegal Stuff
+        db.Throw_Exception_TextBox_Script(TextBoxDistrictCode);
+        db.Throw_Exception_TextBox_Html(TextBoxDistrictCode);
+
+        db.Throw_Exception_TextBox_Script(TextBoxDistrict);
+        db.Throw_Exception_TextBox_Html(TextBoxDistrict);
+
+        db.Throw_Exception_TextBox_Script(TextBoxOfficeTitle);
+        db.Throw_Exception_TextBox_Html(TextBoxOfficeTitle);
+
+        #endregion Check TextBoxes for Illegal Stuff
+
+        Checks4Delete();
+
+        string SQLDELETE = string.Empty;
+        if (Convert.ToInt16(ViewState["DistrictType"]) == db.Electoral_Multi_Counties)//Multi-County Districts
+        {
+          SQLDELETE = "DELETE FROM MultiCountyDistrictCounties"
+          + " WHERE DistrictCode = " + db.SQLLit(TextBoxDistrictCode.Text)
+          + " AND DistrictCodeAlpha = " + db.SQLLit(TextBoxAlphaCode.Text);
+          db.ExecuteSQL(SQLDELETE);
+
+          SQLDELETE = "DELETE FROM Offices"
+          + " WHERE StateCode = " + db.SQLLit(ViewState["StateCode"].ToString())
+          + " AND DistrictCode = " + db.SQLLit(TextBoxDistrictCode.Text)
+          + " AND DistrictCodeAlpha = " + db.SQLLit(TextBoxAlphaCode.Text)
+          + " AND OfficeLevel = " + db.Electoral_Multi_Counties.ToString();
+          db.ExecuteSQL(SQLDELETE);
+
+          SQLDELETE = "DELETE FROM MultiCountyDistricts"
+          + " WHERE StateCode = " + db.SQLLit(ViewState["StateCode"].ToString())
+          + " AND DistrictCode = " + db.SQLLit(TextBoxDistrictCode.Text)
+          + " AND DistrictCodeAlpha = " + db.SQLLit(TextBoxAlphaCode.Text);
+          db.ExecuteSQL(SQLDELETE);
+        }
+        else // Judicial Districts
+        {
+          SQLDELETE = "DELETE FROM JudicialDistrictCounties"
+          + " WHERE DistrictCode = " + db.SQLLit(TextBoxDistrictCode.Text)
+          + " AND DistrictCodeAlpha = " + db.SQLLit(TextBoxAlphaCode.Text);
+          db.ExecuteSQL(SQLDELETE);
+
+          SQLDELETE = "DELETE FROM Offices"
+          + " WHERE StateCode = " + db.SQLLit(ViewState["StateCode"].ToString())
+          + " AND DistrictCode = " + db.SQLLit(TextBoxDistrictCode.Text)
+          + " AND DistrictCodeAlpha = " + db.SQLLit(TextBoxAlphaCode.Text)
+          + " AND OfficeLevel = " + db.Electoral_Multi_Counties.ToString();
+          db.ExecuteSQL(SQLDELETE);
+
+          SQLDELETE = "DELETE FROM JudicialDistricts"
+          + " WHERE StateCode = " + db.SQLLit(ViewState["StateCode"].ToString())
+          + " AND DistrictCode = " + db.SQLLit(TextBoxDistrictCode.Text)
+          + " AND DistrictCodeAlpha = " + db.SQLLit(TextBoxAlphaCode.Text);
+          db.ExecuteSQL(SQLDELETE);
+        }
+
+        Msg.Text = db.Ok("The Counties and Offices in " + TextBoxDistrict.Text + " have been deleted.");
+
+        ClearTextboxes();
+        ClearAllCheckboxes();
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void ButtonRecord_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region Check TextBoxes for Illegal Stuff
+        db.Throw_Exception_TextBox_Script(TextBoxDistrictCode);
+        db.Throw_Exception_TextBox_Html(TextBoxDistrictCode);
+
+        db.Throw_Exception_TextBox_Script(TextBoxDistrict);
+        db.Throw_Exception_TextBox_Html(TextBoxDistrict);
+
+        db.Throw_Exception_TextBox_Script(TextBoxOfficeTitle);
+        db.Throw_Exception_TextBox_Html(TextBoxOfficeTitle);
+
+        #endregion Check TextBoxes for Illegal Stuff
+
+        Checks4AddOrUpdate();
+        CheckValidDistrictCode(TextBoxDistrictCode.Text.Trim(), TextBoxAlphaCode.Text.Trim());
+
+        #region get the District Row
+        DataTable DistrictsTable = null;
+        int CountiesInDistrictRecorded = 0;
+        string Message = string.Empty;
+
+        if (Convert.ToInt16(ViewState["DistrictType"]) == db.Electoral_Multi_Counties)//Multi-County Districts
+        {
+          DistrictsTable = db.Table(sql.MultiCountyDistricts(ViewState["StateCode"].ToString()));
+          DataRow DistrictRow = DistrictsTable.Rows[Convert.ToInt16(ViewState["CurrentDistrictRow"])];
+          CountiesInDistrictRecorded = RecordMultiCountyCounties(DistrictRow);
+
+          Message += "The Counties comprising " + TextBoxDistrict.Text.Trim() + " was updated.";
+          //if (db.MultiCountyDistricts(ViewState["StateCode"].ToString(), LabelDistrictCode.Text, "District")
+          if (db.MultiCountyDistricts(
+            ViewState["StateCode"].ToString()
+            , TextBoxDistrictCode.Text
+            , TextBoxAlphaCode.Text
+            , "District")
+            != TextBoxDistrict.Text.Trim())
+          {
+            db.MultiCountyDistrictsUpdate(
+              ViewState["StateCode"].ToString()
+            , TextBoxDistrictCode.Text.Trim()
+            , TextBoxAlphaCode.Text.Trim()
+            , "District"
+            , TextBoxDistrict.Text.Trim());
+            Message += " The District Name was also changed to " + TextBoxDistrict.Text.Trim() + ".";
+          }
+        }
+        else //db.Type_Judicial = Judicial Districts
+        {
+          DistrictsTable = db.Table(sql.JudicialDistricts(ViewState["StateCode"].ToString()));
+          DataRow DistrictRow = DistrictsTable.Rows[Convert.ToInt16(ViewState["CurrentDistrictRow"])];
+          CountiesInDistrictRecorded = RecordJudicialCounties(DistrictRow);
+
+          Message += "The Counties comprising " + TextBoxDistrict.Text.Trim() + " was updated.";
+          if (db.JudicialDistricts(
+            ViewState["StateCode"].ToString()
+            , TextBoxDistrictCode.Text
+            , TextBoxAlphaCode.Text.Trim()
+            , "District")
+            != TextBoxDistrict.Text.Trim())
+          {
+            db.JudicialDistrictsUpdate(
+              ViewState["StateCode"].ToString()
+            , TextBoxDistrictCode.Text.Trim()
+            , TextBoxAlphaCode.Text.Trim()
+            , "District"
+            , TextBoxDistrict.Text.Trim());
+            Message += " The District Name was also changed to " + TextBoxDistrict.Text.Trim() + ".";
+          }
+        }
+        #endregion
+
+        //ClearTextboxes();
+        //ClearAllCheckboxes();
+
+        Msg.Text = db.Ok(Message);
+
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void ButtonAdd_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        #region Check TextBoxes for Illegal Stuff
+        db.Throw_Exception_TextBox_Script(TextBoxDistrictCode);
+        db.Throw_Exception_TextBox_Html(TextBoxDistrictCode);
+
+        db.Throw_Exception_TextBox_Script(TextBoxDistrict);
+        db.Throw_Exception_TextBox_Html(TextBoxDistrict);
+
+        db.Throw_Exception_TextBox_Script(TextBoxOfficeTitle);
+        db.Throw_Exception_TextBox_Html(TextBoxOfficeTitle);
+
+        #endregion Check TextBoxes for Illegal Stuff
+
+        Checks4AddOrUpdate();
+
+        string CurrentDistrictName = TextBoxDistrict.Text.Trim();
+        string CurrentDistrictCode = TextBoxDistrictCode.Text.Trim();
+
+        #region DistrictCode
+        string DistrictCode = TextBoxDistrictCode.Text.Trim();
+        if (DistrictCode.Length == 1)
+          DistrictCode = DistrictCode.Insert(0, "00");
+        else if (DistrictCode.Length == 2)
+          DistrictCode = DistrictCode.Insert(0, "0");
+        CheckIsNewDistrictCode(DistrictCode);
+
+        #endregion
+
+        #region Inits
+        string SQLINSERT = string.Empty;
+        DataRow DistrictRow = null;
+        string OffiecTitle = string.Empty;
+        string OfficeKey = string.Empty;
+        bool OfficeAdded = false;
+        int CountiesInDistrictRecorded = 0;
+        #endregion
+
+        //if (Convert.ToInt16(ViewState["DistrictType"]) == db.Judicial)
+        if (ViewState["DistrictType"].ToOfficeClass() == OfficeClass.StateDistrictMultiCounties)
+        {
+          #region Add MultiCountyDistricts Row
+          SQLINSERT = "INSERT INTO MultiCountyDistricts "
+              + "("
+              + "StateCode"
+              + ",DistrictCode"
+              + ",DistrictCodeAlpha"
+              + ",District"
+              + ")"
+              + " VALUES("
+              + db.SQLLit(ViewState["StateCode"].ToString())
+              + "," + db.SQLLit(DistrictCode)
+              + "," + db.SQLLit(TextBoxDistrict.Text.Trim())
+              + "," + db.SQLLit(TextBoxAlphaCode.Text.Trim())
+              + ")";
+          db.ExecuteSQL(SQLINSERT);
+
+          ViewState["Districts"] = db.Rows(sql.MultiCountyDistricts(ViewState["StateCode"].ToString()));
+          #endregion
+
+          #region Add MultiCountyDistrictCounties Rows
+          DistrictRow = db.Row(sql.MultiCountyDistricts(
+            ViewState["StateCode"].ToString()
+          , DistrictCode
+          , TextBoxAlphaCode.Text.Trim().ToUpper()));
+
+          CountiesInDistrictRecorded = RecordMultiCountyCounties(DistrictRow);
+          #endregion
+
+        }
+        else
+        {
+          #region Judicial Districts
+          #region Add JudicialDistricts Row
+          SQLINSERT = "INSERT INTO JudicialDistricts "
+              + "("
+              + "StateCode"
+              + ",DistrictCode"
+              + ",DistrictCodeAlpha"
+              + ",District"
+              + ")"
+              + " VALUES("
+              + db.SQLLit(ViewState["StateCode"].ToString())
+              + "," + db.SQLLit(DistrictCode)
+              + "," + db.SQLLit(TextBoxAlphaCode.Text.Trim().ToUpper())
+              + "," + db.SQLLit(TextBoxDistrict.Text.Trim())
+              + ")";
+          db.ExecuteSQL(SQLINSERT);
+
+          ViewState["Districts"] = db.Rows(sql.JudicialDistricts(ViewState["StateCode"].ToString()));
+          #endregion
+
+          #region Add JudicialDistrictCounties Row
+          DistrictRow = db.Row(sql.JudicialDistricts(
+            ViewState["StateCode"].ToString()
+          , DistrictCode
+          , TextBoxAlphaCode.Text.Trim().ToUpper()));
+          CountiesInDistrictRecorded = RecordJudicialCounties(DistrictRow);
+          #endregion
+
+          #region Add Optional Offices and ElectionsOffices Rows
+          if (TextBoxOfficeTitle.Text.Trim() != string.Empty)
+          {
+            #region Build the OfficeKey
+            OffiecTitle = TextBoxOfficeTitle.Text.Trim()
+            + " " + DistrictRow["District"].ToString();
+            //OfficeKey = db.OfficeKey(
+            //  db.Office_State_District_Multi_Counties_Judicial
+            //  , ViewState["StateCode"].ToString()
+            //, string.Empty
+            //, string.Empty
+            //, DistrictRow["DistrictCode"].ToString().ToUpper()
+            //, DistrictRow["DistrictCodeAlpha"].ToString().ToUpper()
+            //, OffiecTitle);
+            #endregion
+            //if (db.Row_Optional(db.Sql_Row_Office(OfficeKey)) == null)
+            if (!Offices.OfficeKeyExists(OfficeKey))
+            {
+              #region Add the Office
+              OfficeAdded = true;
+              string x1 = string.Empty;
+              #endregion
+
+              #region Add ElectionsOffices Row (only for upcoming elections)
+              //need to code
+              #endregion
+            }
+          }
+          #endregion
+
+          #region Msg
+          if (OfficeAdded)
+            Msg.Text = db.Ok(CountiesInDistrictRecorded.ToString() + " Counties were added for: "
+              + DistrictRow["District"].ToString() + "."
+              + "<br>And " + TextBoxOfficeTitle.Text.Trim() + " | " + DistrictRow["District"].ToString() + " was added to Offices Table.");
+          else
+            Msg.Text = db.Ok(CountiesInDistrictRecorded.ToString() + " Counties were added for: "
+              + DistrictRow["District"].ToString() + "."
+              + "<br>And NO OFFICE was added to Offices Table.");
+          #endregion
+          #endregion
+        }
+
+        #region Make next DistrictCode and DistrictName
+
+        string NextDistrictName = string.Empty;
+        string NextDistrictCode = string.Empty;
+
+        int CurrentDistrictNumber = 0;
+        string CurrentDistrict = string.Empty;
+
+        int NextDistrictCodeNumber = 0;
+        string NextDistrict = string.Empty;
+
+        //if (db.Is_Digit(CurrentDistrictCode[0]))//1st char is digit (076 or 01A for District 1A)
+        if (char.IsDigit(CurrentDistrictCode[0]))//1st char is digit (076 or 01A for District 1A)
+        {
+          if (db.Is_Valid_Integer(CurrentDistrictCode))//3 digit code - 076
+          {
+            CurrentDistrictNumber = Convert.ToInt16(CurrentDistrictCode);
+            CurrentDistrict = CurrentDistrictNumber.ToString();
+
+            NextDistrictCodeNumber = Convert.ToInt16(CurrentDistrictCode) + 1;
+            NextDistrict = NextDistrictCodeNumber.ToString();
+
+            NextDistrictCode = NextDistrictCodeNumber.ToString();
+            if (NextDistrictCode.Length == 1)
+              NextDistrictCode = NextDistrictCode.Insert(0, "00");
+            else if (NextDistrictCode.Length == 2)
+              NextDistrictCode = NextDistrictCode.Insert(0, "0");
+
+            NextDistrictName = CurrentDistrictName.Replace(CurrentDistrict, NextDistrict);
+          }
+          else//like 01A, 22B (District 1A or 22B)
+          {
+            NextDistrictCode = string.Empty;//next district is probably not 02A or 23B
+            NextDistrictName = string.Empty;
+          }
+        }
+        else// like A02, AA2, DAL
+        {
+          //if (db.Is_Digit(CurrentDistrictCode[1]))// 2nd char is digit = like A02
+          if (char.IsDigit(CurrentDistrictCode[1]))// 2nd char is digit = like A02
+          {
+            CurrentDistrictNumber = Convert.ToInt16(CurrentDistrictCode.Substring(1, 2));
+            CurrentDistrict = CurrentDistrictNumber.ToString();
+
+            NextDistrictCodeNumber = Convert.ToInt16(CurrentDistrictNumber) + 1;
+            NextDistrict = NextDistrictCodeNumber.ToString();
+
+            NextDistrictCode = NextDistrictCodeNumber.ToString();
+            if (NextDistrictCode.Length == 1)
+              NextDistrictCode = NextDistrictCode.Insert(0, "0");
+            NextDistrictCode = CurrentDistrictCode[0]
+            + NextDistrictCode.ToString();
+
+            NextDistrictName = CurrentDistrictName.Replace(CurrentDistrict, NextDistrict);
+          }
+          //else if (db.Is_Digit(CurrentDistrictCode[2]))// 3rd char is digit = 2 Char + digit - AA2
+          else if (char.IsDigit(CurrentDistrictCode[2]))// 3rd char is digit = 2 Char + digit - AA2
+          {
+            CurrentDistrictNumber = Convert.ToInt16(CurrentDistrictCode.Substring(2));
+            CurrentDistrict = CurrentDistrictNumber.ToString();
+
+            NextDistrictCodeNumber = Convert.ToInt16(CurrentDistrictNumber) + 1;
+            NextDistrict = NextDistrictCodeNumber.ToString();
+
+            NextDistrictCode = CurrentDistrictCode.Substring(0, 2)
+            + NextDistrict.ToString();
+
+            NextDistrictName = CurrentDistrictName.Replace(CurrentDistrict, NextDistrict);
+          }
+          else //3 Chars like DAL for Dallas
+          {
+            NextDistrictCode = string.Empty;
+            NextDistrictName = string.Empty;
+          }
+        }
+
+        #region Next District
+        TextBoxDistrictCode.Text = NextDistrictCode;
+        TextBoxDistrict.Text = NextDistrictName;
+        #endregion
+
+        #endregion
+
+        ClearAllCheckboxes();
+
+        //LabelDistrictCode.Text = string.Empty;
+        //TextBoxOfficeTitle is left unchanged intensionally
+      }
+      catch (Exception ex)
+      {
+        #region
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+        #endregion
+      }
+    }
+
+    protected void ButtonUpdateJudicialDistrict_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        db.Throw_Exception_TextBox_Html_Or_Script(TextBoxDistrict);
+
+        if (Convert.ToInt16(ViewState["DistrictType"]) == db.Electoral_Multi_Counties)//Multi-County Districts
+          db.MultiCountyDistrictsUpdate(
+            ViewState["StateCode"].ToString()
+            , ViewState["DistrictCode"].ToString()
+            , ViewState["DistrictCodeAlpha"].ToString()
+            , "District"
+            , TextBoxDistrict.Text.Trim());
+        else
+          db.JudicialDistrictsUpdate(
+            ViewState["StateCode"].ToString()
+            , ViewState["DistrictCode"].ToString()
+            , ViewState["DistrictCodeAlpha"].ToString()
+            , "District"
+            , TextBoxDistrict.Text.Trim());
+
+        LoadDistrictCodesAndName();
+
+        Msg.Text = db.Ok("The District was updated.");
+      }
+      catch (Exception ex)
+      {
+        Msg.Text = db.Fail(ex.Message);
+        db.Log_Error_Admin(ex);
+      }
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        #region Security Check and Values for ViewState["StateCode"] ViewState["CountyCode"] ViewState["LocalCode"]
+
+        #region Notes
+        //The Session UserStateCode, UserCountyCode, UserLocalCode can be changed
+        //by a higher administration level using query strings
+        //This is done in db.State_Code(), db.County_Code(), db.Local_Code()
+        //
+        //Using ViewState variables insures these values won't
+        //change on any postbacks or in different tab or browser Sessions.
+        //
+        //ViewState["StateCode"] can be a StateCode or U1, u2, u3 for FederalCode
+        #endregion Notes
+
+        ViewState["StateCode"] = db.State_Code();
+        ViewState["CountyCode"] = db.County_Code();
+        ViewState["LocalCode"] = db.Local_Code();
+        if (!db.Is_User_Security_Ok())
+          SecurePage.HandleSecurityException();
+
+        #endregion Security Check and Values for ViewState["StateCode"] ViewState["CountyCode"] ViewState["LocalCode"]
+
+        try
+        {
+          ViewState["DistrictCode"] = string.Empty;
+          ViewState["DistrictCodeAlpha"] = string.Empty;
+          ViewState["DistrictType"] = db.Type_Judicial;//default
+
+//          #region DEBUG ViewState["DistrictType"] ViewState["DistrictCode"] ViewState["DistrictCodeAlpha"]
+//#if DEBUG
+//          ViewState["DistrictType"] = db.Type_Judicial;
+//          //			ViewState["DistrictType"] = db.Electoral_Multi_Counties;
+
+//          //    ViewState["DistrictCode"] = string.Empty;
+//          //ViewState["DistrictCode"] = "001";
+
+//          //    ViewState["DistrictCodeAlpha"] = string.Empty;
+//          ViewState["DistrictCodeAlpha"] = "DAL";
+//          //    ViewState["DistrictCodeAlpha"] = "A";
+//#endif
+//          #endregion
+
+          #region ViewState["DistrictType"] ViewState["DistrictCode"] ViewState["DistrictCodeAlpha"]
+          if (!string.IsNullOrEmpty(GetQueryString("Type")))
+            ViewState["DistrictType"] = GetQueryString("Type");
+
+          if(ViewState["DistrictType"].ToString() == string.Empty)
+            throw new ApplicationException("No Office Group was passed as a query string.");
+
+
+          if (!string.IsNullOrEmpty(GetQueryString("District")))
+            ViewState["DistrictCode"] = GetQueryString("District");
+
+          if (!string.IsNullOrEmpty(GetQueryString("DistrictAlpha")))
+            ViewState["DistrictCodeAlpha"] = GetQueryString("DistrictAlpha");
+
+
+          if ((ViewState["DistrictCode"].ToString() == string.Empty)
+            && (ViewState["DistrictCodeAlpha"].ToString() == string.Empty))
+            throw new ApplicationException("No District and/or DistrictAlpha Codes were passed as a query string.");
+          #endregion
+
+          #region checks
+          if (Convert.ToInt16(ViewState["DistrictType"]) == db.Type_Judicial)
+          {
+            #region Check DistrictCode in DB
+            if (!db.Is_Valid_Judicial_District(ViewState["StateCode"].ToString(),
+              ViewState["DistrictCode"].ToString()
+              , ViewState["DistrictCodeAlpha"].ToString()))
+              throw new ApplicationException("No Judicial District Code in JudicialDistricts Table for State: "
+                + ViewState["StateCode"].ToString()
+                + " DistrictCode: " + ViewState["DistrictCode"].ToString());
+            #endregion
+          }
+          else if (Convert.ToInt16(ViewState["DistrictType"]) == db.Electoral_Multi_Counties)
+          {
+            #region Not implemented or tested
+            //#region Check DistrictCode in DB
+            //if (!db.Is_Valid_MultiCounty_District(
+            //  ViewState["StateCode"].ToString(),
+            //  ViewState["DistrictCode"].ToString()
+            //  , ViewState["DistrictCodeAlpha"].ToString()))
+            //  throw new ApplicationException("No Multi-County District Code in MultiCountyDistricts Table for State: "
+            //    + ViewState["StateCode"].ToString()
+            //    + " DistrictCode: " + ViewState["DistrictCode"].ToString());
+            //#endregion
+            #endregion Not implemented or tested
+          }
+          else
+          {
+            throw new ApplicationException("The Office Group was not a Multi-County Judicial Group or Multi-County Group.");
+          }
+          #endregion checks
+
+          #region Page Title
+          if (Convert.ToInt16(ViewState["DistrictType"]) == db.Type_Judicial)
+          {
+            LabelPageTitle.Text = StateCache.GetStateName(ViewState["StateCode"].ToString())
+              //+ "<br>"
+              //+ db.JudicialDistricts(
+              //    ViewState["StateCode"].ToString()
+              //    , ViewState["DistrictCode"].ToString()
+              //    , ViewState["DistrictCodeAlpha"].ToString()
+              //    , "District")
+              + "<br>Judicial District";
+          }
+          else if (Convert.ToInt16(ViewState["DistrictType"]) == db.Electoral_Multi_Counties)
+          {
+            LabelPageTitle.Text = StateCache.GetStateName(ViewState["StateCode"].ToString())
+              //+ "<br>"
+              //+ db.MultiCountyDistricts(
+              //    ViewState["StateCode"].ToString()
+              //    , ViewState["DistrictCode"].ToString()
+              //    , ViewState["DistrictCodeAlpha"].ToString()
+              //    , "District")
+              + "<br>Multi-County District";
+          }
+          #endregion Page Title
+
+          if (db.User() == db.UserType.Master)
+          {
+            #region Controls for MASTER users
+            TableMaster1.Visible = true;
+            TableMaster4.Visible = true;
+            TableMaster5.Visible = true;
+            TableMaster6.Visible = true;
+            TableMaster7.Visible = true;
+            TableMaster8.Visible = true;
+
+            SetControls4MasterUser();
+            #endregion Controls for MASTER users
+
+            #region Create County checkboxes
+            DataTable CountiesTable = db.Table(sql.Counties(ViewState["StateCode"].ToString()));
+            foreach (DataRow CountyRow in CountiesTable.Rows)
+            {
+              string OnlyCountyName = CountyRow["County"].ToString();
+              OnlyCountyName = "  " + OnlyCountyName.Replace("County", string.Empty).Trim() + "  ";
+              CheckBoxListCounties.Items.Add(OnlyCountyName);
+            }
+            #endregion Create County checkboxes
+
+            //ViewState["CurrentDistrictRow"] = -1;
+            #region commented out Load Textboxes
+            //DataRow DistrictRow = db.Row_Last_Optional(sql.JudicialDistricts(
+            //  ViewState["StateCode"].ToString()
+            //,ViewState["DistrictCode"].ToString()
+            //,ViewState["DistrictCodeAlpha"].ToString()));
+            //if(DistrictRow != null)
+            //{
+            //TextBoxDistrictCode.Text = DistrictRow["DistrictCode"].ToString();
+            //TextBoxDistrict.Text = DistrictRow["District"].ToString();
+            //TextBoxAlphaCode.Text = DistrictRow["DistrictCodeAlpha"].ToString();
+            //}
+            //else
+            //{
+            //  Msg.Text = db.Fail("This District does not exist in the database.");
+            //}
+            #endregion Load Textboxes
+
+            TextBoxDistrictCode.Text = ViewState["DistrictCode"].ToString();
+            TextBoxAlphaCode.Text = ViewState["DistrictCodeAlpha"].ToString();
+
+            GetDistrictDataAndCounties();
+
+          }
+          else
+          {
+            #region Controls for ADMIN users
+            TableMaster1.Visible = false;
+            TableMaster4.Visible = false;
+            TableMaster5.Visible = false;
+            TableMaster6.Visible = false;
+            TableMaster7.Visible = false;
+            TableMaster8.Visible = false;
+
+            LoadDistrictCodesAndName();
+
+            #endregion Controls for ADMIN users
+          }
+
+        }
+        catch (Exception ex)
+        {
+          #region
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+          #endregion
+        }
+      }
+
+    }
+
+    protected void Page_PreRender(object sender, EventArgs e)
+    {
+      try
+      {
+        if (Session["ErrNavBarAdmin"].ToString() != string.Empty)
+          Msg.Text = db.Fail(Session["ErrNavBarAdmin"].ToString());
+      }
+      catch /*(Exception ex)*/
+      {
+      }
+    }
+  }
+}

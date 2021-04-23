@@ -1,0 +1,213 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Net;
+using System.Web;
+using System.Web.Script.Serialization;
+using System.Xml;
+using DB.Vote;
+
+namespace Vote
+{
+  public class YouTubeVideoInfo
+  {
+    public const string InvalidVideoUrlMessage = "Invalid YouTube URL";
+    public const string VideoIdNotFoundMessage = "Video Id not found on YouTube";
+    public const string VideoNotPublicMessage = "YouTube video is not publically viewable";
+    public const string VideoUploadedByCandidateMessage = "Uploaded by candidate";
+    public const int MaxVideoDescriptionLength = 300;
+
+    // ReSharper disable once MemberCanBePrivate.Global
+    public readonly string Id;
+    public readonly bool IsValid;
+    public readonly string Title;
+    public readonly string Description;
+    public readonly DateTime PublishedAt;
+    public readonly TimeSpan Duration;
+    public readonly bool IsPublic;
+
+    public YouTubeVideoInfo(string id)
+    {
+      Id = id;
+    }
+
+    public YouTubeVideoInfo(string id, string title, string description, DateTime publishedAt,
+      TimeSpan duration, bool isPublic)
+    {
+      Id = id;
+      Title = title;
+      Description = description;
+      PublishedAt = publishedAt;
+      Duration = duration;
+      IsPublic = isPublic;
+      IsValid = true;
+    }
+  }
+
+  public static class YouTubeUtility
+  {
+    private static string _ApiKey;
+    private static string ApiKey
+    {
+      get
+      {
+        return _ApiKey ?? (_ApiKey = ConfigurationManager.AppSettings["VoteYouTubeApiKey"]);
+      }
+    }
+
+    private static string _WebProxyUrl;
+    private static string WebProxyUrl
+    {
+      get
+      {
+        return _WebProxyUrl ?? (_WebProxyUrl = ConfigurationManager.AppSettings["VoteWebProxyUrl"]);
+      }
+    }
+
+    private const string VideoInfoUrlTemplate =
+      "https://www.googleapis.com/youtube/v3/videos?id={0}&key={1}&part=snippet,contentDetails,status&fields=items(snippet/title,snippet/description,snippet/publishedAt,contentDetails/duration,status/privacyStatus)";
+
+    private static YouTubeVideoInfo DecodeJson(string youTubeId, string json)
+    {
+      // ReSharper disable AssignNullToNotNullAttribute
+      var serializer = new JavaScriptSerializer();
+      var jsonObj = serializer.Deserialize<Dictionary<string, object>>(json);
+      var items = jsonObj["items"] as ArrayList;
+      var dictionary = items[0] as Dictionary<string, object>;
+      var snippet = dictionary["snippet"] as Dictionary<string, object>;
+      var title = snippet["title"] as string;
+      var description = snippet["description"] as string;
+      var publishedAt = snippet["publishedAt"] as string;
+      var contentDetails = dictionary["contentDetails"] as Dictionary<string, object>;
+      var duration = contentDetails["duration"] as string;
+      var status = dictionary["status"] as Dictionary<string, object>;
+      var privacyStatus = status["privacyStatus"] as string;
+
+      return new YouTubeVideoInfo(youTubeId, title, description, DateTime.Parse(publishedAt).Date,
+        XmlConvert.ToTimeSpan(duration), privacyStatus != "private");
+      // ReSharper restore AssignNullToNotNullAttribute
+    }
+
+    public static YouTubeVideoInfo GetYouTubeVideoInfo(string youTubeId, int retries = 0)
+    {
+      try
+      {
+        var client = new WebClient();
+        var url = string.Format(VideoInfoUrlTemplate, youTubeId, ApiKey);
+        var json = client.DownloadString(url);
+        return DecodeJson(youTubeId, json);
+      }
+      catch
+      {
+        if (retries <= 0)
+          return new YouTubeVideoInfo(youTubeId);
+      }
+      return GetYouTubeVideoInfo(youTubeId, retries - 1);
+    }
+
+    public static YouTubeVideoInfo GetYouTubeVideoInfoViaProxy(string youTubeId, int retries = 0)
+    {
+      try
+      {
+        var client = new WebClient {Encoding = System.Text.Encoding.UTF8};
+        var url = string.Format(VideoInfoUrlTemplate, youTubeId, ApiKey);
+        var json = client.DownloadString(WebProxyUrl + "?" + HttpUtility.UrlEncode(url));
+        return DecodeJson(youTubeId, json);
+      }
+      catch
+      {
+        if (retries <= 0)
+          return new YouTubeVideoInfo(youTubeId);
+      }
+      return GetYouTubeVideoInfoViaProxy(youTubeId, retries - 1);
+    }
+
+    public static void RefreshYouTubeAnswers()
+    {
+      string message;
+      var expiration = new TimeSpan(3, 0, 0, 0); // 3 days
+      // fudge is to account for small differences in run time
+      var fudge = new TimeSpan(1, 0, 0); // 1 hour
+      var now = DateTime.UtcNow;
+
+      try
+      {
+        VotePage.LogInfo("UpdatePoliticiansLiveOfficeKey", "Started");
+
+        var answersUpdated = 0;
+        var table = Answers.GetDataForYouTubeRefresh(now - expiration + fudge);
+
+        foreach (var row in table)
+        {
+          row.YouTubeRefreshTime = now;
+
+          var youTubeId = row.YouTubeUrl.GetYouTubeId();
+          if (string.IsNullOrWhiteSpace(youTubeId))
+          {
+            if (row.YouTubeAutoDisable != YouTubeVideoInfo.InvalidVideoUrlMessage)
+            {
+              row.YouTubeAutoDisable = YouTubeVideoInfo.InvalidVideoUrlMessage;
+              answersUpdated++;
+            }
+            continue;
+          }
+
+          var videoInfo = GetYouTubeVideoInfo(youTubeId, 1);
+          if (!videoInfo.IsValid)
+          {
+            if (row.YouTubeAutoDisable != YouTubeVideoInfo.VideoIdNotFoundMessage)
+            {
+              row.YouTubeAutoDisable = YouTubeVideoInfo.VideoIdNotFoundMessage;
+              answersUpdated++;
+            }
+            continue;
+          }
+
+          if (!videoInfo.IsPublic)
+          {
+            if (row.YouTubeAutoDisable != YouTubeVideoInfo.VideoNotPublicMessage)
+            {
+              row.YouTubeAutoDisable = YouTubeVideoInfo.VideoNotPublicMessage;
+              answersUpdated++;
+            }
+            continue;
+          }
+
+          var description = videoInfo.Description.Trim();
+          if (string.IsNullOrWhiteSpace(description) || description.Length > YouTubeVideoInfo.MaxVideoDescriptionLength)
+            description = videoInfo.Title.Trim();
+
+          if (description != row.YouTubeDescription ||
+            videoInfo.Duration != row.YouTubeRunningTime ||
+            row.YouTubeAutoDisable != null ||
+            row.YouTubeSource == YouTubeVideoInfo.VideoUploadedByCandidateMessage &&
+              videoInfo.PublishedAt != row.YouTubeDate)
+          {
+            row.YouTubeDescription = description;
+            row.YouTubeRunningTime = videoInfo.Duration;
+            row.YouTubeAutoDisable = null;
+            if (row.YouTubeSource == YouTubeVideoInfo.VideoUploadedByCandidateMessage)
+              row.YouTubeDate = videoInfo.PublishedAt;
+            answersUpdated++;
+          }
+        }
+
+        Answers.UpdateTable(table);
+
+        message =
+          string.Format(
+            "{0} Expired YouTube answers found, {1} YouTube Answers updated", table.Count, answersUpdated);
+
+      }
+      catch (Exception ex)
+      {
+        VotePage.LogException("RefreshYouTubeAnswers", ex);
+        message = string.Format("Exception: {0} [see exception log for details]",
+          ex.Message);
+      }
+
+      VotePage.LogInfo("RefreshYouTubeAnswers", message);
+    }
+  }
+}

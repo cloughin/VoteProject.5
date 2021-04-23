@@ -1,0 +1,32 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="elected.aspx.cs" Inherits="Vote.Sandbox.Elected" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+  <title>Test</title>
+  <link href="/css/Reset.css" type="text/css" rel="stylesheet" />
+  <link href="/css/MainCommon.css" type="text/css" rel="stylesheet" />
+  <link href="/css/SecondaryCommon.css" type="text/css" rel="stylesheet" />
+  <link href="/css/All.css" type="text/css" rel="stylesheet" />
+  <link href="/css/Elected.css" type="text/css" rel="stylesheet" />
+  <link href="/css/SocialMediaButtons.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+    <form id="form1" runat="server">
+
+    <div id="outer">
+    <div id="container">
+      <div id="mainContent">
+        <div id="InnerContent" runat="server">
+          <table class="tablePage" id="ElectedOfficialsTable" cellspacing="0" runat="server"
+          enableviewstate="False" border="0">
+        </table>
+          <asp:PlaceHolder ID="ReportPlaceHolder" runat="server" EnableViewState="False"></asp:PlaceHolder>
+        </div>
+      </div> <!-- id="mainContent" -->
+    </div> <!-- id="container" -->
+    </div> <!-- id="outer" -->
+    </form>
+</body>
+</html>

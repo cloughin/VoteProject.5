@@ -1,0 +1,21 @@
+﻿#main-tabs #tab-upload .browse-button
+{
+  padding: 1px 15px;
+  top: 5px;
+}
+
+#main-tabs #tab-upload .upload-file
+{
+  left: -149px;
+  top: 4px;
+}
+
+#main-tabs #tab-upload .file-name-container
+{
+  left: 94px;
+}
+
+#main-tabs #tab-upload .file-name
+{
+  width: 177px;
+}

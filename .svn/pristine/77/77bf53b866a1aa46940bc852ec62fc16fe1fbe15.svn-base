@@ -1,0 +1,184 @@
+﻿using System;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB.Vote;
+using DB.VoteZipNewLocal;
+using Vote.Reports;
+
+namespace Vote
+{
+  public partial class BallotPage : CacheablePage
+  {
+    protected BallotPage()
+    {
+      NoIndex = true;
+    }
+
+    private string _ZipQueryError;
+
+    #region Caching support
+
+    protected override string GetCacheKey()
+    {
+      return UrlManager.GetStateCodeFromHostName() + "." + QueryState + "." +
+        QueryElection + "." + QueryCongress + "." + QueryStateSenate + "." +
+        QueryStateHouse + "." + QueryCounty;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "Ballot";
+    }
+
+    #endregion Caching support
+
+    private readonly string _ElectionKey = QueryElection;
+    private string _ElectionDescription;
+
+    private const string TitleTag = "Enhanced Sample Ballot for {0} | {1}";
+
+    private void CreateHeading(int officeContestsCount)
+    {
+      //ElectionTitle.InnerText = PageCache.Elections.GetElectionDesc(QueryElection);
+      new HtmlAnchor
+      {
+        HRef = UrlManager.GetElectionPageUri(_ElectionKey).ToString(),
+        InnerText = _ElectionDescription
+      }.AddTo(ElectionTitle);
+      LocationInfo.InnerHtml = FormatLegislativeDistrictsFromQueryStringForHeading(true);
+
+      Control countyBoard;
+      var countyBoardWebAddress =
+        NormalizeUrl(States.GetCountyBoardsWebAddress(
+         Elections.GetStateCodeFromKey(QueryElection)));
+      const string linkText = "local county board&rsquo;s website";
+      if (string.IsNullOrWhiteSpace(countyBoardWebAddress))
+        countyBoard = new LiteralControl(linkText);
+      else
+        countyBoard = new HtmlAnchor
+        {
+          HRef = countyBoardWebAddress,
+          Target = "_blank",
+          InnerHtml = linkText
+        };
+
+      string instructions;
+      if (officeContestsCount > 0)
+        instructions =
+          "Our enhanced sample ballot is not simply a listing of the candidates. We provide photos" +
+          " and links to social media and allow you to compare the biographical information" +
+          " and views of the candidates. If you are looking for an exact replica of the" +
+          " ballot you will see at the polls, we suggest that you consult your " +
+          countyBoard.RenderToString() + ".";
+      else
+        instructions =
+          "There are no office contests for your legislative districts.";
+      Instructions.InnerHtml = instructions;
+
+      var additionalInfo =
+        PageCache.Elections.GetElectionAdditionalInfo(QueryElection)
+          .ReplaceNewLinesWithParagraphs();
+      if (!string.IsNullOrWhiteSpace(additionalInfo))
+        new LiteralControl(additionalInfo).AddTo(AdditionalInfo);
+
+      if (officeContestsCount > 0)
+      {
+        var ballotInstructions =
+          PageCache.Elections.GetBallotInstructions(QueryElection);
+        if (!string.IsNullOrWhiteSpace(ballotInstructions))
+          new LiteralControl(ballotInstructions).AddTo(AdditionalInfo);
+
+        // Mantis 349: Show Incumbent always
+        //if (
+        //  StateCache.GetIsIncumbentShownOnBallots(
+        //    Elections.GetStateCodeFromKey(QueryElection)))
+          new LiteralControl("* = Incumbent").AddTo(AdditionalInfo);
+      }
+    }
+
+    private string GetMetaTitle()
+    {
+      return "Enhanced Sample Ballot for " +
+        PageCache.Elections.GetElectionDesc(QueryElection) + ", " +
+        FormatLegislativeDistrictsFromQueryString(", ");
+    }
+
+    protected override void OnPreInit(EventArgs e)
+    {
+      var zip = Request.QueryString["zip"];
+      if (!string.IsNullOrEmpty(zip))
+        try
+        {
+          // handle zip based queries
+          var electionKey = Request.QueryString["election"];
+          if (string.IsNullOrEmpty(electionKey))
+            throw new VoteException("The election key is missing");
+          zip = zip.Replace("-", "");
+          if (zip.Length != 9)
+            throw new VoteException("The zip must be nine digits");
+          var zip5 = zip.Substring(0, 5);
+          var zip4 = zip.Substring(5, 4);
+          var table = Uszd.GetDataByZip5Zip4(zip5, zip4);
+          if (table.Count == 0)
+            throw new VoteException("Could not find this zip code");
+          var row = table[0];
+          var redirect =
+            string.Format(
+              "/ballot.aspx?State={0}&Election={1}&" +
+                "Congress={2}&StateSenate={3}&StateHouse={4}&County={5}",
+              StateCache.StateCodeFromLdsStateCode(row.LdsStateCode), electionKey,
+              row.Congress.ZeroPad(3), row.StateSenate.ZeroPad(3),
+              row.StateHouse.ZeroPad(3), row.County.ZeroPad(3));
+          redirect = UrlManager.ApplySiteIdToUrl(redirect);
+          Response.Redirect(redirect);
+        }
+        catch (VoteException ex)
+        {
+          _ZipQueryError = ex.Message;
+        }
+      else // classic mode
+        base.OnPreInit(e);
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      Master.MenuPage = "forVoters.aspx";
+
+      _ElectionDescription = PageCache.Elections.GetElectionDesc(_ElectionKey);
+      Title = string.Format(TitleTag, GetMetaTitle(), Master.SiteName);
+
+      try
+      {
+        var metaContent = GetMetaTitle();
+        Title = metaContent;
+        MetaDescription = metaContent;
+        MetaKeywords = metaContent;
+
+        if (_ZipQueryError != null)
+        {
+          InnerContent.Controls.Clear();
+          var p = new HtmlP().AddTo(InnerContent, "not-found-error");
+          new LiteralControl(_ZipQueryError).AddTo(p);
+          return;
+        }
+
+        int officeContests;
+        //bool useExplorer;
+        //if (
+        //  !Boolean.TryParse(
+        //    ConfigurationManager.AppSettings["UseExplorerOnBallotPage"],
+        //    out useExplorer)) useExplorer = false;
+        BallotReportResponsive.GetReport(QueryElection, QueryCongress, QueryStateSenate,
+          QueryStateHouse, QueryCounty, out officeContests)
+          .AddTo(ReportPlaceHolder);
+        CreateHeading(officeContests);
+        BallotReferendumReportResponsive.GetReport(QueryElection, QueryCounty)
+          .AddTo(ReferendumReportPlaceHolder);
+      }
+      catch (Exception ex)
+      {
+        
+      }
+    }
+  }
+}

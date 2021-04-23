@@ -1,0 +1,254 @@
+﻿using System;
+using System.Linq;
+using DB.Vote;
+
+namespace Vote.Admin
+{
+  public partial class UpdateElectionsPage
+  {
+    #region Private
+
+    #region DataItem object
+
+    [PageInitializer]
+    private class AddOfficesTabItem : ElectionsDataItem
+    {
+      // This class assumes OfficeList is the only column
+      private const string GroupName = "AddOffices";
+      public static int OfficeCount { get; private set; }
+
+      private AddOfficesTabItem(UpdateElectionsPage page) : base(page, GroupName) {}
+
+      private static AddOfficesTabItem[] GetTabInfo(UpdateElectionsPage page)
+      {
+        var addOfficesTabInfo = new[]
+          {
+            new AddOfficesTabItem(page)
+              {
+                Column = "OfficeList",
+                Description = "Office List"
+              }
+          };
+
+        foreach (var item in addOfficesTabInfo)
+          item.InitializeItem(page);
+
+        InitializeGroup(page, GroupName);
+
+        return addOfficesTabInfo;
+      }
+
+      protected override string GetCurrentValue()
+      {
+        return null;
+      }
+
+      // ReSharper disable UnusedMember.Local
+      // Invoked via Reflection
+      internal static void Initialize(UpdateElectionsPage page)
+        // ReSharper restore UnusedMember.Local
+      {
+        page._AddOfficesTabInfo = GetTabInfo(page);
+        page.ShowChangeOffices = StateCache.IsValidStateCode(page.StateCode);
+        if (!page.ShowChangeOffices)
+          page.TabChangeOfficesItem.Visible = false;
+      }
+
+      public override void LoadControl()
+      {
+        OfficeCount = 0;
+        Elections.ActualizeElection(Page.GetElectionKey());
+        var table = Elections.GetAvailableElectionOfficeData(
+          Page.GetElectionKey(), Page.StateCode, Page.CountyCode, Page.LocalCode);
+        if (table.Count == 0)
+        {
+          Page.AddOfficesMessage.RemoveCssClass("hidden");
+          Page.AddOfficesControl.AddCssClasses("hidden");
+        }
+        else
+        {
+          Page.AddOfficesMessage.AddCssClasses("hidden");
+          Page.AddOfficesControl.RemoveCssClass("hidden");
+          OfficeCount = Vote.Controls.OfficeControl.PopulateOfficeTree(table,
+            Page.PlaceHolderAddOfficesTree, Page.StateCode, true, false, true, Page.AdminPageLevel == AdminPageLevel.State);
+        }
+      }
+
+      protected override void Log(string oldValue, string newValue)
+      {
+        // Logging done in update
+      }
+
+      private string ActualizeOfficeKey(string officeKey)
+      {
+        switch (Page.AdminPageLevel)
+        {
+          case AdminPageLevel.County:
+            officeKey = Page.StateCode + Page.CountyCode + officeKey.Substring(5);
+            break;
+
+          case AdminPageLevel.Local:
+            officeKey = Page.StateCode + Page.CountyCode + Page.LocalCode + officeKey.Substring(7);
+            break;
+        }
+        return officeKey;
+      }
+
+      private bool IsVirtualOfficeKey(string officeKey)
+      {
+        return Offices.GetCountyCodeFromKey(officeKey) == "###";
+      }
+
+      protected override bool Update(object newValue)
+      {
+        var electionKey = Page.GetElectionKey();
+        var changed = false;
+        var stringValue = newValue.ToString();
+
+        // get the list of officeKeys
+        var officeKeys = stringValue.Split(new[] {'|'}, 
+          StringSplitOptions.RemoveEmptyEntries).ToList();
+
+        // actualize any virtuals
+        foreach (var officeKey in officeKeys)
+        {
+          if (IsVirtualOfficeKey(officeKey))
+          {
+            var table = Offices.GetDataByOfficeKey(officeKey);
+            if (table.Count != 0)
+            {
+              var row = table[0];
+              Offices.Insert(ActualizeOfficeKey(officeKey), Page.StateCode, Page.CountyCode,
+                Page.LocalCode, row.DistrictCode, row.DistrictCodeAlpha, row.OfficeLine1,
+                row.OfficeLine2, row.OfficeLevel, row.AlternateOfficeLevel, row.OfficeOrderWithinLevel,
+                row.IsRunningMateOffice, row.IsOnlyForPrimaries, row.Incumbents, row.VoteInstructions,
+                row.VoteForWording, row.WriteInInstructions, row.WriteInWording, row.WriteInLines,
+                false, DateTime.UtcNow, false,row.IsSpecialOffice, false, row.ElectionPositions,
+                row.PrimaryPositions, row.PrimaryRunoffPositions, row.GeneralRunoffPositions, false);
+            }
+          }
+        }
+
+        // create a dictionary of office keys from the updated tree
+        var officeKeyDictionary = officeKeys
+          .ToDictionary(ActualizeOfficeKey, key => false, StringComparer.OrdinalIgnoreCase);
+
+        // get the current list of office keys for the election
+        var offices = ElectionsOffices.GetOfficeKeysData(electionKey);
+
+        // delete any that aren't in the dictionary (and from 
+        // ElectionsPoliticians too), and mark those that are there
+        // so we know what to add
+        foreach (var office in offices)
+        {
+          var officeKey = office.OfficeKey;
+          if (officeKeyDictionary.ContainsKey(officeKey))
+            officeKeyDictionary[officeKey] = true;
+          else
+          {
+            LogElectionsOfficesDelete(electionKey, officeKey);
+            ElectionsOffices.DeleteByElectionKeyOfficeKey(electionKey, officeKey);
+            ElectionsPoliticians.DeleteByElectionKeyOfficeKey(electionKey,
+              officeKey);
+            changed = true;
+          }
+        }
+
+        // add offices from the dictionary that aren't marked
+        foreach (var officeKey in officeKeyDictionary.Where(kvp => !kvp.Value)
+          .Select(kvp => kvp.Key))
+        {
+          LogElectionsOfficesInsert(electionKey, officeKey);
+          Page.InsertElectionOffice(electionKey, officeKey);
+          changed = true;
+        }
+        LoadControl();
+        return changed;
+      }
+    }
+
+    private AddOfficesTabItem[] _AddOfficesTabInfo;
+
+    #endregion DataItem object
+
+    private static string CreateFederalElectionIfNeeded(string electionKey,
+      string officeKey)
+    {
+      var officeClass = Offices.GetOfficeClass(officeKey);
+      if (!officeClass.IsFederal()) return String.Empty;
+
+      var federalCode = officeClass.StateCodeProxy();
+      var federalElectionKey = Elections.GetFederalElectionKeyFromKey(electionKey,
+        federalCode);
+
+      if (GetAdminPageLevel() != AdminPageLevel.State ||
+        !Elections.IsGeneralElection(electionKey)) return String.Empty;
+
+      if (!Elections.ElectionKeyExists(federalElectionKey))
+      {
+        var electionDate = Elections.GetElectionDateFromKey(electionKey);
+        var electionDateString = Elections.GetElectionDateStringFromKey(electionKey);
+        var electionDesc = electionDate.ToString("MMMM d, yyyy") +
+          " General Election " + officeClass.Description() + " State-By-State";
+
+        Elections.Insert(federalElectionKey, federalCode, String.Empty, String.Empty,
+          electionDate, electionDateString, Elections.ElectionTypeGeneralElection,
+          Parties.NationalPartyAll, "ALL", String.Empty, electionDesc, String.Empty, 
+          String.Empty, DefaultDbDate, String.Empty, false, 0, DefaultDbDate, 0,
+          DefaultDbDate, 0, DefaultDbDate, 0, DefaultDbDate, 0, String.Empty, 0, false,
+          false, DefaultDbDate, DefaultDbDate, DefaultDbDate, DefaultDbDate,
+          DefaultDbDate, DefaultDbDate, DefaultDbDate, DefaultDbDate, DefaultDbDate);
+      }
+
+      return federalElectionKey;
+    }
+
+    private void InsertElectionOffice(string electionKey, string officeKey)
+    {
+      var federalElectionKey = CreateFederalElectionIfNeeded(electionKey, officeKey);
+      var officeClass = Offices.GetOfficeClass(officeKey);
+      var districtCode = Offices.GetValidDistrictCode(officeKey);
+      var stateElectionKey = Elections.GetStateElectionKeyFromKey(electionKey);
+      var countyElectionKey = Elections.GetCountyElectionKeyFromKey(electionKey,
+        StateCode, CountyCode);
+      var localElectionKey = Elections.GetLocalElectionKeyFromKey(electionKey,
+        StateCode, CountyCode, LocalCode);
+
+      ElectionsOffices.Insert(electionKey, officeKey, stateElectionKey, 
+        federalElectionKey, countyElectionKey, localElectionKey, StateCode, 
+        CountyCode, LocalCode, districtCode, officeClass.ToInt(), false);
+    }
+
+    #endregion Private
+
+    #region Event handlers and overrides
+
+    protected void ButtonAddOffices_OnClick(object sender, EventArgs e)
+    {
+      switch (AddOfficesReloading.Value)
+      {
+        case "reloading":
+          {
+            AddOfficesReloading.Value = String.Empty;
+            _AddOfficesTabInfo.LoadControls();
+            SetElectionHeading(HeadingAddOffices);
+            FeedbackAddOffices.AddInfo(String.Format("{0} offices loaded.",
+              AddOfficesTabItem.OfficeCount));
+          }
+          break;
+
+        case "":
+          {
+            // normal update
+            _AddOfficesTabInfo.Update(FeedbackAddOffices);
+          }
+          break;
+
+        default:
+          throw new VoteException("Unknown reloading option");
+      }
+    }
+
+    #endregion Event handlers and overrides
+  }
+}

@@ -1,0 +1,47 @@
+﻿table
+{
+  table-layout: fixed;
+}
+
+input[type=text] {
+  margin: 3px 0 3px 3px;
+  width: 70px;
+  font-size: 10pt;
+}
+
+tr:nth-child(odd),
+tr:nth-child(odd) input {
+  background: #eeeeee;
+}
+
+tr:first-child {
+  background: #000000;
+  color: #ffffff;
+}
+
+th
+{
+  padding: 6px 4px;
+  font-size: 10pt;
+}
+
+td {
+  padding: 4px;
+  font-size: 10pt;
+   }
+
+td:last-child {
+  padding-right: 0;
+   }
+
+.update-button
+{
+  float: none;
+  margin: 10px;
+
+}
+
+.error
+{
+  background: #ffff00;
+}

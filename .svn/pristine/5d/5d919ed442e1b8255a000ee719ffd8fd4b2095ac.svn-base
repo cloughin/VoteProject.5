@@ -1,0 +1,339 @@
+﻿define(["jquery", "vote/adminMaster", "vote/util", "monitor", "moment"],
+function ($, master, util, monitor, moment) {
+
+  var afterUpdateContainer = function (group) {
+    if (!group) return;
+
+    switch (group.group) {
+      case "mc-group-editvolunteer":
+        if ($('#edit-volunteer-dialog .refresh-report').val() === "Y")
+          refreshReport(true);
+        // unless there was an error, update volunteer-to-edit in case email changed
+        var $newEmail = $('#edit-volunteer-dialog .email input');
+        if (!$newEmail.hasClass("error"))
+          $('.volunteer-to-edit').val($.trim($newEmail.val()));
+        break;
+    }
+  };
+
+  function initPage() {
+    monitor.registerCallback("afterUpdateContainer", afterUpdateContainer);
+    monitor.registerCallback("afterUndo", afterUndo);
+    monitor.registerCallback("initRequest", initRequest);
+    monitor.init();
+
+    $('#tab-addvolunteer .input-element.email input')
+      .on("propertychange change click keyup input paste", function () {
+        $(this).removeClass("error");
+        $("#tab-addvolunteer .add-volunteer-button").prop("disabled", !$.trim($(this).val()));
+      });
+
+    $('#tab-addvolunteer .add-volunteer-button')
+     .click(function () {
+       var partyKey = $('#tab-addvolunteer .input-element.partykey select').val();
+       if (!partyKey) {
+         util.alert("Please select a state and party.");
+         return;
+       }
+       var $email = $('#tab-addvolunteer .input-element.email input');
+       util.openAjaxDialog("Adding volunteer...");
+       util.ajax({
+         url: "/Admin/WebService.asmx/AddVolunteer",
+         data: {
+           email: $.trim($email.val()),
+           partyKey: partyKey
+         },
+
+         success: function (result) {
+           if (result.d) {
+             // actually an error on email
+             $email.addClass("error");
+             util.alert(result.d);
+           } else {
+             refreshReport(true);
+             $('.volunteer-to-edit').val($email.val());
+             $('#edit-volunteer-dialog').dialog('open');
+             $email.val("").trigger("change");
+           }
+         },
+
+         error: function (result) {
+           util.alert(util.formatAjaxError(result, "Could not add volunteer"));
+         },
+
+         complete: function () {
+           util.closeAjaxDialog();
+         }
+       });
+     });
+
+     $("#tab-addvolunteer .select-statecode").change(loadAddParties).trigger("change");
+
+
+
+    $("#tab-report .select-state").change(function () {
+      util.openAjaxDialog("Getting parties...");
+      util.ajax({
+        url: "/Admin/WebService.asmx/GetVolunteerReportParties",
+        data: {
+          stateCode: $(this).val(),
+          forEdit: false
+        },
+
+        success: function (result) {
+          var $parties = $("#tab-report .select-party");
+          util.populateDropdown($parties, result.d);
+          $parties.prop("disabled", result.d.length <= 1);
+        },
+
+        error: function (result) {
+          util.alert(util.formatAjaxError(result, "Could not get parties"));
+        },
+
+        complete: function () {
+          util.closeAjaxDialog();
+        }
+      });
+    });
+
+    $("#tab-report .get-report-button").click(function () { refreshReport(false); });
+
+    $("#tab-report").on("click", ".edit", function () {
+      var email = getClickedEmail($(this));
+      $('.volunteer-to-edit').val(email);
+      $('#edit-volunteer-dialog').dialog('open');
+    });
+
+    $("#tab-report").on("click", ".delete", deleteVolunteer);
+
+    $('#edit-volunteer-dialog').dialog({
+      autoOpen: false,
+      width: 880,
+      resizable: false,
+      dialogClass: 'edit-volunteer overlay-dialog',
+      open: onOpenEditVolunteerDialog,
+      close: function() {
+        editVolunteerDialogLoaded = false;
+        master.onCloseJqDialog();
+      },
+      modal: true
+    })
+    .on("change", ".select-statecode", loadEditParties);
+  }
+
+  function afterUndo(group) {
+    switch (group.group) {
+      case "mc-group-editvolunteer":
+        var undoState = $("#edit-volunteer-dialog .undo-state").val();
+        var state = $("#edit-volunteer-dialog .select-state").val();
+        if (state !== undoState) {
+          $("#edit-volunteer-dialog .select-statecode").val(undoState);
+          loadEditParties(null, $("#edit-volunteer-dialog .undo-party").val());
+        }
+        break;
+    }
+  }
+
+  function initRequest(group) {
+    if (!group) return true;
+    switch (group.group) {
+      case "mc-group-editvolunteer":
+        var selectedParty = $("#edit-volunteer-dialog .select-partykey").val();
+        var submittedParty = $("#edit-volunteer-dialog .submitted-party").val();
+        if (selectedParty !== submittedParty) {
+          $("#edit-volunteer-dialog .submitted-party").val(selectedParty);
+          setTimeout(function () { $("#" + group.button).click(); }, 100);
+          return false;
+        }
+    }
+    return true;
+  }
+
+  function getClickedEmail($target) {
+    return $target.closest("tr").find(".email").text();
+  }
+
+  function deleteVolunteer(event, force) {
+    var email = getClickedEmail($(event.target));
+    if (email) {
+      if (!force) {
+        util.confirm("Are you sure you want to delete the volunteer with email address " + email + "?",
+          function (button) {
+            if (button === "Ok") {
+              deleteVolunteer(event, true);
+            }
+          });
+        return;
+      }
+      
+      util.openAjaxDialog("Deleting volunteer...");
+      util.ajax({
+        url: "/Admin/WebService.asmx/DeleteVolunteer",
+        data: {
+          email: email
+        },
+
+        success: function (result) {
+          util.alert("Volunter deleted.");
+          refreshReport(true);
+        },
+
+        error: function (result) {
+          util.alert(util.formatAjaxError(result, "Could not delete volunteer"));
+        },
+
+        complete: function () {
+          util.closeAjaxDialog();
+        }
+      });
+    }
+  }
+  var editVolunteerDialogLoaded;
+
+  function onOpenEditVolunteerDialog() {
+    var $dialog = $("#edit-volunteer-dialog");
+    $(".content-area", $dialog).css("visibility", "hidden");
+    monitor.clearGroupFeedback("mc-group-editvolunteer");
+    master.onOpenJqDialog.apply(this);
+    editVolunteerDialogLoaded = false;
+    $('.reloading', $dialog).val("reloading");
+    $('input.update-button', $dialog).addClass("reloading").click();
+  }
+
+  function loadReport(data) {
+    var $scroller = $("#tab-report .volunteer-scroller");
+    $scroller.html("");
+
+    if (!data) {
+      $scroller.addClass("hidden");
+      return;
+    }
+
+    $scroller.removeClass("hidden");
+    if (data.length === 0) {
+      $scroller.html('<table><tbody><tr><td>No matching volunteers found.</td></tr></tbody></table>');
+      return;
+    }
+
+    var head = '<tr>' +
+        '<th>State</th>' +
+        '<th>Party</th>' +
+        '<th>Email Address</th>' +
+        '<th>Phone</th>' +
+        '<th>Name</th>' +
+        '<th>Password</th>' +
+        '<th>Added</th>' +
+        '<th>&nbsp;</th>' +
+        '<th>&nbsp;</th>' +
+        '</tr>';
+
+    var rows = [];
+    $.each(data, function () {
+      var name = this.FirstName || "";
+      if (name) name += " ";
+      name += this.LastName;
+      var date = moment(this.DateStamp);
+      date = date.year() < 2000 ? "&nbsp;" : date.format("M/D/YY");
+      rows.push('<tr>' +
+        '<td>' + (this.StateCode || '--') + '</td>' +
+        '<td>' + (this.PartyName || '--') + '</td>' +
+        '<td class="email">' + (this.Email || '--') + '</td>' +
+        '<td>' + (this.Phone || '&nbsp;') + '</td>' +
+        '<td>' + name + '</td>' +
+        '<td>' + (this.Password || '&nbsp;') + '</td>' +
+        '<td>' + date + '</td>' +
+        '<td class="link edit">edit</td>' +
+        '<td class="link delete">delete</td>' +
+        '</tr>');
+    });
+
+    $scroller.html('<table><thead>' + head + '</thead><tbody>' + rows.join("") + '</tbody></table>');
+    util.assignRotatingClassesToChildren($("tbody", $scroller), ["odd", "even"]);
+  }
+
+  function refreshReport(silent) {
+    loadReport();
+    var stateCode = $("#tab-report .select-state").val();
+    var partyKey = $("#tab-report .select-party").val();
+    if (stateCode !== "" && stateCode != "*ALL*" && !partyKey) {
+      if (!silent) util.alert("Please select a Party");
+      return;
+    }
+
+    if (!silent) util.openAjaxDialog("Getting report...");
+    util.ajax({
+      url: "/Admin/WebService.asmx/GetVolunteerReport",
+      data: {
+        stateCode: $("#tab-report .select-state").val(),
+        partyKey: $("#tab-report .select-party").val()
+      },
+
+      success: function (result) {
+        loadReport(result.d);
+      },
+
+      error: function (result) {
+        if (!silent) util.alert(util.formatAjaxError(result, "Could not get report"));
+      },
+
+      complete: function () {
+        if (!silent) util.closeAjaxDialog();
+      }
+    });
+  }
+
+  function loadAddParties(event) {
+    util.openAjaxDialog("Getting parties...");
+    util.ajax({
+      url: "/Admin/WebService.asmx/GetVolunteerAddParties",
+      data: {
+        stateCode: $("#tab-addvolunteer .statecode select").val()
+      },
+
+      success: function (result) {
+        var $parties = $("#tab-addvolunteer .partykey select");
+        util.populateDropdown($parties, result.d);
+        $parties.prop("disabled", result.d.length <= 1);
+      },
+
+      error: function (result) {
+        util.alert(util.formatAjaxError(result, "Could not get parties"));
+      },
+
+      complete: function () {
+        util.closeAjaxDialog();
+      }
+    });
+  }
+
+  function loadEditParties(event, party) {
+    util.openAjaxDialog("Getting parties...");
+    util.ajax({
+      url: "/Admin/WebService.asmx/GetVolunteerReportParties",
+      data: {
+        stateCode: $("#edit-volunteer-dialog .statecode select").val(),
+        forEdit: true
+      },
+
+      success: function (result) {
+        var $parties = $("#edit-volunteer-dialog .partykey select");
+        util.populateDropdown($parties, result.d);
+        if (party) $parties.val(party);
+        $parties.prop("disabled", result.d.length <= 1);
+        $parties.trigger("change");
+      },
+
+      error: function (result) {
+        util.alert(util.formatAjaxError(result, "Could not get parties"));
+      },
+
+      complete: function () {
+        util.closeAjaxDialog();
+      }
+    });
+  }
+
+  master.inititializePage({
+    callback: initPage
+  });
+});

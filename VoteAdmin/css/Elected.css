@@ -1,0 +1,105 @@
+/* --- Elected Title --- */
+.trElectedTitle
+{
+}
+.tdElectedTitle
+{
+font-family: Arial, Helvetica, sans-serif;
+margin: 0px;
+font-size: 20px;
+font-weight: bold;
+color: #373737;
+text-align:left;
+padding: 0px;
+padding-left:20px;
+}
+
+.tdElectedSubTitle
+{
+font-family: Arial, Helvetica, sans-serif;
+margin: 0px;
+font-size: 14px;
+line-height: 18px;
+font-weight: bold;
+color: #373737;
+text-align:right;
+padding-right:20px;
+}
+
+/* --- Elected Instructions --- */
+.trElectedInstruction
+{
+}
+.tdElectedInstruction
+{
+vertical-align: top;
+font-family: Arial, Helvetica, sans-serif;
+line-height: 15px;
+/*font-size: 14px;
+color: #373737;*/
+padding:10px 10px 10px 10px;
+  font-size: 16px;
+  color: #444;
+}
+.trElectedOfficeSpacer
+{
+}
+.tdElectedOfficeSpacer
+{
+}
+.trElectedOfficeMsg
+{
+}
+.tdElectedOfficeMsg
+{
+font-family: Verdana;
+font-size: 14px;
+font-weight: bolder;
+text-align: center;
+color: #26466D;
+background-color: #EEF;
+padding: 5px;
+}
+
+/* overrides for new page */
+#mainContent .tdElectedSubTitle
+{
+  padding: 12px 0 0 12px;
+  text-align: left;
+}
+
+#mainContent .tdElectedSubTitle .districtsHead
+{
+  font-style: italic;
+  color: #888;
+}
+
+#mainContent .tdElectedInstruction
+{
+  /*line-height: 130%;*/
+  line-height: 120%;
+}
+
+#mainContent .tdReportHeading
+{
+  color: #fff;
+  font-size: 120%;
+  font-weight: normal;
+}
+
+#mainContent .tdReportDetail font
+{
+  font-weight: normal;
+  font-size: 11px;
+  line-height: 130%;
+}
+
+#mainContent .tdReportDetail .detail
+{
+  margin-top: 4px;
+}
+
+#mainContent .tdReportDetail .detail:first-child
+{
+  margin-top: 0;
+}

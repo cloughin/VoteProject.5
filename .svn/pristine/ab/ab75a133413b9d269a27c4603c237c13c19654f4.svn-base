@@ -1,0 +1,1031 @@
+﻿/***********************************************/
+/* Entire page                                 */
+/***********************************************/
+
+body.admin-page #outer
+{
+  position: relative;
+}
+
+body.admin-page .sub-heading.headings
+{
+  float: left;
+}
+
+body.admin-page .sub-heading.change-button
+{
+  position: absolute;
+  right: 0;
+  top: 10px;
+}
+
+body.admin-page h2.jurisdiction-message
+{
+  margin: 0;
+}
+
+body.admin-page h4.credential-message
+{
+  font-size: 12px;
+  font-style: italic;
+}
+
+body.admin-page .update-controls
+{
+  margin: 4px 0 0 0;
+  position: relative;
+}
+
+body.admin-page #main-tabs
+{
+  margin: 0 0 20px 0;
+  width: 933px;
+}
+
+body.admin-page #main-tabs .data-area
+{
+  min-height: 279px;
+}
+
+#main-tabs div.col
+{
+  float: left;
+}
+
+#main-tabs .spacer
+{
+  height: 10px;
+  width: 1px;
+}
+
+#main-tabs .input-element
+{
+  float: left;
+  margin: 0 16px 0 0;
+}
+
+#main-tabs .content-footer
+{
+  margin: 0;
+}
+
+#main-tabs .feedback-floater-for-ie7
+{
+  float: left;
+  min-height: 1px;
+  width: 702px;
+}
+
+#main-tabs div.htab-panel div.inner-panel .feedback
+{
+  width: 676px;
+}
+
+#main-tabs input[type=text]
+{
+  margin-left: 0;
+}
+
+#main-tabs .htab-panel
+{
+  min-height: 509px;
+}
+
+#main-tabs div.htab-panel div.inner-panel
+{
+  min-height: 483px;
+}
+
+#main-tabs div.htab-panel div.content-area
+{
+  min-height: 400px;
+}
+
+#main-tabs div.instructions 
+{
+  margin: 0 0 10px 15px;
+}
+
+#main-tabs div.instructions ul
+{
+  color: #bf9241;
+  list-style: disc;
+}
+
+#main-tabs div.instructions li
+{
+  margin-bottom: 2px;
+}
+
+#main-tabs div.instructions li span
+{
+  color: #334f80;
+  font-size: 11px;
+}
+
+#main-tabs div.instructions em
+{
+  color: #bf9241;
+  font-style: normal;
+  font-weight: bold;
+}
+ 
+/***********************************************/
+/* General Voter Information                   */
+/***********************************************/
+
+#main-tabs #tab-generalvoterinfo .pollhours textarea
+{
+  height: 16px;
+  width: 840px;
+}
+
+#main-tabs #tab-generalvoterinfo input[type=text]
+{
+  width: 834px;
+}
+
+#main-tabs #tab-generalvoterinfo textarea
+{
+  height: 48px;
+  width: 840px;
+}
+ 
+/***********************************************/
+/* Primary Voter Information                   */
+/***********************************************/
+
+#main-tabs #tab-primaryvoterinfo textarea
+{
+  height: 64px;
+  width: 840px;
+}
+ 
+/***********************************************/
+/* Election Authority                          */
+/***********************************************/
+
+#main-tabs #tab-electionauthority .data-group
+{
+  float: left;
+}
+
+#main-tabs #tab-electionauthority .data-group input[type=text]
+{
+  width: 230px;
+}
+
+#main-tabs #tab-electionauthority p.fieldlabel.head
+{
+  float: left;
+}
+
+#main-tabs #tab-electionauthority p.move-button
+{
+  float: right;
+  margin-right: 13px;
+}
+
+#main-tabs #tab-electionauthority .input-element.jurisdictionname
+{
+  float: none;
+  margin-bottom: 10px;
+}
+
+#main-tabs #tab-electionauthority p.fieldlabel.name
+{
+  clear: both;
+}
+
+#main-tabs #tab-electionauthority .main-contact .input-element
+{
+  margin: 0;
+}
+
+#main-tabs #tab-electionauthority .swap-button
+{
+  height: 32px;
+  width: 32px;
+  background-image: url(/images/swap32.png);
+  background-position: 0 0;
+  margin: 60px 16px 0 0;
+}
+
+#main-tabs #tab-electionauthority .swap-button:hover
+{
+  background-position: 0 -32px;
+}
+
+#main-tabs #tab-electionauthority textarea
+{
+  height: 64px;
+  width: 840px;
+}
+
+#main-tabs #tab-electionauthority .input-element.url
+{
+  margin-right: 48px;
+}
+
+#main-tabs #tab-electionauthority .input-element.url input
+{
+  width: 504px;
+}
+
+#main-tabs #tab-electionauthority .input-element.email input
+{
+  width: 230px;
+}
+ 
+/***********************************************/
+/* Bulk Email                                  */
+/***********************************************/
+
+#main-tabs #tab-bulkemail .inner-panel
+{
+  padding: 0;
+}
+
+#main-tabs #tab-bulkemail .ui-tabs-panel
+{
+  min-height: 432px;
+}
+
+#main-tabs #tab-bulkemail .mainlabel 
+{
+  color: #bf9241;
+  font-weight: bold;
+}
+
+#main-tabs #tab-bulkemail .mainlabel em
+{
+  color: #2254aa;
+  font-style: normal;
+}
+
+#main-tabs #bulk-email-tabs li.htab .tab-ast
+{
+  top: 0;
+  left: 0;
+}
+
+#main-tabs #tab-bulkemail .scrolling-list
+{
+  background-color: #ffe;
+  border: 1px solid #dbdbdb;
+  width: 260px;
+  height: 100px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  margin-bottom: 3px;
+  color: #334f80;
+}
+
+#main-tabs #tab-bulkemail .email-list input[type=text]
+{
+  width: 184px;
+}
+ 
+/***********************************************/
+/* Bulk Email - Edit Template                  */
+/***********************************************/
+
+#main-tabs #tab-bulkemail-edittemplate div.code-edit
+{
+  margin-bottom: 20px;
+  background-color: #ffe;
+  border: 1px solid #dbdbdb;
+}
+
+#main-tabs #tab-bulkemail-edittemplate div.subject
+{
+  height: 32px;
+}
+
+#main-tabs #tab-bulkemail-edittemplate div.body
+{
+  height: 284px;
+}
+
+#main-tabs #tab-bulkemail-edittemplate p.template-name
+{
+  text-overflow: ellipsis;
+	width: 858px;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+#main-tabs #tab-bulkemail-edittemplate #edittemplate-name
+{
+  color: #334f80;
+}
+
+#main-tabs #tab-bulkemail-edittemplate .code-edit-heading .mainlabel
+{
+  float: left;
+  padding-top: 7px;
+}
+
+#main-tabs #tab-bulkemail-edittemplate .code-edit-heading .undo-redo
+{
+  float: right;
+}
+
+#main-tabs #tab-bulkemail-edittemplate .code-edit-heading .undo-redo div
+{
+  width: 24px;
+  height: 22px;
+  float: left;
+  background-image: url(/images/undo-redo.png);
+  margin-bottom: 2px;
+}
+
+#main-tabs #tab-bulkemail-edittemplate .code-edit-heading .undo-redo div.undo
+{
+  margin-right: 2px;
+  background-position: 0 0;
+}
+
+#main-tabs #tab-bulkemail-edittemplate .code-edit-heading .undo-redo div.undo:hover
+{
+  background-position: 0 -22px;
+}
+
+#main-tabs #tab-bulkemail-edittemplate .code-edit-heading .undo-redo div.undo.disabled
+{
+  background-position: 0 -44px;
+}
+
+#main-tabs #tab-bulkemail-edittemplate .code-edit-heading .undo-redo div.redo
+{
+  background-position: -24px 0;
+}
+
+#main-tabs #tab-bulkemail-edittemplate .code-edit-heading .undo-redo div.redo:hover
+{
+  background-position: -24px -22px;
+}
+
+#main-tabs #tab-bulkemail-edittemplate .code-edit-heading .undo-redo div.redo.disabled
+{
+  background-position: -24px -44px;
+}
+
+#main-tabs #tab-bulkemail-edittemplate .code-edit
+{
+  clear: both;
+}
+ 
+/***********************************************/
+/* Bulk Email - Available Substitutions        */
+/***********************************************/
+
+#main-tabs #tab-bulkemail-availablesubstitutions div.instructions 
+{
+  margin-bottom: 0;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions.ui-tabs-panel
+{
+  height: 432px;
+  overflow-y: scroll;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions tr.odd
+{
+  background-color: #eee;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions th
+{
+  color: #bf9241;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions th.substitution-class
+{
+  color: #334f80;
+  font-size: 1.2em;
+  font-weight: bold;
+  padding-top: 6px;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions td
+{
+  font-size: 8pt;
+  padding-top: 2px;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions td.name
+{
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font-size: 12px;
+  padding-right: 5px;
+  color: rgb(0, 0, 224);
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions td.name:hover
+{
+  color: red;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions td.name .escape
+{
+  color: rgb(0, 0, 0);
+  background-color: rgb(255, 255, 51);
+  -moz-opacity: 0.6;
+  filter: alpha(opacity: 60);
+  opacity: 0.6;
+  }
+
+#main-tabs #tab-bulkemail-availablesubstitutions h3.conditionals
+{
+  padding-top: 6px;
+  margin-bottom: 3px;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions div.conditionals
+{
+  float: left;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions p.conditionals
+{
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font-size: 12px;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions p.conditionals .escape
+{
+  color: rgb(0, 0, 0);
+  background-color: rgb(255, 255, 51);
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions p.conditionals .keyword
+{
+  color: rgb(0, 0, 224);
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions p.conditionals .operator
+{
+  color: rgb(136, 18, 159);
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions div.conditionals.col1
+{
+  background-color: #eee;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions div.conditionals.col2
+{
+  margin: 10px 15px 0 15px;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions div.conditionals.col3
+{
+  margin: 13px 0 0 0;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions div.conditionals.col3 .label
+{
+  font-size: 8pt;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions div.conditionals.col3 .keyword
+{
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font-size: 12px;
+  color: rgb(0, 0, 224);
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions div.conditionals.col3 .elseif .label
+{
+  padding-left: 5px;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions div.conditionals.col3 .elseif-spinner
+{
+  width: 10px;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions div.conditionals.col3 .else
+{
+  margin-top: 4px;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions div.conditionals.col3 .else .label
+{
+  padding-left: 1px;
+}
+
+#main-tabs #tab-bulkemail-availablesubstitutions div.conditionals.col3 .else div
+{
+  float: left;
+}
+ 
+/***********************************************/
+/* Bulk Email - Select Recipients              */
+/***********************************************/
+
+#main-tabs #tab-bulkemail-selectrecipients div.col
+{
+  margin-right: 20px;
+}
+
+#main-tabs #tab-bulkemail-selectrecipients div.box
+{
+  background: #eee;
+  padding: 5px 0 5px 5px;
+}
+
+#main-tabs #tab-bulkemail-selectrecipients div.col.jurisdiction.disabled
+{
+  -moz-opacity: 0.5;
+  filter: alpha(opacity: 50);
+  opacity: 0.5;
+}
+
+#main-tabs #tab-bulkemail-selectrecipients div.contacts-buttons
+{
+  margin-top: 10px;
+}
+
+#main-tabs #tab-bulkemail-selectrecipients div.col .checkbox-list
+{
+  border: 1px solid #888;
+  margin-right: 5px;
+  background-color: #ffe;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  max-height: 220px;
+}
+
+#main-tabs #tab-bulkemail-selectrecipients div.col .checkbox-list em
+{
+  color: #334f80;
+  font-size: 8pt;
+  padding: 4px;
+  display: block;
+}
+
+#main-tabs #tab-bulkemail-selectrecipients div.col.col1
+{
+  width: 141px;
+}
+
+#main-tabs #tab-bulkemail-selectrecipients div.col.states
+{
+  width: 180px;
+}
+
+#main-tabs #tab-bulkemail-selectrecipients div.col.counties
+{
+  width: 220px;
+}
+
+#main-tabs #tab-bulkemail-selectrecipients div.col.locals
+{
+  width: 229px;
+  margin-right: 0;
+}
+
+#main-tabs #tab-bulkemail-selectrecipients .col1 label,
+#main-tabs #tab-bulkemail-selectrecipients p.sublabel
+{
+  color: #334f80;
+  font-size: 8pt;
+}
+
+#main-tabs #tab-bulkemail-selectrecipients div.get-recipients
+{
+  position: absolute;
+  top: 400px;
+}
+ 
+/***********************************************/
+/* Bulk Email - View Recipients                */
+/***********************************************/
+
+#main-tabs #tab-bulkemail-viewrecipients .current-list-results
+{
+  border: 1px solid #888;
+  overflow-y: scroll;
+  height: 420px;
+}
+
+#main-tabs #tab-bulkemail-viewrecipients .current-list-results p
+{
+  color: #334f80;
+  font-size: 9pt;
+  padding: 5px;
+}
+
+#main-tabs #tab-bulkemail-viewrecipients .current-list-results em
+{
+  color: #bf9241;
+  font-style: normal;
+  font-weight: bold;
+}
+
+#main-tabs #tab-bulkemail-viewrecipients .current-list-results table
+{
+  width: 100%
+}
+
+#main-tabs #tab-bulkemail-viewrecipients .current-list-results table div.css-checkbox
+{
+  float: left;
+  margin: 1px 2px 0 0;
+}
+
+#main-tabs #tab-bulkemail-viewrecipients .current-list-results table tr.head
+{
+  background-color: #d8d8f9;
+}
+
+#main-tabs #tab-bulkemail-viewrecipients .current-list-results table tr.even
+{
+  background-color: #eef;
+}
+
+#main-tabs #tab-bulkemail-viewrecipients .current-list-results table tr.selected
+{
+  background-color: #00f;
+}
+
+#main-tabs #tab-bulkemail-viewrecipients .current-list-results table tr.selected td
+{
+  color: #fff;
+}
+
+#main-tabs #tab-bulkemail-viewrecipients .current-list-results table th,
+#main-tabs #tab-bulkemail-viewrecipients .current-list-results table td
+{
+  padding: 0 3px
+}
+
+#main-tabs #tab-bulkemail-viewrecipients .current-list-results table th
+{
+  color: #bf9241;
+  font-size: 8pt;
+  border-left: 1px solid #eee;
+}
+
+#main-tabs #tab-bulkemail-viewrecipients .current-list-results table th:first-child
+{
+  border-left: none;
+}
+
+#main-tabs #tab-bulkemail-viewrecipients .current-list-results table td
+{
+  color: #334f80;
+  font-size: 8pt;
+}
+ 
+/***********************************************/
+/* Bulk Email - Preview Sample                 */
+/***********************************************/
+
+#main-tabs #tab-bulkemail-previewsample .cols 
+{
+  float: left;
+}
+
+#main-tabs #tab-bulkemail-previewsample .col1 
+{
+  width: 200px;
+}
+
+#main-tabs #tab-bulkemail-previewsample .col1 .sample-keys
+{
+  margin-top: 10px;
+}
+
+#main-tabs #tab-bulkemail-previewsample .col1 .button input[type=radio]
+{
+  float: left;
+}
+
+#main-tabs #tab-bulkemail-previewsample .col1 .button label
+{
+  margin-left: 21px;
+  padding-top: 3px;
+  display: block;
+  color: #bf9241;
+  font-weight: bold;
+}
+
+#main-tabs #tab-bulkemail-previewsample .col1 .options
+{
+  background-color: #eee;
+  margin: 5px 0 0 21px;
+  padding: 0 5px 5px 5px;
+}
+
+#main-tabs #tab-bulkemail-previewsample .col1 .options p.label
+{
+  margin-top: 5px;
+}
+
+#main-tabs #tab-bulkemail-previewsample .col1 .options input
+{
+  background-color: #ffe;
+  width: 155px;
+  color: #334f80;
+  font-size: 9pt;
+}
+
+#main-tabs #tab-bulkemail-previewsample .col1 .options select
+{
+  background-color: #ffe;
+  width: 100%;
+  color: #334f80;
+  font-size: 9pt;
+}
+
+#main-tabs #tab-bulkemail-previewsample .col1 .options select:disabled
+{
+  background-color: #f8f8f8;
+}
+
+#main-tabs #tab-bulkemail-previewsample .col1 .options p.label
+{
+  color: #334f80;
+  font-size: 8pt;
+}
+
+#main-tabs #tab-bulkemail-previewsample .col1 .generate
+{
+  margin: 10px 0 0 21px;
+}
+
+#main-tabs #tab-bulkemail-previewsample .col2 
+{
+  margin-left: 20px;
+}
+
+#main-tabs #tab-bulkemail-previewsample .col2 .sample-subject
+{
+  color: #334f80;
+  font-size: 8pt;
+}
+
+#main-tabs #tab-bulkemail-previewsample .col2 #preview-sample-tabs
+{
+  margin-top: 10px;
+}
+
+#main-tabs #tab-bulkemail-previewsample .col2 .ui-tabs-panel
+{
+  width: 597px;
+  min-height: 330px;
+  height: 330px;
+}
+ 
+#main-tabs #tab-bulkemail-previewsample #preview-sample-tabs .inner
+{
+  height: 320px;
+}
+ 
+#main-tabs #tab-bulkemail-previewsample #tab-bulkemail-preview-html .error
+{
+  color: #334f80;
+  font-size: 9pt;
+  padding: 5px;
+  overflow-y: scroll;
+  height: 100%;
+  display: none;
+}
+ 
+#main-tabs #tab-bulkemail-previewsample #tab-bulkemail-preview-html #preview-html
+{
+  height: 100%;
+  display: none;
+}
+ 
+#main-tabs #tab-bulkemail-previewsample #tab-bulkemail-preview-html .error
+{
+  padding: 5px;
+  overflow-y: scroll;
+  height: 100%;
+}
+ 
+#main-tabs #tab-bulkemail-previewsample #tab-bulkemail-preview-html .error-head
+{
+  color: red;
+  font-weight: bold;
+}
+ 
+#main-tabs #tab-bulkemail-previewsample #tab-bulkemail-preview-rendered iframe
+{
+  width: 100%;
+  height: 100%
+}
+ 
+/***********************************************/
+/* Bulk Email - Email Options                  */
+/***********************************************/
+
+#main-tabs #tab-bulkemail-emailoptions .col
+{
+  margin-right: 20px;
+}
+
+#main-tabs #tab-bulkemail-emailoptions .attachments
+{
+  margin-top: 20px;
+}
+
+#main-tabs #tab-bulkemail-emailoptions .attachments .scrolling-list
+{
+  padding-left: 4px;
+}
+
+#main-tabs #tab-bulkemail-emailoptions .fileinputs
+{
+  margin: 0;
+  height: 24px;
+  position: relative;
+}
+
+#main-tabs #tab-bulkemail-emailoptions .masker
+{
+  background: #eee;
+  display: none;
+  position: absolute;
+  z-index: 3;
+}
+
+#main-tabs #tab-bulkemail-emailoptions .upload-file
+{
+  cursor: pointer;
+  -moz-opacity: 0;
+  filter: alpha(opacity: 0);
+  opacity: 0;
+  position: absolute;
+  text-align: right;
+  z-index: 2;
+}
+
+#main-tabs #tab-bulkemail-emailoptions .browse-button
+{
+  font-size: 11px;
+  left: 0;
+  padding: 2px 18px;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+}
+
+/***********************************************/
+/* Bulk Email - Send Emails              */
+/***********************************************/
+
+#main-tabs #tab-bulkemail-sendemails .all-email
+{
+  margin: 40px 0 0 11px;
+}
+
+#main-tabs #tab-bulkemail-sendemails .test-email
+{
+  margin-top: 40px;
+  background-color: #eee;
+  padding: 10px;
+}
+
+#main-tabs #tab-bulkemail-sendemails .col
+{
+  margin-right: 18px;
+}
+
+#main-tabs #tab-bulkemail-sendemails .button 
+{
+  margin-top: 53px;
+}
+
+#main-tabs #tab-bulkemail-sendemails .radios 
+{
+  margin-top: 51px;
+}
+
+#main-tabs #tab-bulkemail-sendemails .radios label
+{
+  color: #bf9241;
+  font-weight: bold;
+}
+ 
+/***********************************************/
+/* Bulk Email - Help                           */
+/***********************************************/
+
+/***********************************************/
+/* Master only                                 */
+/***********************************************/
+
+#main-tabs #tab-masteronly #master-only-tabs 
+{
+  margin-top: 10px;
+}
+
+#main-tabs #tab-masteronly #master-only-tabs li.tab a 
+{
+  font-size: 8pt;
+  padding: 3px 12px;
+}
+
+#main-tabs #tab-masteronly .ui-tabs-panel 
+{
+  min-height: 316px;
+}
+
+#main-tabs #tab-masteronly div.instructions
+{
+  float: none;
+}
+
+#main-tabs #tab-masteronly div.instructions ul
+{
+  margin: 0 0 0 20px;
+  width: 750px;
+}
+
+#main-tabs #tab-masteronly div.instructions ul ul
+{
+  margin: 7px 0 7px 20px;
+}
+
+/***********************************************/
+/* FIREFOX                                     */
+/***********************************************/
+
+@-moz-document url-prefix()
+{
+  #main-tabs #tab-bulkemail-emailoptions .upload-file
+  {
+    left: -142px;
+    top: 2px;
+  }    
+  #main-tabs #tab-bulkemail-emailoptions .browse-button
+  {
+    font-size: 11px;
+    left: 0;
+    padding: 1px 9px;
+    top: 4px;
+  }    
+}
+
+/***********************************************/
+/* CHROME                                      */
+/***********************************************/
+
+@media
+screen and (-webkit-min-device-pixel-ratio: 0)
+{
+  #main-tabs #tab-bulkemail-emailoptions .masker2
+  {
+    display: block;
+    height: 26px;
+    left: 82px;
+    opacity: 0;
+    width: 190px;
+  }
+  
+  #main-tabs #tab-bulkemail-emailoptions .browse-button
+  {
+    font-size: 11px;
+    padding: 2px 18px;
+    top: 1px;
+  }
+
+  #main-tabs #tab-bulkemail-emailoptions .upload-file
+  {
+    left: 0;
+    top: 0;
+  }
+}
+
+/***********************************************/
+/* IE10                                        */
+/***********************************************/
+
+.ie10 #main-tabs #tab-bulkemail-emailoptions .masker2
+{
+  display: block;
+  height: 26px;
+  left: -155px;
+  opacity: 0;
+  width: 155px;
+}
+
+.ie10 #main-tabs #tab-bulkemail-emailoptions .browse-button
+{
+  padding: 1px 21px;
+  top: 5px;
+}
+
+.ie10 #main-tabs #tab-bulkemail-emailoptions .upload-file
+{
+  left: -149px;
+  top: 4px;
+}

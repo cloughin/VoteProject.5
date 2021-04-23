@@ -1,0 +1,69 @@
+﻿using System;
+
+namespace DB.Vote
+{
+  public partial class VolunteersViewRow {}
+
+  public partial class VolunteersView
+  {
+    public static void DeleteByEmail(String email, int commandTimeout = -1)
+    {
+      PartiesEmails.DeleteByPartyEmailIsVolunteer(email, true, commandTimeout);
+    }
+
+    public static VolunteersViewTable GetAllDataSorted(int commandTimeout = -1)
+    {
+      var cmdText = SelectAllCommandText +
+        " ORDER BY StateName,PartyName,LastName,FirstName";
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      return FillTable(cmd, VolunteersViewTable.ColumnSet.All);
+    }
+
+    public static void Insert(
+      String email, String password, String partyKey, String firstName,
+      String lastName, String phone, int commandTimeout = -1)
+    {
+      const string cmdText = "INSERT INTO PartiesEmails (PartyEmail,PartyPassword,PartyKey,PartyContactFName,PartyContactLName,PartyContactPhone,PartyContactTitle,IsVolunteer) VALUES (@PartyEmail,@PartyPassword,@PartyKey,@PartyContactFirstName,@PartyContactLastName,@PartyContactPhone,@PartyContactTitle,@IsVolunteer)";
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      VoteDb.AddCommandParameter(cmd, "PartyEmail", email);
+      VoteDb.AddCommandParameter(cmd, "PartyPassword", password);
+      VoteDb.AddCommandParameter(cmd, "PartyKey", partyKey);
+      VoteDb.AddCommandParameter(cmd, "PartyContactFirstName", firstName);
+      VoteDb.AddCommandParameter(cmd, "PartyContactLastName", lastName);
+      VoteDb.AddCommandParameter(cmd, "PartyContactPhone", phone);
+      VoteDb.AddCommandParameter(cmd, "PartyContactTitle", string.Empty);
+      VoteDb.AddCommandParameter(cmd, "IsVolunteer", true);
+      VoteDb.ExecuteNonQuery(cmd);
+    }
+
+    public static int UpdateEmail(String newValue, String email)
+    {
+      return PartiesEmails.UpdatePartyEmail(newValue, email);
+    }
+
+    public static int UpdateFirstName(String newValue, String email)
+    {
+      return PartiesEmails.UpdatePartyContactFirstName(newValue, email);
+    }
+
+    public static int UpdateLastName(String newValue, String email)
+    {
+      return PartiesEmails.UpdatePartyContactLastName(newValue, email);
+    }
+
+    public static int UpdatePartyKey(String newValue, String email)
+    {
+      return PartiesEmails.UpdatePartyKey(newValue, email);
+    }
+
+    public static int UpdatePassword(String newValue, String email)
+    {
+      return PartiesEmails.UpdatePartyPassword(newValue, email);
+    }
+
+    public static int UpdatePhone(String newValue, String email)
+    {
+      return PartiesEmails.UpdatePartyContactPhone(newValue, email);
+    }
+  }
+}

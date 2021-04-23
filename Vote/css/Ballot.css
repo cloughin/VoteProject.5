@@ -1,0 +1,235 @@
+/* --- Ballot Title --- */
+
+.tdBallotTitle
+{
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+  padding-left: 20px;
+  text-align: left; /*padding: 0px;*/
+}
+
+.tdBallotSubTitle
+{
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 18px;
+  margin: 0;
+  padding-right: 20px;
+  text-align: right;
+}
+/* --- Ballot Instructions --- */
+
+.tdBallotInstruction
+{
+  color: #444;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px; /*color: #373737;
+font-size: 14px;*/
+  line-height: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  vertical-align: top;
+}
+/* --- Ballot Offices --- */
+/*
+#tableBallotOffices
+{
+vertical-align: top;
+width: 100%;
+padding: 10px 0px 10px 0px;
+}
+*/
+
+.trBallotOfficeContestsRowOfThree
+{
+  padding: 10px 0 10px 0;
+  vertical-align: top;
+  width: 100%;
+}
+
+.tdBallotOfficeContest
+{
+  padding: 10px;
+  vertical-align: top;
+  width: 33%;
+}
+
+.tableBallotOfficeContest
+{
+  border-bottom: 1px solid Black;
+  border-left: 1px solid Black;
+  border-right: 1px solid Black;
+}
+
+.trBallotOfficeHeading
+{
+  padding-bottom: 10px;
+  width: 225px;
+}
+
+.tdBallotOfficeHeading
+{
+  background-color: #f2f2f2;
+  border-top: 1px solid Black;
+  height: 60px;
+  padding: 7px;
+  vertical-align: top;
+  width: 300px;
+}
+
+.tdBallotOfficeHeading
+{
+  color: #26466D;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+}
+/*
+.tdBallotOfficeHeading a:link
+,.tdBallotOfficeHeading a:visited
+,.tdBallotOfficeHeading a:hover
+{
+text-decoration: underline;
+}
+*/
+
+.tdBallotOfficeHeading
+{
+  text-decoration: none;
+}
+
+.BallotOfficesVoteFor
+{
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+}
+
+.tdBallotCandidate
+{
+  border-top: 1px solid Black;
+  font-size: 13px;
+  font-weight: Bold;
+  padding: 5px;
+  vertical-align: middle;
+}
+
+.tdBallotCandidate
+/*
+,.tdBallotCandidate a:link
+,.tdBallotCandidate a:visited
+,.tdBallotCandidate a:hover
+*/
+{
+  color: #26466D;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+}
+/*
+.tdBallotCandidate a:link
+,.tdBallotCandidate a:visited
+,.tdBallotCandidate a:hover
+{
+text-decoration: underline;
+}
+*/
+
+.tdBallotCandidate
+{
+  text-decoration: none;
+}
+
+.tdBallotCheckBox
+{
+  border-top: 1px solid Black;
+  padding: 5px;
+  vertical-align: middle;
+}
+
+.trBallotSeparator
+{
+  background-color: #CAE1FF;
+  padding: 10px 0 10px 0;
+  vertical-align: top;
+  width: 100%;
+}
+
+.tdBallotSeparator
+{
+  color: Black;
+  font-family: Verdana;
+  font-size: 14px;
+  font-weight: bolder; /*background-color: #EEF;*/
+  margin-bottom: 0;
+  padding: 5px;
+  text-align: center;
+}
+
+.tdBallotReferendumHeading
+{
+  background-color: #f2f2f2; /*#DDD;*/
+  border-bottom: solid 1px black;
+  border-left: solid 1px black;
+  border-right: solid 1px black;
+  border-top: solid 1px black;
+  padding: 7px;
+  text-align: center;
+}
+
+.tdBallotReferendumHeading
+{
+  color: #26466D;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.tdBallotReferendum
+{
+  background-color: #FFF;
+  color: #373737;
+  font-family: Verdana;
+  font-size: 12px;
+  font-weight: normal;
+  padding-left: 10px;
+  padding-top: 0;
+}
+
+.tdBallotReferendumYN
+{
+  color: #373737;
+  font-family: Verdana;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 7px;
+  text-align: right;
+  vertical-align: middle;
+}
+
+.tdBallotReferendumCheckBox
+{
+  padding: 5px 0 5px 0;
+  text-align: left;
+  vertical-align: middle;
+}
+
+/*
+#mainContent .tdBallotOfficeHeading
+{
+  text-align: left;
+  height: auto;
+}
+
+#mainContent .tdBallotOfficeHeading a ~ a
+{
+  float:right;
+  margin-top: -28px;
+}
+*/

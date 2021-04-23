@@ -1,0 +1,32 @@
+/*--Page Title--*/
+.trCandidatesPageTitle
+{
+}
+.tdCandidatesPageTitle
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+font-weight:bold;
+color: #373737;
+padding:10px 10px 3px 10px;
+}
+/*--Page Content--*/
+.trCandidatesPageContent
+{
+}
+.tdCandidatesPageContent
+/*
+,.tdCandidatesPageContent a:link
+,.tdCandidatesPageContent a:visited
+,.tdCandidatesPageContent a:hover
+*/
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 12px;
+font-weight:normal;
+color: #373737;
+}
+.tdCandidatesPageContent
+{
+padding:2px 10px 2px 10px;
+}

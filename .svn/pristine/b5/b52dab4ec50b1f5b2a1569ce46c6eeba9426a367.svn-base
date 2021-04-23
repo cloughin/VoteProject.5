@@ -1,0 +1,35 @@
+﻿define(["jquery", "vote/adminMaster", "vote/util"],
+function ($, master, util) {
+
+  function doQuery() {
+    var $todo = $(".youtube-table tbody tr:not(.done)");
+    if (!$todo.length) return;
+    var key = $todo.data("key");
+    util.ajax({
+      url: "/Admin/WebService.asmx/GetYouTubeVideoChannel",
+      data: {
+        politicianKey: key
+      },
+
+      success: function (result) {
+
+      },
+
+      error: function (result) {
+
+      },
+
+      complete: function () {
+
+      }
+    });
+  }
+
+  function initPage() {
+    doQuery();
+  }
+  
+  master.inititializePage({
+    callback: initPage
+  });
+});

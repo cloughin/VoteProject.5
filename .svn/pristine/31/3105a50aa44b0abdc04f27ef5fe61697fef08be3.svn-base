@@ -1,0 +1,369 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using DB.Vote;
+using DB.VoteZipNewLocal;
+using Vote.Reports;
+using Control = System.Web.UI.Control;
+
+namespace Vote
+{
+  public partial class BallotPage : CacheablePage
+  {
+    bool _IsStaging;
+
+    protected BallotPage()
+    {
+      NoIndex = true;
+    }
+
+    private string _ZipQueryError;
+
+    #region Caching support
+
+    protected override string GetCacheKey()
+    {
+      return UrlManager.GetStateCodeFromHostName() + "." + QueryState + "." +
+        QueryElection + "." + QueryCongress + "." + QueryStateSenate + "." +
+        QueryStateHouse + "." + QueryCounty;
+    }
+
+    protected override string GetCacheType()
+    {
+      return "Ballot";
+    }
+
+    #endregion Caching support
+
+    private readonly string _ElectionKey = QueryElection;
+    private string _ElectionDescription;
+
+    private const string TitleTag = "Enhanced Sample Ballot for {0} | {1}";
+
+    private void CreateHeading(int officeContestsCount)
+    {
+      //ElectionTitle.InnerText = PageCache.Elections.GetElectionDesc(QueryElection);
+      new HtmlAnchor
+      {
+        HRef = UrlManager.GetElectionPageUri(_ElectionKey).ToString(),
+        InnerText = _ElectionDescription
+      }.AddTo(ElectionTitle);
+      LocationInfo.InnerHtml = FormatLegislativeDistrictsFromQueryStringForHeading(true);
+
+      var stateCode = Elections.GetStateCodeFromKey(QueryElection);
+
+      Control countyBoard;
+      
+      var countyBoardWebAddress = Counties.GetUrl(stateCode, QueryCounty);
+      //var countyBoardWebAddressOld =
+      //  NormalizeUrl(States.GetCountyBoardsWebAddress(
+      //   Elections.GetStateCodeFromKey(QueryElection)));
+      const string linkText = "local county board&rsquo;s website";
+      if (string.IsNullOrWhiteSpace(countyBoardWebAddress))
+        countyBoard = new LiteralControl(linkText);
+      else
+        countyBoard = new HtmlAnchor
+        {
+          HRef = NormalizeUrl(countyBoardWebAddress),
+          Target = "_blank",
+          InnerHtml = linkText
+        };
+
+      string instructions;
+      if (officeContestsCount > 0)
+        instructions =
+          "Our enhanced sample ballot is not simply a listing of the candidates. We provide photos" +
+          " and links to social media and allow you to compare the biographical information" +
+          " and views of the candidates. If you are looking for an exact replica of the" +
+          " ballot you will see at the polls, we suggest that you consult your " +
+          countyBoard.RenderToString() + ".";
+      else
+        instructions =
+          "There are no office contests for your legislative districts.";
+      if (!_IsStaging) Instructions.InnerHtml = instructions;
+      new HtmlP { InnerHtml = instructions }.AddTo(CommonIntroduction);
+
+      if (officeContestsCount > 0)
+      {
+        var additionalInfo =
+          PageCache.Elections.GetElectionAdditionalInfo(QueryElection)
+            .ReplaceNewLinesWithParagraphs();
+        if (!string.IsNullOrWhiteSpace(additionalInfo))
+        {
+          if (!_IsStaging) new LiteralControl(additionalInfo).AddTo(AdditionalInfo);
+          new LiteralControl(additionalInfo).AddTo(AdditionalInformation);
+        }
+
+        var ballotInstructions =
+          PageCache.Elections.GetBallotInstructions(QueryElection);
+        if (!string.IsNullOrWhiteSpace(ballotInstructions))
+        {
+          if (!_IsStaging) new LiteralControl(ballotInstructions).AddTo(AdditionalInfo);
+          new LiteralControl(ballotInstructions.ReplaceNewLinesWithParagraphs()).AddTo(BallotInstructions);
+        }
+
+        var statesRow = States.GetData(stateCode).FirstOrDefault();
+        if (statesRow != null)
+        {
+          var controlsToAdd = new List<Control>();
+
+          if (!string.IsNullOrWhiteSpace(statesRow.PollHours))
+          {
+            if (controlsToAdd.Count > 0) controlsToAdd.Add(new HtmlBreak());
+            controlsToAdd.Add(new HtmlEm { InnerText = "Normal Polling Hours: " });
+            controlsToAdd.Add(new LiteralControl(statesRow.PollHours));
+          }
+
+          if (!string.IsNullOrWhiteSpace(statesRow.PollHoursUrl))
+          {
+            if (controlsToAdd.Count > 0) controlsToAdd.Add(new HtmlBreak());
+            controlsToAdd.Add(new HtmlAnchor
+            {
+              HRef = NormalizeUrl(statesRow.PollHoursUrl),
+              Target = "_blank",
+              InnerHtml = statesRow.State + " polling hours"
+            });
+          }
+
+          if (!string.IsNullOrWhiteSpace(statesRow.PollPlacesUrl))
+          {
+            if (controlsToAdd.Count > 0) controlsToAdd.Add(new HtmlBreak());
+            controlsToAdd.Add(new HtmlAnchor
+            {
+              HRef = NormalizeUrl(statesRow.PollPlacesUrl),
+              Target = "_blank",
+              InnerHtml = statesRow.State + " polling places"
+            });
+          }
+
+          if (!string.IsNullOrWhiteSpace(statesRow.VoterRegistrationWebAddress))
+          {
+            if (controlsToAdd.Count > 0) controlsToAdd.Add(new HtmlBreak());
+            controlsToAdd.Add(new HtmlAnchor
+            {
+              HRef = NormalizeUrl(statesRow.VoterRegistrationWebAddress),
+              Target = "_blank",
+              InnerHtml = statesRow.State + " voter registration page"
+            });
+          }
+
+          if (!string.IsNullOrWhiteSpace(statesRow.EarlyVotingWebAddress))
+          {
+            if (controlsToAdd.Count > 0) controlsToAdd.Add(new HtmlBreak());
+            controlsToAdd.Add(new HtmlAnchor
+            {
+              HRef = NormalizeUrl(statesRow.EarlyVotingWebAddress),
+              Target = "_blank",
+              InnerHtml = statesRow.State + " early voting page"
+            });
+          }
+
+          if (!string.IsNullOrWhiteSpace(statesRow.VoteByMailWebAddress))
+          {
+            if (controlsToAdd.Count > 0) controlsToAdd.Add(new HtmlBreak());
+            controlsToAdd.Add(new HtmlAnchor
+            {
+              HRef = NormalizeUrl(statesRow.VoteByMailWebAddress),
+              Target = "_blank",
+              InnerHtml = statesRow.State + " vote by mail page"
+            });
+          }
+
+          if (!string.IsNullOrWhiteSpace(statesRow.VoteByAbsenteeBallotWebAddress))
+          {
+            if (controlsToAdd.Count > 0) controlsToAdd.Add(new HtmlBreak());
+            controlsToAdd.Add(new HtmlAnchor
+            {
+              HRef = NormalizeUrl(statesRow.VoteByAbsenteeBallotWebAddress),
+              Target = "_blank",
+              InnerHtml = statesRow.State + " absentee ballot page"
+            });
+          }
+
+          if (controlsToAdd.Count > 0)
+          {
+            var p = new HtmlP();
+            VotingInformation.Controls.Add(p);
+            foreach (var c in controlsToAdd)
+              p.Controls.Add(c);
+          }
+
+          var howVotingIsDone = Elections.IsPrimaryElection(QueryElection)
+            ? statesRow.HowPrimariesAreDone
+            : statesRow.HowVotingIsDone;
+
+          if (!string.IsNullOrWhiteSpace(howVotingIsDone))
+            VotingInformation.Controls.Add(
+              new LiteralControl(howVotingIsDone.ReplaceNewLinesWithParagraphs()));
+        }
+
+        var electionsRow = Elections.GetData(Elections.GetStateElectionKeyFromKey(QueryElection)).FirstOrDefault();
+        if (electionsRow != null)
+        {
+          var controlsToAdd = new List<Control>();
+
+          if (electionsRow.RegistrationDeadline != DefaultDbDate)
+          {
+            if (controlsToAdd.Count > 0) controlsToAdd.Add(new HtmlBreak());
+            controlsToAdd.Add(new HtmlEm { InnerText = "Registration Deadline: " });
+            controlsToAdd.Add(new LiteralControl(electionsRow.RegistrationDeadline.ToShortDateString()));
+          }
+
+          if (electionsRow.EarlyVotingBegin != DefaultDbDate || 
+            electionsRow.EarlyVotingEnd != DefaultDbDate)
+          {
+            if (controlsToAdd.Count > 0) controlsToAdd.Add(new HtmlBreak());
+            controlsToAdd.Add(new HtmlEm { InnerText = "Early Voting: " });
+            var strings = new List<string>();
+            if (electionsRow.EarlyVotingBegin != DefaultDbDate)
+              strings.Add("begins " + electionsRow.EarlyVotingBegin.ToShortDateString());
+            if (electionsRow.EarlyVotingEnd != DefaultDbDate)
+              strings.Add("ends " + electionsRow.EarlyVotingEnd.ToShortDateString());
+            controlsToAdd.Add(new LiteralControl(string.Join(", ", strings)));
+          }
+
+          if (electionsRow.MailBallotBegin != DefaultDbDate ||
+            electionsRow.MailBallotEnd != DefaultDbDate ||
+            electionsRow.MailBallotDeadline != DefaultDbDate)
+          {
+            if (controlsToAdd.Count > 0) controlsToAdd.Add(new HtmlBreak());
+            controlsToAdd.Add(new HtmlEm { InnerText = "Mail-In Ballots: " });
+            var strings = new List<string>();
+            if (electionsRow.MailBallotBegin != DefaultDbDate)
+              strings.Add("begins " + electionsRow.MailBallotBegin.ToShortDateString());
+            if (electionsRow.MailBallotEnd != DefaultDbDate)
+              strings.Add("last day to request " + electionsRow.MailBallotEnd.ToShortDateString());
+            if (electionsRow.MailBallotDeadline != DefaultDbDate)
+              strings.Add("must be received by " + electionsRow.MailBallotDeadline.ToShortDateString());
+            controlsToAdd.Add(new LiteralControl(string.Join(", ", strings)));
+          }
+
+          if (electionsRow.AbsenteeBallotBegin != DefaultDbDate ||
+            electionsRow.AbsenteeBallotEnd != DefaultDbDate ||
+            electionsRow.AbsenteeBallotDeadline != DefaultDbDate)
+          {
+            if (controlsToAdd.Count > 0) controlsToAdd.Add(new HtmlBreak());
+            controlsToAdd.Add(new HtmlEm { InnerText = "Absentee Ballots: " });
+            var strings = new List<string>();
+            if (electionsRow.AbsenteeBallotBegin != DefaultDbDate)
+              strings.Add("begins " + electionsRow.AbsenteeBallotBegin.ToShortDateString());
+            if (electionsRow.AbsenteeBallotEnd != DefaultDbDate)
+              strings.Add("last day to request " + electionsRow.AbsenteeBallotEnd.ToShortDateString());
+            if (electionsRow.AbsenteeBallotDeadline != DefaultDbDate)
+              strings.Add("must be received by " + electionsRow.AbsenteeBallotDeadline.ToShortDateString());
+            controlsToAdd.Add(new LiteralControl(string.Join(", ", strings)));
+          }
+
+          if (controlsToAdd.Count > 0)
+          {
+            var p = new HtmlP();
+            VotingInformation.Controls.Add(p);
+            foreach (var c in controlsToAdd)
+              p.Controls.Add(c);
+          }
+        }
+
+        // Mantis 349: Show Incumbent always
+        //if (
+        //  StateCache.GetIsIncumbentShownOnBallots(
+        //    Elections.GetStateCodeFromKey(QueryElection)))
+        new LiteralControl("* = Incumbent").AddTo(AdditionalInfo);
+      }
+    }
+
+    private string GetMetaTitle()
+    {
+      return "Enhanced Sample Ballot for " +
+        PageCache.Elections.GetElectionDesc(QueryElection) + ", " +
+        FormatLegislativeDistrictsFromQueryString(", ");
+    }
+
+    protected override void OnPreInit(EventArgs e)
+    {
+      var zip = Request.QueryString["zip"];
+      if (!string.IsNullOrEmpty(zip))
+        try
+        {
+          // handle zip based queries
+          var electionKey = Request.QueryString["election"];
+          if (string.IsNullOrEmpty(electionKey))
+            throw new VoteException("The election key is missing");
+          zip = zip.Replace("-", "");
+          if (zip.Length != 9)
+            throw new VoteException("The zip must be nine digits");
+          var zip5 = zip.Substring(0, 5);
+          var zip4 = zip.Substring(5, 4);
+          var table = Uszd.GetDataByZip5Zip4(zip5, zip4);
+          if (table.Count == 0)
+            throw new VoteException("Could not find this zip code");
+          var row = table[0];
+          var redirect =
+            string.Format(
+              "/ballot.aspx?State={0}&Election={1}&" +
+                "Congress={2}&StateSenate={3}&StateHouse={4}&County={5}",
+              StateCache.StateCodeFromLdsStateCode(row.LdsStateCode), electionKey,
+              row.Congress.ZeroPad(3), row.StateSenate.ZeroPad(3),
+              row.StateHouse.ZeroPad(3), row.County.ZeroPad(3));
+          //redirect = UrlManager.ApplySiteIdToUrl(redirect);
+          Response.Redirect(redirect);
+        }
+        catch (VoteException ex)
+        {
+          _ZipQueryError = ex.Message;
+        }
+      else // classic mode
+        base.OnPreInit(e);
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      Page.IncludeJs("~/js/ballot.js");
+      Master.MenuPage = "forVoters.aspx";
+      _IsStaging = Security.GetIsStaging(UserName, false);
+
+      _ElectionDescription = PageCache.Elections.GetElectionDesc(_ElectionKey);
+      Title = string.Format(TitleTag, GetMetaTitle(), Master.SiteName);
+
+      try
+      {
+        var metaContent = GetMetaTitle();
+        Title = metaContent;
+        MetaDescription = metaContent;
+        MetaKeywords = metaContent;
+
+        if (_ZipQueryError != null)
+        {
+          InnerContent.Controls.Clear();
+          var p = new HtmlP().AddTo(InnerContent, "not-found-error");
+          new LiteralControl(_ZipQueryError).AddTo(p);
+          return;
+        }
+
+        int officeContests;
+        BallotReportResponsive.GetReport(QueryElection, QueryCongress, QueryStateSenate,
+          QueryStateHouse, QueryCounty, out officeContests)
+          .AddTo(ReportPlaceHolder);
+        CreateHeading(officeContests);
+        BallotReferendumReportResponsive.GetReport(QueryElection, QueryCounty)
+          .AddTo(ReferendumReportPlaceHolder);
+
+        // tag body with key for persistent selections
+        var body = Master.FindControl("Body") as HtmlGenericControl;
+        var stateElectionKey =
+          Elections.GetStateElectionKeyFromKey(QueryElection).ToUpperInvariant();
+        body.Attributes.Add("data-election", stateElectionKey);
+        //var electionKeyToInclude = Elections.GetElectionKeyToInclude(stateElectionKey);
+        //if (!string.IsNullOrWhiteSpace(electionKeyToInclude))
+        //  body.Attributes.Add("data-election-to-include", electionKeyToInclude);
+        if (_IsStaging)
+          body.AddCssClasses("staging");
+      }
+      catch (Exception)
+      {
+        
+      }
+    }
+  }
+}

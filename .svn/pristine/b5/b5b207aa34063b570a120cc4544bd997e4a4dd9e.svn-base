@@ -1,0 +1,2072 @@
+﻿/***********************************************/
+/* Entire page                                 */
+/***********************************************/
+
+body.admin-page #outer
+{
+  position: relative;
+}
+
+body.admin-page .sub-heading.headings
+{
+  float: left;
+}
+
+body.admin-page .sub-heading.change-button
+{
+  position: absolute;
+  right: 0;
+  top: 10px;
+}
+
+body.admin-page h2.jurisdiction-message
+{
+  margin: 0;
+}
+
+body.admin-page h4.credential-message
+{
+  font-size: 12px;
+  font-style: italic;
+}
+
+body.admin-page .update-controls
+{
+  margin: 4px 0 0 0;
+  position: relative;
+}
+
+body.admin-page #main-tabs
+{
+  margin: 0 0 20px 0;
+  width: 933px;
+}
+
+body.admin-page #main-tabs .data-area
+{
+  min-height: 279px;
+}
+
+body.admin-page div.data-default {
+  font-size: 7pt;
+  color: #666;
+}
+
+body.admin-page #main-tabs li.htab a, #body div.tabs-container li.htab a {
+  font-size: 8pt;
+}
+
+#main-tabs .spacer
+{
+  height: 10px;
+  width: 1px;
+}
+
+#main-tabs .input-element
+{
+  float: left;
+  margin: 0 16px 0 0;
+}
+
+#main-tabs .content-footer
+{
+  margin: 0;
+}
+
+#main-tabs .feedback-floater-for-ie7
+{
+  float: left;
+  min-height: 1px;
+  width: 702px;
+}
+
+#main-tabs div.htab-panel div.inner-panel .feedback
+{
+  width: 676px;
+}
+
+#main-tabs input[type=text]
+{
+  margin-left: 0;
+}
+
+#main-tabs .htab-panel
+{
+  min-height: 509px;
+}
+
+#main-tabs div.htab-panel div.inner-panel
+{
+  min-height: 483px;
+}
+
+#main-tabs div.htab-panel div.content-area
+{
+  min-height: 400px;
+}
+
+#main-tabs div.instructions
+{
+  float: left;
+}
+
+#main-tabs div.instructions ul
+{
+  color: #bf9241;
+  list-style: disc;
+  margin: 50px 0 0 60px;
+  width: 300px;
+}
+
+#main-tabs div.instructions li
+{
+  margin-bottom: 5px;
+}
+
+#main-tabs div.instructions li span
+{
+  color: #334f80;
+  font-size: 11px;
+}
+
+#main-tabs div.instructions em
+{
+  color: #bf9241;
+  font-style: normal;
+  font-weight: bold;
+}
+
+#main-tabs .icon-move
+{
+  background-image: url(/images/opsprite.png);
+  background-position: -200px 0;
+  border: solid 1px #ccc;
+  float: left;
+  height: 20px;
+  margin-left: 2px;
+  width: 20px;
+}
+
+#main-tabs .icon-move:hover
+{
+  background-position: -200px -20px;
+}
+
+/***********************************************/
+/* Add Election                                */
+/***********************************************/
+
+#main-tabs #tab-addelection h6
+{
+  margin: 2px 0 4px 0;
+}
+
+#main-tabs #tab-addelection .data-area
+{
+  padding: 10px 0 0 0;
+}
+
+#main-tabs #tab-addelection .data-area div.instructions
+{
+  float: none;
+}
+
+#main-tabs #tab-addelection .data-area div.instructions ul
+{
+  margin: 0 0 20px 60px;
+  width: 750px;
+}
+
+#main-tabs #tab-addelection .data-area .col
+{
+  float: left;
+  margin-left: 30px;
+}
+
+#main-tabs #tab-addelection .data-area .primaries
+{
+  margin: 18px 0 0 30px;
+  padding: 6px;
+  background-color: #f8f8f8;
+  float: left
+}
+
+#main-tabs #tab-addelection .data-area .primaries.disabled
+{
+  -moz-opacity: 0.5;
+  filter: alpha(opacity: 50);
+  opacity: 0.5;
+}
+
+#main-tabs #tab-addelection select
+{
+  min-width: 200px;
+}
+
+#main-tabs #tab-addelection .pastelection
+{
+  margin-left: 20px;
+}
+
+#main-tabs #tab-addelection .party
+{
+  margin-top: 10px;
+}
+
+#main-tabs #tab-addelection .add-election-copy-offices-dropdown
+{
+  max-width: 360px;
+}
+
+#main-tabs #tab-addelection .feedback-floater-for-ie7
+{
+  float: left;
+  min-height: 1px;
+  width: 664px;
+}
+
+#main-tabs #tab-addelection .feedback
+{
+  width: 638px;
+}
+
+/***********************************************/
+/* State Defaults                              */
+/***********************************************/
+
+#main-tabs #tab-statedefaults textarea
+{
+  height: 32px;
+  width: 840px;
+}
+
+#main-tabs #tab-statedefaults .disclaimer-buttons
+{
+  margin-top: 6px;
+}
+
+/***********************************************/
+/* Change Info                                 */
+/***********************************************/
+
+#main-tabs #tab-changeinfo .data-default
+{
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 846px;
+  overflow: hidden;
+}
+
+#main-tabs #tab-changeinfo .data-area
+{
+  padding-top: 6px;
+}
+
+#main-tabs #tab-changeinfo .data-area .spacer
+{
+  height: 18px;
+}
+
+#main-tabs #tab-changeinfo textarea
+{
+  height: 32px;
+  width: 840px;
+}
+
+#main-tabs #tab-changeinfo .input-element.changelocals
+{
+  margin-left: 25px;
+}
+
+#main-tabs #tab-changeinfo .input-element.electiondesc input
+{
+  width: 834px;
+}
+
+#main-tabs #tab-changeinfo .disclaimer-buttons
+{
+  margin-top: 6px;
+}
+
+#main-tabs #tab-changeinfo .input-element.countyboardswebaddress input
+{
+  width: 834px;
+}
+
+#main-tabs #tab-changeinfo .input-element.isviewable
+{
+  margin-top: 5px;
+}
+
+#main-tabs #tab-changeinfo .input-element.isviewable .kalypto-checkbox-label
+{
+  color: #c00;
+}
+
+#main-tabs #tab-changeinfo .textarea.is-resizable .ui-wrapper {
+  padding-bottom: 0 !important;
+}
+
+#main-tabs #tab-changeinfo .textarea.is-resizable .ui-icon-gripsmall-diagonal-se {
+  bottom: -3px;
+}
+ 
+/***********************************************/
+/* Add Deadlines                               */
+/***********************************************/
+
+#main-tabs #tab-changedeadlines .data-area
+{
+  padding: 0 0 0 0;
+}
+ 
+/***********************************************/
+/* Add Offices                                 */
+/***********************************************/
+
+#main-tabs #tab-addoffices .data-area
+{
+  padding: 15px 0 0 0;
+}
+
+#main-tabs #tab-addoffices .add-offices-control
+{
+  height: 300px;
+  width: 400px;
+}
+
+#main-tabs #tab-addoffices ul.dynatree-container
+{
+  background-color: #ffffee;
+  border: 1px solid #dbdbdb;
+}
+
+#main-tabs #tab-addoffices span.dynatree-title
+{
+  color: #334f80;
+  padding: 1px 0 0 2px;
+}
+
+#main-tabs #tab-addoffices span.office-class span.dynatree-title
+{
+  font-weight: bold;
+}
+
+/***********************************************/
+/* Add Candidates                              */
+/***********************************************/
+
+#main-tabs #tab-addcandidates
+{
+  position: relative;
+}
+
+#main-tabs #tab-addcandidates .office-heading
+{
+  float: left;
+}
+
+/***********************************************/
+/* Adjust Incumbents                           */
+/***********************************************/
+
+#main-tabs #tab-adjustincumbents .adjust-incumbents-control .offices,
+#main-tabs #tab-adjustincumbents .reinstate-incumbents-control .offices
+{
+  margin-left: 30px;
+}
+
+#main-tabs #tab-adjustincumbents .adjust-incumbents-control .office,
+#main-tabs #tab-adjustincumbents .reinstate-incumbents-control .office
+{
+  margin-top: 10px;
+}
+
+#main-tabs #tab-adjustincumbents .adjust-incumbents-control .office p.office-name,
+#main-tabs #tab-adjustincumbents .reinstate-incumbents-control .office p.office-name
+{
+  font-weight: bold;
+}
+
+#main-tabs #tab-adjustincumbents .adjust-incumbents-control .office p.office-extra
+{
+  font-size: 85%;
+}
+
+#main-tabs #tab-adjustincumbents .reinstate-incumbents-message
+{
+  margin-top: 15px;
+}
+
+/***********************************************/
+/* Identify Winners                            */
+/***********************************************/
+
+#main-tabs .winners-tab .next-button
+{
+  position: absolute;
+  left: 20px;
+  top: 7px;
+  border: 1px solid #d8d8d8;
+  padding: 2px;
+}
+
+#main-tabs .winners-tab .next-button div
+{
+  width: 20px;
+  height: 20px;
+  background: #fff url(/images/opsprite.png) -260px 0;
+}
+
+#main-tabs .winners-tab .next-button:hover div
+{
+  background: #fff url(/images/opsprite.png) -260px -20px;
+}
+
+
+#main-tabs .winners-tab .next-button:disabled div
+{
+  background: #fff url(/images/opsprite.png) -260px -40px;
+}
+
+#main-tabs #tab-identifywinners .identify-winners-control
+{
+  height: 300px;
+  width: 650px;
+}
+
+#main-tabs #tab-identifywinnersbeta .identify-winners-beta-control
+{
+  height: 352px;
+  width: 863px;
+}
+
+#main-tabs #tab-identifywinners ul.dynatree-container
+{
+  background-color: #ffffee;
+  border: 1px solid #dbdbdb;
+}
+
+#main-tabs #tab-identifywinnersbeta ul.dynatree-container
+{
+  background-color: #ffffee;
+  border: 1px solid #dbdbdb;
+}
+
+#main-tabs #tab-identifywinners span.dynatree-title
+{
+  color: #334f80;
+  padding: 1px 0 0 2px;
+}
+
+#main-tabs #tab-identifywinnersbeta span.dynatree-title
+{
+  color: #334f80;
+  padding: 1px 0 0 2px;
+}
+
+#main-tabs #tab-identifywinners .odd span.dynatree-title
+{
+  background-color: #eee;
+}
+
+#main-tabs #tab-identifywinnersbeta .odd span.dynatree-title
+{
+  background-color: #eee;
+}
+
+#main-tabs #tab-identifywinners span.root-node .dynatree-title
+{
+  font-weight: bold;
+  padding-bottom: 5px;
+}
+
+#main-tabs #tab-identifywinnersbeta span.root-node .dynatree-title
+{
+  font-weight: bold;
+  padding-bottom: 5px;
+}
+
+#main-tabs #tab-identifywinners span.office-class span.dynatree-title
+{
+  font-weight: bold;
+}
+
+#main-tabs #tab-identifywinnersbeta span.office-class span.dynatree-title
+{
+  font-weight: bold;
+}
+
+#main-tabs #tab-identifywinners span.dynatree-title .label
+{
+  float: left;
+  width: 350px;
+}
+
+#main-tabs #tab-identifywinnersbeta span.dynatree-title .label
+{
+  float: left;
+  width: 510px;
+}
+
+#main-tabs #tab-identifywinners span.dynatree-title .label.red
+{
+  color: red;
+}
+
+#main-tabs #tab-identifywinnersbeta span.dynatree-title .label.red
+{
+  color: red;
+}
+
+#main-tabs #tab-identifywinners span.dynatree-title .dropdowns
+{
+  float: left;
+}
+
+#main-tabs #tab-identifywinnersbeta span.dynatree-title .dropdowns
+{
+  float: left;
+}
+
+#main-tabs #tab-identifywinners span.dynatree-title .dropdowns select
+{
+  background-color: #fff;
+  color: #334f80;
+  display: block;
+  font-size: 8pt;
+  margin-top: 2px;
+  padding: 0;
+  width: 200px;
+}
+
+#main-tabs #tab-identifywinnersbeta span.dynatree-title .dropdowns select
+{
+  background-color: #fff;
+  color: #334f80;
+  display: block;
+  font-size: 8pt;
+  margin-top: 2px;
+  padding: 0;
+  width: 250px;
+}
+#main-tabs #tab-identifywinners span.dynatree-title .dropdowns select.bold
+{
+  font-weight: bold;
+}
+#main-tabs #tab-identifywinnersbeta span.dynatree-title .dropdowns select.bold
+{
+  font-weight: bold;
+}
+#main-tabs #tab-identifywinnersbeta span.dynatree-title .dropdowns select:disabled 
+{
+  background-color: #ccc;
+}
+#main-tabs #tab-identifywinners span.dynatree-title .dropdowns select:first-child
+{
+  margin-top: 0;
+}
+
+#main-tabs #tab-identifywinnersbeta span.dynatree-title .dropdowns select:first-child
+{
+  margin-top: 0;
+}
+
+#main-tabs #tab-identifywinners .no-checkbox
+{
+  margin-left: 19px;
+}
+
+#main-tabs #tab-identifywinnersbeta .no-checkbox
+{
+  margin-left: 19px;
+}
+
+#main-tabs #tab-identifywinners div.control-area
+{
+  float: left;
+}
+
+#main-tabs #tab-identifywinnersbeta div.control-area
+{
+  float: left;
+}
+
+#main-tabs #tab-identifywinners .iswinnersidentified
+{
+  margin-top: 10px;
+}
+
+#main-tabs #tab-identifywinnersbeta .iswinnersidentified
+{
+  margin-top: 10px;
+}
+
+#main-tabs #tab-identifywinners div.instructions ul
+{
+  margin: 5px 0 0 10px;
+  width: 160px;
+}
+
+#main-tabs #tab-identifywinnersbeta div.instructions ul
+{
+  margin: 5px 0 0 10px;
+  width: 260px;
+}
+
+/***********************************************/
+/* Add Ballot Measures                         */
+/***********************************************/
+
+/***********************************************/
+/* Add Ballot Measures: Select Ballot Measure  */
+/***********************************************/
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-toggler
+{
+  text-decoration: none;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-toggler div
+{
+  background-image: url(/images/treeicons.gif);
+  background-position: -4px -2px;
+  background-repeat: no-repeat;
+  display: block;
+  float: left;
+  height: 14px;
+  width: 10px;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-toggler:hover div
+{
+  background-position: -20px -2px;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-toggler.showing div
+{
+  background-position: -36px -2px;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-toggler.showing:hover div
+{
+  background-position: -52px -2px;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-control
+{
+  min-height: 240px;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container-outer
+{
+  display: none;
+  left: 19px;
+  position: absolute;
+  top: 146px;
+  z-index: 10;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container
+{
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  width: 380px;
+  background: #fff;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container .slimscroll-toggler
+{
+  background-image: url(/images/treeicons.gif);
+  background-position: -4px -2px;
+  background-repeat: no-repeat;
+  display: block;
+  height: 14px;
+  margin: 4px 0 0 3px;
+  position: absolute;
+  width: 10px;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container .slimscroll-toggler:hover
+{
+  background-position: -20px -2px;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container .slimscroll-toggler.showing
+{
+  background-position: -36px -2px;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container .slimscroll-toggler.showing:hover
+{
+  background-position: -52px -2px;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container .tab-ast
+{
+  margin: 6px 1px 0 0;
+  right: 0;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container div.heading
+{
+  background: #eed;
+  border: 1px solid #dbdbdb;
+  border-bottom: none;
+  padding: 3px 10px;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container div.heading .label
+{
+  float: left;
+  width: 325px;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container div.heading .undo-button
+{
+  background: #fff;
+  float: right;
+  margin-left: 5px;
+  position: static;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container div.heading .sub
+{
+  font-style: italic;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-outer
+{
+  background: #ffe;
+  border-bottom: 1px solid #eee;
+  padding: 5px 15px 8px 15px;
+}
+
+#main-tabs #tab-addballotmeasures .icons
+{
+  float: left;
+  margin: 1px 4px 2px -1px;
+}
+
+#main-tabs #tab-addballotmeasures .icon-move
+{
+  float: none;
+  border-color: #aaa;
+}
+
+#main-tabs #tab-addballotmeasures .icon-status
+{
+  color: #888888;
+  margin: -2px 0 0 8px;
+}
+
+#main-tabs #tab-addballotmeasures .icon-status.defeated
+{
+  color: #f00;
+}
+
+#main-tabs #tab-addballotmeasures .icon-status.passed
+{
+  color: #0c0;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-control .ballot-measure-desc
+{
+  background-color: #d8d8d8;
+  border: 1px solid #888;
+  cursor: pointer;
+  font-size: 8pt;
+  margin: 1px 0 1px 0;
+  min-height: 37px;
+  padding: 0;
+  text-shadow: 0 1px 1px #fff;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-control .ballot-measure-desc.tagged
+{
+  color: #888;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-control .ballot-measure-desc.selected
+{
+  background-color: #fff;
+  color: #2254aa;
+  cursor: default;
+  font-weight: bold;
+  text-shadow: none;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-control .ballot-measure-desc.tagged
+{
+  background-color: #eee;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container .content-footer
+{
+  margin-top: 2px;
+  padding-bottom: 3px;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container .feedback-floater-for-ie7
+{
+  width: 262px;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container .feedback-container
+{
+  margin-left: 1px;
+  width: 277px;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container .feedback
+{
+  width: 237px;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container div.update-button
+{
+  padding-right: 3px;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container div.update-button input
+{
+  clear: both;
+  display: block;
+  margin: 3px 0;
+}
+
+#main-tabs #tab-addballotmeasures .select-ballot-measure-container div.update-button input.add-ballot-measure
+{
+  float: right;
+}
+
+#main-tabs #tab-addballotmeasures .data-area
+{
+  display: none;
+}
+
+#main-tabs #tab-addballotmeasures textarea
+{
+  height: 32px;
+  width: 840px;
+}
+
+#main-tabs #tab-addballotmeasures .input-element.is-tag-for-deletion
+{
+  margin: 18px 16px 0 30px;
+}
+
+#main-tabs #tab-addballotmeasures #ballot-measure-tabs 
+{
+  margin-top: 10px;
+}
+
+#main-tabs #ballot-measure-tabs li.tab a 
+{
+  font-size: 8pt;
+  padding: 3px 12px;
+}
+
+#main-tabs #tab-addballotmeasures #ballot-measure-tabs .url-label
+{
+  margin: 6px 4px 0 0;
+}
+
+#main-tabs #tab-addballotmeasures #ballot-measure-tabs .input-element.url
+{
+  margin: 0;
+}
+
+#main-tabs #tab-addballotmeasures #ballot-measure-tabs .url input
+{
+  width: 566px;
+}
+
+#main-tabs #tab-addballotmeasures #ballot-measure-tabs .remove-line-breaks
+{
+  margin: 2px 16px 8px 0;
+}
+
+#main-tabs #tab-addballotmeasures #ballot-measure-tabs textarea
+{
+  width: 794px;
+  height: 112px;
+}
+
+#main-tabs #tab-addballotmeasures #ballot-measure-tabs .text-area-toggler
+{
+  background-image: url(/images/treeicons.gif);
+  background-position: -4px -2px;
+  background-repeat: no-repeat;
+  display: block;
+  float: left;
+  height: 14px;
+  width: 10px;
+}
+
+#main-tabs #tab-addballotmeasures #ballot-measure-tabs .text-area-toggler:hover
+{
+  background-position: -20px -2px;
+}      
+
+#main-tabs #tab-addballotmeasures #ballot-measure-tabs .text-area-toggler.showing
+{
+  background-position: -36px -2px;;
+}      
+
+#main-tabs #tab-addballotmeasures #ballot-measure-tabs .text-area-toggler.showing:hover
+{
+  background-position: -52px -2px;
+}      
+
+#main-tabs #ballot-measure-tabs div.icon-box
+{
+  float: left;
+  margin: 1px 5px 0 2px;
+  padding: 2px;
+  border: 1px solid #ccc;
+}
+      
+#main-tabs #ballot-measure-tabs .icon
+{
+  width: 20px;
+  height: 20px;
+  background:#fff url(/images/socialsprite.png);
+  background-position: 0 0;
+  display: block;
+}
+      
+#main-tabs #ballot-measure-tabs .icon:hover
+{
+  background-position: 0 -20px;
+}
+      
+#main-tabs #ballot-measure-tabs .icon.disabled
+{
+  background-position: 0 -40px;
+}
+ 
+/***********************************************/
+/* View Report                                 */
+/***********************************************/
+
+#tab-viewreport .get-report
+{
+  float: left;
+  margin: 0 5px 2px 0;
+}
+
+#tab-viewreport .get-report-in-new-window
+{
+  float: left;
+  color: #334f80;
+  margin-top: 5px;
+}
+
+#tab-viewreport .get-report-in-new-window label
+{
+  position: relative;
+  top: -2px;
+}
+
+#tab-viewreport h6.report-head
+{
+  float: left;
+  margin: 0 0 0 10px;
+  width: 780px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-top: 2px;
+}
+ 
+/***********************************************/
+/* Master only                                 */
+/***********************************************/
+
+#main-tabs #tab-masteronly #master-only-tabs 
+{
+  margin-top: 10px;
+}
+
+#main-tabs #tab-masteronly #master-only-tabs li.tab a 
+{
+  font-size: 8pt;
+  padding: 3px 12px;
+}
+
+#main-tabs #tab-masteronly .ui-tabs-panel 
+{
+  min-height: 290px;
+}
+
+#main-tabs #tab-masteronly .input-element.electiondesc input
+{
+  width: 800px;
+}
+
+#main-tabs #tab-masteronly div.instructions
+{
+  float: none;
+}
+
+#main-tabs #tab-masteronly div.instructions ul
+{
+  margin: 20px 0 20px 20px;
+  width: 750px;
+}
+
+#main-tabs #tab-masteronly div.instructions ul ul
+{
+  margin: 7px 0 7px 20px;
+}
+
+#main-tabs #tab-masteronly .input-element.electiontocopy .fieldlabel
+{
+  margin-bottom: 2px;
+}
+
+#main-tabs #tab-masteronly .input-element.electiontocopy input[type=text]
+{
+  width: 800px;
+}
+
+#main-tabs #tab-masteronly .input-element.deleteelection .kalypto-checkbox-label
+{
+  color: #c00;
+}
+
+#main-tabs #tab-masteronly .input-element.generalpastelection,
+#main-tabs #tab-masteronly .input-element.generalincludepresident
+{
+  margin-top: 4px;
+  margin-left: 20px;
+}
+
+#main-tabs #tab-masteronly .input-element.generalelectiondesc input
+{
+  width: 800px;
+}
+
+#main-tabs #tab-masteronly .input-element.electionstatus textarea 
+{
+  height: 255px;
+  width: 800px;
+}
+ 
+/***********************************************/
+/* Election Report                             */
+/* (allAdmin + Election                        */
+/***********************************************/
+
+#ElectionReport 
+{
+  color: red;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+  margin: 0;
+  border: 1px solid #aaa;
+  overflow-y: scroll;
+  max-height: 480px;
+}
+
+#ElectionReport a img
+{
+  border: none;
+}
+
+#ElectionReport a:link
+{
+  color: #26466D;
+  text-decoration: underline; 
+}
+
+#ElectionReport a:visited
+{
+  color: #990099; 
+  text-decoration: underline;
+}
+
+#ElectionReport a:hover
+{
+  color: red;
+  text-decoration: none;
+}
+
+#ElectionReport a:active
+{
+  color: red;
+  text-decoration: underline;
+}
+
+#ElectionReport .tableAdmin
+{
+  margin-left: 0;
+  width: 880px;
+}
+
+#ElectionReport .trBanner
+{
+  margin: 0;
+}
+
+#ElectionReport .tdLeftBanner
+{
+  text-align: left;
+}
+
+#ElectionReport .tdRightBanner
+{
+  text-align: right;
+}
+
+#ElectionReport #HTMLTableIssueLinks td,
+#ElectionReport #HTMLTableIssueLinks td
+{
+  padding: 2px 10px 2px 10px;
+}
+
+#ElectionReport .HyperLink,
+#ElectionReport .HyperLinkSmall
+{
+  font-weight: bold;
+  padding: 5px 0 0 5px;
+}
+
+#ElectionReport .BorderLight,
+#ElectionReport td.BorderLight
+{
+  border-color: silver;
+  border-style: solid;
+  border-width: 1px;
+  color: #373737;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+}
+
+#ElectionReport td hr
+{
+  border-style: solid;
+  border-width: thin;
+  color: Black;
+  margin: 0;
+}
+
+#ElectionReport .T,
+#ElectionReport .TLarge,
+#ElectionReport .TSmall,
+#ElectionReport .TSmallBorder,
+#ElectionReport .TLargeBorder,
+#ElectionReport .TBold,
+#ElectionReport .TBoldColor,
+#ElectionReport .TSmallBold,
+#ElectionReport .TSmallBorderBold,
+#ElectionReport .H,
+#ElectionReport .HLarge,
+#ElectionReport .HSmall,
+#ElectionReport .TColor,
+#ElectionReport .TLargeColor,
+#ElectionReport .TSmallColor,
+#ElectionReport .HColor,
+#ElectionReport .HLargeColor,
+#ElectionReport .HSmallColor
+{
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  padding: 0 0 0 5px;
+}
+
+#ElectionReport .HSmall
+{
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  padding: 5px 5px 5px 15px;
+}
+
+#ElectionReport .T,
+#ElectionReport .TLarge,
+#ElectionReport .TSmall,
+#ElectionReport .TSmallBorder,
+#ElectionReport .TLargeBorder,
+#ElectionReport .TColor,
+#ElectionReport .TLargeColor,
+#ElectionReport .TSmallColor
+{
+  font-weight: normal;
+}
+
+#ElectionReport .H,
+#ElectionReport .HLarge,
+#ElectionReport .HSmall,
+#ElectionReport .TBold,
+#ElectionReport .TBoldColor,
+#ElectionReport .TSmallBold,
+#ElectionReport .TSmallBorderBold,
+#ElectionReport .HColor,
+#ElectionReport .HLargeColor,
+#ElectionReport .HSmallColor
+{
+  font-weight: bold;
+}
+
+#ElectionReport .T,
+#ElectionReport .TLarge,
+#ElectionReport .TSmall,
+#ElectionReport .TSmallBorder,
+#ElectionReport .TLargeBorder,
+#ElectionReport .TBold,
+#ElectionReport .TBoldColor,
+#ElectionReport .TSmallBold,
+#ElectionReport .TSmallBorderBold,
+#ElectionReport .H,
+#ElectionReport .HSmall
+{
+  color: #373737;
+}
+
+#ElectionReport .HLarge
+{
+  color: #26466D;
+}
+
+#ElectionReport .TColor,
+#ElectionReport .TLargeColor,
+#ElectionReport .TSmallColor,
+#ElectionReport .HColor,
+#ElectionReport .HLargeColor,
+#ElectionReport .HSmallColor
+{
+  color: Red;
+}
+
+#ElectionReport .T,
+#ElectionReport .TBold,
+#ElectionReport .TColor
+{
+  font-size: 11px;
+}
+
+#ElectionReport .TLarge,
+#ElectionReport .TLargeBorder,
+#ElectionReport .TBoldColor,
+#ElectionReport .TLargeColor
+{
+  font-size: 13px;
+}
+
+#ElectionReport .TSmall,
+#ElectionReport .TSmallBold,
+#ElectionReport .TSmallColor,
+#ElectionReport .TSmallBorder
+{
+  font-size: 9px;
+}
+
+#ElectionReport .H,
+#ElectionReport .HColor
+{
+  background-color: #E0E0E0;
+  border: solid 1px gray;
+  font-size: 13px;
+  padding: 2px;
+  text-align: center;
+}
+
+#ElectionReport .H
+{
+  color: #26466D;
+}
+
+#ElectionReport .HColor
+{
+  color: red;
+}
+
+#ElectionReport .HLarge,
+#ElectionReport .HLargeColor
+{
+  font-size: 13px;
+  padding: 3px 5px 3px 5px;
+}
+
+#ElectionReport .HSmall,
+#ElectionReport .HSmallColor
+{
+  background-color: #E0E0E0;
+  background-color: #F5F5F5;
+  border-top: solid 1px gray;
+  font-size: 12px;
+  text-align: left;
+}
+
+#ElectionReport .HSmall
+{
+  color: #26466D;
+}
+
+#ElectionReport .HSmallColor
+{
+  color: red;
+}
+
+#ElectionReport .TSmallBorder,
+#ElectionReport .TLargeBorder
+{
+  border-color: silver;
+  border-style: solid;
+  border-width: 1px;
+}
+
+#ElectionReport .T,
+#ElectionReport .TLarge,
+#ElectionReport .TSmall,
+#ElectionReport .TBold,
+#ElectionReport .TBoldColor,
+#ElectionReport .TSmallBold,
+#ElectionReport .TLargeBold,
+#ElectionReport .TColor,
+#ElectionReport .TLargeColor,
+#ElectionReport .TSmallColor,
+#ElectionReport .TBoldColor,
+#ElectionReport .TLargeBoldColor,
+#ElectionReport .TSmallBoldColor,
+#ElectionReport .TBorder,
+#ElectionReport .TLargeBorder,
+#ElectionReport .TSmallBorder
+{
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  padding: 0 0 0 5px;
+}
+
+#ElectionReport .HSmall,
+#ElectionReport .HSmallBold,
+#ElectionReport .HSmallColor,
+#ElectionReport .HSmallBoldColor
+{
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  padding: 3px;
+  text-align: left;
+}
+
+#ElectionReport .H,
+#ElectionReport .HBold,
+#ElectionReport .HColor,
+#ElectionReport .HBoldColor
+{
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  padding: 3px;
+  text-align: center;
+}
+
+#ElectionReport .HLarge,
+#ElectionReport .HLargeBold,
+#ElectionReport .HLargeBoldColor,
+#ElectionReport .HLargeColor
+{
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  padding: 3px 5px 3px 5px;
+  text-align: left;
+}
+
+#ElectionReport .T,
+#ElectionReport .TLarge,
+#ElectionReport .TSmall,
+#ElectionReport .TColor,
+#ElectionReport .TLargeColor,
+#ElectionReport .TSmallColor,
+#ElectionReport .TBorder,
+#ElectionReport .TLargeBorder,
+#ElectionReport .TSmallBorder
+{
+  font-weight: normal;
+}
+
+#ElectionReport .T,
+#ElectionReport .TLarge,
+#ElectionReport .TSmall,
+#ElectionReport .TBold,
+#ElectionReport .TBoldColor,
+#ElectionReport .TSmallBold,
+#ElectionReport .TLargeBold,
+#ElectionReport .TBorder,
+#ElectionReport .TLargeBorder,
+#ElectionReport .TSmallBorder
+{
+  color: #373737; /*gray*/
+}
+
+#ElectionReport .H,
+#ElectionReport .HLarge,
+#ElectionReport .HSmall,
+#ElectionReport .HBold,
+#ElectionReport .HLargeBold,
+#ElectionReport .HSmallBold
+{
+  color: #26466D; /*blue-gray*/
+}
+
+#ElectionReport .TColor,
+#ElectionReport .TLargeColor,
+#ElectionReport .TSmallColor,
+#ElectionReport .TBoldColor,
+#ElectionReport .TLargeBoldColor,
+#ElectionReport .TSmallBoldColor,
+#ElectionReport .HColor,
+#ElectionReport .HLargeColor,
+#ElectionReport .HSmallColor,
+#ElectionReport .HBoldColor,
+#ElectionReport .HLargeBoldColor,
+#ElectionReport .HSmallBoldColor
+{
+  color: Red;
+}
+
+#ElectionReport .TSmall,
+#ElectionReport .TSmallBold,
+#ElectionReport .TSmallColor,
+#ElectionReport .TSmallBoldColor,
+#ElectionReport .TSmallBorder
+{
+  font-size: 10px;
+}
+
+#ElectionReport .T,
+#ElectionReport .TBold,
+#ElectionReport .TBoldColor,
+#ElectionReport .TColor,
+#ElectionReport .TBorder
+{
+  font-size: 11px;
+}
+
+#ElectionReport .TLarge,
+#ElectionReport .TLargeBold,
+#ElectionReport .TLargeColor,
+#ElectionReport .TLargeBoldColor,
+#ElectionReport .TLargeBorder
+{
+  font-size: 14px;
+}
+
+#ElectionReport .HSmall,
+#ElectionReport .HSmallBold,
+#ElectionReport .HSmallColor,
+#ElectionReport .HSmallBoldColor
+{
+  font-size: 11px;
+}
+
+#ElectionReport .H,
+#ElectionReport .HBold,
+#ElectionReport .HColor,
+#ElectionReport .HBoldColor
+{
+  font-size: 13px;
+}
+
+#ElectionReport .HLarge,
+#ElectionReport .HLargeBold,
+#ElectionReport .HLargeColor,
+#ElectionReport .HLargeBoldColor
+{
+  font-size: 14px;
+}
+
+#ElectionReport .H,
+#ElectionReport .HBold,
+#ElectionReport .HColor,
+#ElectionReport .HBoldColor
+{
+  background-color: #E0E0E0; /*gray*/
+  border: solid 1px gray;
+}
+
+#ElectionReport .HSmall,
+#ElectionReport .HSmallBold,
+#ElectionReport .HSmallColor,
+#ElectionReport .HSmallBoldColor
+{
+  background-color: #F5F5F5; /*light gray*/
+  border-top: solid 1px gray;
+}
+
+#ElectionReport .TBorder,
+#ElectionReport .TLargeBorder,
+#ElectionReport .TSmallBorder
+{
+  border-color: silver;
+  border-style: solid;
+  border-width: 1px;
+}
+
+#ElectionReport .Msg,
+#ElectionReport .MsgSmall,
+#ElectionReport .MsgFail,
+#ElectionReport .MsgFailSmall,
+#ElectionReport .MsgOk,
+#ElectionReport .MsgOkSmall,
+#ElectionReport .MsgWarn,
+#ElectionReport .MsgWarnSmall
+{
+  background-color: Yellow; /*Yellow #FFFCCF*/
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  padding: 0 0 0 5px;
+}
+
+#ElectionReport .Msg,
+#ElectionReport .MsgFail,
+#ElectionReport .MsgOk,
+#ElectionReport .MsgWarn
+{
+  font-size: 12px;
+}
+
+#ElectionReport .MsgSmall,
+#ElectionReport .MsgFailSmall,
+#ElectionReport .MsgOkSmall,
+#ElectionReport .MsgWarnSmall
+{
+  font-size: 12px;
+}
+
+#ElectionReport .MsgFail,
+#ElectionReport .MsgFailSmall
+{
+  color: Red;
+}
+
+#ElectionReport .MsgOk,
+#ElectionReport .MsgOkSmall
+{
+  color: Green;
+}
+
+#ElectionReport .MsgWarn,
+#ElectionReport .MsgWarnSmall
+{
+  color: Red;
+}
+
+#ElectionReport .Msg,
+#ElectionReport .MsgSmall
+{
+  color: Blue;
+}
+
+#ElectionReport .tableReport
+{
+  border: solid 1px Gray;
+  margin-left: 0;
+  width: 700px;
+}
+
+#ElectionReport .trReportGroupHeading,
+#ElectionReport .trReportGroupHeadingLeft,
+#ElectionReport .trReportGroupHeadingColor,
+#ElectionReport .trReportGroupHeadingLeftColor
+{
+  background-color: #CAE1FF; /* light blue */
+}
+
+#ElectionReport .trReportHeading,
+#ElectionReport .trReportHeadingLeft,
+#ElectionReport .trReportHeadingColor,
+#ElectionReport .trReportHeadingLeftColor
+{
+  background-color: #6396D8; /* medium blue */
+  padding: 10px 0 10px 0; /*background-color: #E0E0E0;*/
+  vertical-align: top;
+  width: 100%;
+}
+
+#ElectionReport .tdReportHeading,
+#ElectionReport .tdReportHeadingLeft,
+#ElectionReport .tdReportHeadingColor,
+#ElectionReport .tdReportHeadingLeftColor
+{
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+}
+
+#ElectionReport .tdReportHeading,
+#ElectionReport .tdReportHeadingLeft
+{
+  color: #373737;
+}
+
+#ElectionReport .tdReportHeadingColor,
+#ElectionReport .tdReportHeadingLeftColor
+{
+  color: red;
+}
+
+#ElectionReport .tdReportHeading
+{
+  text-align: center;
+}
+
+#ElectionReport .tdReportHeadingLeft
+{
+  text-align: left;
+}
+
+#ElectionReport .tdReportHeading,
+#ElectionReport .tdReportHeadingLeft
+{
+  color: #373737;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 0;
+  padding: 5px;
+  vertical-align: top;
+}
+
+#ElectionReport .tdReportGroupHeading,
+#ElectionReport .tdReportGroupHeadingLeft,
+#ElectionReport .tdReportGroupHeadingColor,
+#ElectionReport .tdReportGroupHeadingLeftColor
+{
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 6px;
+  vertical-align: top;
+}
+
+#ElectionReport .tdReportGroupHeading,
+#ElectionReport .tdReportGroupHeadingLeft
+{
+  color: #373737;
+}
+
+#ElectionReport .tdReportGroupHeadingColor,
+#ElectionReport .tdReportGroupHeadingLeftColor
+{
+  color: red;
+}
+
+#ElectionReport .tdReportGroupHeading
+{
+  text-align: center;
+}
+
+#ElectionReport .tdReportGroupHeadingLeft
+{
+  text-align: left;
+}
+
+#ElectionReport .trReportGroupHeading,
+#ElectionReport .tdReportGroupHeadingLeft
+{
+  padding: 7px 5px 7px 5px;
+}
+
+#ElectionReport .tdReportIncumbentKeyHeading
+{
+  background-color: #F5F5F5;
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 5px 2px 5px;
+}
+
+#ElectionReport .trReportDetailHeading
+{
+  background-color: #F5F5F5;
+}
+
+#ElectionReport .tdReportDetailHeading,
+#ElectionReport .tdReportDetailHeadingLeft
+{
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  color: #373737;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px;
+}
+
+#ElectionReport .tdReportDetailHeading
+{
+  text-align: center;
+}
+
+#ElectionReport .tdReportDetailHeadingLeft
+{
+  text-align: left;
+}
+
+#ElectionReport .tdReportImage
+{
+  background-color: #FFFFFF; /* WHITE */
+  border-bottom: solid 1px Gray;
+  padding: 5px 2px 5px 2px;
+  vertical-align: top;
+}
+
+#ElectionReport .tdReportDetail,
+#ElectionReport .tdReportDetailBold,
+#ElectionReport .tdReportDetailLarge,
+#ElectionReport .tdReportDetailLargeBold,
+#ElectionReport .tdReportDetailColor,
+#ElectionReport .tdReportDetailSmall
+{
+  background-color: #FFFFFF; /* WHITE */
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 2px 5px 2px 5px;
+  text-align: left;
+  vertical-align: top; /*width:900px;*//* 900px 210px*/
+}
+
+#ElectionReport .tdReportDetail,
+#ElectionReport .tdReportDetailColor,
+#ElectionReport .tdReportDetailBold
+{
+  font-size: 12px;
+}
+
+#ElectionReport .tdReportDetailSmall
+{
+  font-size: 10px;
+}
+
+#ElectionReport .tdReportDetail,
+#ElectionReport .tdReportDetailColor
+{
+  font-weight: normal;
+}
+
+#ElectionReport .tdReportDetailBold
+{
+  font-weight: bold;
+}
+
+#ElectionReport .tdReportDetailLarge,
+#ElectionReport .tdReportDetailLargeBold
+{
+  font-size: 14px;
+}
+
+#ElectionReport .tdReportDetailLarge
+{
+  font-weight: normal;
+}
+
+#ElectionReport .tdReportDetailLargeBold
+{
+  font-weight: bold;
+}
+
+#ElectionReport .tdReportDetail,
+#ElectionReport .tdReportDetailBold,
+#ElectionReport .tdReportDetailLarge,
+#ElectionReport .tdReportDetailLargeBold,
+#ElectionReport .tdReportDetailSmall
+{
+  color: #26466D;
+}
+
+#ElectionReport .tdReportDetailColor
+{
+  color: red;
+}
+
+#ElectionReport .tdLinks
+{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: normal;
+  padding-left: 5px;
+}
+
+#ElectionReport .tdCountyLocalLinks
+{
+  border-bottom: solid 1px Gray;
+  border-right: solid 1px Gray;
+  color: #373737;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 6px 10px 6px 10px;
+}
+
+#ElectionReport .TName
+{
+  color: #26466D; /*gray blue*/
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  vertical-align: top;
+  font-size: 15px;
+  font-weight: bold;;
+  line-height: 130%;
+}
+
+#ElectionReport .TWebsite
+{
+  color: #26466D; /*gray blue*/
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  vertical-align: top;
+  font-size: 12px;
+  font-weight: bold;;
+  line-height: 130%;
+}
+
+#ElectionReport .TAddress
+{
+  color: #26466D; /*gray blue*/
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  vertical-align: top;
+  font-size: 9px;
+  font-weight: normal;
+  line-height: 130%;
+}
+
+#ElectionReport .TPhone
+{
+  color: #26466D; /*gray blue*/
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  vertical-align: top;
+  font-size: 9px;
+  font-weight: normal;;
+  line-height: 130%;
+}
+
+#ElectionReport .TAge
+{
+  color: #26466D; /*gray blue*/
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  vertical-align: top;
+  font-size: 9px;
+  font-weight: bold;;
+  line-height: 130%;
+}
+
+#ElectionReport ul.social-media-anchors
+{
+  list-style: none;
+}
+
+#ElectionReport ul.social-media-anchors li
+{
+  float: left;
+  margin-bottom: 4px;
+  margin-right: 8px;
+}
+
+/* election.css */
+
+#ElectionReport .warning
+{
+  color: Red !important;
+}
+
+#ElectionReport .tdElectionName
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 18px;
+font-weight: bold;
+color: #373737;
+margin: 0;
+padding:10px 10px 0 10px;
+}
+
+#ElectionReport .tdElectionTitle
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+font-weight: bold;
+color: #373737;
+margin: 0;
+padding:2px 10px 0 10px;
+}
+
+#ElectionReport .tdElectionElection
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 14px;
+font-weight: bold;
+color: #373737;
+margin: 0;
+padding:2px 10px 0 10px;
+}
+
+#ElectionReport .tdElectionElectionInfo
+{
+vertical-align: top;
+font-family: Arial, Helvetica, sans-serif;
+padding:10px 10px 0 10px;
+/*font-size: 14px;*/
+font-size: 16px;
+line-height: 120%;
+color: #373737;
+}
+
+#ElectionReport .tdElectionResultsHead
+{
+font-family: Arial, Helvetica, sans-serif;
+font-weight:bold;
+padding:10px 10px 0 10px;
+font-size: 14px;
+color: #373737;
+vertical-align: top;
+text-align:center;
+}
+
+#ElectionReport .tdElectionResultsImage
+{
+vertical-align: top;
+text-align:center;
+}
+
+#ElectionReport .tdElectionResultsSource
+{
+font-family: Arial, Helvetica, sans-serif;
+padding:10px 10px 0 10px;
+font-size: 11px;
+color: #373737;
+vertical-align: top;
+text-align:center;
+}
+
+#ElectionReport .tdElectionInstruction
+{
+font-family: Arial, Helvetica, sans-serif;
+vertical-align: top;
+color: #373737;
+}
+
+#ElectionReport .tdElectionInstruction
+{
+padding:10px 10px 0 10px;
+}
+
+#ElectionReport .tdReportIncumbentKeyHeading
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 11px;
+font-weight: bold;
+padding: 2px 5px 2px 5px;
+border-right:solid 1px Gray;
+border-bottom:solid 1px Gray;
+background-color: #F5F5F5;
+color: #373737;
+}
+
+#ElectionReport .tdReportDetailHeading
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 13px;
+font-weight:bold;
+padding:2px;
+border-right:solid 1px Gray;
+border-bottom:solid 1px Gray;
+background-color: #F5F5F5;
+color: #373737;
+}
+
+#ElectionReport .tdReportDetail
+{
+border-right:solid 1px Gray;
+border-bottom:solid 1px Gray;
+padding: 2px 5px 2px 5px;
+}
+
+#ElectionReport .tdReportDetail
+{
+font-family: Arial, Helvetica, sans-serif;
+font-size: 13px;
+}
+
+#ElectionReport .tdReportDetail
+{
+font-weight:normal;
+color: #373737;
+}
+
+#ElectionReport .tdReportDetail .detail
+{
+  margin-top: 8px;
+}
+
+#ElectionReport .tdReportDetail .detail:first-child
+{
+  margin-top: 0;
+}
+
+#ElectionReport  .trElectionTitle
+{
+  display: none;
+}
+
+#ElectionReport  #ElectionInstructionTable
+{
+  /*display: none;*/
+  font-family: Arial, Helvetica, sans-serif;
+  /*line-height: 15px;
+  font-size: 14px;
+  color: #373737;*/
+  padding-bottom: 15px;
+  font-size: 16px;
+  color: #444;
+  line-height: 120%;
+}
+
+#ElectionReport  #ElectionHeading
+{
+  margin-bottom: 8px;
+}
+
+#ElectionReport  #ElectionHeading span
+{
+  color: #666;
+}
+
+#ElectionReport  .tdReportHeading
+{
+  color: #fff;
+  font-size: 120%;
+  font-weight: normal;
+}
+
+#ElectionReport  .tdReportDetail
+{
+  padding-top: 10px;
+}
+
+#ElectionReport  .tdReportDetail font
+{
+  font-weight: normal;
+  font-size: 11px;
+  line-height: 130%;
+}
+
+#ElectionReport  td.tdReportHeading,
+#ElectionReport  td.tdReportGroupHeading,
+#ElectionReport  .lasttd
+{
+  border-right: none;
+}
+
+#ElectionReport  img.compareCandidatesButton
+{
+  padding-top: 5px;
+}
+
+#ElectionReport  a.compareCandidates
+{
+  margin-top: 5px;
+}

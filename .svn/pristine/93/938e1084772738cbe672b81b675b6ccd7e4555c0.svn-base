@@ -1,0 +1,146 @@
+﻿using System;
+using DB.Vote;
+
+namespace Vote
+{
+  public partial class SubscribePage : PublicPage
+  {
+    protected SubscribePage()
+    {
+      NoUrlEdit = true;
+      NoIndex = true;
+    }
+
+    private const string TitleTag = "Subscribe and Unsubscribe | {0}";
+
+    private static void UpdateAddresses(string email, string op)
+    { // get all matching email entries from Addresses
+      var addressesTable = Addresses.GetDataByEmail(email);
+      if (addressesTable.Count > 0)
+        switch (op)
+        {
+          case "unsubscribe":
+            foreach (var row in addressesTable)
+            {
+              row.SendSampleBallots = false;
+              row.OptOut = true;
+            }
+            break;
+
+          case "ballots":
+            foreach (var row in addressesTable)
+            {
+              row.SendSampleBallots = true;
+              row.OptOut = false;
+            }
+            break;
+        }
+      Addresses.UpdateTable(addressesTable);
+    }
+
+    private void UnsubscribeAddresses(int id, string email, string op)
+    {
+      if (id == 0 || string.IsNullOrWhiteSpace(email) ||
+        (op != "unsubscribe" && op != "ballots"))
+        return;
+
+      // first find the EmailQueue entry
+      var queueTable = EmailQueue.GetDataById(id);
+      var handled = true;
+      if (queueTable.Count == 1 && queueTable[0].ToAddress.IsEqIgnoreCase(email))
+        UpdateAddresses(email, op);
+      else if (Addresses.GetEmailById(id)
+        .SafeString()
+        .IsEqIgnoreCase(email)) UpdateAddresses(email, op);
+      else handled = false;
+      if (!handled) return;
+      switch (op)
+      {
+        case "unsubscribe":
+          Message.InnerText =
+            string.Format(
+              "Email {0} has been unsubscribed from all future email.", email);
+          break;
+
+        case "ballots":
+          Message.InnerText =
+            string.Format(
+              "We will send future sample ballots to {0} as soon as they become available.",
+              email);
+          break;
+      }
+    }
+
+    private void UnsubscribeDonor(string email)
+    {
+      var table = Donations.GetDataByEmail(email);
+      if (table.Count == 0) return;
+      foreach (var row in table)
+        row.OptOut = true;
+      Donations.UpdateTable(table);
+      Message.InnerText =
+        string.Format(
+          "Email {0} has been unsubscribed from all future donation requests.", email);
+    }
+
+    private void UnsubscribeParty(string email)
+    {
+      var table = PartiesEmails.GetDataByPartyEmail(email);
+      if (table.Count == 0) return;
+      foreach (var row in table)
+        row.OptOut = true;
+      PartiesEmails.UpdateTable(table);
+      Message.InnerText =
+        string.Format(
+          "Email {0} has been unsubscribed from all future party-related emails.", email);
+    }
+
+    private void UnsubscribePolitician()
+    {
+      var politicianKey = GetQueryString("key");
+      var table = Politicians.GetDataByPoliticianKey(politicianKey);
+      if (table.Count == 0) return;
+      foreach (var row in table)
+        row.OptOut = true;
+      Politicians.UpdateTable(table);
+      Message.InnerText =
+        string.Format("{0} has been unsubscribed from all future candidate emails.",
+        Politicians.FormatName(table[0]));
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack) // ReSharper restore InvertIf
+      {
+        Title = string.Format(TitleTag, Master.SiteName);
+
+        var email = GetQueryString("email");
+        var code = GetQueryString("code");
+        var op = GetQueryString("op");
+
+        int id;
+        int.TryParse(code, out id);
+
+        switch (op)
+        {
+          case "unsubscribe":
+          case "ballots":
+            UnsubscribeAddresses(id, email, op);
+            break;
+
+          case "undnr":
+            UnsubscribeDonor(email);
+            break;
+
+          case "unpty":
+            UnsubscribeParty(email);
+            break;
+
+          case "unpol":
+            UnsubscribePolitician();
+            break;
+        }
+      }
+    }
+  }
+}

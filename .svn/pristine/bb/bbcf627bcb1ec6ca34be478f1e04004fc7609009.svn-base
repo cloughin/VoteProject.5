@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Vote.db" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>++//fzf7VT3/X//33s3+/+/f93P//7v//v/9+//7f+c=</HashCode>
+      <FileName>CommonDbLayer\Stubs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Vote.ElectionPageX" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAABKIDAQYCEBglAQCA4ARAAMUBEIABAADAQAQKAAFI=</HashCode>
+      <FileName>Election.aspx.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<generateDbClasses>
+  <databases 
+    supportMySql="true" 
+    supportMsSql="true"
+    secondary="true"
+    >
+    <database
+      mappedName="VoteCache"
+      provider="MySql"
+      connectionString="Server=votesql.c3fj3t5d5d77.us-east-1.rds.amazonaws.com;Uid=ron;Pwd=p17134;Database=votecache"
+      connectionStringKey="CnVoteCache.MySql"
+      providerKey="VoteDbProvider"
+      >
+      <tables>
+        <table name="CacheBallotPages" skip="true" deleteTable="true" truncateTable="true" />
+        <table name="CacheControl" singleton="true" />
+        <table name="CacheElectedPages" skip="true" deleteTable="true" truncateTable="true" />
+        <table name="CacheElectionPages" skip="true" deleteTable="true" truncateTable="true" />
+        <table name="CacheIntroPages" skip="true" deleteTable="true" truncateTable="true" />
+        <table name="CacheIssuePages" skip="true" deleteTable="true" truncateTable="true" />
+        <table name="CacheOfficialsPages" skip="true" deleteTable="true" truncateTable="true" />
+        <table name="CachePages" deleteTable="true" truncateTable="true" />
+        <table name="CachePoliticianIssuePages" skip="true" deleteTable="true" truncateTable="true" />
+        <table name="CacheReferendumPages" skip="true" deleteTable="true" truncateTable="true" />
+        <table name="DonationNagsControl" singleton="true" />
+        <table name="LastProcessedId" skip="true" />
+      </tables>
+    </database>
+  </databases>
+</generateDbClasses>

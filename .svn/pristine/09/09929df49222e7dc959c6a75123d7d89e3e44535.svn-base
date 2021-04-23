@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
+using DB.VoteZipNewLocal;
+
+namespace LoadUszdSingleState
+{
+  public static class UszdNew
+  {
+    public static void DeleteByLdsStateCode(string ldsStateCode)
+    {
+      DeleteByLdsStateCode(ldsStateCode , -1);
+    }
+
+    public static void DeleteByLdsStateCode(string ldsStateCode, int commandTimeout)
+    {
+      string cmdText = "DELETE FROM USZDNew WHERE ST=@LdsStateCode";
+      DbCommand cmd = VoteZipNewLocalDb.GetCommand(cmdText, commandTimeout);
+      VoteZipNewLocalDb.AddCommandParameter(cmd, "LdsStateCode", ldsStateCode);
+      VoteZipNewLocalDb.ExecuteNonQuery(cmd);
+    }
+  }
+}

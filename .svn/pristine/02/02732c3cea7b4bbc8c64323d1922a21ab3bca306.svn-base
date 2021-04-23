@@ -1,0 +1,26 @@
+﻿// Initialize when ready
+$(function () {
+
+  var $dropdown = $('.email-form-subject');
+  
+  function onChange() {
+    $dropdown.val() === "Other" ? $(".email-form-other-subject").show(200) : $(".email-form-other-subject").hide(200);
+  }
+
+  $dropdown.change(onChange);
+  onChange();
+  //$dropdown.simpleCombo();
+  // change Select a subject to Select a subject or enter your own
+  // and remove Other subject
+  //var $selectOption = $dropdown.find("option[value='']");
+  //if ($selectOption.text() === "Select a subject")
+  //  $selectOption.text("Select a subject or enter your own here");
+  //$dropdown.find("option[value='Other subject']").remove();
+  //$dropdown.kendoComboBox({ animation: false });
+  var errorLabel = $('.email-form-error-label');
+  var goodLabel = $('.email-form-good-label');
+  if (errorLabel.length !== 0)
+    alert(errorLabel.text());
+  else if (goodLabel.length !== 0)
+    alert(goodLabel.text());
+});

@@ -1,0 +1,140 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using DB.Vote;
+using Vote.Reports;
+
+namespace Vote.Admin
+{
+  public partial class Officials : SecureAdminPage
+  {
+    #region from db
+
+    public static string Elections_Winners_Identified(string stateCode)
+    {
+      #region date of last General Election
+      var sql = " SELECT ElectionDate";
+      sql += " FROM Elections";
+      sql += " WHERE StateCode = " + db.SQLLit(stateCode);
+      sql += " AND CountyCode = '' AND LocalCode=''";
+      sql += " AND ElectionType = 'G'";
+      sql += " AND ElectionDate < " + db.SQLLit(Db.DbToday);
+      sql += " ORDER BY ElectionDate DESC";
+
+      var rowGeneralElection = db.Row_First(sql);
+      var dateLastGeneralElection = Convert.ToDateTime(rowGeneralElection["ElectionDate"].ToString());
+      #endregion date of last General Election
+
+      #region List Elections since last General Election
+      sql = " SELECT ElectionDesc,IsWinnersIdentified";
+      sql += " FROM Elections";
+      sql += " WHERE StateCode = " + db.SQLLit(stateCode);
+      sql += " AND CountyCode = '' AND LocalCode=''";
+      sql += " AND ElectionDate >= '" + dateLastGeneralElection.ToString("yyyy/MM/dd") + "'";
+      sql += " AND ElectionDate < " + db.SQLLit(Db.DbToday);
+      sql += " AND IsViewable = 1";
+      var tableElections = db.Table(sql);
+      var electionsWinnersIdentified = string.Empty;
+      foreach (DataRow rowElection in tableElections.Rows)
+      {
+        electionsWinnersIdentified += "<br>";
+        if (Convert.ToBoolean(rowElection["IsWinnersIdentified"]))
+          electionsWinnersIdentified += "Winners <span style=color:green>HAVE</span> been Identified";
+        else
+          electionsWinnersIdentified += "Winners have <span style=color:red><strong>NOT</strong></span> been Identified";
+        electionsWinnersIdentified += " - " + rowElection["ElectionDesc"];
+      }
+      #endregion List Elections since last General Election
+
+      return electionsWinnersIdentified;
+    }
+
+    #endregion from db
+
+    private void Page_Title()
+    {
+      PageTitle.Text = string.Empty;
+      PageTitle.Text += Offices.GetElectoralClassDescription(ViewState["StateCode"].ToString(),
+        ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString());
+
+      PageTitle.Text += "<br>";
+      PageTitle.Text += "CURRENTLY ELECTED OFFICIALS (INCUMBENTS)";
+    }
+
+    private void Visible_Controls()
+    {
+      TableIncumbentStatusRadioButtons.Visible =
+        db.Is_Electoral_Class_State_County_Local(ViewState["StateCode"].ToString(),
+          ViewState["CountyCode"].ToString(), ViewState["LocalCode"].ToString());
+
+      TablePoliticianData.Visible = IsMasterUser;
+    }
+
+    private void ShowOfficialsReport()
+    {
+      OfficialsReport.GetReport(Report.SignedInReportUser,
+        ViewState["StateCode"].ToString(), ViewState["CountyCode"].ToString(),
+        ViewState["LocalCode"].ToString()).AddTo(ReportPlaceHolder);
+    }
+
+    internal override IEnumerable<string> NonStateCodesAllowed
+    {
+      get
+      {
+        return new[]
+        {
+          "U1",
+          "U2",
+          "U3",
+          "U4"
+        };
+      }
+    }
+
+    private void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        Page.Title = "Officials";
+
+        ViewState["StateCode"] = db.State_Code();
+        ViewState["CountyCode"] = db.County_Code();
+        ViewState["LocalCode"] = db.Local_Code();
+        //if (!db.Is_User_Security_Ok())
+        //  HandleSecurityException();
+
+        try
+        {
+          Visible_Controls();
+
+          var stateCode = db.State_Code();
+          HyperLink_View_Public_Report.NavigateUrl =
+            UrlManager.GetOfficialsPageUri(stateCode)
+              .ToString();
+
+          Page_Title();
+
+          Label_Report_Elections_Winners_Identified.Text =
+            Elections_Winners_Identified(ViewState["StateCode"].ToString());
+
+          ShowOfficialsReport();
+        }
+        catch (Exception ex)
+        {
+          Msg.Text = db.Fail(ex.Message);
+          db.Log_Error_Admin(ex);
+        }
+      }
+    }
+
+    protected void Page_PreRender(object sender, EventArgs e)
+    {
+      try
+      {
+        if (Session["ErrNavBarAdmin"].ToString() != string.Empty)
+          Msg.Text = db.Fail(Session["ErrNavBarAdmin"].ToString());
+      }
+      catch /*(Exception ex)*/ {}
+    }
+  }
+}

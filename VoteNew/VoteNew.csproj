@@ -1,0 +1,514 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3CE14693-9FDA-48C5-ACA4-41EBD050291D}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VoteNew</RootNamespace>
+    <AssemblyName>VoteNew</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BotDetect">
+      <HintPath>C:\Program Files\Lanapsoft\BotDetect 3 CAPTCHA Component\Asp.Net\v4.0\BotDetect.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="About.aspx" />
+    <Content Include="Contact.aspx" />
+    <Content Include="Controls\EmailForm.ascx" />
+    <Content Include="Controls\MainBanner.ascx" />
+    <Content Include="Controls\MainFooter.ascx" />
+    <Content Include="Controls\MainNavigation.ascx" />
+    <Content Include="Controls\MissionSidebar.ascx" />
+    <Content Include="Controls\SiteVerification.ascx" />
+    <Content Include="Controls\SocialMediaButtons.ascx" />
+    <Content Include="Controls\VoteUsaAddress.ascx" />
+    <Content Include="css\AddressEntry.css" />
+    <Content Include="Admin\Default.aspx" />
+    <Content Include="Controls\AddressEntry.ascx" />
+    <Content Include="css\DefaultNew.css" />
+    <Content Include="css\Donate.css" />
+    <Content Include="css\EmailForm.css" />
+    <Content Include="css\MainBanner.css" />
+    <Content Include="css\MainCommon.css" />
+    <Content Include="css\MainFooter.css" />
+    <Content Include="css\MainNavigation.css" />
+    <Content Include="css\Reset.css" />
+    <Content Include="css\SecondaryCommon.css" />
+    <Content Include="css\SocialMediaButtons.css" />
+    <Content Include="Default.aspx" />
+    <Content Include="Donate.aspx" />
+    <Content Include="favicon.ico" />
+    <Content Include="forCandidates.aspx" />
+    <Content Include="forEducationAndResearch.aspx" />
+    <Content Include="forPartners.aspx" />
+    <Content Include="forStateElectionAuthorities.aspx" />
+    <Content Include="forVolunteers.aspx" />
+    <Content Include="forVoters.aspx" />
+    <Content Include="forVotersNoAddress.aspx" />
+    <Content Include="images\aboutustitle.png" />
+    <Content Include="images\addressinput.png" />
+    <Content Include="images\ajax-loader.gif" />
+    <Content Include="images\anotherState.png" />
+    <Content Include="images\becominginformed.png" />
+    <Content Include="images\btnclose.png" />
+    <Content Include="images\canvas-list-nav-item-arrow-.gif" />
+    <Content Include="images\changelocation.png" />
+    <Content Include="images\closebutton.png" />
+    <Content Include="images\contactustitle.png" />
+    <Content Include="images\designs\vote-ak\lgbanner.png" />
+    <Content Include="images\designs\vote-ak\name.png" />
+    <Content Include="images\designs\vote-ak\smbanner.png" />
+    <Content Include="images\designs\vote-al\lgbanner.png" />
+    <Content Include="images\designs\vote-al\name.png" />
+    <Content Include="images\designs\vote-al\smbanner.png" />
+    <Content Include="images\designs\vote-ar\lgbanner.png" />
+    <Content Include="images\designs\vote-ar\name.png" />
+    <Content Include="images\designs\vote-ar\smbanner.png" />
+    <Content Include="images\designs\vote-az\lgbanner.png" />
+    <Content Include="images\designs\vote-az\name.png" />
+    <Content Include="images\designs\vote-az\smbanner.png" />
+    <Content Include="images\designs\vote-ca\lgbanner.png" />
+    <Content Include="images\designs\vote-ca\name.png" />
+    <Content Include="images\designs\vote-ca\smbanner.png" />
+    <Content Include="images\designs\vote-co\lgbanner.png" />
+    <Content Include="images\designs\vote-co\name.png" />
+    <Content Include="images\designs\vote-co\smbanner.png" />
+    <Content Include="images\designs\vote-ct\lgbanner.png" />
+    <Content Include="images\designs\vote-ct\name.png" />
+    <Content Include="images\designs\vote-ct\smbanner.png" />
+    <Content Include="images\designs\vote-dc\lgbanner.png" />
+    <Content Include="images\designs\vote-dc\name.png" />
+    <Content Include="images\designs\vote-dc\smbanner.png" />
+    <Content Include="images\designs\vote-de\lgbanner.png" />
+    <Content Include="images\designs\vote-de\name.png" />
+    <Content Include="images\designs\vote-de\smbanner.png" />
+    <Content Include="images\designs\vote-fl\lgbanner.png" />
+    <Content Include="images\designs\vote-fl\name.png" />
+    <Content Include="images\designs\vote-fl\smbanner.png" />
+    <Content Include="images\designs\vote-ga\lgbanner.png" />
+    <Content Include="images\designs\vote-ga\name.png" />
+    <Content Include="images\designs\vote-ga\smbanner.png" />
+    <Content Include="images\designs\vote-hi\lgbanner.png" />
+    <Content Include="images\designs\vote-hi\name.png" />
+    <Content Include="images\designs\vote-hi\smbanner.png" />
+    <Content Include="images\designs\vote-ia\lgbanner.png" />
+    <Content Include="images\designs\vote-ia\name.png" />
+    <Content Include="images\designs\vote-ia\smbanner.png" />
+    <Content Include="images\designs\vote-id\lgbanner.png" />
+    <Content Include="images\designs\vote-id\name.png" />
+    <Content Include="images\designs\vote-id\smbanner.png" />
+    <Content Include="images\designs\vote-il\lgbanner.png" />
+    <Content Include="images\designs\vote-il\name.png" />
+    <Content Include="images\designs\vote-il\smbanner.png" />
+    <Content Include="images\designs\vote-in\lgbanner.png" />
+    <Content Include="images\designs\vote-in\name.png" />
+    <Content Include="images\designs\vote-in\smbanner.png" />
+    <Content Include="images\designs\vote-ks\lgbanner.png" />
+    <Content Include="images\designs\vote-ks\name.png" />
+    <Content Include="images\designs\vote-ks\smbanner.png" />
+    <Content Include="images\designs\vote-ky\lgbanner.png" />
+    <Content Include="images\designs\vote-ky\name.png" />
+    <Content Include="images\designs\vote-ky\smbanner.png" />
+    <Content Include="images\designs\vote-la\lgbanner.png" />
+    <Content Include="images\designs\vote-la\name.png" />
+    <Content Include="images\designs\vote-la\smbanner.png" />
+    <Content Include="images\designs\vote-ma\lgbanner.png" />
+    <Content Include="images\designs\vote-ma\name.png" />
+    <Content Include="images\designs\vote-ma\smbanner.png" />
+    <Content Include="images\designs\vote-md\lgbanner.png" />
+    <Content Include="images\designs\vote-md\name.png" />
+    <Content Include="images\designs\vote-md\smbanner.png" />
+    <Content Include="images\designs\vote-me\lgbanner.png" />
+    <Content Include="images\designs\vote-me\name.png" />
+    <Content Include="images\designs\vote-me\smbanner.png" />
+    <Content Include="images\designs\vote-mi\lgbanner.png" />
+    <Content Include="images\designs\vote-mi\name.png" />
+    <Content Include="images\designs\vote-mi\smbanner.png" />
+    <Content Include="images\designs\vote-mn\lgbanner.png" />
+    <Content Include="images\designs\vote-mn\name.png" />
+    <Content Include="images\designs\vote-mn\smbanner.png" />
+    <Content Include="images\designs\vote-mo\lgbanner.png" />
+    <Content Include="images\designs\vote-mo\name.png" />
+    <Content Include="images\designs\vote-mo\smbanner.png" />
+    <Content Include="images\designs\vote-ms\lgbanner.png" />
+    <Content Include="images\designs\vote-ms\name.png" />
+    <Content Include="images\designs\vote-ms\smbanner.png" />
+    <Content Include="images\designs\vote-mt\lgbanner.png" />
+    <Content Include="images\designs\vote-mt\name.png" />
+    <Content Include="images\designs\vote-mt\smbanner.png" />
+    <Content Include="images\designs\vote-nc\lgbanner.png" />
+    <Content Include="images\designs\vote-nc\name.png" />
+    <Content Include="images\designs\vote-nc\smbanner.png" />
+    <Content Include="images\designs\vote-nd\lgbanner.png" />
+    <Content Include="images\designs\vote-nd\name.png" />
+    <Content Include="images\designs\vote-nd\smbanner.png" />
+    <Content Include="images\designs\vote-ne\lgbanner.png" />
+    <Content Include="images\designs\vote-ne\name.png" />
+    <Content Include="images\designs\vote-ne\smbanner.png" />
+    <Content Include="images\designs\vote-nh\lgbanner.png" />
+    <Content Include="images\designs\vote-nh\name.png" />
+    <Content Include="images\designs\vote-nh\smbanner.png" />
+    <Content Include="images\designs\vote-nj\lgbanner.png" />
+    <Content Include="images\designs\vote-nj\name.png" />
+    <Content Include="images\designs\vote-nj\smbanner.png" />
+    <Content Include="images\designs\vote-nm\lgbanner.png" />
+    <Content Include="images\designs\vote-nm\name.png" />
+    <Content Include="images\designs\vote-nm\smbanner.png" />
+    <Content Include="images\designs\vote-nv\lgbanner.png" />
+    <Content Include="images\designs\vote-nv\name.png" />
+    <Content Include="images\designs\vote-nv\smbanner.png" />
+    <Content Include="images\designs\vote-ny\lgbanner.png" />
+    <Content Include="images\designs\vote-ny\name.png" />
+    <Content Include="images\designs\vote-ny\smbanner.png" />
+    <Content Include="images\designs\vote-oh\lgbanner.png" />
+    <Content Include="images\designs\vote-oh\name.png" />
+    <Content Include="images\designs\vote-oh\smbanner.png" />
+    <Content Include="images\designs\vote-ok\lgbanner.png" />
+    <Content Include="images\designs\vote-ok\name.png" />
+    <Content Include="images\designs\vote-ok\smbanner.png" />
+    <Content Include="images\designs\vote-or\lgbanner.png" />
+    <Content Include="images\designs\vote-or\name.png" />
+    <Content Include="images\designs\vote-or\smbanner.png" />
+    <Content Include="images\designs\vote-pa\lgbanner.png" />
+    <Content Include="images\designs\vote-pa\name.png" />
+    <Content Include="images\designs\vote-pa\smbanner.png" />
+    <Content Include="images\designs\vote-ri\lgbanner.png" />
+    <Content Include="images\designs\vote-ri\name.png" />
+    <Content Include="images\designs\vote-ri\smbanner.png" />
+    <Content Include="images\designs\vote-sc\lgbanner.png" />
+    <Content Include="images\designs\vote-sc\name.png" />
+    <Content Include="images\designs\vote-sc\smbanner.png" />
+    <Content Include="images\designs\vote-sd\lgbanner.png" />
+    <Content Include="images\designs\vote-sd\name.png" />
+    <Content Include="images\designs\vote-sd\smbanner.png" />
+    <Content Include="images\designs\vote-tn\lgbanner.png" />
+    <Content Include="images\designs\vote-tn\name.png" />
+    <Content Include="images\designs\vote-tn\smbanner.png" />
+    <Content Include="images\designs\vote-tx\lgbanner.png" />
+    <Content Include="images\designs\vote-tx\name.png" />
+    <Content Include="images\designs\vote-tx\smbanner.png" />
+    <Content Include="images\designs\vote-usa\lgbanner.png" />
+    <Content Include="images\designs\vote-usa\smbanner.png" />
+    <Content Include="images\designs\vote-ut\lgbanner.png" />
+    <Content Include="images\designs\vote-ut\name.png" />
+    <Content Include="images\designs\vote-ut\smbanner.png" />
+    <Content Include="images\designs\vote-va\lgbanner.png" />
+    <Content Include="images\designs\vote-va\name.png" />
+    <Content Include="images\designs\vote-va\smbanner.png" />
+    <Content Include="images\designs\vote-vt\lgbanner.png" />
+    <Content Include="images\designs\vote-vt\name.png" />
+    <Content Include="images\designs\vote-vt\smbanner.png" />
+    <Content Include="images\designs\vote-wa\lgbanner.png" />
+    <Content Include="images\designs\vote-wa\name.png" />
+    <Content Include="images\designs\vote-wa\smbanner.png" />
+    <Content Include="images\designs\vote-wi\lgbanner.png" />
+    <Content Include="images\designs\vote-wi\name.png" />
+    <Content Include="images\designs\vote-wi\smbanner.png" />
+    <Content Include="images\designs\vote-wv\lgbanner.png" />
+    <Content Include="images\designs\vote-wv\name.png" />
+    <Content Include="images\designs\vote-wv\smbanner.png" />
+    <Content Include="images\designs\vote-wy\lgbanner.png" />
+    <Content Include="images\designs\vote-wy\name.png" />
+    <Content Include="images\designs\vote-wy\smbanner.png" />
+    <Content Include="images\dialogbg.png" />
+    <Content Include="images\donatebox.png" />
+    <Content Include="images\donatetitle.png" />
+    <Content Include="images\donatetoday.png" />
+    <Content Include="images\findmylocation.png" />
+    <Content Include="images\findyourstate.png" />
+    <Content Include="images\flagbg.jpg" />
+    <Content Include="images\forcandidatestitle.png" />
+    <Content Include="images\foreducationandresearchtitle.png" />
+    <Content Include="images\forpartnerstitle.png" />
+    <Content Include="images\forstateelectionauthoritiestitle.png" />
+    <Content Include="images\forvolunteerstitle.png" />
+    <Content Include="images\forVoters.png" />
+    <Content Include="images\forvoterstitle.png" />
+    <Content Include="images\getstarted.png" />
+    <Content Include="images\getstartedtitle.png" />
+    <Content Include="images\homebg.gif" />
+    <Content Include="images\homelogo.png" />
+    <Content Include="images\homemenubar.png" />
+    <Content Include="images\onestop.png" />
+    <Content Include="images\peoplevoting.jpg" />
+    <Content Include="images\privacytitle.png" />
+    <Content Include="images\pullbg.png" />
+    <Content Include="images\secondarybg.gif" />
+    <Content Include="images\smallbannerusa.png" />
+    <Content Include="jq\jquery-ui.css" />
+    <Content Include="jq\jquery.dynatree.js" />
+    <Content Include="jq\jquery.dynatree.min.js" />
+    <Content Include="jq\jquery.json-2.2.min.js" />
+    <Content Include="jq\jquery.jstree.js" />
+    <Content Include="jq\jquery.simpleCombo.js" />
+    <Content Include="jq\treeskin\dynatree.custom.css" />
+    <Content Include="jq\treeskin\icons.gif" />
+    <Content Include="jq\treeskin\originalicons.gif" />
+    <Content Include="jq\treeskin\loading.gif" />
+    <Content Include="jq\treeskin\ui.dynatree.css" />
+    <Content Include="jq\treeskin\originalvline.gif" />
+    <Content Include="jq\treeskin\vline.gif" />
+    <Content Include="js\AddressEntry.js" />
+    <Content Include="js\EmailForm.js" />
+    <Content Include="js\vote.js" />
+    <Content Include="Master\Default.aspx" />
+    <Content Include="Privacy.aspx" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="WebService.asmx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="About.aspx.cs">
+      <DependentUpon>About.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="About.aspx.designer.cs">
+      <DependentUpon>About.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="code\Transition.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Contact.aspx.cs">
+      <DependentUpon>Contact.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Contact.aspx.designer.cs">
+      <DependentUpon>Contact.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AddressEntry.ascx.cs">
+      <DependentUpon>AddressEntry.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\AddressEntry.ascx.designer.cs">
+      <DependentUpon>AddressEntry.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\EmailForm.ascx.cs">
+      <DependentUpon>EmailForm.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\EmailForm.ascx.designer.cs">
+      <DependentUpon>EmailForm.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainBanner.ascx.cs">
+      <DependentUpon>MainBanner.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\MainBanner.ascx.designer.cs">
+      <DependentUpon>MainBanner.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainFooter.ascx.cs">
+      <DependentUpon>MainFooter.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\MainFooter.ascx.designer.cs">
+      <DependentUpon>MainFooter.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainNavigation.ascx.cs">
+      <DependentUpon>MainNavigation.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\MainNavigation.ascx.designer.cs">
+      <DependentUpon>MainNavigation.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MissionSidebar.ascx.cs">
+      <DependentUpon>MissionSidebar.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\MissionSidebar.ascx.designer.cs">
+      <DependentUpon>MissionSidebar.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SiteVerification.ascx.cs">
+      <DependentUpon>SiteVerification.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SiteVerification.ascx.designer.cs">
+      <DependentUpon>SiteVerification.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SocialMediaButtons.ascx.cs">
+      <DependentUpon>SocialMediaButtons.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SocialMediaButtons.ascx.designer.cs">
+      <DependentUpon>SocialMediaButtons.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\VoteUsaAddress.ascx.cs">
+      <DependentUpon>VoteUsaAddress.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\VoteUsaAddress.ascx.designer.cs">
+      <DependentUpon>VoteUsaAddress.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Donate.aspx.cs">
+      <DependentUpon>Donate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Donate.aspx.designer.cs">
+      <DependentUpon>Donate.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="forCandidates.aspx.cs">
+      <DependentUpon>forCandidates.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="forCandidates.aspx.designer.cs">
+      <DependentUpon>forCandidates.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="forEducationAndResearch.aspx.cs">
+      <DependentUpon>forEducationAndResearch.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="forEducationAndResearch.aspx.designer.cs">
+      <DependentUpon>forEducationAndResearch.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="forPartners.aspx.cs">
+      <DependentUpon>forPartners.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="forPartners.aspx.designer.cs">
+      <DependentUpon>forPartners.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="forStateElectionAuthorities.aspx.cs">
+      <DependentUpon>forStateElectionAuthorities.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="forStateElectionAuthorities.aspx.designer.cs">
+      <DependentUpon>forStateElectionAuthorities.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="forVolunteers.aspx.cs">
+      <DependentUpon>forVolunteers.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="forVolunteers.aspx.designer.cs">
+      <DependentUpon>forVolunteers.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="forVoters.aspx.cs">
+      <DependentUpon>forVoters.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="forVoters.aspx.designer.cs">
+      <DependentUpon>forVoters.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="forVotersNoAddress.aspx.cs">
+      <DependentUpon>forVotersNoAddress.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="forVotersNoAddress.aspx.designer.cs">
+      <DependentUpon>forVotersNoAddress.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Master\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Master\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Privacy.aspx.cs">
+      <DependentUpon>Privacy.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Privacy.aspx.designer.cs">
+      <DependentUpon>Privacy.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebService.asmx.cs">
+      <DependentUpon>WebService.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Vote\Vote.csproj">
+      <Project>{8A2AF8BE-DADA-4BF6-8F4D-28B93D6E3CBC}</Project>
+      <Name>Vote</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>21212</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

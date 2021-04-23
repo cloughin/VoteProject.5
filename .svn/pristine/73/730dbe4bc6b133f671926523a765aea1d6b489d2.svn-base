@@ -1,0 +1,16 @@
+﻿using System;
+
+namespace DB.Vote
+{
+  public partial class PoliticiansImagesBlobs
+  {
+    public static void GuaranteePoliticianKeyExists(String politicianKey)
+    {
+      if (PoliticianKeyExists(politicianKey)) return;
+      Insert(
+        politicianKey: politicianKey, profileOriginal: null, profile300: null,
+        profile200: null, headshot100: null, headshot75: null, headshot50: null,
+        headshot35: null, headshot25: null, headshot20: null, headshot15: null);
+    }
+  }
+}

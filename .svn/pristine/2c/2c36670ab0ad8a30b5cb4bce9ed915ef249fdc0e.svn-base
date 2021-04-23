@@ -1,0 +1,169 @@
+﻿#main-tabs div.htab-panel div.inner-panel {
+  min-height: 483px;
+}
+
+#main-tabs .spacer
+{
+  height: 10px;
+  width: 1px;
+}
+
+#tab-addvolunteer .input-element {
+  float: left;
+}
+
+#tab-addvolunteer .input-element.email input {
+  width: 500px;
+}
+
+#tab-addvolunteer .input-element.name input {
+  width: 250px;
+}
+
+#tab-addvolunteer .input-element.notes,
+#tab-addvolunteer .input-element.notes textarea {
+  width: 100%;
+}
+
+#tab-addvolunteer .input-element.notes textarea {
+  height: 100px;
+}
+
+#tab-report .input-element.state,
+#tab-report .input-element.party
+{ 
+  float: left;
+  margin-right: 30px;
+}
+
+#tab-report .input-element.state
+{ 
+  width: 170px;
+}
+
+#tab-report .input-element.party select
+{ 
+  min-width: 100px;
+}
+
+#tab-report .volunteer-scroller
+{
+  margin-top: 15px;
+  max-height: 420px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+}
+
+#tab-report .volunteer-scroller table
+{
+  width: 100%;
+  font-size: 90%;
+}
+
+#tab-report .volunteer-scroller thead {
+  background-color: #000;
+  color: #fff;
+}
+
+#tab-report .volunteer-scroller th,
+#tab-report .volunteer-scroller td {
+  padding: 2px;
+}
+
+#tab-report .volunteer-scroller tr.even {
+  background-color: #d8d8d8;
+}
+
+#tab-report .volunteer-scroller td.link {
+  text-decoration: underline;
+  color:blue;
+}
+
+#tab-report .volunteer-scroller td.link:hover {
+  color: red;
+}
+
+#edit-volunteer-dialog .input-element
+{ 
+  float: left;
+}
+
+#edit-volunteer-dialog .input-element.email input
+{ 
+  width: 384px;
+}
+
+#edit-volunteer-dialog div.tab-panel .feedback
+{ 
+  width: 600px;
+}
+
+#volunteer-notes-dialog .label {
+  font-weight: bold;
+}
+
+#volunteer-notes-dialog .info {
+  margin-top: 10px;
+}
+
+#volunteer-notes-dialog .info .item {
+  margin: 3px 10px;
+  float: left;
+}
+
+#volunteer-notes-dialog .notes {
+  margin: 10px;
+  border: 1px solid #aaaaaa;
+  height: 200px;
+  overflow-y: scroll;
+  padding: 5px;
+}
+
+#volunteer-notes-dialog .note-header .date 
+{
+  font-weight: bold;
+  font-size: 90%;
+}
+
+#volunteer-notes-dialog .note-header .link {
+  margin-left: 10px;
+  text-decoration: underline;
+  font-size: 90%;
+}
+
+#volunteer-notes-dialog .note-header .link:hover {
+  color: #ff0000;
+}
+
+#volunteer-notes-dialog .note-body  {
+  margin-bottom: 10px;
+  border: 1px solid #ffffff;
+  display: inline-block;
+  width: 100%;
+}
+
+#volunteer-notes-dialog .note-body.editing  {
+  background-color: #eeeecc;
+  border-color: #aaaaaa;
+}
+
+#volunteer-notes-dialog .new-note-label 
+{
+  margin-left: 10px;
+}
+
+#volunteer-notes-dialog .new-note {
+  margin: 0 10px 10px 10px;
+}
+
+#volunteer-notes-dialog .new-note textarea {
+  width: 100%;
+  height: 75px;
+  box-sizing: border-box;
+  padding: 5px;
+}
+
+#volunteer-notes-dialog .add-button 
+{
+  margin: 0 0 10px 10px;
+}

@@ -1,0 +1,84 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Globalization;
+using System.Linq;
+using MySql.Data.MySqlClient;
+using Vote;
+
+namespace DB.Vote
+{
+  public partial class EmailTemplates
+  {
+    public static EmailTemplatesTable GetAvailableTemplateData(String ownerType, 
+      String owner, bool allPublic, int commandTimeout = -1)
+    {
+      var cmdText = 
+        "SELECT Id,Name,OwnerType,Owner,IsPublic,CreateTime,ModTime,LastUsedTime," +
+        "Requirements,Subject,Body FROM EmailTemplates" +
+        " WHERE (OwnerType=@OwnerType AND Owner=@Owner) {0}" +
+        " ORDER BY Owner,OwnerType,Name";
+
+      var publicClause = allPublic ? " OR IsPublic=1" : string.Empty;
+      cmdText = string.Format(cmdText, publicClause);
+
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      VoteDb.AddCommandParameter(cmd, "OwnerType", ownerType);
+      VoteDb.AddCommandParameter(cmd, "Owner", owner);
+      return FillTable(cmd, EmailTemplatesTable.ColumnSet.All);
+    }
+
+    public static SimpleListItem[] GetStarterDocuments(int commandTimeout = -1)
+    {
+      const string cmdText = "SELECT Id,Name FROM EmailTemplates WHERE OwnerType='*' ORDER BY Name";
+
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      using (var cn = VoteDb.GetOpenConnection())
+      {
+        cmd.Connection = cn;
+        var table = new DataTable();
+        DbDataAdapter adapter = new MySqlDataAdapter(cmd as MySqlCommand);
+        adapter.Fill(table);
+        return
+         new List<SimpleListItem>
+          {
+            new SimpleListItem(string.Empty, "blank email")
+          }.Union(
+           table.Rows.OfType<DataRow>()
+             .Select(row =>
+               new SimpleListItem(row.Id().ToString(CultureInfo.InvariantCulture),
+                 row.Name())))
+           .ToArray();
+      }
+    }
+
+    public static void Upsert(String name, String ownerType, String owner, 
+      Boolean isPublic, DateTime createTime, DateTime modTime, String subject, 
+      String body, bool isNew = false, int commandTimeout = -1)
+    {
+      const string cmdTemplate = "INSERT INTO EmailTemplates" +
+        " (Name,OwnerType,Owner,IsPublic,CreateTime,ModTime,Requirements,Subject,Body)" +
+        " VALUES (@Name,@OwnerType,@Owner,@IsPublic,@CreateTime,@ModTime,@Requirements,@Subject,@Body)" +
+        " ON DUPLICATE KEY UPDATE IsPublic=VALUES(IsPublic)," +
+        " ModTime=VALUES(ModTime),Requirements=VALUES(Requirements),Subject=VALUES(Subject),Body=VALUES(Body)";
+
+      var cmdText = cmdTemplate;
+      if (isNew) cmdText += ",SelectRecipientOptions=NULL,EmailOptions=NULL";
+
+      var requirements = GetTemplateRequirementsString(subject, body);
+
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      VoteDb.AddCommandParameter(cmd, "Name", name);
+      VoteDb.AddCommandParameter(cmd, "OwnerType", ownerType);
+      VoteDb.AddCommandParameter(cmd, "Owner", owner);
+      VoteDb.AddCommandParameter(cmd, "IsPublic", isPublic);
+      VoteDb.AddCommandParameter(cmd, "CreateTime", createTime);
+      VoteDb.AddCommandParameter(cmd, "ModTime", modTime);
+      VoteDb.AddCommandParameter(cmd, "Requirements", requirements);
+      VoteDb.AddCommandParameter(cmd, "Subject", subject);
+      VoteDb.AddCommandParameter(cmd, "Body", body);
+      VoteDb.ExecuteScalar(cmd);
+    }
+  }
+}

@@ -1,0 +1,67 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Web.UI.HtmlControls;
+using DB;
+using DB.Vote;
+
+namespace Vote.Master
+{
+  public partial class ReviewYouTubeChannelsPage : SecurePage, ISuperUser
+  {
+    #region Private
+
+    private void BuildTable(IEnumerable<DataRow> unverifiedVideos)
+    {
+      var even = true;
+      foreach (var row in unverifiedVideos)
+      {
+        var tr = new HtmlTableRow().AddTo(BodyPlaceHolder, even ? "even" : "odd");
+        tr.Attributes.Add("data-key", row.PoliticianKey());
+        even = !even;
+        new HtmlTableCell
+        {
+          InnerText = Politicians.FormatName(row) + " [" + row.StateCode() + "]"
+        }.AddTo(tr);
+        var td = new HtmlTableCell().AddTo(tr);
+        new HtmlAnchor
+        {
+          InnerText = row.YouTubeWebAddress().GetYouTubeVideoId(),
+          HRef = NormalizeUrl(row.YouTubeWebAddress()),
+          Title = row.YouTubeWebAddress(),
+          Target = "view"
+        }.AddTo(td);
+        new HtmlTableCell { InnerHtml = "&nbsp;" }.AddTo(tr);
+        new HtmlTableCell { InnerHtml = "&nbsp;" }.AddTo(tr);
+        new HtmlTableCell { InnerHtml = "&nbsp;" }.AddTo(tr);
+        new HtmlTableCell { InnerHtml = "&nbsp;" }.AddTo(tr);
+      }
+    }
+
+    #endregion Private
+
+    #region Event handlers and overrides
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        Page.Title = "Review YouTube Channels";
+        H1.InnerHtml = "Review YouTube Channels";
+        var unverifiedVideos = Politicians.GetUnverifiedYouTubeVideos();
+        if (unverifiedVideos.Count == 0)
+        {
+          var tr = new HtmlTableRow().AddTo(BodyPlaceHolder);
+          new HtmlTableCell
+          {
+            ColSpan = 6,
+            InnerText = "No unverified videos found"
+          }.AddTo(tr);
+        }
+        else BuildTable(unverifiedVideos);
+      }
+    }
+
+    #endregion Event handlers and overrides
+  }
+}

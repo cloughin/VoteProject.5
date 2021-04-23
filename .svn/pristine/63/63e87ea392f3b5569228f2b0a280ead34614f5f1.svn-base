@@ -1,0 +1,96 @@
+﻿<%@ Page Language="C#" ValidateRequest="false" AutoEventWireup="true" 
+CodeBehind="forVolunteers.aspx.cs" Inherits="Vote.ForVolunteersPage" %>
+
+<%@ Register Src="/Controls/SocialMediaButtons.ascx" TagName="SocialMediaButtons" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonateBanner.ascx" TagName="DonateBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainBanner.ascx" TagName="MainBanner" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainNavigation.ascx" TagName="MainNavigation" TagPrefix="user" %>
+<%@ Register Src="/Controls/EmailForm.ascx" TagName="EmailForm" TagPrefix="user" %>
+<%@ Register Src="/Controls/MainFooter.ascx" TagName="MainFooter" TagPrefix="user" %>
+<%@ Register Src="/Controls/PageHeading.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/AddressEntry.ascx" TagName="AddressEntry" TagPrefix="user" %>
+<%@ Register Assembly="BotDetect" Namespace="BotDetect.Web.UI"  TagPrefix="BotDetect" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+  <title runat="server" id="TitleTag" >For Volunteers</title>
+  <meta runat="server" id="MetaDescriptionTag" content="" name="description" />
+  <meta runat="server" id="MetaKeywordsTag" content="" name="keywords" />
+</head>
+<body class="volunteers-page">
+    <form id="form1" runat="server" enableviewstate="True">
+    <div id="outer">
+    <div id="container">
+      <user:SocialMediaButtons runat="server" />
+      <user:DonateBanner runat="server" />
+      <user:MainBanner runat="server" />
+      <user:MainNavigation runat="server" />
+      <div id="mainContent">
+        <user:PageHeading ID="PageHeading" runat="server" 
+          MainHeadingText="For Volunteers" />
+
+        <div class="intro">
+          <p>The Vote-USA project relies heavily on the efforts of volunteers.  
+          To get involved, all you need is an internet connection and the desire. 
+          Here are some of ways you can contribute.</p>
+
+          <div class="sub">
+
+          <p class="head">Scrape candidate websites for pictures, biographical 
+          information and views on the issues.</p>
+
+          <p>When we have incomplete or outdated information for candidates, 
+          we need volunteers to locate and copy the correct information from 
+          the candidates’ campaign websites into our platform.</p>
+
+          <p class="head">Enter state election rosters for upcoming elections.</p>
+
+          <p>Each state provides us with its election roster prior to each 
+          election. These rosters must be loaded into our platform as quickly 
+          as possible so that we can provide timely information to the voters.</p>
+
+          <p class="head">Identify county and local offices.</p>
+
+          <p>We are currently in the process of expanding our platform to include 
+          county and local contests and ballot measures. We need volunteers to 
+          research each state’s county and local districts to identify and enter
+          the county and local elected offices.</p>
+
+          <p class="head">Interview the candidates.</p>
+
+          <p>We need volunteers willing to go into the field to meet and 
+          interview the candidates, and to record videos of the candidates 
+          expressing their views on issues of their choice. These videos will 
+          be posted to YouTube and linked to from within our site.</p>
+
+          <p class="head">Become an Intern or State Administrator.</p>
+
+          <p>Volunteers who makes significant contributions will be given the 
+          title of Intern and provided with a Vote-USA.org email account and 
+          business cards.</p>
+
+          <p>We need a State Administrator for each of the 50 States and DC. 
+          We hope to recruit these people from our pool of volunteers who are 
+          willing to make a larger commitment to the project.</p>
+
+          </div>
+
+          <p>If you are interested in helping Vote-USA, please use to form 
+          below to provide us with your postal and email addresses, and to 
+          tell us a little bit about yourself and how you would like to become 
+          involved with our project.</p> 
+
+          <user:EmailForm id="EmailForm" runat="server" />
+       </div>
+        <user:MainFooter runat="server" />
+      </div> <!-- id="mainContent" -->
+    </div> <!-- id="container" -->
+    </div> <!-- id="outer" -->
+
+    <user:AddressEntry runat="server" />
+
+    </form>
+</body>
+</html>

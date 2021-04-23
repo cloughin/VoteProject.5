@@ -1,0 +1,50 @@
+﻿using System;
+using System.Web;
+
+namespace Vote
+{
+  public class LocationCookies
+  {
+    public string State;
+    public string Congress;
+    public string StateSenate;
+    public string StateHouse;
+    public string County;
+
+    private static string ValueOrNull(HttpCookie cookie)
+    {
+      return cookie == null ? null : cookie.Value;
+    }
+
+    public static LocationCookies GetCookies()
+    {
+      var httpContext = HttpContext.Current;
+      if (httpContext == null)
+        throw new ApplicationException("HttpContext is not available.");
+      var request = httpContext.Request;
+
+      var result = new LocationCookies
+        {
+          State = ValueOrNull(request.Cookies["State"]),
+          Congress = ValueOrNull(request.Cookies["Congress"]),
+          StateSenate = ValueOrNull(request.Cookies["StateSenate"]),
+          StateHouse = ValueOrNull(request.Cookies["StateHouse"]),
+          County = ValueOrNull(request.Cookies["County"])
+        };
+
+      return result;
+    }
+
+    public bool IsValid
+    {
+      get
+      {
+        return !string.IsNullOrWhiteSpace(State) &&
+          !string.IsNullOrWhiteSpace(Congress) &&
+          !string.IsNullOrWhiteSpace(StateSenate) &&
+          !string.IsNullOrWhiteSpace(StateHouse) &&
+          !string.IsNullOrWhiteSpace(County);
+      }
+    }
+  }
+}

@@ -1,0 +1,98 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.IO;
+using System.Configuration;
+
+namespace Vote.Master
+{
+  public partial class Dropbox : System.Web.UI.Page
+  {
+    private void HandleException(Exception ex)
+    {
+      string message;
+
+      try
+      {
+        message = db.Fail(ex.Message);
+        // We don't log routine UI exceptions
+        if (!(ex is VoteUIException))
+          db.Log_Error_Admin(ex);
+      }
+      catch (Exception ex2)
+      {
+        message = "Unexpected failure in exception handler: " +
+          ex2.ToString() + Environment.NewLine +
+          "Original exception: " + ex.ToString();
+      }
+
+      Msg.Text = message;
+    }
+
+    protected void ButtonUploadFile_ServerClick(object sender, EventArgs e)
+    {
+      try
+      {
+        // Get the upload file and validate
+        HttpPostedFile postedFile = Request.Files["UploadFile"];
+        if (postedFile == null || postedFile.ContentLength == 0)
+          throw new VoteUIException("Upload file is missing");
+        string extension = Path.GetExtension(postedFile.FileName);
+        if (extension.IsEqIgnoreCase(".metadata"))
+          throw new VoteUIException("Invalid extension on upload file");
+
+        // Get the save filename and validate
+        string saveFileName = Filename.Value.Trim();
+        if (string.IsNullOrEmpty(saveFileName))
+          saveFileName = Path.GetFileNameWithoutExtension(postedFile.FileName);
+        if (saveFileName.IndexOfAny(new char[] { '\\', '/', ':', '*', '?', '"', '<', '>', '|' }) >= 0)
+          throw new VoteUIException("Invalid character in file name");
+
+        // Get dropbox directory
+        string directoryName = ConfigurationManager.AppSettings["VoteDropbox"];
+        DirectoryInfo dropboxDirectoryInfo = new DirectoryInfo(directoryName);
+
+        using (var guest = new ImpersonateGuest())
+        {
+          // Make sure filename is unique
+          int suffix = 0;
+          string saveFilePath;
+          do
+          {
+            string name = saveFileName;
+            if (suffix > 0)
+              name = name + "_" + suffix.ToString();
+            suffix++;
+            saveFilePath = Path.Combine(dropboxDirectoryInfo.FullName, name + extension);
+          } while (File.Exists(saveFilePath));
+
+          // Format metadata
+          string metadata = saveFilePath + Environment.NewLine +
+            "Uploaded by " + SecurePage.UserName + " at " + DateTime.Now.ToString() +
+            Environment.NewLine + Comments.Value.Trim();
+
+          // Save file 
+          postedFile.SaveAs(saveFilePath);
+
+          // Save metadata
+          File.WriteAllText(saveFilePath + ".metadata", metadata);
+
+          Msg.Text = db.Ok("File was successfully uploaded as " +
+            Path.GetFileName(saveFilePath));
+        }
+      }
+      catch (Exception ex)
+      {
+        HandleException(ex);
+      }
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+    }
+  }
+}

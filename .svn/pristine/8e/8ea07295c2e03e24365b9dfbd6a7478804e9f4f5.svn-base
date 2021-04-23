@@ -1,0 +1,67 @@
+﻿using System;
+
+namespace Vote
+{
+  public partial class Default3 : CacheablePage
+  {
+    public Default3()
+    {
+      NoUrlEdit = true;
+    }
+
+    #region Caching support
+
+    protected override bool SuppressCaching
+    {
+      get { return true; }
+    }
+
+    protected override string GetCacheKey()
+    {
+      return UrlManager.GetStateCodeFromHostName();
+    }
+
+    protected override string GetCacheType()
+    {
+      return "Home";
+    }
+
+    #endregion Caching support
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        if (DomainData.IsValidStateCode) // Single state
+        {
+          if (DomainDesign.IncludeTitleForSingleState)
+            Title =
+              DomainDesign.GetSubstitutionText(PageCache, "TitleTagDefaultPageSingleStateDomain");
+          if (DomainDesign.IncludeMetaDescriptionForSingleState)
+            MetaDescription =
+              DomainDesign.GetSubstitutionText(PageCache, "MetaDescriptionTagDefaultPageSingleStateDomain");
+          if (DomainDesign.IncludeMetaKeywordsForSingleState)
+            MetaKeywords =
+              DomainDesign.GetSubstitutionText(PageCache, "MetaKeywordsTagDefaultPageSingleStateDomain");
+        }
+        else // use the All states domain
+        {
+          if (DomainDesign.IncludeTitleForAllStates)
+            Title =
+              DomainDesign.GetSubstitutionText(PageCache, "TitleTagDefaultPageAllStatesDomain");
+          if (DomainDesign.IncludeMetaDescriptionForAllStates)
+            MetaDescription =
+              DomainDesign.GetSubstitutionText(PageCache, "MetaDescriptionTagDefaultPageAllStatesDomain");
+          if (DomainDesign.IncludeMetaKeywordsForAllStates)
+            MetaKeywords =
+              DomainDesign.GetSubstitutionText(PageCache, "MetaKeywordsTagDefaultPageAllStatesDomain");
+        }
+      }
+      else
+      {
+        // address submission by non-js user
+        AddressEntryInline.Submit();
+      }
+    }
+  }
+}

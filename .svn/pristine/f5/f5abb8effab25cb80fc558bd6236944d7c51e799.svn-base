@@ -1,0 +1,232 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Admin.Master" AutoEventWireup="true" 
+CodeBehind="UpdateVolunteers.aspx.cs" Inherits="Vote.Master.UpdateVolunteersPage" %>
+<%@ Register TagPrefix="user" Namespace="Vote" Assembly="Vote" %>
+<%@ Register TagPrefix="user" TagName="FeedbackContainer" Src="~/Controls/FeedbackContainer.ascx" %>
+
+<asp:Content ID="HeadContent" ContentPlaceHolderID="MasterHeadContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+  
+  <div id="outer">
+    <h1 id="H1" EnableViewState="false" runat="server"></h1>
+    
+    
+    <div id="UpdateControls" class="update-controls" runat="server">
+      
+      <div id="main-tabs" class="tab-control htab-control jqueryui-tabs start-hidden shadow">
+        
+        <ul class="main-tabs tabs htabs unselectable">
+         <li class="tab htab" EnableViewState="false" runat="server"><a href="#tab-addvolunteer" onclick="this.blur()" id="TabAddVolunteer" EnableViewState="false" runat="server">Add<br />Volunteer</a></li>
+         <li class="tab htab" EnableViewState="false" runat="server"><a href="#tab-report" onclick="this.blur()" id="TabReport" EnableViewState="false" runat="server">Volunteers<br />Report</a></li>
+        </ul>
+
+        <div id="tab-addvolunteer" class="main-tab content-panel tab-panel htab-panel">
+           
+          <div class="inner-panel rounded-border">
+            <div class="tab-panel-heading horz-center">
+              <div class="center-inner">
+                <h4 class="center-element">Add a Volunteer</h4>
+              </div>
+            </div>
+            <hr/>
+            <div class="content-area">
+              <h6 class="inverted">First add the new volunteer&rsquo;s email address, state and party. Then a dialog will allow you to enter or change other volunteer details.</h6>
+              <hr/>
+              <div class="data-area">
+                
+                <div class="input-element email">
+                  <p class="fieldlabel">Volunteer Email Address <span class="reqd">◄</span></p>
+                  <div class="databox textbox">
+                    <user:TextBoxWithNormalizedLineBreaks ID="AddVolunteerEmail" spellcheck="false" CssClass="shadow-2" runat="server"/>
+                  </div>                
+                </div>
+                     
+                <div class="clear-both"></div>
+
+                <div class="input-element statecode">
+                  <p class="fieldlabel">State <span class="reqd">◄</span></p>
+                  <div class="databox textbox">
+                    <asp:DropDownList id="AddVolunteerStateCode" runat="server" CssClass="shadow-2 select-statecode"></asp:DropDownList>
+                  </div>
+                </div>
+
+                <div class="input-element partykey">
+                  <p class="fieldlabel">Party <span class="reqd">◄</span></p>
+                  <div class="databox textbox">
+                    <asp:DropDownList id="AddVolunteerPartyKey" runat="server" CssClass="shadow-2 select-partykey"></asp:DropDownList>
+                  </div>
+                </div>
+                     
+                <div class="clear-both"></div>
+
+                <div class="update-button">
+                  <input type="button" value="Add Volunteer" disabled="disabled" class="button-1 add-volunteer-button">                  
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        
+        <div id="tab-report" class="main-tab content-panel tab-panel htab-panel">
+          
+          <div class="inner-panel rounded-border">
+            <div class="content-area">
+              <div class="data-area">
+ 
+                <div class="input-element state">
+                  <p class="fieldlabel">State</p>
+                  <select id="ReportState" runat="server" class="select-state">
+                  </select>
+                </div>
+ 
+                <div class="input-element party">
+                  <p class="fieldlabel">Party</p>
+                  <select id="ReportParty" runat="server" class="select-party">
+                  </select>
+                </div>
+
+                <div class="update-button">
+		              <input type="button" value="Get Report" class="button-1 get-report-button">                  
+                </div>  
+                
+              </div>
+
+              <div class="clear-both"></div>
+             
+              <div class="volunteer-scroller hidden">
+                
+              </div>
+            </div>
+          </div>
+
+        </div>
+        
+      </div>
+        
+    </div>
+    
+
+  </div>
+
+  
+  <div id="edit-volunteer-dialog" class="hidden">
+    <div class="content-panel tab-panel htab-panel">
+      <asp:UpdatePanel ID="UpdatePanelEditVolunteer" UpdateMode="Conditional" runat="server">
+        <ContentTemplate>
+          <div id="ContainerEditVolunteer" runat="server">
+            
+            <input id="EditVolunteerReloading" class="reloading" type="hidden" runat="server" />
+            <input id="VolunteerToEdit" runat="server" class="volunteer-to-edit" type="hidden" />
+            <input id="RefreshReport" runat="server" class="refresh-report" type="hidden"/>
+            <input id="UndoState" runat="server" class="undo-state" type="hidden"/>
+            <input id="UndoParty" runat="server" class="undo-party" type="hidden"/>
+            <input id="SubmittedParty" runat="server" class="submitted-party" type="hidden"/>
+            <div class="inner-panel rounded-border">
+          
+              <div class="tab-panel-heading horz-center">
+                <div class="center-inner">
+                  <div class="undo-button tiptip" title="Revert all fields on this panel to the latest saved version">
+                    <div id="UndoEditVolunteer" runat="server"></div>
+                  </div>
+                  <h3 id = "EditVolunteerTitle" runat="server" class="center-element">Edit Volunteer Information</h3>
+                </div>
+              </div>
+              <hr/>
+              
+              <div class="content-area">
+
+                <div class="input-element email">
+                  <p class="fieldlabel">Email Address <span class="reqd">◄</span></p>
+                  <div class="databox textbox">
+                    <user:TextBoxWithNormalizedLineBreaks spellcheck="false" ID="ControlEditVolunteerEmail" CssClass="shadow-2" runat="server"></user:TextBoxWithNormalizedLineBreaks>
+                    <div class="tab-ast" id="AsteriskEditVolunteerEmail" EnableViewState="false" runat="server"></div>
+                  </div>
+                </div>
+
+                <div class="input-element password">
+                  <p class="fieldlabel">Password <span class="reqd">◄</span></p>
+                  <div class="databox textbox">
+                    <user:TextBoxWithNormalizedLineBreaks spellcheck="false" ID="ControlEditVolunteerPassword" CssClass="shadow-2" runat="server"></user:TextBoxWithNormalizedLineBreaks>
+                    <div class="tab-ast" id="AsteriskEditVolunteerPassword" EnableViewState="false" runat="server"></div>
+                  </div>
+                </div>
+
+                <div class="clear-both spacer"></div>
+
+                <div class="input-element name firstname">
+                  <p class="fieldlabel">First Name</p>
+                  <div class="databox textbox">
+                    <user:TextBoxWithNormalizedLineBreaks spellcheck="false" ID="ControlEditVolunteerFirstName" CssClass="shadow-2" runat="server"></user:TextBoxWithNormalizedLineBreaks>
+                    <div class="tab-ast" id="AsteriskEditVolunteerFirstName" EnableViewState="false" runat="server"></div>
+                  </div>
+                </div>
+
+                <div class="input-element name lastname">
+                  <p class="fieldlabel">Last Name</p>
+                  <div class="databox textbox">
+                    <user:TextBoxWithNormalizedLineBreaks spellcheck="false" ID="ControlEditVolunteerLastName" CssClass="shadow-2" runat="server"></user:TextBoxWithNormalizedLineBreaks>
+                    <div class="tab-ast" id="AsteriskEditVolunteerLastName" EnableViewState="false" runat="server"></div>
+                  </div>
+                </div>
+
+                <div class="input-element phone">
+                  <p class="fieldlabel">Phone</p>
+                  <div class="databox textbox">
+                    <user:TextBoxWithNormalizedLineBreaks spellcheck="false" ID="ControlEditVolunteerPhone" CssClass="shadow-2" runat="server"></user:TextBoxWithNormalizedLineBreaks>
+                    <div class="tab-ast" id="AsteriskEditVolunteerPhone" EnableViewState="false" runat="server"></div>
+                  </div>
+                </div>
+
+                <div class="clear-both spacer"></div>
+
+                <div class="input-element statecode">
+                  <p class="fieldlabel">State</p>
+                  <div class="databox textbox">
+                    <asp:DropDownList id="ControlEditVolunteerStateCode" runat="server" CssClass="shadow-2 select-statecode"></asp:DropDownList>
+                  </div>
+                </div>
+
+                <div class="input-element partykey">
+                  <p class="fieldlabel">Party</p>
+                  <div class="databox textbox">
+                    <asp:DropDownList id="ControlEditVolunteerPartyKey" runat="server" CssClass="shadow-2 select-partykey"></asp:DropDownList>
+                    <div class="tab-ast" id="AsteriskEditVolunteerPartyKey" EnableViewState="false" runat="server"></div>
+                  </div>
+                </div>
+
+                <div class="clear-both spacer"></div>
+
+              </div>
+          
+              <hr />
+              <div class="content-footer">
+                <div class="feedback-floater-for-ie7">
+                  <user:FeedbackContainer ID="FeedbackEditVolunteer" 
+                  EnableViewState="false" runat="server" />
+                  </div>
+                <div class="footer-item footer-ajax-loader">
+                  <asp:Image ID="AjaxLoaderEditVolunteer" 
+                  EnableViewState="false" ImageUrl="~/images/ajax-loader32.gif" 
+                    CssClass="ajax-loader" runat="server" />
+                </div>
+                <div class="update-button">
+                  <asp:Button ID="ButtonEditVolunteer" EnableViewState="false" 
+                    runat="server" 
+                    Text="Update" CssClass="update-button button-1 tiptip" 
+                    Title="Update the volunteer info"
+                    OnClick="ButtonEditVolunteer_OnClick" /> 
+                </div>   
+                <div class="clear-both"></div>
+              </div>   
+
+            </div>
+
+          </div>
+        </ContentTemplate>
+      </asp:UpdatePanel>
+    </div>
+  </div>
+
+</asp:Content>

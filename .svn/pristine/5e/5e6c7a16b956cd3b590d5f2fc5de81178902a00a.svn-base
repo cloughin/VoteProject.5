@@ -1,0 +1,121 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Linq;
+using MySql.Data.MySqlClient;
+using Vote;
+
+namespace DB.Vote
+{
+  public partial class OfficesOfficials
+  {
+    public static string GetIncumbentOfficeKeyByPoliticianKey(
+      string politicianKey, int commandTimeout = -1)
+    {
+      var cmdText = "SELECT OfficesOfficials.OfficeKey" +
+        " FROM OfficesOfficials,Offices" +
+        " WHERE OfficesOfficials.PoliticianKey=@PoliticianKey" +
+        "  AND OfficesOfficials.OfficeKey = Offices.OfficeKey" +
+        " ORDER BY OfficesOfficials.DataLastUpdated DESC";
+      cmdText = VoteDb.InjectSqlLimit(cmdText, 1);
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      VoteDb.AddCommandParameter(cmd, "PoliticianKey", politicianKey);
+      var table = FillTable(cmd, OfficesOfficialsTable.ColumnSet.OfficeKey);
+      return table.Count == 0 ? null : table[0].OfficeKey;
+    }
+
+    public static string GetIncumbentOfficeKeyByRunningMateKey(
+      string runningMateKey, int commandTimeout = -1)
+    {
+      var cmdText = "SELECT OfficesOfficials.OfficeKey" +
+        " FROM OfficesOfficials,Offices" +
+        " WHERE OfficesOfficials.RunningMateKey=@RunningMateKey" +
+        "  AND OfficesOfficials.OfficeKey = Offices.OfficeKey" +
+        " ORDER BY OfficesOfficials.DataLastUpdated DESC";
+      cmdText = VoteDb.InjectSqlLimit(cmdText, 1);
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      VoteDb.AddCommandParameter(cmd, "RunningMateKey", runningMateKey);
+      var table = FillTable(cmd, OfficesOfficialsTable.ColumnSet.OfficeKey);
+      return table.Count == 0 ? null : table[0].OfficeKey;
+    }
+
+    public static IEnumerable<string> GetIncumbentsByState(string stateCode, string countyCode = "",
+      string localCode = "", int commandTimeout = -1)
+    {
+      const string cmdText = "SELECT PoliticianKey,RunningMateKey FROM OfficesOfficials" +
+        " WHERE StateCode IN (@StateCode,'') AND CountyCode=@CountyCode AND LocalCode=@LocalCode";
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      var table = new DataTable();
+      using (var cn = VoteDb.GetOpenConnection())
+      {
+        cmd.Connection = cn;
+        VoteDb.AddCommandParameter(cmd, "StateCode", stateCode);
+        VoteDb.AddCommandParameter(cmd, "CountyCode", countyCode);
+        VoteDb.AddCommandParameter(cmd, "LocalCode", localCode);
+        DbDataAdapter adapter = new MySqlDataAdapter(cmd as MySqlCommand);
+        adapter.Fill(table);
+      }
+      return table.Rows.Cast<DataRow>().Select(row => row.PoliticianKey())
+        .Union(table.Rows.Cast<DataRow>().Select(row => row.RunningMateKey()))
+        .Where(k => stateCode.IsEqIgnoreCase(Politicians.GetStateCodeFromKey(k)));
+    }
+
+    public static DataTable GetIncumbentsForOffice(string officeKey, int commandTimeout = -1)
+    {
+      const string columnList =
+        "oo.RunningMateKey,p.AddOn,p.Address," +
+        "p.CityStateZip,p.EmailAddr AS Email,p.FName AS FirstName," + 
+        //"p.LDSAddress,p.LDSCityStateZip,p.LDSEmailAddr AS LDSEmail,p.LDSPhone,p.LDSWebAddr AS LDSWebAddress," + 
+        "p.MName as MiddleName,p.LName AS LastName," +
+        "p.Nickname,p.Phone,p.PoliticianKey,p.StateAddress,p.StateCityStateZip," +
+        "p.StateEmailAddr AS StateEmail,p.StatePhone," +
+        "p.StateWebAddr AS StateWebAddress,p.Suffix,p.WebAddr AS WebAddress," +
+        "o.IsRunningMateOffice,o.Incumbents,pt.PartyCode,pt.PartyName,pt.PartyUrl";
+
+      var cmdText =
+        string.Format(
+          "SELECT {0}, 0 AS IsRunningMate FROM OfficesOfficials oo" +
+          " INNER JOIN Politicians p ON p.PoliticianKey=oo.PoliticianKey" +
+          " LEFT JOIN Parties pt ON pt.PartyKey=p.PartyKey" +
+          " INNER JOIN Offices o ON o.OfficeKey=@OfficeKey" +
+          " WHERE oo.OfficeKey=@OfficeKey" +
+          " UNION SELECT {0}, 1 AS IsRunningMate FROM OfficesOfficials oo" +
+          " INNER JOIN Politicians p ON p.PoliticianKey=oo.RunningMateKey" +
+          " LEFT JOIN Parties pt ON pt.PartyKey=p.PartyKey" +
+          " INNER JOIN Offices o ON o.OfficeKey=@OfficeKey" +
+          " WHERE oo.OfficeKey=@OfficeKey" +
+          " ORDER BY LastName,FirstName,MiddleName,Nickname,Suffix",
+          columnList);
+
+      var cmd = VoteDb.GetCommand(cmdText, commandTimeout);
+      VoteDb.AddCommandParameter(cmd, "OfficeKey", officeKey);
+      using (var cn = VoteDb.GetOpenConnection())
+      {
+        cmd.Connection = cn;
+        var table = new DataTable();
+        DbDataAdapter adapter = new MySqlDataAdapter(cmd as MySqlCommand);
+        adapter.Fill(table);
+        return table;
+      }
+    }
+
+    public static bool OfficeKeyExists(String officeKey)
+    {
+      const string cmdText = "SELECT COUNT(*) FROM OfficesOfficials WHERE OfficeKey=@OfficeKey";
+      var cmd = VoteDb.GetCommand(cmdText, -1);
+      VoteDb.AddCommandParameter(cmd, "OfficeKey", officeKey);
+      var result = VoteDb.ExecuteScalar(cmd);
+      return Convert.ToInt32(result) != 0;
+    }
+
+    //public static int UpdateOfficeKeyByOfficeKey(String newValue, String officeKey)
+    //{
+    //  const string cmdText = "UPDATE OfficesOfficials SET OfficeKey=@newValue WHERE OfficeKey=@OfficeKey";
+    //  var cmd = VoteDb.GetCommand(cmdText, -1);
+    //  VoteDb.AddCommandParameter(cmd, "OfficeKey", officeKey);
+    //  VoteDb.AddCommandParameter(cmd, "newValue", newValue);
+    //  return VoteDb.ExecuteNonQuery(cmd);
+    //}
+  }
+}

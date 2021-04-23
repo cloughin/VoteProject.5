@@ -1,0 +1,68 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Public.Master" AutoEventWireup="true" CodeBehind="Elected.aspx.cs" Inherits="Vote.ElectedPage" %>
+
+<%@ Register Src="/Controls/PageHeadingResponsive.ascx" TagName="PageHeading" TagPrefix="user" %>
+<%@ Register Src="/Controls/DonationRequestResponsive.ascx" TagName="DonationRequest" TagPrefix="user" %>
+
+<asp:Content ID="HeadTopContent" ContentPlaceHolderID="MasterHeadTopContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="HeadBottomContent" ContentPlaceHolderID="MasterHeadBottomContent" runat="server">
+  <style type="text/css">
+    .content .intro {
+      padding: 8px 5px;
+    }
+    .content .not-found-error
+    {
+	    font-family: sans-serif;
+	    font-size: 13px;
+	    font-weight: normal;
+	    line-height: 110%;
+	    color: #373737;
+	    padding: 25px 10px 2px 30px;
+    }
+    .content .locals-accordion {
+      margin-top: 15px;
+    }
+    .content .locals-accordion .accordion-header {
+      padding-left: 28px;
+    }
+
+  </style>
+  <script type="text/javascript">
+    $(function () {
+      if ($(".accordion-toggle").hasClass("no-js")) {
+        // Wrap the locals
+        $(".elected-report-locals").wrapAll('<div class="locals-accordion"></div>');
+        $(".locals-accordion,.elected-report-locals-content").accordion({
+          active: false,
+          collapsible: true,
+          heightStyle: "content",
+          activate: PUBLIC.accordionActivate
+        });
+      } else {
+        $(".elected-report,.elected-report-locals-content").accordion({
+          heightStyle: "content",
+          activate: PUBLIC.accordionActivate
+        });
+      }
+    });
+  </script>
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+  <div id="InnerContent" runat="server">
+
+    <user:PageHeading ID="PageHeading" runat="server" MainHeadingText="Your Elected Officials" />
+  
+    <div class="intro">
+      <div id="LocationInfo" runat="server" class="location-info" EnableViewState="False"></div>
+    </div>
+    <div class="accordion-toggle no-js"> <!-- has-js no-js -->
+      <asp:PlaceHolder ID="ReportPlaceHolder" runat="server" EnableViewState="False"></asp:PlaceHolder>
+    </div>
+  </div>
+</asp:Content>
+
+<asp:Content ID="BottomContent" ContentPlaceHolderID="MasterBottomContent" runat="server">
+  <user:DonationRequest ID="DonationRequest" runat="server" />
+</asp:Content>

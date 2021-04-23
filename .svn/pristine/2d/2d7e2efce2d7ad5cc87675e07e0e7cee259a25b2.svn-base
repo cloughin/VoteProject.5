@@ -1,0 +1,69 @@
+﻿using System;
+
+namespace Vote
+{
+  public partial class ContactUsPage : CacheablePage
+  {
+    #region Caching support
+
+    protected override string GetCacheKey()
+    {
+      return UrlManager.GetStateCodeFromHostName();
+    }
+
+    protected override string GetCacheType()
+    {
+      return "ContactUs";
+    }
+
+    #endregion Caching support
+
+    private const string TitleTagAllStatesDomain =
+      "Contacting Vote-USA.org by Email or Slow Mail";
+
+    private const string MetaDescriptionAllStatesDomain =
+      "Send Vote-USA.org an email or postal mail";
+
+    private const string MetaKeywordsAllStatesDomain =
+      "sample ballot, sample ballots, ballot, ballots, vote, voting, election, primary, elections, candidates";
+
+    private const string TitleTagSingleStateDomain =
+      "Contacting Vote-[[StateCode]].org by Email or Slow Mail";
+
+    private const string MetaDescriptionSingleStateDomain =
+      "Send Vote-[[StateCode]].org an email or postal mail";
+
+    private const string MetaKeywordsSingleStateDomain =
+      "[[state]] sample ballot, [[state]] sample ballots, [[state]] ballot, ballots, [[state]] vote, [[state]] voting, [[state]] election, [[state]] primary, [[state]] elections, [[state]] candidates";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+      if (!IsPostBack)
+        if (DomainData.IsValidStateCode) // Single state
+        {
+          if (DomainDesign.IncludeTitleForSingleState)
+            Title = TitleTagSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForSingleState)
+            MetaDescription = MetaDescriptionSingleStateDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForSingleState)
+            MetaKeywords = MetaKeywordsSingleStateDomain.Substitute();
+        }
+        else
+        {
+          if (DomainDesign.IncludeTitleForAllStates)
+            Title = TitleTagAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaDescriptionForAllStates)
+            MetaDescription = MetaDescriptionAllStatesDomain.Substitute();
+          if (DomainDesign.IncludeMetaKeywordsForAllStates)
+            MetaKeywords = MetaKeywordsAllStatesDomain.Substitute();
+        }
+
+      EmailForm.ToEmailAddress = "mgr@Vote-USA.org";
+
+      EmailForm.SetItems(
+        "Privacy issues", "Donation issues", "Volunteer My Help",
+        "I’m a Candidate and Need My Login Credentials");
+    }
+  }
+}

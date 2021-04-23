@@ -1,0 +1,96 @@
+﻿
+.ui-widget-overlay 
+{
+  background: repeat-x scroll 50% 50% #000;
+}
+.ui-dialog
+{
+  background: transparent;
+  border: none;
+  /*overflow: visible;*/
+}
+.ui-dialog-titlebar
+{
+  display: none;
+}
+#donationRequestDialog
+{
+  display: none;
+  text-align: left;
+  color: #666;
+  border: 1px solid #666;
+  background-color: #fff;
+  padding: 0;
+}
+#donationRequestDialog .header
+{
+  width: 100%;
+  height: 52px;
+  background: #365e77;
+  color: #fff;
+}
+#donationRequestDialog .header div
+{
+  padding: 15px 0 0 10px;
+  font-family: Georgia;
+  font-size: 24px;
+  font-weight: normal;
+}
+#donationRequest .inner
+{
+  padding: 15px 30px 0 30px;
+  width: 100%;
+}
+#donationRequestDialog .inner .messageText
+{
+  font-family: Georgia;
+  font-size: 12pt;
+  line-height: 130%;
+  margin: 10px 10px 0 10px;
+}
+#donationRequestDialog .inner .inner2
+{
+  margin: 20px 0 0 10px;
+  width: 100%;
+}
+#donationRequestDialog .inner a
+{
+  height: 29px;
+  display: block;
+  overflow: hidden;
+	text-indent: -10000px;
+	font-size: 0;
+	line-height: 0;
+  cursor: pointer;
+}
+#donationRequestDialog .inner a:hover
+{
+  background-position: 0 -29px;
+}
+#donationRequestDialog .inner .yes,
+#donationRequestDialog .inner .no,
+#donationRequestDialog .inner .already
+{
+  float: left;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+#donationRequestDialog .inner .yes a
+{
+  width: 113px;
+  background: url(/images/OK-Ill-Donate.png);
+}
+#donationRequestDialog .inner .no a
+{
+  width: 111px;
+  background: url(/images/Sorry-Ill-Pass.png);
+}
+#donationRequestDialog .inner .already a
+{
+  width: 130px;
+  background: url(/images/I-Already-Donated.png);
+}
+#donationRequestDialog .inner .inner2 a:hover
+{
+  background-position: 0 -29px;
+}

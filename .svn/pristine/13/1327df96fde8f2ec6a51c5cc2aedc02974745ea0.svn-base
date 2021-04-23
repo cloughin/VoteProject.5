@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace Vote.Admin
+{
+  #region private
+  #endregion private
+
+  #region Event handlers and overrides
+
+  public partial class VideosPage : SecureAdminPage
+  {
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        Page.Title = "Instructional Videos for Admins";
+        H1.InnerHtml = "Instructional Videos for Admins";
+      }
+    }
+
+  #endregion Event handlers and overrides
+  }
+}

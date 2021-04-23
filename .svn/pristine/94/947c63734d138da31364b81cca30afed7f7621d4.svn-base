@@ -1,0 +1,151 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Test.aspx.cs" Inherits="Vote.Test" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Test</title>
+    <link href="/css/Reset.css" type="text/css" rel="stylesheet" />
+    <link href="/css/MainCommon.css" type="text/css" rel="stylesheet" />
+    <link href="/css/SecondaryCommon.css" type="text/css" rel="stylesheet" />
+    <link href="/css/All.css" type="text/css" rel="stylesheet" />
+    <link href="/css/Issue.css" type="text/css" rel="stylesheet" />
+    <style type="text/css">
+      .trPoliticianInfoTop
+      {
+        margin: 0;
+      }
+
+      .tdPoliticianInfoBio
+      {
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .tdPoliticianInfoPoliticianTitle
+      {
+        color: #373737;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 18px;
+        margin: 0;
+        padding: 3px 10px 3px 10px;
+      }
+
+      #mainContent .tdOfficeName
+      {
+        font-size: 18px;
+        line-height: normal;
+        padding: 8px 10px 0 10px;
+      }
+
+      #mainContent .tdElectionName
+      {
+        font-size: 14px;
+        line-height: normal;
+        padding: 0 10px 3px 10px;
+      }
+
+      #mainContent .bioTable
+      {
+        width: 600px;
+      }
+
+      #mainContent .trPoliticianInfoContact td
+      {
+        padding-top: 6px;
+      }
+
+      #mainContent .trPoliticianInfoContactAge td
+      {
+        padding-top: 10px;
+      }
+
+      .tdPoliticianInfoContactHeading
+      {
+        color: #373737;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 13px;
+        font-weight: bold;
+        padding: 3px 10px 3px 10px;
+      }
+
+      #mainContent .tdPoliticianInfoContactHeading
+      {
+        font-size: 11px;
+        font-weight: normal;
+        padding-left: 0;
+        padding-right: 0; /*text-transform: lowercase;*/
+        width: 120px;
+      }
+
+      #mainContent .tdPoliticianInfoContactHeading span
+      {
+        padding-left: 50px;
+      }
+
+      .tdPoliticianInfoContactDetail
+      {
+        color: #373737;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 13px;
+        font-weight: normal;
+        padding: 0;
+        text-align: left;
+      }
+
+      #mainContent .tdPoliticianInfoContactDetail
+      {
+        color: Black;
+        font-size: 12px;
+        font-weight: bold;
+        line-height: 120%;
+        width: 480px;
+      }
+
+      #mainContent .tdPoliticianInfoContactDetail a
+      {
+        color: Black;
+        font-size: 12px;
+        font-weight: bold;
+        line-height: 120%;
+      }
+
+      #mainContent .tdPoliticianInfoContactDetail a:hover
+      {
+        color: #A00000;
+        text-decoration: underline;
+      }
+
+      #mainContent .socialMedia
+      {
+        padding-top: 8px;
+      }
+
+      .tdPoliticianInfoImage
+      {
+        text-align: right;
+        vertical-align: top;
+      }      
+    </style>
+</head>
+<body>
+    <form id="form1" runat="server">
+      <div id="outer"><div id="container"><div id="mainContent"><div id="InnerContent">
+                                                                  <!-- Vote-USA.org Logo Button Large BEGIN -->
+<style type="text/css">
+a.vote-usa-logo-button { display: block; background-image: url(http://vote-usa.org/images/VoteLogoBtns.png); }
+a.vote-usa-logo-button-7 { width: 210px; height: 39px; background-position: 0 0; }
+a:hover.vote-usa-logo-button-7 { background-position: 0 -39px; }
+</style>
+<a class="vote-usa-logo-button vote-usa-logo-button-7" href="http://vote-usa.org/" target="voteusa"></a>
+<!-- Vote-USA.org Logo Button Large END -->
+        <table class="tablePage" id="IssueResponsesTable" cellspacing="0" cellpadding="0"
+          runat="server" enableviewstate="False">
+        </table>
+        <asp:PlaceHolder ID="ReportPlaceHolder" enableviewstate="False" runat="server"></asp:PlaceHolder>
+      </div></div></div></div>
+    </form>
+</body>
+</html>

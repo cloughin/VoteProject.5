@@ -1,0 +1,13 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Public.Master" AutoEventWireup="true" CodeBehind="default3.aspx.cs" Inherits="Vote.Default3" %>
+
+<%@ Register Src="/Controls/SiteVerification.ascx" TagName="SiteVerification" TagPrefix="user" %>
+
+<asp:Content ID="HeadTopContent" ContentPlaceHolderID="MasterHeadTopContent" runat="server">
+  <user:SiteVerification ID="SiteVerification" runat="server" />
+</asp:Content>
+
+<asp:Content ID="HeadBottomContent" ContentPlaceHolderID="MasterHeadBottomContent" runat="server">
+</asp:Content>
+
+<asp:Content ID="MainContent" ContentPlaceHolderID="MasterMainContent" runat="server">
+</asp:Content>

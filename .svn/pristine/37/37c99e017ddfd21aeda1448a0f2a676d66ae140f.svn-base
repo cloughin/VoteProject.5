@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace CommonCacheCleanup
+{
+  class Program
+  {
+    static void Main(string[] args)
+    {
+      Console.WriteLine("Begin CommonCacheCleanup");
+      Vote.CommonCacheInvalidation.CleanUpCacheInvalidation();
+      DB.Vote.TempEmailBatches.CleanUpTempEmailBatches();
+      Console.WriteLine("End CommonCacheCleanup");
+    }
+  }
+}

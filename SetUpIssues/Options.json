@@ -1,0 +1,3104 @@
+﻿{
+  "LongAnswerMinimumLength": 40,
+  "Issues": [
+    "Abortion, Pro-Life & Genetic Engineering",
+    "Banks & Finance",
+    "Civil, Religious, Gay & Human Rights",
+    "Consumers & Food",
+    "Courts, Laws & Justice",
+    "Crime, Police & Imprisonment",
+    "Energy",
+    "Environment",
+    "Federal Budget & Fiscal Policy",
+    "Foreign Policy",
+    "Government, Elections & Politics",
+    "Gun & Property Rights",
+    "Health & Medical",
+    "Homeland Securtiy, Immigration, Border Security & Terrorism",
+    "Housing & Communities",
+    "Infrastructure & Transportation",
+    "Internet, Media, Technology, Science & Space",
+    "Jobs, Economy, Trade, Business, Industry & Agriculture",
+    "Labor, Wages & Unions",
+    "Marijuana, Illegal Drugs, Alcohol, Cigarettes, Gambling & Prostitution",
+    "Military, National Defense & Veterans",
+    "Minorities",
+    "Poverty, Welfare & Hunger",
+    "Schools & Education",
+    "Seniors, Social Secrity, Medicare, Pensioins",
+    "Sex & Sexuality",
+    "Taxes",
+    "Values, Religion, Family, Patriotism & Public Service"
+  ],
+  "Topics": [
+    {
+      "Topic": "$700 Billion Troubled Asset Relief Bailout",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "14th Amendment",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "2001 Tax Cuts",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "527 Stealth & Super PACs",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "5G & High Speed Broadband Deployment",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "9/11 Commission Recommendations",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Abortion",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Abortion Clinics & Protesters",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Abortion Federal Funding",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Abortion for Rape and Incest",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Abusive Driver Fees",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Achievement Gaps like Black-White, Boy-Girl",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Activist Judges",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Adoption and Foster Care",
+      "Issues": [
+        "Values, Religion, Family, Patriotism & Public Service",
+        "Abortion, Pro-Life & Genetic Engineering"
+      ]
+    },
+    {
+      "Topic": "Adult Education",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Affirmative Action",
+      "Issues": [ "Minorities", "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Affordable Care Act (Obamacare)",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Affordable Housing and Rental Supports",
+      "Issues": [ "Housing & Communities" ]
+    },
+    {
+      "Topic": "Affordable Housing and Rentals",
+      "Issues": [ "Housing & Communities" ]
+    },
+    {
+      "Topic": "Afghanistan",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Africa",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "African American Reparations",
+      "Issues": [ "Minorities", "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "African Americans",
+      "Issues": [ "Minorities", "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "After-School, Sports, Art, Music Programs",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Agent Orange Related Illness",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Agriculture",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Air Travel",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Airport, Air, Rail & Port Security",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Alcohol",
+      "Issues": [ "Marijuana, Illegal Drugs, Alcohol, Cigarettes, Gambling & Prostitution" ]
+    },
+    {
+      "Topic": "Alien Minors",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Alternate Energy",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Alternative Dispute Resolution",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Alternative Medicine",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Alternative Minimum Tax (AMT)",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Alzheimer's Disease",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "American Values",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Americanization of Immigrants",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Americans with Disabilities Act (ADA)",
+      "Issues": [ "Health & Medical", "Minorities" ]
+    },
+    {
+      "Topic": "America's Image Abroad",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Amnesty for Illegal Immigrants in US",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Anti-Ballistic Missile Treaty (ABM)",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Anti-semitism",
+      "Issues": [ "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Antitrust Enforcement",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Arab Spring",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Arctic National Wildlife Refuge Oil Drilling (ANWR )",
+      "Issues": [ "Energy", "Environment" ]
+    },
+    {
+      "Topic": "Arizona's Strict New Immigration Law",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Association Health Plans (AHP)",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Asthma",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Atheists and Agnostics",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Attracting Doctors and Medical Care Providers",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Autism",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Auto Industry",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture", "Energy" ]
+    },
+    {
+      "Topic": "Bail Outs of Banks, Financial & Auto Corps",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Balanced Budget",
+      "Issues": [ "Federal Budget & Fiscal Policy" ]
+    },
+    {
+      "Topic": "Balanced Budget Constitutional Amendment",
+      "Issues": [ "Federal Budget & Fiscal Policy" ]
+    },
+    {
+      "Topic": "Balkans",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Ballot Measures & Citizen Participation",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Ban on Assault Weapons",
+      "Issues": [ "Gun & Property Rights" ]
+    },
+    {
+      "Topic": "Bankruptcy Reform",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Banks",
+      "Issues": [ "Banks & Finance" ]
+    },
+    {
+      "Topic": "Banks too Big to Fail",
+      "Issues": [ "Banks & Finance" ]
+    },
+    {
+      "Topic": "Bikes, Scoters and Pedestrians",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Bilingual Education",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Biodiversity & Biotechnology",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Biomedical Superiority",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Bird Flu (Avian Influenza)",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Black Lives Matter",
+      "Issues": [ "Crime, Police & Imprisonment ", "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Blighted Areas",
+      "Issues": [ "Housing & Communities" ]
+    },
+    {
+      "Topic": "Border Security &  Border Patrol",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Boy and Girl Scouts",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Breastfeeding",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Building Codes",
+      "Issues": [ "Housing & Communities" ]
+    },
+    {
+      "Topic": "Bullying and School Crime",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Burma",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Burning the Flag",
+      "Issues": [
+        "Values, Religion, Family, Patriotism & Public Service",
+        "Civil, Religious, Gay & Human Rights",
+        "Courts, Laws & Justice"
+      ]
+    },
+    {
+      "Topic": "Business",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Business Tax Breaks and Incentives",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Business Tax Credits",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Business Tax Credits for Employee Health Coverage",
+      "Issues": [ "Health & Medical", "Taxes" ]
+    },
+    {
+      "Topic": "Businesses Moving Offshore ",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Campaign Contribution Limits (Citizens United)",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Campaign Finance Reform",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Campaign Spending Limits",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Cancer",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Cap-and-Trade",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Capitalism",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Carbon Tax",
+      "Issues": [ "Energy", "Environment" ]
+    },
+    {
+      "Topic": "Centers for Disease Control and Prevention (CDC)",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Central American Free Trade Agreement (CAFTA)",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "CEO Pay & Executive Compensation",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Charter and Magnet Schools",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Chesapeake Bay",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Child Abuse And Neglect",
+      "Issues": [ "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Child Care",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Child Custody Protection Act",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Child Labor",
+      "Issues": [ "Labor, Wages & Unions" ]
+    },
+    {
+      "Topic": "Child Pornography",
+      "Issues": [ "Crime, Police & Imprisonment ", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Child Support",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Child Tax Credit",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Children's Health",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "China",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "China Currency Manipulation",
+      "Issues": [ "Banks & Finance" ]
+    },
+    {
+      "Topic": "Chinese Internet Censorship",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Chronic & Catastrophic Illnesses",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "CIA",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Cigarettes and Smoking",
+      "Issues": [ "Marijuana, Illegal Drugs, Alcohol, Cigarettes, Gambling & Prostitution" ]
+    },
+    {
+      "Topic": "Cigarettes Drug & Alcohol Advertising",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Citizens United Case",
+      "Issues": [ "Government, Elections & Politics", "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Citizenship for Illegal Immigrants",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Civil Rights",
+      "Issues": [ "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Civil Unions & Domestic Partnerships",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Class Action Reform",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Classroom Size",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Clean Air Act of 1963",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Clean Air and Water",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Clean Energy",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Clean Water Act of 1977",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Cluster Bombs",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Coal",
+      "Issues": [ "Energy", "Environment" ]
+    },
+    {
+      "Topic": "Color-Coded Warning System",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Commander in Chief",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Common Core Education",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Community Colleges",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Community Development",
+      "Issues": [ "Housing & Communities" ]
+    },
+    {
+      "Topic": "Company Job Creation Rewards ",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Computers in Schools",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Constitution",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Consumer Product Safety, Fraud and Protection",
+      "Issues": [ "Consumers & Food" ]
+    },
+    {
+      "Topic": "Consumers",
+      "Issues": [ "Consumers & Food" ]
+    },
+    {
+      "Topic": "Contraception",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Corporate & Business Taxes",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Corporate Crime and Fraud",
+      "Issues": [ "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Corporate Defined Benefit Pension Defaults",
+      "Issues": [ "Seniors, Social Secrity, Medicare, Pensioins" ]
+    },
+    {
+      "Topic": "Corporate Tax Breaks & Loopholes",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Country of Origin Labeling",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Court Costs",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Courts",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Credit Agencies",
+      "Issues": [ "Consumers & Food" ]
+    },
+    {
+      "Topic": "Credit And Banking",
+      "Issues": [ "Banks & Finance" ]
+    },
+    {
+      "Topic": "Credit Cards",
+      "Issues": [ "Consumers & Food" ]
+    },
+    {
+      "Topic": "Crime",
+      "Issues": [ "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Crime Victims",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Crimes Against Children",
+      "Issues": [ "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Criminal Justice System",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Criminalize Assistance to Illegal Immigrants",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Cruelty to Animals",
+      "Issues": [
+        "Civil, Religious, Gay & Human Rights",
+        "Values, Religion, Family, Patriotism & Public Service"
+      ]
+    },
+    {
+      "Topic": "Cuba",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Cutting Off War Funding",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Cyber Security",
+      "Issues": [
+        "Homeland Securtiy, Immigration, Border Security & Terrorism",
+        "Internet, Media, Technology, Science & Space"
+      ]
+    },
+    {
+      "Topic": "Database of Foreigners",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "DC Statehood",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "DC Voting Representation in Congress",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Deadline for US Pullout",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Death Penalty",
+      "Issues": [ "Courts, Laws & Justice", "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Debt and Deficit Spending Limits",
+      "Issues": [ "Federal Budget & Fiscal Policy" ]
+    },
+    {
+      "Topic": "Defense",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Defense and Military Budget",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Defense of Marriage Act (DOMA)",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Department of Agriculture",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Department of Defense and Pentagon",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Department of Education",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Department of Energy",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Department of Homeland Security (DHS)",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Department of Transportation",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Deportation",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Developing World Climate Change & Energy",
+      "Issues": [ "Energy", "Environment" ]
+    },
+    {
+      "Topic": "Diabetes",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Digital Rights",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Disease Prevention",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Diversity &Tolerance",
+      "Issues": [ "Minorities", "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Dodd-Frank Act",
+      "Issues": [ "Banks & Finance", "Consumers & Food" ]
+    },
+    {
+      "Topic": "Domestic Intelligence & Agencies",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Doping in Sports",
+      "Issues": [ "Marijuana, Illegal Drugs, Alcohol, Cigarettes, Gambling & Prostitution" ]
+    },
+    {
+      "Topic": "Dream Act",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Drinking Age",
+      "Issues": [ "Marijuana, Illegal Drugs, Alcohol, Cigarettes, Gambling & Prostitution" ]
+    },
+    {
+      "Topic": "Driver Safety Measures",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Driver's Licenses",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Driver's Licenses to Illegals",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Drone Strikes",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Dropouts",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Drug Addiction &Substance Abuse",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Drug Prevention and Rehabilitation",
+      "Issues": [ "Marijuana, Illegal Drugs, Alcohol, Cigarettes, Gambling & Prostitution" ]
+    },
+    {
+      "Topic": "Drugs in Schools",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Drunk Driving",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Drunk Driving and Highway Safety",
+      "Issues": [
+        "Infrastructure & Transportation",
+        "Marijuana, Illegal Drugs, Alcohol, Cigarettes, Gambling & Prostitution"
+      ]
+    },
+    {
+      "Topic": "Dubai Ports Administration Purchase",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Earmarks",
+      "Issues": [ "Federal Budget & Fiscal Policy", "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Earned Income Tax Credit (EITC)",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Economic Stimulus",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Economy",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Education",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Education Gap with Other Countries",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Education Tax Credits",
+      "Issues": [ "Schools & Education", "Taxes" ]
+    },
+    {
+      "Topic": "Elderly's Health",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Election Reform",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Electricity Transmission Grid",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Electronic Verification System for Employers",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Eminent Domain",
+      "Issues": [ "Courts, Laws & Justice", "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Employee Free Choice Act",
+      "Issues": [ "Labor, Wages & Unions" ]
+    },
+    {
+      "Topic": "Employers Who Hire Illegals",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Employment Discrimination",
+      "Issues": [
+        "Labor, Wages & Unions",
+        "Jobs, Economy, Trade, Business, Industry & Agriculture"
+      ]
+    },
+    {
+      "Topic": "Employment Non-Discrimination Act",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Labor, Wages & Unions" ]
+    },
+    {
+      "Topic": "Endangered Species",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Energy",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Energy Efficiency",
+      "Issues": [ "Energy", "Environment" ]
+    },
+    {
+      "Topic": "Energy Efficiency Standards",
+      "Issues": [ "Energy", "Environment" ]
+    },
+    {
+      "Topic": "Energy Regulation",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Energy Research and Development",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "English as Official Language",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Entitlements",
+      "Issues": [ "Federal Budget & Fiscal Policy" ]
+    },
+    {
+      "Topic": "Environment",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Environmental Protection Agency (EPA) & Regulation",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Equal Pay",
+      "Issues": [ "Labor, Wages & Unions" ]
+    },
+    {
+      "Topic": "Equal Rights Amendment",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "E-Science & Computer Technology Research",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Ethanol & Biofuels",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Europe",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Euthanasia and Assisted Suicide",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Evacuation Preparedness",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Everglades",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "E-Verify System",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Evolution and Intelligent Design Education",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Evolution vs. Intelligent Design",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Extending the Bush Tax Cuts",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Factory Farms",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Faith-based Initiative Funding",
+      "Issues": [
+        "Government, Elections & Politics",
+        "Values, Religion, Family, Patriotism & Public Service"
+      ]
+    },
+    {
+      "Topic": "Family",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Family Farm",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Family Values",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Fannie Mae and Freddie Mac",
+      "Issues": [ "Banks & Finance" ]
+    },
+    {
+      "Topic": "Farm Bill",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Farm Corporation Subsidies",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Farm Service Agency (FSA)",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Farm Subsidies & Supports",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Fast Track Authority",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Fatherhood",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Federal Budget",
+      "Issues": [ "Federal Budget & Fiscal Policy" ]
+    },
+    {
+      "Topic": "Federal Bureaucracy & Regulations",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Federal Communications Commission (FCC)",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Federal Housing Administration (FHA)",
+      "Issues": [ "Housing & Communities" ]
+    },
+    {
+      "Topic": "Federal Mandates",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Federal Marriage Amendment (FMA)",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Federal Mortgage Regulation",
+      "Issues": [ "Housing & Communities", "Banks & Finance" ]
+    },
+    {
+      "Topic": "Federal Reserve",
+      "Issues": [ "Banks & Finance" ]
+    },
+    {
+      "Topic": "Federalism and States' Rights",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "FEMA and Hurricane Katrina",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Financial Consumer Protection",
+      "Issues": [ "Consumers & Food" ]
+    },
+    {
+      "Topic": "Financial Crisis",
+      "Issues": [ "Banks & Finance" ]
+    },
+    {
+      "Topic": "Financial Industry Regulation",
+      "Issues": [ "Banks & Finance" ]
+    },
+    {
+      "Topic": "Fiscal Policy",
+      "Issues": [ "Federal Budget & Fiscal Policy" ]
+    },
+    {
+      "Topic": "Flat Tax",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Flexible Fuel Vehicles",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Flood Protection And Levee Repair",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Food",
+      "Issues": [ "Consumers & Food" ]
+    },
+    {
+      "Topic": "Food and Drug Administration (FDA)",
+      "Issues": [ "Consumers & Food" ]
+    },
+    {
+      "Topic": "Food Safety",
+      "Issues": [ "Consumers & Food" ]
+    },
+    {
+      "Topic": "Foreclosures",
+      "Issues": [ "Housing & Communities", "Banks & Finance" ]
+    },
+    {
+      "Topic": "Foreign Aid",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Foreign Job Outsourcing",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Foreign Oil Energy Independence",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Foreign Policy",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Forest Fires",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Forests, Fish and Wildlife",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Fracking and Natural Gas",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Free Market Health Care",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Free Market Vision",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Free Trade Agreements (FTA)",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Freedom of Information Act",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Fuel Efficiency Standards",
+      "Issues": [ "Energy", "Environment" ]
+    },
+    {
+      "Topic": "G8 (Group of Eight Countries)",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Gambling",
+      "Issues": [ "Marijuana, Illegal Drugs, Alcohol, Cigarettes, Gambling & Prostitution" ]
+    },
+    {
+      "Topic": "Gas Prices & Gas Taxes",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Gay Rights",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Gays Serving in the Military",
+      "Issues": [
+        "Civil, Religious, Gay & Human Rights",
+        "Military, National Defense & Veterans"
+      ]
+    },
+    {
+      "Topic": "Gender Equality",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Generic Drugs",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Genetically Engineered Food (GMOs)",
+      "Issues": [ "Consumers & Food" ]
+    },
+    {
+      "Topic": "Gerrymandering",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "GI Bill & Veterans' Benefits",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Glass-Steagall Act",
+      "Issues": [ "Banks & Finance" ]
+    },
+    {
+      "Topic": "Global Environmental Standards",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Global Warming and Climate Change",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Globalization",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Gold Standard",
+      "Issues": [ "Federal Budget & Fiscal Policy" ]
+    },
+    {
+      "Topic": "Government",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Government & Religion",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Government Accountability",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Government Agencies",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Government Corruption and Ethics",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Government Efficiency",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Government Reform",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Government Shut Down",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Government Subsidized Jobs",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Government Transparency",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Green Offices, Homes and Improvements",
+      "Issues": [ "Energy", "Environment" ]
+    },
+    {
+      "Topic": "Greenhouse Gas Emission Limits",
+      "Issues": [ "Energy", "Environment" ]
+    },
+    {
+      "Topic": "Guantanamo Bay Prison (GITMO)",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Guest Worker and H-1B Programs",
+      "Issues": [
+        "Homeland Securtiy, Immigration, Border Security & Terrorism",
+        "Jobs, Economy, Trade, Business, Industry & Agriculture"
+      ]
+    },
+    {
+      "Topic": "Gulf Oil Spill",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Gun Legislation",
+      "Issues": [ "Gun & Property Rights" ]
+    },
+    {
+      "Topic": "Gun Show Checks & Manufacturer Law Suits",
+      "Issues": [ "Gun & Property Rights" ]
+    },
+    {
+      "Topic": "Guns",
+      "Issues": [ "Gun & Property Rights" ]
+    },
+    {
+      "Topic": "Guns Permits and Hunting",
+      "Issues": [ "Gun & Property Rights" ]
+    },
+    {
+      "Topic": "Harboring, Housing & Work Centers for Illegals",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Hate Crimes",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Hate Crimes Legislation ",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Head Start",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Health",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Health & Medical",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Health and Medical Insurance",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Health Care Tax Credits ",
+      "Issues": [ "Health & Medical", "Taxes" ]
+    },
+    {
+      "Topic": "Health Insurance Covering Birth Control",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering", "Health & Medical" ]
+    },
+    {
+      "Topic": "Health Maintenance Organizations (HMOs)",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Health Savings Accounts (HSA)",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Help America Vote Act of 2002",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "High Capacity Amo & Gun Locks",
+      "Issues": [ "Gun & Property Rights" ]
+    },
+    {
+      "Topic": "High Schools",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Higher Education",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "High-Frequency Trading",
+      "Issues": [ "Banks & Finance" ]
+    },
+    {
+      "Topic": "Highway Congestion",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Highways",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "HIV/AIDS",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Home Prices",
+      "Issues": [ "Housing & Communities" ]
+    },
+    {
+      "Topic": "Home Schooling",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Homeland Securtiy",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Homeless Veterans",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Homelessness",
+      "Issues": [ "Housing & Communities" ]
+    },
+    {
+      "Topic": "Homeownership",
+      "Issues": [ "Housing & Communities" ]
+    },
+    {
+      "Topic": "Homosexuality as Sin",
+      "Issues": [ "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Homosexuality Choice or Chance",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Hospitals and Medical Facilities",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Housing",
+      "Issues": [ "Housing & Communities" ]
+    },
+    {
+      "Topic": "Housing Shortage",
+      "Issues": [ "Housing & Communities" ]
+    },
+    {
+      "Topic": "Human and Animal Cloning",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Human Rights",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Human Trafficking",
+      "Issues": [ "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Hunger",
+      "Issues": [ "Poverty, Welfare & Hunger" ]
+    },
+    {
+      "Topic": "Hybrid and Electric Cars",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Hydrogen Cell Fuel Initiative",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Identity Theft",
+      "Issues": [ "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Illegal Drugs",
+      "Issues": [ "Marijuana, Illegal Drugs, Alcohol, Cigarettes, Gambling & Prostitution" ]
+    },
+    {
+      "Topic": "Illegal Immigrants Social Services",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Illegal Immigration Amnesty",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Illegal Immigration and Reform",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Illegal Immigration as a Felony",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Illegal Immigration Enforcement",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Immigrant Military Service & Citizenship",
+      "Issues": [
+        "Homeland Securtiy, Immigration, Border Security & Terrorism",
+        "Military, National Defense & Veterans"
+      ]
+    },
+    {
+      "Topic": "Immigrants & Immigration",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Immigration of Highly Skilled Workers",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Income Inequality",
+      "Issues": [
+        "Jobs, Economy, Trade, Business, Industry & Agriculture",
+        "Labor, Wages & Unions"
+      ]
+    },
+    {
+      "Topic": "Income Tax on Seniors",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Income Taxes",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Independent Workers",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "India",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Individual Retirement Accounts and 401(k)s",
+      "Issues": [ "Seniors, Social Secrity, Medicare, Pensioins" ]
+    },
+    {
+      "Topic": "Infrastructure",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Inheritance / Estate Taxes",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Innovation",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "In-state Tuition for Illegal Aliens",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Insurance Industry",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Intellectual Property Protection",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Interior Department",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Internal Revenu Service (IRS)",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "International Criminal Court (ICC)",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Internet",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Internet Crime",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Internet Divide of Rich & Poor",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Internet Freedom Preservation Act",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Internet Gambling",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Internet Neutrality",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Internet Pornography",
+      "Issues": [ "Internet, Media, Technology, Science & Space", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Internet Privacy",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Internet Sales Tax",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Invasive Species",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Investment Banking",
+      "Issues": [ "Banks & Finance" ]
+    },
+    {
+      "Topic": "Iran",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Iran Nuclear Deal",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Iraq",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "ISIS",
+      "Issues": [ "Foreign Policy", "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Islam and Muslims",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Israel",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Israeli and Palestinian Conflict",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Jobs",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Judical Appointments & Confirmations",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Judicial Discretion & Mandatory Sentencing",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Junk Food & Vending Machines in Schools",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Justice Department",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Keystone Pipeline",
+      "Issues": [ "Energy", "Environment" ]
+    },
+    {
+      "Topic": "Labor",
+      "Issues": [ "Labor, Wages & Unions" ]
+    },
+    {
+      "Topic": "Land, Rivers and Lakes",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Latin and Central America",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Latino / Hispanic Americans",
+      "Issues": [ "Minorities", "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Law Enforcement",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Lead Poisoning",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Lebanon",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Legal Reform",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Legal Status for Undocumented Farm Workers",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Legal Status, Residency & Citizenship for Immigrant Youth",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Length of Deployments",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "LGBT",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Life Beginning at Conception",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Light Rail",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Lobbying",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Local Control Over Education",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Local First Responders",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Local Gun Laws",
+      "Issues": [ "Gun & Property Rights" ]
+    },
+    {
+      "Topic": "Loss of American Lives in Iraq",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Lottery",
+      "Issues": [ "Marijuana, Illegal Drugs, Alcohol, Cigarettes, Gambling & Prostitution" ]
+    },
+    {
+      "Topic": "Low Income and Public Housing",
+      "Issues": [ "Housing & Communities" ]
+    },
+    {
+      "Topic": "Low Income and Public Housing & Assistance",
+      "Issues": [ "Poverty, Welfare & Hunger" ]
+    },
+    {
+      "Topic": "Low Income Energy Assistance",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Mad Cow",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Mandate Public Service",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Manufacturing Decline",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Marijuana",
+      "Issues": [ "Marijuana, Illegal Drugs, Alcohol, Cigarettes, Gambling & Prostitution" ]
+    },
+    {
+      "Topic": "Market-Based Medical Insurance",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Marriage",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Marriage Left to States",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Marriage Penalty",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Math and Science in Schools",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Media",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Media Ownership Concentration",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Media Violence, Sex & Indecency",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Medicaid",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Medical Errors",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Medical Malpractice Reform",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Medical Research",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Medical Use of Marijuana",
+      "Issues": [ "Marijuana, Illegal Drugs, Alcohol, Cigarettes, Gambling & Prostitution" ]
+    },
+    {
+      "Topic": "Medically Uninsured or Underinsured",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Medicare",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Medicare Part D Prescription Drug Program",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Mental Health",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Mental Health Mass Shootings",
+      "Issues": [ "Gun & Property Rights", "Health & Medical" ]
+    },
+    {
+      "Topic": "Mercury Pollution",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Metamphetamines and Opioids",
+      "Issues": [ "Marijuana, Illegal Drugs, Alcohol, Cigarettes, Gambling & Prostitution" ]
+    },
+    {
+      "Topic": "Mexico",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Middle Class Decline",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Middle East",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Military",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Military Families",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Military Industrial Establishment",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Military Pay, Medical Care and Benefits",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Mine Safety and Health",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Minimum Wage",
+      "Issues": [ "Labor, Wages & Unions" ]
+    },
+    {
+      "Topic": "Minorities",
+      "Issues": [ "Minorities", "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Minority Incarceration",
+      "Issues": [ "Courts, Laws & Justice", "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Missile Defense System",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Money and Special Interests",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Mormon Religion and Polygamy",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Mortgages",
+      "Issues": [ "Housing & Communities", "Banks & Finance" ]
+    },
+    {
+      "Topic": "Mosque Near Ground Zero",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Motor Vehicles And Inspections",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Muslim Americans",
+      "Issues": [ "Minorities", "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Muslims Entering US",
+      "Issues": [
+        "Homeland Securtiy, Immigration, Border Security & Terrorism",
+        "Civil, Religious, Gay & Human Rights"
+      ]
+    },
+    {
+      "Topic": "Nanotechnologies",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "National Aeronautics and Space Administration (NASA)",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "National and State Parks",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "National Endowment for the Arts (NEA)",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "National Forest Roadless Area Conservation Act",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "National Forests and Healthy Forests Initiative",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "National Guard & Reserves ",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "National Institutes of Health (NIH)",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "National Labor Relations Board (NLRB)",
+      "Issues": [ "Labor, Wages & Unions" ]
+    },
+    {
+      "Topic": "National Rifle Association (NRA)",
+      "Issues": [ "Gun & Property Rights" ]
+    },
+    {
+      "Topic": "National Sales Tax",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "National Science Foundation (NSF) Funding",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "National Security",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "National Security Agency (NSA) & Citizen Surveillance",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "National Service and AmeriCorps",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Native American Casinos",
+      "Issues": [ "Minorities", "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Native American Rights",
+      "Issues": [ "Minorities", "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Native Americans",
+      "Issues": [ "Minorities", "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Native Americans US Treaties",
+      "Issues": [ "Minorities", "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Naturalization Backlog for Immigrants",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Neighborhood Crime",
+      "Issues": [ "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Neighborhoods",
+      "Issues": [ "Housing & Communities" ]
+    },
+    {
+      "Topic": "No Child Left Behind",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Non-Violent Crime",
+      "Issues": [ "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "North America Free Trade Agreement (NAFTA)",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "North Atlantic Treaty Organization (NATO)",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "North Korea",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Nuclear Power",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Nuclear Weapons & Non-Proliferation Treaty",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Nurses and Public Health Workers",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Nursing Homes, Hospices and Assisted Living",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Obesity",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Obscenity Laws",
+      "Issues": [ "Courts, Laws & Justice", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Occupational Safety and Health (OSHA)",
+      "Issues": [ "Labor, Wages & Unions" ]
+    },
+    {
+      "Topic": "Oceans",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Offshore Oil Drilling",
+      "Issues": [ "Energy", "Environment" ]
+    },
+    {
+      "Topic": "Offshore Tax Shelters",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Oil and Gas Subsidies",
+      "Issues": [ "Energy", "Environment" ]
+    },
+    {
+      "Topic": "Oil Company Profits",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Oil Drilling",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Oil Industry",
+      "Issues": [ "Energy", "Environment" ]
+    },
+    {
+      "Topic": "Ordination of Women and Gay Clergy",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Other Arab Countries, Egypt, Libya, Tunisia",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Oursourcing of Jobs",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Out-of-State Abortions",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Overseas Interventions",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Paid Maternity, Family & Medical Leave",
+      "Issues": [
+        "Jobs, Economy, Trade, Business, Industry & Agriculture",
+        "Labor, Wages & Unions"
+      ]
+    },
+    {
+      "Topic": "Pakistan",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Paperless Claims",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Parental Blocking & Children Internet Protections",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Parental Consent or Notification",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Parental Involvement in Education",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Parks And Open Spaces",
+      "Issues": [ "Housing & Communities" ]
+    },
+    {
+      "Topic": "Parole and Probation",
+      "Issues": [ "Crime, Police & Imprisonment ", "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Partial-birth Abortions",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Partisan Gridlock",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Patent System",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Patient's Bill of Rights",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Patriotism",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Pay-As-You-Go (PAYGO) Rule",
+      "Issues": [ "Federal Budget & Fiscal Policy" ]
+    },
+    {
+      "Topic": "Payday Loans & Predatory Lending",
+      "Issues": [ "Banks & Finance" ]
+    },
+    {
+      "Topic": "Pension Benefit Guaranty Corporation",
+      "Issues": [ "Seniors, Social Secrity, Medicare, Pensioins" ]
+    },
+    {
+      "Topic": "Pensions",
+      "Issues": [ "Seniors, Social Secrity, Medicare, Pensioins" ]
+    },
+    {
+      "Topic": "Persian Gulf War Illnesses",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Persons with Disabilities",
+      "Issues": [ "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Photo-Red Traffic Signal Enforcement",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Physicians",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Planned Parenthood & Family Planning",
+      "Issues": [
+        "Values, Religion, Family, Patriotism & Public Service",
+        "Abortion, Pro-Life & Genetic Engineering"
+      ]
+    },
+    {
+      "Topic": "Police",
+      "Issues": [ "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Polluter Superfund Fees",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Poor Children",
+      "Issues": [ "Poverty, Welfare & Hunger" ]
+    },
+    {
+      "Topic": "Pornography and Adult Oriented Media",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Post-Traumatic Stress Disorder (PTSD)",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Poverty",
+      "Issues": [ "Poverty, Welfare & Hunger" ]
+    },
+    {
+      "Topic": "POWs and MIAs",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Prayer & Pledge of Allegiance in Schools",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Pre-School and Early Childhood Education",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Prescription Drugs",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "President Ahmadinejad",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "President Hamid Karzai",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Presidential Line-item Veto",
+      "Issues": [ "Federal Budget & Fiscal Policy" ]
+    },
+    {
+      "Topic": "Prisons",
+      "Issues": [ "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Privacy Rights",
+      "Issues": [ "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Private Company Space Travel",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Private Schools Vouchers and Funding",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Private Security like Blackwater",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Privatization",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Privatization of Roads",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Privatizing Social Security",
+      "Issues": [ "Seniors, Social Secrity, Medicare, Pensioins" ]
+    },
+    {
+      "Topic": "Product Liability Reform",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Pro-Life v. Pro-Choice",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Promotion of Democracy Around World",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Promotion of Mixed-income Neighborhoods",
+      "Issues": [ "Housing & Communities" ]
+    },
+    {
+      "Topic": "Property Rights",
+      "Issues": [ "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Property Rights vs. Civil Rights",
+      "Issues": [ "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Property Taxes",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Public Defender Services",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Public Funding of Political Campaigns",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Public Schools K-12",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Public Service, Peace Corps, AmeriCorps",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Public Transportation",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Puerto Rico and US Territories",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Punishments for Drug Crimes",
+      "Issues": [ "Marijuana, Illegal Drugs, Alcohol, Cigarettes, Gambling & Prostitution" ]
+    },
+    {
+      "Topic": "R&D Tax Credit",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Race Sentencing Disparity",
+      "Issues": [ "Courts, Laws & Justice", "Minorities" ]
+    },
+    {
+      "Topic": "Racial Profiling",
+      "Issues": [ "Minorities", "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Racism & Race Relations",
+      "Issues": [ "Minorities", "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Radical Islam",
+      "Issues": [
+        "Foreign Policy",
+        "Homeland Securtiy, Immigration, Border Security & Terrorism"
+      ]
+    },
+    {
+      "Topic": "Raising Retirement Age & Reducing Payment Levels",
+      "Issues": [ "Seniors, Social Secrity, Medicare, Pensioins" ]
+    },
+    {
+      "Topic": "Rape",
+      "Issues": [ "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Real Estate",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Real ID Act",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Recession",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Recidivism and Rehabilitation",
+      "Issues": [ "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Recognition of a Palestinian State",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Recreational Marijuana",
+      "Issues": [ "Marijuana, Illegal Drugs, Alcohol, Cigarettes, Gambling & Prostitution" ]
+    },
+    {
+      "Topic": "Recycling",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Red Light Camera Surveillance",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Reducing Health Care Costs",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Reducing Military Costs",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Refusal of  Businesses to Gays",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Religion",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Religious Rights",
+      "Issues": [ "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Renewable Electricity Production Tax Credit (PTC)",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Renewable Energy & Fuels",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Research and Development",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Resistance to Antibiotics",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Retired Workers",
+      "Issues": [ "Seniors, Social Secrity, Medicare, Pensioins", "Labor, Wages & Unions" ]
+    },
+    {
+      "Topic": "Retirement Security",
+      "Issues": [ "Seniors, Social Secrity, Medicare, Pensioins" ]
+    },
+    {
+      "Topic": "Right to Carry a Concealed Handgun",
+      "Issues": [ "Gun & Property Rights" ]
+    },
+    {
+      "Topic": "Right to Life Constitutional Amendment",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Right to Own Guns - Second Amendment",
+      "Issues": [ "Gun & Property Rights" ]
+    },
+    {
+      "Topic": "Right-To-Work",
+      "Issues": [ "Labor, Wages & Unions" ]
+    },
+    {
+      "Topic": "Roe v. Wade",
+      "Issues": [
+        "Abortion, Pro-Life & Genetic Engineering",
+        "Civil, Religious, Gay & Human Rights"
+      ]
+    },
+    {
+      "Topic": "Rural Health Care",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Rural Internet Access",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Rural Poverty",
+      "Issues": [ "Poverty, Welfare & Hunger" ]
+    },
+    {
+      "Topic": "Russia",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Safety of Technological Products",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Sales Tax",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Same Sex Adoptions",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Same Sex Marriage",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Sanctions",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Sanctuary Cities",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Sarbanes-Oxley Act",
+      "Issues": [ "Banks & Finance" ]
+    },
+    {
+      "Topic": "Saudi Arabia",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "School Budgets",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "School Safety",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Science",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Seaports",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Seniors & Aging of Population",
+      "Issues": [ "Seniors, Social Secrity, Medicare, Pensioins" ]
+    },
+    {
+      "Topic": "Separation of Church & State",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Sex and Birth Control Education",
+      "Issues": [ "Schools & Education", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Sex Crimes & Offenders",
+      "Issues": [ "Crime, Police & Imprisonment ", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Sexual Misconduct of Politicians",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Sexual Orientation Discrimination",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Sexual Orientation Education",
+      "Issues": [ "Schools & Education", "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Shale Gas",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Single 6 Year Term for US President",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Small Businesses",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Smoking",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Social Security",
+      "Issues": [ "Seniors, Social Secrity, Medicare, Pensioins" ]
+    },
+    {
+      "Topic": "Social Security Long Term Viability",
+      "Issues": [ "Seniors, Social Secrity, Medicare, Pensioins" ]
+    },
+    {
+      "Topic": "Social Security Means Testing",
+      "Issues": [ "Seniors, Social Secrity, Medicare, Pensioins" ]
+    },
+    {
+      "Topic": "Social Security Trust Fund",
+      "Issues": [ "Seniors, Social Secrity, Medicare, Pensioins" ]
+    },
+    {
+      "Topic": "Soft-money Political Contributions",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Solar Energy",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Space",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Space & Aerospace Industry",
+      "Issues": [
+        "Internet, Media, Technology, Science & Space",
+        "Jobs, Economy, Trade, Business, Industry & Agriculture"
+      ]
+    },
+    {
+      "Topic": "Spamming",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Special Education",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Spent Nuclear Fuel",
+      "Issues": [ "Environment", "Energy" ]
+    },
+    {
+      "Topic": "State Block Grants",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "State Children's Health Insurance Program (SCHIP)",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "State Governments",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "State Health Plans",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "State Pensions",
+      "Issues": [ "Seniors, Social Secrity, Medicare, Pensioins" ]
+    },
+    {
+      "Topic": "Stem Cell Research",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Stem Cell Research Federal Funding",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Strategic Energy Fund",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Student Loans, Scholarships and Pell Grants",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Student Standards and Testing",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Sunset Clauses",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Supreme Court",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Supreme Court Term Limits",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Survivor Benefits",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Syria",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Taliban & Radical Islamic Jihadists",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Taliban, Al-Qaeda and Jihadists",
+      "Issues": [ "Foreign Policy", "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Tariffs",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Tax Credit / Deductible for Medical Insurance",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Tax Credit for Purchase of Efficient Appliances",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Tax Credits",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Tax Exemptions",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Tax on Social Security Benefits",
+      "Issues": [ "Seniors, Social Secrity, Medicare, Pensioins" ]
+    },
+    {
+      "Topic": "Tax Proposals",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Tax Reform",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Tax Treatment of Same Sex Couples",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Taxes",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Taxes on Interest, Dividends, and Capital Gains",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Taxes on Native Americans",
+      "Issues": [ "Minorities", "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Tax-Free Savings Accounts",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Taxing the the Wealthiest 1%",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Tea Party",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Teacher Pay",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Teacher Standards",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Teacher Tenure",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Teacher Unions",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Technology",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Teen Pregnancy",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Telecommunications",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Telecommuting",
+      "Issues": [
+        "Internet, Media, Technology, Science & Space",
+        "Jobs, Economy, Trade, Business, Industry & Agriculture"
+      ]
+    },
+    {
+      "Topic": "Telemarketing",
+      "Issues": [ "Consumers & Food" ]
+    },
+    {
+      "Topic": "Terrorist & Enemy Combatant  Rights",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Terrorist Attacks",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Textbook Selection",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "The Military Don't Ask/Don't Tell Policy",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "The Morning After Pill (Plan B)",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Title IX 'Equal Opportunities for Girls'",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Tolerance & Political Correctness",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Tort Reform",
+      "Issues": [ "Courts, Laws & Justice" ]
+    },
+    {
+      "Topic": "Torture & Waterboarding",
+      "Issues": [
+        "Homeland Securtiy, Immigration, Border Security & Terrorism",
+        "Civil, Religious, Gay & Human Rights"
+      ]
+    },
+    {
+      "Topic": "Toxic Waste",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Trade",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Trade Adjustment Assistance (TAA)",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Trade Agreements",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Trade Barriers to US Goods",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Trade Deficit",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Trade Fast-track Authority",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Trade with China",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Train Travel and Amtrak",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Transgender Public Bathroom Restrictions",
+      "Issues": [ "Civil, Religious, Gay & Human Rights", "Sex & Sexuality" ]
+    },
+    {
+      "Topic": "Trans-Pacific Partnership Free Trade Agreement (TPP)",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Transportation",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "TRICARE Health Insurance",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Turkey and Kurds",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "U.S. Postal Service",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Ultrasound Testing as Part of Informed Consent",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Unborn Victims of Violence Act",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Undocumented Immigrants",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Unemployment Insurance",
+      "Issues": [ "Labor, Wages & Unions" ]
+    },
+    {
+      "Topic": "Unfair Trade Practices",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Uniform Billing and Claims",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Unilateralism",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Unions and Collective Bargaining",
+      "Issues": [ "Labor, Wages & Unions" ]
+    },
+    {
+      "Topic": "United Nations (UN)",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Universal Medical Care & Insurance",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Urban Poverty",
+      "Issues": [ "Poverty, Welfare & Hunger" ]
+    },
+    {
+      "Topic": "US House and Senate Term Limits",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "US Treaties",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "USA Patriot Act",
+      "Issues": [ "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Using Embryos in Stem Cell Research",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Utility Deregulation",
+      "Issues": [ "Energy" ]
+    },
+    {
+      "Topic": "Vaccinations & Immunizations",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Value-Added Tax",
+      "Issues": [ "Taxes" ]
+    },
+    {
+      "Topic": "Values",
+      "Issues": [ "Values, Religion, Family, Patriotism & Public Service" ]
+    },
+    {
+      "Topic": "Veterans",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Veterans Administration (VA)",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Veterans' Beneifts",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Veterans Funding",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Veterans' Health and Medical Care",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Veterans Health Care",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Vetreran Job Retraining",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "Victimless Crimes",
+      "Issues": [ "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Videotaping Criminal Interrogations",
+      "Issues": [ "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Domestic Violence",
+      "Issues": [ "Crime, Police & Imprisonment " ]
+    },
+    {
+      "Topic": "Visa Enforcement",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Vocational and Technical Education",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Voting and Election Reform",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Voting Rights for X-Felons",
+      "Issues": [ "Government, Elections & Politics" ]
+    },
+    {
+      "Topic": "Wage Discrimination",
+      "Issues": [ "Labor, Wages & Unions" ]
+    },
+    {
+      "Topic": "Wages",
+      "Issues": [ "Labor, Wages & Unions" ]
+    },
+    {
+      "Topic": "Wall Street",
+      "Issues": [ "Banks & Finance" ]
+    },
+    {
+      "Topic": "Walter Reed Army Medical Center Scandal",
+      "Issues": [ "Military, National Defense & Veterans" ]
+    },
+    {
+      "Topic": "War on Terror",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Water, Hazardous Materials & Bio Terrorism",
+      "Issues": [ "Homeland Securtiy, Immigration, Border Security & Terrorism" ]
+    },
+    {
+      "Topic": "Weapons of Mass Destruction",
+      "Issues": [
+        "Foreign Policy",
+        "Homeland Securtiy, Immigration, Border Security & Terrorism"
+      ]
+    },
+    {
+      "Topic": "Welfare",
+      "Issues": [ "Poverty, Welfare & Hunger" ]
+    },
+    {
+      "Topic": "Wildfires",
+      "Issues": [ "Environment" ]
+    },
+    {
+      "Topic": "Wireless Spectrum",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Women and Minority Research Grants",
+      "Issues": [ "Internet, Media, Technology, Science & Space" ]
+    },
+    {
+      "Topic": "Women Workplace Violence",
+      "Issues": [ "Labor, Wages & Unions" ]
+    },
+    {
+      "Topic": "Women's Health",
+      "Issues": [ "Health & Medical" ]
+    },
+    {
+      "Topic": "Women's Issues",
+      "Issues": [ "Civil, Religious, Gay & Human Rights" ]
+    },
+    {
+      "Topic": "Women's Reproductive Health",
+      "Issues": [ "Abortion, Pro-Life & Genetic Engineering" ]
+    },
+    {
+      "Topic": "Worker Rights and Benefits",
+      "Issues": [ "Labor, Wages & Unions" ]
+    },
+    {
+      "Topic": "Working Class",
+      "Issues": [ "Labor, Wages & Unions" ]
+    },
+    {
+      "Topic": "World Trade Organization (WTO)",
+      "Issues": [ "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Worldwide HIV/AIDS, Tuberculosis, and Malaria",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Youth and Gang Crime",
+      "Issues": [ "Crime, Police & Imprisonment" ]
+    },
+    {
+      "Topic": "Zoning",
+      "Issues": [ "Housing & Communities" ]
+    },
+    {
+      "Topic": "Minority-Owned Businesses",
+      "Issues": [ "Minorities", "Jobs, Economy, Trade, Business, Industry & Agriculture" ]
+    },
+    {
+      "Topic": "Bikes, Scooters & Alternative Vehicles",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Traffic Congestion",
+      "Issues": [ "Infrastructure & Transportation" ]
+    },
+    {
+      "Topic": "Refugee Crisis",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "School Curriculum Math, Science, History, Government",
+      "Issues": [ "Schools & Education" ]
+    },
+    {
+      "Topic": "Third World Debt Relief",
+      "Issues": [ "Foreign Policy" ]
+    },
+    {
+      "Topic": "Truth In Lending",
+      "Issues": [ "Banks & Finance" ]
+    }
+  ]
+}

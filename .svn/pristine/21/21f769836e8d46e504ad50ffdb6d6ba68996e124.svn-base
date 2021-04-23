@@ -1,0 +1,203 @@
+﻿using System;
+using System.Linq;
+using DB.Vote;
+using DB.VoteLog;
+using Vote.Controls;
+
+namespace Vote.Master
+{
+  [PageInitializers]
+  public partial class UpdateVolunteersPage : SecurePage, ISuperUser
+  {
+    private string GetVolunteerToEdit()
+    {
+      return VolunteerToEdit.Value;
+    }
+
+    [PageInitializer]
+    private class EditVolunteerDialogItem : DataItemBase
+    {
+      private const string GroupName = "EditVolunteer";
+      private readonly UpdateVolunteersPage _Page;
+
+      private EditVolunteerDialogItem(UpdateVolunteersPage page) : base(GroupName)
+      {
+        _Page = page;
+      }
+
+      protected override string GetCurrentValue()
+      {
+        var column = VolunteersView.GetColumn(Column);
+        var oldEmail = _Page.GetVolunteerToEdit();
+        var value = VolunteersView.GetColumn(column, oldEmail);
+        return value == null ? String.Empty : ToDisplay(value);
+      }
+
+      private static bool ValidateUniqueEmail(DataItemBase item)
+      {
+        var success = ValidateRequired(item);
+        if (success)
+        {
+          var newValue = item.DataControl.GetValue();
+          var oldValue = GetCurrentValue(item);
+          if (newValue.IsNeIgnoreCase(oldValue) && 
+            PartiesEmails.PartyEmailExists(item.DataControl.GetValue()))
+          {
+            item.Feedback.PostValidationError(item.DataControl, 
+              "The new email address already exists.");
+            success = false;
+          }
+        }
+        return success;
+      }
+
+      private static EditVolunteerDialogItem[] GetDialogInfo(UpdateVolunteersPage page)
+      {
+        var editVolunteerInfo = new[]
+          {
+            new EditVolunteerDialogItem(page)
+              {
+                Column = "Password",
+                Description = "Password",
+                Validator = ValidateRequired
+              },
+            new EditVolunteerDialogItem(page)
+              {
+                Column = "FirstName",
+                Description = "First Name"
+              },
+            new EditVolunteerDialogItem(page)
+              {
+                Column = "LastName",
+                Description = "Last Name"
+              },
+            new EditVolunteerDialogItem(page)
+              {
+                Column = "Phone",
+                Description = "Phone"
+              },
+            new EditVolunteerDialogItem(page)
+              {
+                Column = "PartyKey",
+                Description = "Party"
+              },
+            // this must be last because it can change the key
+            new EditVolunteerDialogItem(page)
+              {
+                Column = "Email",
+                Description = "Email Address",
+                Validator = ValidateUniqueEmail
+              }
+          };
+
+        foreach (var item in editVolunteerInfo)
+          item.InitializeItem(page);
+
+        InitializeGroup(page, GroupName);
+
+        return editVolunteerInfo;
+      }
+
+      // ReSharper disable UnusedMember.Local
+      // Invoked via Reflection
+      internal static void Initialize(UpdateVolunteersPage page)
+      // ReSharper restore UnusedMember.Local
+      {
+        page._EditVolunteerDialogInfo = GetDialogInfo(page);
+      }
+
+      protected override void Log(string oldValue, string newValue)
+      {
+        LogDataChange.LogUpdate(VolunteersView.TableName, Column, oldValue, newValue,
+          UserName, UserSecurityClass, DateTime.UtcNow,
+          _Page.GetVolunteerToEdit());
+      }
+
+      protected override bool Update(object newValue)
+      {
+        var column = VolunteersView.GetColumn(Column);
+        var email = _Page.GetVolunteerToEdit();
+        VolunteersView.UpdateColumn(column, newValue, email);
+        return true;
+      }
+    }
+
+    private EditVolunteerDialogItem[] _EditVolunteerDialogInfo;
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+      if (!IsPostBack)
+      {
+        const string title = "Update Volunteers";
+        Page.Title = title;
+        H1.InnerHtml = title;
+
+        StateCache.Populate(ReportState, "all states", "*ALL*");
+        StateCache.Populate(AddVolunteerStateCode, "<select state>", string.Empty);
+
+        ReportParty.Items.Clear();
+        ReportParty.AddItem("any party", string.Empty);
+        ReportParty.Disabled = true;
+      }
+      else
+      {
+        // rebuild the party dropdown, since it might have changed client-side
+        LoadEditParties(ControlEditVolunteerStateCode.SelectedValue);
+        ControlEditVolunteerPartyKey.SelectedValue = SubmittedParty.Value;
+      }
+    }
+
+    private void LoadEditUndos()
+    {
+      var email = GetVolunteerToEdit();
+      UndoState.Value = VolunteersView.GetStateCode(email).SafeString();
+      UndoParty.Value = VolunteersView.GetPartyKey(email).SafeString();
+    }
+
+    private void LoadEditParties(string stateCode = null)
+    {
+      if (stateCode == null)
+        stateCode =
+          VolunteersView.GetStateCode(GetVolunteerToEdit()).SafeString();      
+      var parties = Parties.GetVolunteerReportParties(stateCode, true);
+      Utility.PopulateFromList(ControlEditVolunteerPartyKey, parties);
+      ControlEditVolunteerPartyKey.Enabled = parties.Length > 1;
+    }
+
+    protected void ButtonEditVolunteer_OnClick(object sender, EventArgs e)
+    {
+      switch (EditVolunteerReloading.Value)
+      {
+        case "reloading":
+          {
+            EditVolunteerReloading.Value = String.Empty;
+            RefreshReport.Value = "N";
+            var stateCode =
+              VolunteersView.GetStateCode(GetVolunteerToEdit()).SafeString();
+            StateCache.Populate(ControlEditVolunteerStateCode, stateCode);
+            LoadEditParties(stateCode);
+            _EditVolunteerDialogInfo.LoadControls();
+            LoadEditUndos();
+            FeedbackEditVolunteer.AddInfo("Volunteer information loaded.");
+          }
+          break;
+
+        case "":
+          {
+            // normal update
+            _EditVolunteerDialogInfo.ClearValidationErrors();
+            _EditVolunteerDialogInfo.Update(FeedbackEditVolunteer);
+            var emailItem = _EditVolunteerDialogInfo.FirstOrDefault(i => i.Column == "Email");
+            if (emailItem != null && !emailItem.DataControl.HasClass("error"))
+              VolunteerToEdit.Value = DataItemBase.GetCurrentValue(emailItem);
+            RefreshReport.Value = "Y";
+            LoadEditUndos();
+          }
+          break;
+
+        default:
+          throw new VoteException("Unknown reloading option");
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+﻿.file-upload-container
+{
+  margin-top: 20px;
+}
+
+#FileUpload
+{
+  width: 920px;
+}
+
+.summary-container
+{
+  margin-top: 20px;
+}
+
+.summary
+{
+  width: 918px;
+  border: 1px solid #999;
+  min-height: 100px;
+  max-height: 300px;
+  overflow-y: scroll;
+  padding: 2px;
+}
+
+.submit-container
+{
+  margin-top: 10px;
+}
+
+.summary p.error
+{
+  color: red;
+}

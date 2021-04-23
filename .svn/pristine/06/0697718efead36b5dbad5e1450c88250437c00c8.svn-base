@@ -1,0 +1,4 @@
+﻿#main-tabs div.accordion-panel .input-element.source input
+{
+  width: 535px;
+}
